@@ -14,6 +14,9 @@
 		CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A182340252600748249 /* Preview Assets.xcassets */; };
 		CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */; };
 		CD6A9A242340255E00748249 /* BrotValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A232340255E00748249 /* BrotValue.swift */; };
+		CD6A9A272340262B00748249 /* Rezept.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A262340262B00748249 /* Rezept.swift */; };
+		CD6A9A292340267F00748249 /* RezeptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A282340267F00748249 /* RezeptStore.swift */; };
+		CD6A9A2B2340271300748249 /* rezeptData.json in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A2A2340271300748249 /* rezeptData.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		CD6A9A1B2340252600748249 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD6A9A1D2340252600748249 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD6A9A232340255E00748249 /* BrotValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrotValue.swift; sourceTree = "<group>"; };
+		CD6A9A262340262B00748249 /* Rezept.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rezept.swift; sourceTree = "<group>"; };
+		CD6A9A282340267F00748249 /* RezeptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RezeptStore.swift; sourceTree = "<group>"; };
+		CD6A9A2A2340271300748249 /* rezeptData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rezeptData.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +88,9 @@
 			isa = PBXGroup;
 			children = (
 				CD6A9A232340255E00748249 /* BrotValue.swift */,
+				CD6A9A262340262B00748249 /* Rezept.swift */,
+				CD6A9A282340267F00748249 /* RezeptStore.swift */,
+				CD6A9A2A2340271300748249 /* rezeptData.json */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -147,6 +156,7 @@
 				CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */,
 				CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */,
 				CD6A9A162340252600748249 /* Assets.xcassets in Resources */,
+				CD6A9A2B2340271300748249 /* rezeptData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,8 +167,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD6A9A272340262B00748249 /* Rezept.swift in Sources */,
 				CD6A9A102340252400748249 /* AppDelegate.swift in Sources */,
 				CD6A9A122340252400748249 /* SceneDelegate.swift in Sources */,
+				CD6A9A292340267F00748249 /* RezeptStore.swift in Sources */,
 				CD6A9A242340255E00748249 /* BrotValue.swift in Sources */,
 				CD6A9A142340252400748249 /* ContentView.swift in Sources */,
 			);

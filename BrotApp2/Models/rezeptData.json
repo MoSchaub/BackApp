@@ -1,0 +1,58 @@
+[
+    {
+        "name": "Rezept1",
+        "imageName" : "test",
+        "brotValues": {
+        [
+            "BrotValue": {"time": 60, "identifier": "Autolyse"},
+            "BrotValue": {"time": 60, "identifier": "Kneten"},
+            "BrotValue": {"time": 60, "identifier": "Stockgare"},
+            "BrotValue": {"time": 60, "identifier": "Aufarbeiten"},
+            "BrotValue": {"time": 60, "identifier": "Stückgare"},
+            "BrotValue": {"time": 60, "identifier": "Backen"}
+        ]
+        }
+    },
+    {
+        "name": "Rezept1",
+        "imageName" : "test",
+        "brotValues": {
+        [
+            "BrotValue": {"time": 60, "identifier": "Autolyse"},
+            "BrotValue": {"time": 60, "identifier": "Kneten"},
+            "BrotValue": {"time": 60, "identifier": "Stockgare"},
+            "BrotValue": {"time": 60, "identifier": "Aufarbeiten"},
+            "BrotValue": {"time": 60, "identifier": "Stückgare"},
+            "BrotValue": {"time": 60, "identifier": "Backen"}
+        ]
+        }
+    },
+    {
+        "name": "Rezept1",
+        "imageName" : "test",
+        "brotValues": {
+        [
+            "BrotValue": {"time": 60, "identifier": "Autolyse"},
+            "BrotValue": {"time": 60, "identifier": "Kneten"},
+            "BrotValue": {"time": 60, "identifier": "Stockgare"},
+            "BrotValue": {"time": 60, "identifier": "Aufarbeiten"},
+            "BrotValue": {"time": 60, "identifier": "Stückgare"},
+            "BrotValue": {"time": 60, "identifier": "Backen"}
+        ]
+        }
+    },
+    {
+        "name": "Rezept1",
+        "imageName" : "test",
+        "brotValues": {
+        [
+            "BrotValue": {"time": 60, "identifier": "Autolyse"},
+            "BrotValue": {"time": 60, "identifier": "Kneten"},
+            "BrotValue": {"time": 60, "identifier": "Stockgare"},
+            "BrotValue": {"time": 60, "identifier": "Aufarbeiten"},
+            "BrotValue": {"time": 60, "identifier": "Stückgare"},
+            "BrotValue": {"time": 60, "identifier": "Backen"}
+        ]
+        }
+    },
+]
