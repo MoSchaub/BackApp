@@ -6,16 +6,10 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
+import Combine
 
-func rezeptData() -> [Rezept] {
-    let file = Bundle.main.url(forResource: "rezeptData.json", withExtension: nil)
-    let data = try! Data(contentsOf: file!)
-    return try! JSONDecoder().decode([Rezept].self, from: data )
-}
-
-
-class RezptStore: ObservableObject {
-    @Published var rezepte = rezeptData
+final class RezeptStore: ObservableObject {
+    @Published var rezepte = RezeptData
     
 }

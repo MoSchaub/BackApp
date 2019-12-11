@@ -9,6 +9,7 @@
 import Foundation
 
 struct BrotValue: Equatable, Identifiable, Hashable, Codable {
+
     var id: Int
     
     var time : TimeInterval
