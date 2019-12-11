@@ -29,7 +29,10 @@ struct RezeptDetail: View {
             }
             
             Section{
-                DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
+                HStack {
+                    MODatePicker(date: $rezeptStore.rezepte[rezeptIndex].date )
+                    Spacer()
+                }
             }
         }
         .navigationBarTitle(Text("\(rezeptStore.rezepte[rezeptIndex].name)"))

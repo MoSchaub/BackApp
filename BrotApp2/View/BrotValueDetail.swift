@@ -24,27 +24,14 @@ struct BrotValueDetail: View {
         rezeptStore.rezepte[rezeptIndex].brotValues.firstIndex(where: {$0.id == brotValue.id }) ?? 0
     }
     
-    @State var time: Double = 0
     
     
     var body: some View {
         VStack {
             Text(brotValue.name)
-            MOTimePicker(time: $time)
-                .onAppear(){
-                    self.changeTime()
-                }
-            .onDisappear() {
-                let h = self.rezeptStore
-                h.rezepte[self.rezeptIndex].brotValues[self.brotValueIndex].time = self.time
-                self.rezeptStore.rezepte = h.rezepte
-                
-            }
-            Text("\(Int(time/60)) Minuten")
+            MOTimePicker(time: $rezeptStore.rezepte[rezeptIndex].brotValues[brotValueIndex].time)
+            //Text("\(Int(time/60)) Minuten")
         }
-    }
-    func changeTime() {
-        time = rezeptStore.rezepte[rezeptIndex].brotValues[brotValueIndex].time
     }
 }
 

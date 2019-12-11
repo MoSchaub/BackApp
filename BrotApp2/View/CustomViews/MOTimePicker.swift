@@ -20,6 +20,7 @@ struct MOTimePicker: UIViewRepresentable {
         let datepicker = UIDatePicker()
         datepicker.datePickerMode = .countDownTimer
         datepicker.countDownDuration = time
+        datepicker.locale = .current
         datepicker.addTarget(context.coordinator, action: #selector(Coordinator.updateCountDownDuration(sender:)), for: .valueChanged)
         return datepicker
     }

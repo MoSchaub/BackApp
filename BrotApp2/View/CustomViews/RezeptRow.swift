@@ -19,7 +19,7 @@ struct RezeptRow: View {
                 Spacer()
             }
             HStack {
-                Text("Beginn am \(rezept.date)")
+                Text("Beginn am \(dateFormatter.string(from: rezept.startDate()))")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .padding(.leading)
@@ -33,7 +33,7 @@ struct RezeptRow: View {
                 Spacer()
             }
             HStack{
-                Text("Ende am \(dateFormatter.string(from: rezept.getEndDate()!))")
+                Text("Ende am \(dateFormatter.string(from: rezept.endDate()))")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .padding(.leading)

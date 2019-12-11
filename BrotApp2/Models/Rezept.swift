@@ -14,20 +14,40 @@ var dateFormatter: DateFormatter{
     return formatter
 }
 
+var isoFormatter = ISO8601DateFormatter()
+
 struct Rezept: Hashable, Codable, Identifiable {
     var id: Int
     var name: String
     var brotValues: [BrotValue]
     
-    var date: String
     
-    /// returns the date from a string
-    func getDate(from string: String) -> Date? {
-       return dateFormatter.date(from: string)
+    var inverted : Bool
+    private var dateString: String
+    
+    var date: Date{
+        get{
+            return isoFormatter.date(from: dateString) ?? Date()
+        }
+        set(newValue){
+            dateString =  isoFormatter.string(from: newValue)
+        }
     }
     
-    func getEndDate() -> Date? {
-        return getDate(from: date)?.addingTimeInterval(TimeInterval(totalTime()*60))
+    func startDate() -> Date {
+        if !inverted {
+            return date
+        } else {
+            return date.addingTimeInterval(TimeInterval(-(totalTime()*60)))
+        }
+    }
+    func endDate() -> Date {
+        if inverted {
+            return date
+        } else {
+            return date.addingTimeInterval(TimeInterval(totalTime()*60))
+        }
+        
     }
     
     /// returns the total time of all the BrotValues in the brotValues array

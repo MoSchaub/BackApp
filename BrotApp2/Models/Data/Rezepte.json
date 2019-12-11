@@ -11,7 +11,8 @@
         {"id": 5, "time": 60, "name": "Stückgare"},
         {"id": 6, "time": 60, "name": "Backen"}
     ],
-    "date" : "01.10.19 um 15:13"
+    "inverted": true,
+    "dateString" : "2019-12-21T19:32:00Z"
     },
     
     {
@@ -26,6 +27,7 @@
         {"id": 5, "time": 180, "name": "Stückgare"},
         {"id": 6, "time": 180, "name": "Backen"}
     ],
-    "date" : "01.10.19 um 15:13"
+    "inverted": true,
+    "dateString" : "2019-12-21T19:32:00Z"
     }
 ]
