@@ -1,0 +1,31 @@
+[
+    {
+    "id": 1,
+    "name": "Rezept1",
+    "brotValues":
+    [
+        {"id": 1, "time": 120, "name": "Autolyse"},
+        {"id": 2, "time": 60, "name": "Kneten"},
+        {"id": 3, "time": 60, "name": "Stockgare"},
+        {"id": 4, "time": 60, "name": "Aufarbeiten"},
+        {"id": 5, "time": 60, "name": "Stückgare"},
+        {"id": 6, "time": 60, "name": "Backen"}
+    ],
+    "date" : "01.10.19 um 15:13"
+    },
+    
+    {
+    "id": 2,
+    "name": "Rezept2",
+    "brotValues":
+    [
+        {"id": 1, "time": 180, "name": "Autolyse"},
+        {"id": 2, "time": 180, "name": "Kneten"},
+        {"id": 3, "time": 180, "name": "Stockgare"},
+        {"id": 4, "time": 180, "name": "Aufarbeiten"},
+        {"id": 5, "time": 180, "name": "Stückgare"},
+        {"id": 6, "time": 180, "name": "Backen"}
+    ],
+    "date" : "01.10.19 um 15:13"
+    }
+]

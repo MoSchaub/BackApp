@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CD3C9A7623426DBB006FC5F9 /* RezeptData.json in Resources */ = {isa = PBXBuildFile; fileRef = CD3C9A7523426DBB006FC5F9 /* RezeptData.json */; };
+		CD3C9A7623426DBB006FC5F9 /* Rezepte.json in Resources */ = {isa = PBXBuildFile; fileRef = CD3C9A7523426DBB006FC5F9 /* Rezepte.json */; };
 		CD3C9A7823426F0C006FC5F9 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3C9A7723426F0C006FC5F9 /* Data.swift */; };
 		CD6A9A102340252400748249 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A0F2340252400748249 /* AppDelegate.swift */; };
 		CD6A9A122340252400748249 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A112340252400748249 /* SceneDelegate.swift */; };
@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.release.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.release.xcconfig"; sourceTree = "<group>"; };
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD3C9A7523426DBB006FC5F9 /* RezeptData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RezeptData.json; sourceTree = "<group>"; };
+		CD3C9A7523426DBB006FC5F9 /* Rezepte.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Rezepte.json; sourceTree = "<group>"; };
 		CD3C9A7723426F0C006FC5F9 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		CD6A9A0C2340252400748249 /* BrotApp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrotApp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD6A9A0F2340252400748249 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 				CD6A9A262340262B00748249 /* Rezept.swift */,
 				CD6A9A282340267F00748249 /* RezeptStore.swift */,
 				CD3C9A7723426F0C006FC5F9 /* Data.swift */,
-				CD3C9A7523426DBB006FC5F9 /* RezeptData.json */,
+				CD3C9A7523426DBB006FC5F9 /* Rezepte.json */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -142,7 +142,6 @@
 				F4721B5665AD9BC1C8A4D52B /* Pods-BrotApp2.debug.xcconfig */,
 				9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -209,7 +208,7 @@
 				CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */,
 				CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */,
 				CD6A9A162340252600748249 /* Assets.xcassets in Resources */,
-				CD3C9A7623426DBB006FC5F9 /* RezeptData.json in Resources */,
+				CD3C9A7623426DBB006FC5F9 /* Rezepte.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

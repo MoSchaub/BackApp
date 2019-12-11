@@ -8,7 +8,7 @@
 
 import Foundation
 
-let RezeptData: [Rezept] = load("RezeptData.json")
+let RezeptData: [Rezept] = load("Rezepte.json")
 
 func load<T: Decodable>(_ filename: String, as type: T.Type = T.self) -> T {
     let data: Data
