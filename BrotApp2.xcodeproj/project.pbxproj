@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */; };
 		CD3C9A7623426DBB006FC5F9 /* Rezepte.json in Resources */ = {isa = PBXBuildFile; fileRef = CD3C9A7523426DBB006FC5F9 /* Rezepte.json */; };
 		CD3C9A7823426F0C006FC5F9 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3C9A7723426F0C006FC5F9 /* Data.swift */; };
 		CD6A9A102340252400748249 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A0F2340252400748249 /* AppDelegate.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.release.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.release.xcconfig"; sourceTree = "<group>"; };
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MODatePicker.swift; sourceTree = "<group>"; };
 		CD3C9A7523426DBB006FC5F9 /* Rezepte.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Rezepte.json; sourceTree = "<group>"; };
 		CD3C9A7723426F0C006FC5F9 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		CD6A9A0C2340252400748249 /* BrotApp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrotApp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +72,36 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CD0D2E1623A15C0000C7B927 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				CD3C9A7523426DBB006FC5F9 /* Rezepte.json */,
+				CD6A9A282340267F00748249 /* RezeptStore.swift */,
+				CD3C9A7723426F0C006FC5F9 /* Data.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		CD0D2E1723A15C4800C7B927 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CD6A9A132340252400748249 /* RezeptList.swift */,
+				CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */,
+				CDE13F502343B12F00019202 /* BrotValueDetail.swift */,
+				CDE13F542343B3E800019202 /* CustomViews */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		CD0D2E1823A15C5F00C7B927 /* supportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				CD6A9A0F2340252400748249 /* AppDelegate.swift */,
+				CD6A9A112340252400748249 /* SceneDelegate.swift */,
+			);
+			path = supportingFiles;
+			sourceTree = "<group>";
+		};
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
@@ -91,12 +123,8 @@
 		CD6A9A0E2340252400748249 /* BrotApp2 */ = {
 			isa = PBXGroup;
 			children = (
-				CD6A9A0F2340252400748249 /* AppDelegate.swift */,
-				CD6A9A112340252400748249 /* SceneDelegate.swift */,
-				CD6A9A132340252400748249 /* RezeptList.swift */,
-				CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */,
-				CDE13F502343B12F00019202 /* BrotValueDetail.swift */,
-				CDE13F542343B3E800019202 /* CustomViews */,
+				CD0D2E1823A15C5F00C7B927 /* supportingFiles */,
+				CD0D2E1723A15C4800C7B927 /* View */,
 				CD6A9A252340256700748249 /* Models */,
 				CD6A9A152340252600748249 /* Assets.xcassets */,
 				CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */,
@@ -119,9 +147,7 @@
 			children = (
 				CD6A9A232340255E00748249 /* BrotValue.swift */,
 				CD6A9A262340262B00748249 /* Rezept.swift */,
-				CD6A9A282340267F00748249 /* RezeptStore.swift */,
-				CD3C9A7723426F0C006FC5F9 /* Data.swift */,
-				CD3C9A7523426DBB006FC5F9 /* Rezepte.json */,
+				CD0D2E1623A15C0000C7B927 /* Data */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -132,6 +158,7 @@
 				CDE13F552343B42000019202 /* BrotValueRow.swift */,
 				CDE13F4C2343A67500019202 /* RezeptRow.swift */,
 				CDE13F522343B3D200019202 /* MOTimePicker.swift */,
+				CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -262,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD3C9A7823426F0C006FC5F9 /* Data.swift in Sources */,
+				CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */,
 				CDE13F562343B42000019202 /* BrotValueRow.swift in Sources */,
 				CD6A9A272340262B00748249 /* Rezept.swift in Sources */,
 				CD6A9A102340252400748249 /* AppDelegate.swift in Sources */,

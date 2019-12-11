@@ -20,10 +20,16 @@ struct RezeptDetail: View {
     
     var body: some View {
         List{
-            ForEach(rezeptStore.rezepte[rezeptIndex].brotValues) { brotValue in
-                NavigationLink(destination: BrotValueDetail(rezept: self.rezeptStore.rezepte[self.rezeptIndex], brotValue: brotValue).environmentObject(self.rezeptStore)) {
-                    BrotValueRow(brotValue: brotValue)
+            Section{
+                ForEach(rezeptStore.rezepte[rezeptIndex].brotValues) { brotValue in
+                    NavigationLink(destination: BrotValueDetail(rezept: self.rezeptStore.rezepte[self.rezeptIndex], brotValue: brotValue).environmentObject(self.rezeptStore)) {
+                        BrotValueRow(brotValue: brotValue)
+                    }
                 }
+            }
+            
+            Section{
+                DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
             }
         }
         .navigationBarTitle(Text("\(rezeptStore.rezepte[rezeptIndex].name)"))
