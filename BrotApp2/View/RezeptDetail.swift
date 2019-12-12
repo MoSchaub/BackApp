@@ -20,6 +20,18 @@ struct RezeptDetail: View {
     
     var body: some View {
         List{
+            
+            Section{
+                VStack {
+                    HStack {
+                        Text("Name:")
+                        TextField("name", text: $rezeptStore.rezepte[rezeptIndex].name)
+                    }
+                    Image(uiImage: rezeptStore.rezepte[rezeptIndex].image)
+                        .scaledToFill()
+                }
+            }
+            
             Section{
                 ForEach(rezeptStore.rezepte[rezeptIndex].brotValues) { brotValue in
                     NavigationLink(destination: BrotValueDetail(rezept: self.rezeptStore.rezepte[self.rezeptIndex], brotValue: brotValue).environmentObject(self.rezeptStore)) {
@@ -29,12 +41,33 @@ struct RezeptDetail: View {
             }
             
             Section{
-                HStack {
-                    MODatePicker(date: $rezeptStore.rezepte[rezeptIndex].date )
-                    Spacer()
+                VStack {
+                    if rezeptStore.rezepte[rezeptIndex].inverted{
+                        Text("Enddatum")
+                    }else {
+                        Text("Startdatum")
+                    }
+                    HStack {
+                        MODatePicker(date: $rezeptStore.rezepte[rezeptIndex].date )
+                        Spacer()
+                    }
+                    Picker(selection: $rezeptStore.rezepte[rezeptIndex].inverted, label: Text("Start-/Enddatum")) {
+                        Text("Enddatum").tag(true)
+                        Text("Startdatum").tag(false)
+                    }
+                    if rezeptStore.rezepte[rezeptIndex].inverted{
+                        Text("Enddatum: \(dateFormatter.string(from: rezeptStore.rezepte[rezeptIndex].endDate()))")
+                    }else {
+                        Text("Startdatum: \(dateFormatter.string(from: rezeptStore.rezepte[rezeptIndex].startDate()))")
+                    }
                 }
             }
+            
+            Section{
+                Text(rezeptStore.rezepte[rezeptIndex].text())
+            }
         }
+        .listStyle(GroupedListStyle())
         .navigationBarTitle(Text("\(rezeptStore.rezepte[rezeptIndex].name)"))
     }
 }

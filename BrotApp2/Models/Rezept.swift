@@ -6,7 +6,7 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 var dateFormatter: DateFormatter{
     let formatter = DateFormatter()
@@ -20,10 +20,10 @@ struct Rezept: Hashable, Codable, Identifiable {
     var id: Int
     var name: String
     var brotValues: [BrotValue]
-    
-    
     var inverted : Bool
+    
     private var dateString: String
+    private var imageString: String
     
     var date: Date{
         get{
@@ -31,6 +31,16 @@ struct Rezept: Hashable, Codable, Identifiable {
         }
         set(newValue){
             dateString =  isoFormatter.string(from: newValue)
+        }
+    }
+    
+    var image: UIImage{
+        get{
+            let data = Data(base64Encoded: imageString)
+            return UIImage(data: data!)!
+        }
+        set{
+            imageString = newValue.base64(format: .PNG)
         }
     }
     
@@ -48,6 +58,18 @@ struct Rezept: Hashable, Codable, Identifiable {
             return date.addingTimeInterval(TimeInterval(totalTime()*60))
         }
         
+    }
+    func text() -> String {
+        var h = startDate()
+        var text = ""
+        
+        for brotValue in brotValues {
+            text += "\(brotValue.name) am \(dateFormatter.string(from: h))"
+            text += "\n"
+            h = h.addingTimeInterval(brotValue.time)
+        }
+        text += "fertig am \(dateFormatter.string(from: endDate()))"
+        return text
     }
     
     /// returns the total time of all the BrotValues in the brotValues array

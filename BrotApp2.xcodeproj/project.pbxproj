@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */; };
+		CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD31CEA523A29A57005E36DA /* UIImageExtension.swift */; };
 		CD3C9A7623426DBB006FC5F9 /* Rezepte.json in Resources */ = {isa = PBXBuildFile; fileRef = CD3C9A7523426DBB006FC5F9 /* Rezepte.json */; };
 		CD3C9A7823426F0C006FC5F9 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3C9A7723426F0C006FC5F9 /* Data.swift */; };
 		CD6A9A102340252400748249 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A0F2340252400748249 /* AppDelegate.swift */; };
@@ -31,6 +32,7 @@
 		9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.release.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.release.xcconfig"; sourceTree = "<group>"; };
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MODatePicker.swift; sourceTree = "<group>"; };
+		CD31CEA523A29A57005E36DA /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		CD3C9A7523426DBB006FC5F9 /* Rezepte.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Rezepte.json; sourceTree = "<group>"; };
 		CD3C9A7723426F0C006FC5F9 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		CD6A9A0C2340252400748249 /* BrotApp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrotApp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +80,7 @@
 				CD3C9A7523426DBB006FC5F9 /* Rezepte.json */,
 				CD6A9A282340267F00748249 /* RezeptStore.swift */,
 				CD3C9A7723426F0C006FC5F9 /* Data.swift */,
+				CD31CEA523A29A57005E36DA /* UIImageExtension.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				CDE13F4D2343A67500019202 /* RezeptRow.swift in Sources */,
 				CD6A9A292340267F00748249 /* RezeptStore.swift in Sources */,
 				CDE13F532343B3D200019202 /* MOTimePicker.swift in Sources */,
+				CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */,
 				CD6A9A242340255E00748249 /* BrotValue.swift in Sources */,
 				CDE13F512343B12F00019202 /* BrotValueDetail.swift in Sources */,
 				CD6A9A142340252400748249 /* RezeptList.swift in Sources */,
