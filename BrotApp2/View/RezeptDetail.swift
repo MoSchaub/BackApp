@@ -38,8 +38,16 @@ struct RezeptDetail: View {
                         BrotValueRow(brotValue: brotValue)
                     }
                 }
+                .onDelete(perform: deleteBrotValue(at:))
+                .onMove(perform: moveItems(from:to:))
+            
             }
             
+            Picker(selection: $rezeptStore.rezepte[rezeptIndex].inverted, label: Text("Start-/Enddatum")) {
+                Text("Enddatum").tag(true)
+                Text("Startdatum").tag(false)
+            }
+
             Section{
                 VStack {
                     if rezeptStore.rezepte[rezeptIndex].inverted{
@@ -50,10 +58,6 @@ struct RezeptDetail: View {
                     HStack {
                         MODatePicker(date: $rezeptStore.rezepte[rezeptIndex].date )
                         Spacer()
-                    }
-                    Picker(selection: $rezeptStore.rezepte[rezeptIndex].inverted, label: Text("Start-/Enddatum")) {
-                        Text("Enddatum").tag(true)
-                        Text("Startdatum").tag(false)
                     }
                     if rezeptStore.rezepte[rezeptIndex].inverted{
                         Text("Enddatum: \(dateFormatter.string(from: rezeptStore.rezepte[rezeptIndex].endDate()))")
@@ -68,12 +72,24 @@ struct RezeptDetail: View {
             }
         }
         .listStyle(GroupedListStyle())
+        .navigationBarItems(trailing: EditButton())
         .navigationBarTitle(Text("\(rezeptStore.rezepte[rezeptIndex].name)"))
     }
+    
+    func deleteBrotValue(at offsets: IndexSet) {
+        rezeptStore.rezepte[rezeptIndex].brotValues.remove(atOffsets: offsets)
+    }
+    
+    func moveItems(from source: IndexSet, to destination: Int){
+        rezeptStore.rezepte[rezeptIndex].brotValues.move(fromOffsets: source, toOffset: destination)
+    }
+    
 }
 
 struct RezeptDetail_Previews: PreviewProvider {
     static var previews: some View {
-        RezeptDetail(rezept: RezeptData[0]).environmentObject(RezeptStore())
+        NavigationView{
+            RezeptDetail(rezept: RezeptData[0]).environmentObject(RezeptStore())
+        }
     }
 }

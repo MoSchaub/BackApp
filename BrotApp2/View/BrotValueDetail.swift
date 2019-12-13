@@ -28,9 +28,15 @@ struct BrotValueDetail: View {
     
     var body: some View {
         VStack {
-            Text(brotValue.name)
+            Text(brotValue.name).font(.title)
+            
             MOTimePicker(time: $rezeptStore.rezepte[rezeptIndex].brotValues[brotValueIndex].time)
-            //Text("\(Int(time/60)) Minuten")
+            HStack(alignment: .center, spacing: 10){
+                Spacer(minLength: 75)
+                Text("Name:")
+                TextField("Name", text: $rezeptStore.rezepte[rezeptIndex].brotValues[brotValueIndex].name)
+                
+            }
         }
     }
 }
