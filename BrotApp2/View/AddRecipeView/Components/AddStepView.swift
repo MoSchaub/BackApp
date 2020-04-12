@@ -14,7 +14,7 @@ struct AddStepView: View {
     
     @Binding var recipe: Recipe
     
-    @State private var step = BrotValue(name: "", time: 60, ingredients: [])
+    @State private var step = Step(name: "", time: 60, ingredients: [])
     
     var title: String{
         self.step.name.trimmingCharacters(in: .whitespaces).isEmpty ? "neuer Schritt" : self.step.name

@@ -22,7 +22,7 @@ struct Recipe: Hashable, Codable{
     var name: String
     
     ///array containing all steps involved in the recipe
-    var steps: [BrotValue]
+    var steps: [Step]
     
     ///property containing wether the recipe is a favourite
     var isFavourite: Bool
@@ -150,7 +150,7 @@ struct Recipe: Hashable, Codable{
         "\(self.formattedStartDate) bis \n\(self.formattedEndDate)"
     }
     
-    func formattedStartDate(for item: BrotValue) -> String{
+    func formattedStartDate(for item: Step) -> String{
         var start = self.startDate
         for step in self.steps{
             if step == item{
@@ -161,9 +161,9 @@ struct Recipe: Hashable, Codable{
         return "error"
     }
     
-    static var example = Recipe(name: "Rezept", brotValues: [BrotValue(name: "Schritt1", time: 60, ingredients: [Ingredient]())], inverted: true, dateString: isoFormatter.string(from: Date()), imageString: "", isFavourite: false, category: Category.example)
+    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient]())], inverted: true, dateString: isoFormatter.string(from: Date()), imageString: "", isFavourite: false, category: Category.example)
     
-    init(name:String, brotValues: [BrotValue], inverted: Bool, dateString: String, imageString: String, isFavourite: Bool, category: Category) {
+    init(name:String, brotValues: [Step], inverted: Bool, dateString: String, imageString: String, isFavourite: Bool, category: Category) {
         self.name = name
         self.steps = brotValues
         self.inverted = inverted

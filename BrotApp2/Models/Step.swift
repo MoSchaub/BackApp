@@ -1,5 +1,5 @@
 //
-//  BrotValue.swift
+//  Step.swift
 //  BrotApp2
 //
 //  Created by Moritz Schaub on 29.09.19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BrotValue: Equatable, Identifiable, Hashable, Codable {
+struct Step: Equatable, Identifiable, Hashable, Codable {
 
     var id: UUID
     

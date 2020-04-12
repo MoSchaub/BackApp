@@ -27,7 +27,7 @@
 		CD6A9A162340252600748249 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A152340252600748249 /* Assets.xcassets */; };
 		CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A182340252600748249 /* Preview Assets.xcassets */; };
 		CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */; };
-		CD6A9A242340255E00748249 /* BrotValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A232340255E00748249 /* BrotValue.swift */; };
+		CD6A9A242340255E00748249 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A232340255E00748249 /* Step.swift */; };
 		CD6A9A272340262B00748249 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A262340262B00748249 /* Recipe.swift */; };
 		CD6A9A292340267F00748249 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A282340267F00748249 /* RecipeStore.swift */; };
 		CDBD71E12439FA1D00BE2DBD /* FavouriteButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */; };
@@ -40,7 +40,7 @@
 		CDE13F4F2343AB7C00019202 /* RezeptDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */; };
 		CDE13F512343B12F00019202 /* BrotValueDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F502343B12F00019202 /* BrotValueDetail.swift */; };
 		CDE13F532343B3D200019202 /* MOTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F522343B3D200019202 /* MOTimePicker.swift */; };
-		CDE13F562343B42000019202 /* BrotValueRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F552343B42000019202 /* BrotValueRow.swift */; };
+		CDE13F562343B42000019202 /* StepDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F552343B42000019202 /* StepDetail.swift */; };
 		DFD8F625798E7253320A3953 /* Pods_BrotApp2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,7 +69,7 @@
 		CD6A9A182340252600748249 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CD6A9A1B2340252600748249 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD6A9A1D2340252600748249 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD6A9A232340255E00748249 /* BrotValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrotValue.swift; sourceTree = "<group>"; };
+		CD6A9A232340255E00748249 /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		CD6A9A262340262B00748249 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		CD6A9A282340267F00748249 /* RecipeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
 		CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteButtonStyle.swift; sourceTree = "<group>"; };
@@ -82,7 +82,7 @@
 		CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RezeptDetail.swift; sourceTree = "<group>"; };
 		CDE13F502343B12F00019202 /* BrotValueDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrotValueDetail.swift; sourceTree = "<group>"; };
 		CDE13F522343B3D200019202 /* MOTimePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOTimePicker.swift; sourceTree = "<group>"; };
-		CDE13F552343B42000019202 /* BrotValueRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrotValueRow.swift; sourceTree = "<group>"; };
+		CDE13F552343B42000019202 /* StepDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetail.swift; sourceTree = "<group>"; };
 		F4721B5665AD9BC1C8A4D52B /* Pods-BrotApp2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.debug.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,6 +141,7 @@
 				CD0D0CD0243CCB6E00B14E7E /* RezeptList */,
 				CD49CB9A243DC0F100B41EA1 /* Rezept Detail */,
 				CDE13F502343B12F00019202 /* BrotValueDetail.swift */,
+				CDE13F552343B42000019202 /* StepDetail.swift */,
 				CD0D0CCD243CCB3C00B14E7E /* HomeView.swift */,
 				CDE76E882440CE6A00B1EBEE /* AddRecipeView */,
 				CDE13F542343B3E800019202 /* CustomViews */,
@@ -227,7 +228,7 @@
 		CD6A9A252340256700748249 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD6A9A232340255E00748249 /* BrotValue.swift */,
+				CD6A9A232340255E00748249 /* Step.swift */,
 				CD6A9A262340262B00748249 /* Recipe.swift */,
 				CD0D0CD2243CCD0300B14E7E /* Category.swift */,
 				CD0D2E1623A15C0000C7B927 /* Data */,
@@ -240,7 +241,6 @@
 			children = (
 				CD3A43A42419845400E40EB4 /* ImagePicker */,
 				CD2EA5862442089200E535B5 /* BackgroundGradient.swift */,
-				CDE13F552343B42000019202 /* BrotValueRow.swift */,
 				CDE13F522343B3D200019202 /* MOTimePicker.swift */,
 				CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */,
 				CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */,
@@ -386,7 +386,7 @@
 				CDBD71E12439FA1D00BE2DBD /* FavouriteButtonStyle.swift in Sources */,
 				CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */,
 				CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */,
-				CDE13F562343B42000019202 /* BrotValueRow.swift in Sources */,
+				CDE13F562343B42000019202 /* StepDetail.swift in Sources */,
 				CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */,
 				CD6A9A272340262B00748249 /* Recipe.swift in Sources */,
 				CD6A9A102340252400748249 /* AppDelegate.swift in Sources */,
@@ -400,7 +400,7 @@
 				CD2A9D7C243476E700D0E9FC /* CardView.swift in Sources */,
 				CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */,
 				CD0D0CD3243CCD0300B14E7E /* Category.swift in Sources */,
-				CD6A9A242340255E00748249 /* BrotValue.swift in Sources */,
+				CD6A9A242340255E00748249 /* Step.swift in Sources */,
 				CDC7F5522441E0B5005834D5 /* TextViewExtension.swift in Sources */,
 				CDBD71E5243A3DFD00BE2DBD /* StrechyHeader.swift in Sources */,
 				CDE13F512343B12F00019202 /* BrotValueDetail.swift in Sources */,

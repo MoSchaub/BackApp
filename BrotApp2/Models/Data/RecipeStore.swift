@@ -75,7 +75,7 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    func find(step: BrotValue, in recipe: Recipe) -> (rezeptIndex: Int?, stepIndex: Int?){
+    func find(step: Step, in recipe: Recipe) -> (rezeptIndex: Int?, stepIndex: Int?){
         guard let rezeptIndex = self.recipes.firstIndex(of: recipe) else {
             return (nil, nil)
         }

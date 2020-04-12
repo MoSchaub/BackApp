@@ -10,15 +10,11 @@ import SwiftUI
 
 struct RezeptDetail: View {
     
-    let recipe: Recipe
+    @Binding var recipe: Recipe
     
-    var recipeIndex: Int {
-        recipeStore.recipes.firstIndex(of: recipe) ?? 0
-    }
+    @EnvironmentObject var recipeStore: RecipeStore
     
     @State private var showingRoomTempSheet = false
-    
-    @EnvironmentObject private var recipeStore: RecipeStore
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -68,9 +64,9 @@ struct RezeptDetail: View {
     
     var startSection: some View {
         VStack(alignment: .leading){
-            Text(recipeStore.recipes[recipeIndex].inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
+            Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
                 .padding([.top, .leading])
-            Picker(" ", selection: self.$recipeStore.recipes[recipeIndex].inverted){
+            Picker(" ", selection: self.$recipe.inverted){
                 Text("Start").tag(false)
                 Text("Ende").tag(true)
             }.pickerStyle(SegmentedPickerStyle())
@@ -113,35 +109,39 @@ struct RezeptDetail: View {
     }
     
     var recipeSections: some View {
-        ForEach(recipeStore.recipes[recipeIndex].steps){step in
-            VStack{
-                HStack {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(step.name).font(.headline)
-                        Text(step.formattedTime).secondary()
-                    }
-                    Spacer()
-                    Text(self.recipe.formattedStartDate(for: step))
-                }.padding(.horizontal)
-                
-                ForEach(step.ingredients){ ingredient in
-                    HStack{
-                        Group{
-                            Text(ingredient.name)
-                            Spacer()
-                            if ingredient.isBulkLiquid{
-                                Text("themp")
-                                Spacer()
-                            } else{
-                                EmptyView()
-                            }
-                            Text("\(ingredient.amount) g")
+        
+        ForEach(self.recipe.steps){step in
+            NavigationLink(destination: StepDetail(recipe: self.$recipe, stepIndex: self.recipe.steps.firstIndex(of: step)!)) {
+                VStack{
+                    HStack {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(step.name).font(.headline)
+                            Text(step.formattedTime).secondary()
                         }
+                        Spacer()
+                        Text(self.recipe.formattedStartDate(for: step))
                     }.padding(.horizontal)
+                    
+                    ForEach(step.ingredients){ ingredient in
+                        HStack{
+                            Group{
+                                Text(ingredient.name)
+                                Spacer()
+                                if ingredient.isBulkLiquid{
+                                    Text("themp")
+                                    Spacer()
+                                } else{
+                                    EmptyView()
+                                }
+                                Text("\(ingredient.amount) g")
+                            }
+                        }.padding(.horizontal)
+                    }
                 }
+                .padding()
+                .background(BackgroundGradient())
             }
-            .padding()
-            .background(BackgroundGradient())
+        .buttonStyle(PlainButtonStyle())
         }
     }
     
@@ -206,12 +206,8 @@ struct RezeptDetail: View {
         
     }
     
-    init(recipe: Recipe) {
-        self.recipe = recipe
-    }
-    
     func fav(){
-        self.recipeStore.recipes[self.recipeIndex].isFavourite.toggle()
+        self.recipe.isFavourite.toggle()
     }
     
 }
@@ -222,105 +218,11 @@ struct RezeptDetail: View {
 struct RezeptDetail_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RezeptDetail(recipe: Recipe.example)
+            RezeptDetail(recipe: .constant(Recipe.example))
                 .environmentObject(RecipeStore.example)
                 .environment(\.colorScheme, .light)
         }
     }
 }
-//struct RezeptDetail: View {
-//
-//    @EnvironmentObject private var rezeptStore: RecipeStore
-//
-//    var rezept: Recipe
-//
-//    var rezeptIndex: Int {
-//        rezeptStore.recipes.firstIndex(where: {$0.id == rezept.id }) ?? 0
-//    }
-//
-//    var body: some View {
-//        PatialDetailView()
-////        List{
-////            Section{
-////                HStack {
-////                    Text("Name:")
-////                    TextField("name", text: $rezeptStore.recipes[rezeptIndex].name).textFieldStyle(RoundedBorderTextFieldStyle())
-////                }
-////
-////            }
-////
-////            NavigationLink(destination: ImagePickerView(inputImage: $rezeptStore.recipes[rezeptIndex].image)) {
-////                Image(uiImage: rezeptStore.recipes[rezeptIndex].image ?? UIImage(named: "user")!)
-////                    .resizable()
-////                    .scaledToFit()
-////                    .background(Color.white)
-////                    .clipShape(RoundedRectangle(cornerRadius: 15))
-////                    .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color.primary, lineWidth: 1))
-////                    .shadow(color: .primary, radius: 2)
-////                    .padding()
-////                    .animation(.default)
-////            }
-////
-////            Section(header: Text("Schritte").font(.headline)){
-////                ForEach(rezeptStore.recipes[rezeptIndex].brotValues) { brotValue in
-////                    NavigationLink(destination: BrotValueDetail(rezept: self.rezeptStore.recipes[self.rezeptIndex], brotValue: brotValue).environmentObject(self.rezeptStore)) {
-////                        BrotValueRow(brotValue: brotValue)
-////                    }
-////                }
-////                .onDelete(perform: deleteBrotValue(at:))
-////                .onMove(perform: moveItems(from:to:))
-////
-////                Button(action: {
-////                    let brotValue = BrotValue(id: self.rezeptStore.recipes[self.rezeptIndex].brotValues.count + 1, time: 60, name: "Schritt")
-////                    self.rezeptStore.recipes[self.rezeptIndex].brotValues.append(brotValue)
-////                }) {
-////                    Text("Schritt hinzufügen")
-////                }
-////
-////            }
-////
-////
-////
-////            Section{
-////                Picker(selection: $rezeptStore.recipes[rezeptIndex].inverted, label: Text("Start-/Enddatum")) {
-////                    Text("Enddatum").tag(true)
-////                    Text("Startdatum").tag(false)
-////                }.pickerStyle(SegmentedPickerStyle())
-////
-////                MODatePicker(date: $rezeptStore.recipes[rezeptIndex].date )
-////
-////                if rezeptStore.recipes[rezeptIndex].inverted{
-////                    Text("Enddatum: \(dateFormatter.string(from: rezeptStore.recipes[rezeptIndex].endDate()))")
-////                }else {
-////                    Text("Startdatum: \(dateFormatter.string(from: rezeptStore.rezepte[rezeptIndex].startDate()))")
-////                }
-////            }
-////
-////            Section(header: Text("Zeitplan").font(.headline)){
-////                Text(rezeptStore.recipes[rezeptIndex].text())
-////            }
-////        }
-////        .listStyle(GroupedListStyle())
-////        .navigationBarItems(trailing: EditButton())
-////        .navigationBarTitle(Text("\(rezeptStore.recipes[rezeptIndex].name)"))
-//    }
-//
-//    func deleteBrotValue(at offsets: IndexSet) {
-//        rezeptStore.recipes[rezeptIndex].steps.remove(atOffsets: offsets)
-//    }
-//
-//    func moveItems(from source: IndexSet, to destination: Int){
-//        rezeptStore.recipes[rezeptIndex].steps.move(fromOffsets: source, toOffset: destination)
-//    }
-//
-//}
-//
-//struct RezeptDetail_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView{
-//            RezeptDetail(rezept: RezeptData[0]).environmentObject(RecipeStore())
-//        }
-//    }
-//}
 
 

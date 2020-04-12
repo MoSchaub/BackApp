@@ -22,7 +22,7 @@ struct RezeptList: View {
                 VStack(spacing: 30) {
                     SearchBar(searchText: self.$searchText, isSearching: self.$searching)
                     ForEach(0..<recipeStore.recipes.count, id: \.self){ number in
-                        NavigationLink(destination: RezeptDetail(recipe: self.recipeStore.recipes[number]).environmentObject(self.recipeStore)) {
+                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[number]).environmentObject(self.recipeStore)) {
                             Card(recipe: self.recipeStore.recipes[number], width: UIScreen.main.bounds.width - 30)
                         }.buttonStyle(PlainButtonStyle())
                     }

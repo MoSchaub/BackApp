@@ -13,7 +13,7 @@ struct AddIngredientView: View{
     @State private var amountText = "0.00"
     @State private var unit = "g"
     
-    @Binding var step: BrotValue
+    @Binding var step: Step
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -87,6 +87,6 @@ struct AddIngredientView: View{
 
 struct AddIngredientView_Previews: PreviewProvider {
     static var previews: some View {
-        AddIngredientView(step: .constant(BrotValue(name: "", time: 60, ingredients: [])))
+        AddIngredientView(step: .constant(Step(name: "", time: 60, ingredients: [])))
     }
 }

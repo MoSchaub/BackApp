@@ -103,31 +103,34 @@ struct AddRecipeView: View {
                 }
             }
             ForEach(self.recipe.steps){step in
-                VStack(alignment: .leading){
-                    HStack {
-                        Text(step.name).font(.headline)
-                        Spacer()
-                        Text(step.formattedTime).secondary()
-                    }.padding(.horizontal)
-                    
-                    ForEach(step.ingredients){ ingredient in
-                        HStack{
-                            Group{
-                                Text(ingredient.name)
-                                Spacer()
-                                if ingredient.isBulkLiquid{
-                                    Text("themp")
-                                    Spacer()
-                                } else{
-                                    EmptyView()
-                                }
-                                Text("\(ingredient.amount) g")
-                            }
+                NavigationLink(destination: StepDetail(recipe: self.$recipe, stepIndex: self.recipe.steps.firstIndex(of: step)!)) {
+                    VStack(alignment: .leading){
+                        HStack {
+                            Text(step.name).font(.headline)
+                            Spacer()
+                            Text(step.formattedTime).secondary()
                         }.padding(.horizontal)
+                        
+                        ForEach(step.ingredients){ ingredient in
+                            HStack{
+                                Group{
+                                    Text(ingredient.name)
+                                    Spacer()
+                                    if ingredient.isBulkLiquid{
+                                        Text("themp")
+                                        Spacer()
+                                    } else{
+                                        EmptyView()
+                                    }
+                                    Text("\(ingredient.amount) g")
+                                }
+                            }.padding(.horizontal)
+                        }
                     }
+                    .padding()
+                    .background(BackgroundGradient())
                 }
-                .padding()
-                .background(BackgroundGradient())
+               
             }
         }
     }
@@ -168,15 +171,15 @@ struct AddRecipeView: View {
         }
     }
     
-    func stepIndex(for step: BrotValue) -> Int? {
+    func stepIndex(for step: Step) -> Int? {
         self.recipe.steps.firstIndex(of: step)
     }
     
-    func IndexFound(for step: BrotValue) -> Bool{
+    func IndexFound(for step: Step) -> Bool{
         self.stepIndex(for: step) != nil
     }
     
-    func formattedTime(for step: BrotValue) -> String{
+    func formattedTime(for step: Step) -> String{
         let time = self.recipe.steps[self.stepIndex(for: step)!].time
         return String(format: "%.0f" + "\(time == 60 ? " Minute" : " Minuten" )" , "\(time/60)")
     }
