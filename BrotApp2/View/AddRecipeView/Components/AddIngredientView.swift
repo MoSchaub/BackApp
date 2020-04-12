@@ -10,8 +10,7 @@ import SwiftUI
 
 struct AddIngredientView: View{
     @State private var ingredient = Ingredient(name: "", amount: 10)
-    @State private var amountText = "0.00"
-    @State private var unit = "g"
+    @State private var amountText = "0.00 g"
     
     @Binding var step: Step
     
@@ -39,14 +38,14 @@ struct AddIngredientView: View{
                         .padding(.leading)
                     HStack {
                         TextField("Menge", text: self.$amountText) {
-                            self.ingredient.amount = Double(self.amountText) ?? 0.0
-                            self.amountText = String(format: "%\(".2")f", self.ingredient.amount)
+                            self.ingredient.amount = Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+                            self.amountText = self.ingredient.formatted(rest: self.amountText)
                         }
-                        Text(self.unit)
                         Spacer()
                     }.padding()
                         .padding(.leading)
                         .background(BackgroundGradient())
+                        .padding(.bottom)
                 }
 
                 HStack {
