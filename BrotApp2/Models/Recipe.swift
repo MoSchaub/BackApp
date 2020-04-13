@@ -75,12 +75,13 @@ struct Recipe: Hashable, Codable{
     ///getter and setter for the image
     var image: UIImage?{
         get{
-            let data = Data(base64Encoded: imageString)
-            return UIImage(data: data!)
+            if let data = Data(base64Encoded: imageString){
+                return UIImage(data: data)
+            } else{ return nil }
         }
         set{
             if newValue == nil{
-                imageString = UIImage(named: "user")!.base64(format: .PNG)
+                imageString = ""
             }
             else {
                 imageString = newValue!.base64(format: .PNG)
@@ -161,7 +162,7 @@ struct Recipe: Hashable, Codable{
         return "error"
     }
     
-    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient]())], inverted: true, dateString: isoFormatter.string(from: Date()), imageString: "", isFavourite: false, category: Category.example)
+    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), imageString: "", isFavourite: false, category: Category.example)
     
     init(name:String, brotValues: [Step], inverted: Bool, dateString: String, imageString: String, isFavourite: Bool, category: Category) {
         self.name = name

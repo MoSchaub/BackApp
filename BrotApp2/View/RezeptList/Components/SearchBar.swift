@@ -9,30 +9,6 @@
 import SwiftUI
 
 
-//struct ContentView: View {
-//    let array = ["Peter", "Paul", "Mary", "Anna-Lena", "George", "John", "Greg", "Thomas", "Robert", "Bernie", "Mike", "Benno", "Hugo", "Miles", "Michael", "Mikel", "Tim", "Tom", "Lottie", "Lorrie", "Barbara"]
-//    @State private var searchText = ""
-//
-//    var body: some View {
-//
-//        NavigationView {
-//            VStack {
-//                // Search view
-//                SearchBar(searchText: $searchText)
-//
-//                List {
-//                    // Filtered list of names
-//                    ForEach(array.filter{$0.hasPrefix(searchText) || searchText == ""}, id:\.self) {
-//                        searchText in Text(searchText)
-//                    }
-//                }
-//                .navigationBarTitle(Text("Search"))
-//                .resignKeyboardOnDragGesture()
-//            }
-//        }
-//    }
-//}
-
 extension UIApplication {
     func endEditing(_ force: Bool) {
         self.windows

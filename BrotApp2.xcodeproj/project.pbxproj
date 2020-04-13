@@ -30,8 +30,13 @@
 		CD6A9A242340255E00748249 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A232340255E00748249 /* Step.swift */; };
 		CD6A9A272340262B00748249 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A262340262B00748249 /* Recipe.swift */; };
 		CD6A9A292340267F00748249 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A282340267F00748249 /* RecipeStore.swift */; };
+		CD743C552443B7790058DDA0 /* IngredientDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD743C542443B7790058DDA0 /* IngredientDetail.swift */; };
 		CDBD71E12439FA1D00BE2DBD /* FavouriteButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */; };
 		CDBD71E5243A3DFD00BE2DBD /* StrechyHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBD71E4243A3DFC00BE2DBD /* StrechyHeader.swift */; };
+		CDBEE899244473A200E094CB /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE898244473A200E094CB /* StepRow.swift */; };
+		CDBEE89B2444877700E094CB /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89A2444877700E094CB /* NeomorphicToggleStyle.swift */; };
+		CDBEE89D2444E6A900E094CB /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89C2444E6A800E094CB /* Ingredient.swift */; };
+		CDBEE89F2444F1AD00E094CB /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89E2444F1AD00E094CB /* IngredientRow.swift */; };
 		CDC7F5522441E0B5005834D5 /* TextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7F5512441E0B5005834D5 /* TextViewExtension.swift */; };
 		CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC17F0243E54D100C4098E /* AddRecipeView.swift */; };
 		CDCC17F3243EFB1B00C4098E /* testTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC17F2243EFB1B00C4098E /* testTabBar.swift */; };
@@ -72,8 +77,13 @@
 		CD6A9A232340255E00748249 /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		CD6A9A262340262B00748249 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		CD6A9A282340267F00748249 /* RecipeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
+		CD743C542443B7790058DDA0 /* IngredientDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetail.swift; sourceTree = "<group>"; };
 		CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteButtonStyle.swift; sourceTree = "<group>"; };
 		CDBD71E4243A3DFC00BE2DBD /* StrechyHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrechyHeader.swift; sourceTree = "<group>"; };
+		CDBEE898244473A200E094CB /* StepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepRow.swift; sourceTree = "<group>"; };
+		CDBEE89A2444877700E094CB /* NeomorphicToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeomorphicToggleStyle.swift; sourceTree = "<group>"; };
+		CDBEE89C2444E6A800E094CB /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		CDBEE89E2444F1AD00E094CB /* IngredientRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
 		CDC7F5512441E0B5005834D5 /* TextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewExtension.swift; sourceTree = "<group>"; };
 		CDCC17F0243E54D100C4098E /* AddRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeView.swift; sourceTree = "<group>"; };
 		CDCC17F2243EFB1B00C4098E /* testTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testTabBar.swift; sourceTree = "<group>"; };
@@ -140,8 +150,6 @@
 			children = (
 				CD0D0CD0243CCB6E00B14E7E /* RezeptList */,
 				CD49CB9A243DC0F100B41EA1 /* Rezept Detail */,
-				CDE13F502343B12F00019202 /* BrotValueDetail.swift */,
-				CDE13F552343B42000019202 /* StepDetail.swift */,
 				CD0D0CCD243CCB3C00B14E7E /* HomeView.swift */,
 				CDE76E882440CE6A00B1EBEE /* AddRecipeView */,
 				CDE13F542343B3E800019202 /* CustomViews */,
@@ -179,8 +187,13 @@
 		CD49CB9B243DC10B00B41EA1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				CD743C542443B7790058DDA0 /* IngredientDetail.swift */,
+				CDBEE89E2444F1AD00E094CB /* IngredientRow.swift */,
+				CDBEE898244473A200E094CB /* StepRow.swift */,
+				CDE13F552343B42000019202 /* StepDetail.swift */,
 				CDBD71E4243A3DFC00BE2DBD /* StrechyHeader.swift */,
 				CD406472243F0F5B005496AF /* UIDeviceModelNameExtension.swift */,
+				CDBEE89A2444877700E094CB /* NeomorphicToggleStyle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -229,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				CD6A9A232340255E00748249 /* Step.swift */,
+				CDBEE89C2444E6A800E094CB /* Ingredient.swift */,
 				CD6A9A262340262B00748249 /* Recipe.swift */,
 				CD0D0CD2243CCD0300B14E7E /* Category.swift */,
 				CD0D2E1623A15C0000C7B927 /* Data */,
@@ -241,6 +255,7 @@
 			children = (
 				CD3A43A42419845400E40EB4 /* ImagePicker */,
 				CD2EA5862442089200E535B5 /* BackgroundGradient.swift */,
+				CDE13F502343B12F00019202 /* BrotValueDetail.swift */,
 				CDE13F522343B3D200019202 /* MOTimePicker.swift */,
 				CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */,
 				CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */,
@@ -387,6 +402,7 @@
 				CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */,
 				CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */,
 				CDE13F562343B42000019202 /* StepDetail.swift in Sources */,
+				CDBEE89D2444E6A900E094CB /* Ingredient.swift in Sources */,
 				CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */,
 				CD6A9A272340262B00748249 /* Recipe.swift in Sources */,
 				CD6A9A102340252400748249 /* AppDelegate.swift in Sources */,
@@ -400,14 +416,18 @@
 				CD2A9D7C243476E700D0E9FC /* CardView.swift in Sources */,
 				CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */,
 				CD0D0CD3243CCD0300B14E7E /* Category.swift in Sources */,
+				CDBEE89F2444F1AD00E094CB /* IngredientRow.swift in Sources */,
 				CD6A9A242340255E00748249 /* Step.swift in Sources */,
 				CDC7F5522441E0B5005834D5 /* TextViewExtension.swift in Sources */,
+				CDBEE89B2444877700E094CB /* NeomorphicToggleStyle.swift in Sources */,
 				CDBD71E5243A3DFD00BE2DBD /* StrechyHeader.swift in Sources */,
 				CDE13F512343B12F00019202 /* BrotValueDetail.swift in Sources */,
 				CD365D292435255A006B9628 /* SearchBar.swift in Sources */,
 				CD3A43A22419844E00E40EB4 /* ImagePickerView.swift in Sources */,
 				CD6A9A142340252400748249 /* RezeptList.swift in Sources */,
+				CD743C552443B7790058DDA0 /* IngredientDetail.swift in Sources */,
 				CD406473243F0F5B005496AF /* UIDeviceModelNameExtension.swift in Sources */,
+				CDBEE899244473A200E094CB /* StepRow.swift in Sources */,
 				CD0D0CCE243CCB3C00B14E7E /* HomeView.swift in Sources */,
 				CDE13F4F2343AB7C00019202 /* RezeptDetail.swift in Sources */,
 				CDCC17F3243EFB1B00C4098E /* testTabBar.swift in Sources */,

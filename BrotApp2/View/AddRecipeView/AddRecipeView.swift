@@ -18,7 +18,6 @@ struct AddRecipeView: View {
     @Binding var isPresented: Bool
     
     @State private var recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", imageString: "", isFavourite: false, category: Category.example)
-    @State private var showingStepsSheet = false
     
     var disabled: Bool{
         recipe.name.isEmpty || recipe.steps.isEmpty
@@ -44,17 +43,31 @@ struct AddRecipeView: View {
     }
     
     var image: some View {
+        Group{
+            if recipe.image == nil{
+                LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .mask(Image( "bread").resizable().scaledToFit())
+                    .frame(height: 250)
+                    .background(BackgroundGradient())
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+                    
+            } else{
+                Image(uiImage: recipe.image!).resizable().scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+            }
+        }
+    }
+    
+    var imageButton: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Bild").secondary().padding(.leading, 35)
             NavigationLink(destination: ImagePickerView(inputImage: self.$recipe.image)) {
                 ZStack {
-                    Image(uiImage: self.recipe.image ?? UIImage(named: "bread")!)
-                        .resizable()
-                        .scaledToFill()
-                        .background(BackgroundGradient())
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                        
+                    image
                     HStack {
                         Spacer()
                         Image(systemName: "chevron.right").padding(.trailing)
@@ -82,56 +95,45 @@ struct AddRecipeView: View {
     
     var stepSection: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 3.0){
-                Text("Arbeitsschritte").secondary()
-                    .padding(.leading)
-                    .padding(.leading)
-                Button(action: {
-                    self.showingStepsSheet = true
-                }){
-                    HStack {
-                        Text("Schritt hinzufügen")
-                        Spacer()
-                        Image(systemName: "chevron.up")
-                    }.padding()
+            VStack(alignment: .leading, spacing: 2.0){
+                HStack {
+                    Text("Arbeitsschritte").secondary()
+                        
+                    Spacer()
+                }
+                .padding(.leading)
+                .padding(.leading)
+                ForEach(self.recipe.steps){step in
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: step)!], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
+                        HStack {
+                            VStack(alignment: .leading){
+                                HStack {
+                                    Text(step.name).font(.headline)
+                                    Spacer()
+                                    Text(step.formattedTime).secondary()
+                                }.padding(.horizontal)
+                                
+                                ForEach(step.ingredients){ ingredient in
+                                    IngredientRow(ingredient: ingredient, step: step, roomTemp: self.recipeStore.roomThemperature).padding(.horizontal)
+                                }
+                            }
+                            Image(systemName: "chevron.right").padding(.trailing)
+                        }.padding()
+                            .background(BackgroundGradient())
+                    }.buttonStyle(PlainButtonStyle())
+                    
+                }
+            }
+            NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
+                HStack {
+                    Text("Schritt hinzufügen")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }.padding()
                     .padding(.horizontal)
                     .background(BackgroundGradient())
-                }
-                .buttonStyle(PlainButtonStyle())
-                .sheet(isPresented: self.$showingStepsSheet) {
-                    AddStepView(recipe: self.$recipe)
-                }
             }
-            ForEach(self.recipe.steps){step in
-                NavigationLink(destination: StepDetail(recipe: self.$recipe, stepIndex: self.recipe.steps.firstIndex(of: step)!)) {
-                    VStack(alignment: .leading){
-                        HStack {
-                            Text(step.name).font(.headline)
-                            Spacer()
-                            Text(step.formattedTime).secondary()
-                        }.padding(.horizontal)
-                        
-                        ForEach(step.ingredients){ ingredient in
-                            HStack{
-                                Group{
-                                    Text(ingredient.name)
-                                    Spacer()
-                                    if ingredient.isBulkLiquid{
-                                        Text("themp")
-                                        Spacer()
-                                    } else{
-                                        EmptyView()
-                                    }
-                                    Text("\(ingredient.amount) g")
-                                }
-                            }.padding(.horizontal)
-                        }
-                    }
-                    .padding()
-                    .background(BackgroundGradient())
-                }
-               
-            }
+            .buttonStyle(PlainButtonStyle())
         }
     }
     
@@ -156,7 +158,7 @@ struct AddRecipeView: View {
             ScrollView{
                 VStack(alignment: .leading){
                     self.name
-                    self.image
+                    self.imageButton
                     self.categoryButton
                     self.stepSection
                     self.addButton
@@ -165,7 +167,7 @@ struct AddRecipeView: View {
             .navigationBarTitle(self.title)
             .navigationBarItems(trailing: Button("Abbrechen"){
                 self.presentationMode.wrappedValue.dismiss()
-            })
+            }.foregroundColor(.accentColor))
         }.onAppear(){
             self.recipe.category = self.recipeStore.categories.first ?? Category.example
         }

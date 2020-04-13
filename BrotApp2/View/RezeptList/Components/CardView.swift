@@ -8,35 +8,6 @@
 
 import SwiftUI
 
-extension Color {
-    static let offWhite = Color(red: 225 / 255, green: 225 / 255, blue: 235 / 255)
-    
-    static let darkFillColor = Color.black
-    
-    static let lightFillColor =  Color.white
-    
-    static let lightShadow = Color.gray.opacity(0.05)
-    static let darkShadow = Color.white.opacity(0.05)
-    
-    
-    static func fillColor(colorScheme: ColorScheme) -> Color{
-        if colorScheme == .dark{
-            return darkFillColor
-        } else {
-            return lightFillColor
-        }
-    }
-    
-    static func shadowColor(colorScheme: ColorScheme) -> Color{
-        if colorScheme == .dark{
-            return darkShadow
-        } else {
-            return lightShadow
-        }
-    }
-    
-}
-
 struct Card: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -65,46 +36,40 @@ struct Card: View {
     }
     
     var body: some View {
-        ZStack {
-            HStack {
-                image
-//                Image(uiImage: recipe.image ?? UIImage(named: "bread")!)
-//                    .resizable()
-//                    .scaledToFill()
-//                    .background(BackgroundGradient())
-//                    .frame(width: CGFloat(width / 1.75), height: CGFloat(width / 1.75))
-//                    .clipShape(RoundedRectangle(cornerRadius: 13))
-//                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 4, y: 4)
-                VStack{
-                    HStack {
-                        Text(recipe.name)
-                            .font(.title)
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
-                    HStack {
-                        Text(recipe.formattedTotalTime)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .multilineTextAlignment(.trailing)
-                        Spacer()
-                    }
-                    HStack {
-                        Text(recipe.formattedStartBisEnde)
-                            .font(.footnote)
-                            .fontWeight(.medium)
-                            .foregroundColor(Color.secondary)
-                        Spacer()
-                    }
-                    
+        HStack {
+            image
+            VStack{
+                HStack {
+                    Text(recipe.name)
+                        .font(.title)
+                        .fontWeight(.bold)
                     Spacer()
-                }.padding(.top)
-                    .frame(height: CGFloat(width / 1.75))
-                
+                }
+                HStack {
+                    Text(recipe.formattedTotalTime)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.trailing)
+                    Spacer()
+                }
+                HStack {
+                    Text(recipe.formattedStartBisEnde)
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                        .foregroundColor(Color.secondary)
+                    Spacer()
+                }
                 Spacer()
-            } .frame(width: width, height: CGFloat(width / 1.75))
-            .background(BackgroundGradient())
+            }.padding(.top)
+                .frame(height: CGFloat(width / 1.75))
+            Image(systemName: "chevron.right")
+                .padding(.trailing)
+            Spacer()
         }
+        .background(BackgroundGradient())
+        .clipShape(RoundedRectangle(cornerRadius: 13))
+        .frame(width: width, height: CGFloat(width / 1.75))
+        .drawingGroup()
     }
     
     func color() -> Color{
@@ -122,10 +87,7 @@ struct Card: View {
 struct CardView_Previews: PreviewProvider {
     
     static var previews: some View {
-        Card(recipe: Recipe.example, width: 300)
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity,maxHeight: .infinity)
-            .background(Color.fillColor(colorScheme: .light).edgesIgnoringSafeArea(.all))
+        Card(recipe: Recipe.example, width: UIScreen.main.bounds.width - 20)
             .environment(\.colorScheme, .light)
             .environmentObject(RecipeStore())
     }

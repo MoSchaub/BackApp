@@ -18,61 +18,40 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var ingredients: [Ingredient]
     
-    var themperature = 20
+    var themperature : Int
     
     //add logic for themperture calc for bulkliquids
     
-    init(name: String, time: TimeInterval, ingredients: [Ingredient]) {
+    init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
         id = UUID()
         self.time = time
         self.name = name
         self.ingredients = ingredients
+        self.themperature = themperature
     }
     
     var formattedTime: String{
         "\(Int(time/60))" + "\(time == 60 ? " Minute" : " Minuten" )"
     }
     
-}
-
-struct Ingredient: Codable, Hashable, Identifiable, Equatable{
+    var formattedTemp: String{
+        String(self.themperature) + " °C"
+    }
     
-    var id: UUID
-    
-    var name: String
-    
-    var themperature: Int?
-    
-    var amount: Double
-    
-    var isBulkLiquid: Bool
-    
-    
-    mutating func formatted(rest: String) -> String{
-        let previousFactor = factor(from: rest)
-        self.amount *= previousFactor
-        if self.amount >= 1000{
-            return "\(self.amount/1000)" + " Kg"
-        } else if amount < 0.1{
-            return "\(self.amount * 1000)" + " mg"
-        } else {
-            return "\(self.amount)" + " g"
+    ///Themperature for bulk liquids so the step has the right Temperature
+    func themperature(for bulkLiquid: Ingredient, roomThemperature: Int) -> Int {
+        
+        var summOfMassTempProductOfNonBulkLiquids = 0.0
+        var totalAmount = 0.0
+        for ingredient in self.ingredients{
+            if !ingredient.isBulkLiquid{
+                summOfMassTempProductOfNonBulkLiquids += ingredient.amount * Double(roomThemperature)
+            }
+            totalAmount += ingredient.amount
         }
+        
+        let diff = Double(self.themperature) * totalAmount - summOfMassTempProductOfNonBulkLiquids
+        return Int( diff / bulkLiquid.amount)
     }
     
-    func factor(from rest: String) -> Double{
-        let str = rest.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .whitespacesAndNewlines)
-        switch str {
-        case "Kg": return 1000
-        case "mg": return 0.001
-        default: return 1
-        }
-    }
-    
-    init(name: String, amount: Double) {
-        self.id = UUID()
-        self.name = name
-        self.amount = amount
-        self.isBulkLiquid = false
-    }
 }

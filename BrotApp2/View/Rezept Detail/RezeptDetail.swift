@@ -9,14 +9,58 @@
 import SwiftUI
 
 struct RezeptDetail: View {
+    @State var editMode = false
     
     @Binding var recipe: Recipe
     
     @EnvironmentObject var recipeStore: RecipeStore
     
-    @State private var showingRoomTempSheet = false
-    
     @Environment(\.presentationMode) var presentationMode
+    
+    var title: String{
+        if recipe.name.isEmpty{
+            return "Rezept hinzufügen"
+        } else {
+            return recipe.name
+        }
+    }
+    
+    var trailingButtons: some View{
+        HStack{
+            Toggle(isOn: self.$recipe.isFavourite) {
+                if self.recipe.isFavourite{
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.primary)
+                } else{
+                    Image(systemName: "heart")
+                        .foregroundColor(.primary)
+                }
+            }.toggleStyle(NeomorphicToggleStyle())
+            
+            Toggle(isOn: self.$editMode) {
+                Image(systemName: "pencil")
+                    .foregroundColor(.primary)
+            }.toggleStyle(NeomorphicToggleStyle())
+
+        }
+    }
+    
+    var nameSection: some View{
+        Group{
+            if editMode{
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Name").secondary()
+                        .padding(.leading, 35)
+                    TextField("Name eingeben", text: self.$recipe.name)
+                        .padding(.leading)
+                        .padding()
+                        .background(BackgroundGradient())
+                }
+            } else{
+                EmptyView()
+            }
+        }
+    }
     
     var image: some View {
         Group{
@@ -24,190 +68,195 @@ struct RezeptDetail: View {
                 LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image( "bread").resizable().scaledToFit())
                     .frame(height: 250)
-                    .background(LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.init(.systemBackground)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                    .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
-                    
+                    .background(BackgroundGradient())
             } else{
                 Image(uiImage: recipe.image!).resizable().scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
             }
-        }.padding()
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+        .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+        .padding()
+    }
+    
+    var imageSection: some View{
+        Group{
+            if self.editMode{
+                NavigationLink(destination: ImagePickerView(inputImage: self.$recipe.image)) {
+                    ZStack {
+                        self.image
+                        HStack{
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                
+                        }
+                        .padding(.trailing)
+                        .padding(.trailing)
+                    }
+                }
+            .buttonStyle(PlainButtonStyle())
+            } else{
+                self.image
+            }
+        }
+    }
+    
+    var categorySection: some View{
+        Group {
+            if self.editMode {
+                NavigationLink(destination: CategoryPicker(recipe: self.$recipe)) {
+                    HStack {
+                        Text("Kategorie:")
+                        Spacer()
+                        Text(recipe.category.name).secondary()
+                        Image("chevron.right")
+                    }.padding()
+                        .padding(.horizontal)
+                        .background(BackgroundGradient())
+                }.buttonStyle(PlainButtonStyle())
+            } else {
+                HStack {
+                    Text(recipe.category.name).secondary()
+                    Spacer()
+                }.padding()
+                    .padding(.leading)
+                    .background(BackgroundGradient())
+            }
+        }
     }
     
     var infoStrip: some View{
-        HStack{
-            Spacer()
-            
-            VStack {
-                Text("\(recipe.totalTime)")
-                Text("Min").secondary()
+        Group {
+            if !editMode {
+                HStack{
+                    Spacer()
+                    
+                    VStack {
+                        Text("\(recipe.totalTime)")
+                        Text("Min").secondary()
+                    }
+                    
+                    Spacer()
+                    
+                    VStack{
+                        Text("\(recipe.numberOfIngredients)")
+                        Text("Zutaten").secondary()
+                    }
+                    
+                    Spacer()
+                    
+                    VStack{
+                        Text("\(recipe.steps.count)")
+                        Text("Schritte").secondary()
+                    }
+                    Spacer()
+                }.background(BackgroundGradient())
+            } else {
+                /*@START_MENU_TOKEN@*/EmptyView()/*@END_MENU_TOKEN@*/
             }
-            
-            Spacer()
-            
-            VStack{
-                Text("\(recipe.numberOfIngredients)")
-                Text("Zutaten").secondary()
-            }
-            
-            Spacer()
-            
-            VStack{
-                Text("\(recipe.steps.count)")
-                Text("Schritte").secondary()
-            }
-            Spacer()
-        }.background(BackgroundGradient())
+        }
     }
     
     var startSection: some View {
-        VStack(alignment: .leading){
-            Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
-                .padding([.top, .leading])
-            Picker(" ", selection: self.$recipe.inverted){
-                Text("Start").tag(false)
-                Text("Ende").tag(true)
-            }.pickerStyle(SegmentedPickerStyle())
-        }
-        .background(BackgroundGradient())
-        .padding([.leading, .bottom, .trailing])
-    }
-    
-    var roomThemperturePicker: some View{
-        VStack {
-            Picker("Raumtemperatur", selection: $recipeStore.roomThemperature){
-                ForEach(-10...50, id: \.self){ n in
-                    Text("\(n)")
-                }
-            }
-            Button("OK"){
-                self.showingRoomTempSheet = false
-            }
-        }
-    }
-    
-    var roomThemperatureSection: some View{
-        HStack {
-            Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
-                .padding(.leading)
-            
-            Spacer()
-            
-            Button(action: {
-                self.showingRoomTempSheet = true
-            }){ Image(systemName: "pencil")}
-                .padding(.trailing)
-            .buttonStyle(PlainButtonStyle())
-        }
-        .padding()
-        .background(BackgroundGradient().padding(.vertical))
-        .sheet(isPresented: self.$showingRoomTempSheet) {
-            self.roomThemperturePicker
-        }
-    }
-    
-    var recipeSections: some View {
-        
-        ForEach(self.recipe.steps){step in
-            NavigationLink(destination: StepDetail(recipe: self.$recipe, stepIndex: self.recipe.steps.firstIndex(of: step)!)) {
-                VStack{
+        Group {
+            if editMode {
+                VStack(alignment: .leading){
                     HStack {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(step.name).font(.headline)
-                            Text(step.formattedTime).secondary()
-                        }
+                        Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
+                            .padding(.leading)
+                            .padding(.top)
                         Spacer()
-                        Text(self.recipe.formattedStartDate(for: step))
-                    }.padding(.horizontal)
-                    
-                    ForEach(step.ingredients){ ingredient in
-                        HStack{
-                            Group{
-                                Text(ingredient.name)
-                                Spacer()
-                                if ingredient.isBulkLiquid{
-                                    Text("themp")
-                                    Spacer()
-                                } else{
-                                    EmptyView()
-                                }
-                                Text("\(ingredient.amount) g")
-                            }
-                        }.padding(.horizontal)
                     }
+                    Picker(" ", selection: self.$recipe.inverted){
+                        Text("Start").tag(false)
+                        Text("Ende").tag(true)
+                    }.pickerStyle(SegmentedPickerStyle())
                 }
-                .padding()
                 .background(BackgroundGradient())
+                .padding([.leading, .bottom, .trailing])
+            } else {
+                EmptyView()
             }
-        .buttonStyle(PlainButtonStyle())
+        }
+    }
+    
+    var stepSections: some View {
+        ForEach(self.recipe.steps){step in
+            Group {
+                if self.editMode {
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: step)!], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
+                        StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                } else {
+                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                }
+            }
+        }
+    }
+    
+    var deleteSection: some View{
+        Group {
+            if self.editMode {
+                Button(action: {
+                        self.delete()
+                    }){
+                        HStack {
+                            Text("Löschen")
+                                .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
+                            Spacer()
+                        }
+                        .padding()
+                        .padding(.horizontal)
+                        .background(BackgroundGradient())
+                        .padding(.vertical)
+                    }
+                .disabled(self.recipeStore.recipes.count < 1 )
+            } else {
+                EmptyView()
+            }
         }
     }
     
     var body: some View {
-        ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(recipe.category.name)
-                        .font(.system(size: 18))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color.secondary)
-                        .padding(.leading)
-                    self.image
+                    self.nameSection
+                    if !editMode{
+                        self.categorySection
+                    }
+                    self.imageSection
+                    if editMode{
+                        self.categorySection
+                    }
                     self.infoStrip
-                    self.roomThemperatureSection
                     Text("Arbeitsschritte")
                         .secondary()
                         .padding(.leading)
+                        .padding(.leading)
                     self.startSection
-                    self.recipeSections
-                    
-                    
-                    
+                    self.stepSections
+                    self.deleteSection
                 }
                 .frame(maxWidth: .infinity)
-                .navigationBarTitle(recipe.name)
+                .navigationBarTitle(self.title)
                 .navigationBarItems(
-                    trailing: HStack{
-                        Button(action: {
-                            self.fav()
-                        }, label: {
-                            if self.recipe.isFavourite{
-                                Image(systemName: "heart.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxHeight: 30)
-                                    .foregroundColor(.primary)
-                            } else{
-                                Image(systemName: "heart")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxHeight: 30)
-                                    .foregroundColor(.primary)
-                            }
-                        })
-                            .padding()
-                        
-                        Button(action: {
-                            print("edit")
-                        }, label: {
-                            Image(systemName: "pencil")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxHeight: 30)
-                                .foregroundColor(.primary)
-                        })
-                            .padding()
-                    }
+                    trailing: self.trailingButtons
                 )
             }
-        }
-        
     }
     
     func fav(){
         self.recipe.isFavourite.toggle()
+    }
+    
+    func delete(){
+        if self.recipeStore.recipes.count > 1, let index = self.recipeStore.recipes.firstIndex(of: self.recipe){
+            self.presentationMode.wrappedValue.dismiss()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self.recipeStore.recipes.remove(at: index)
+            }
+        }
     }
     
 }

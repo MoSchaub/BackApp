@@ -9,28 +9,38 @@
 import SwiftUI
 
 struct ImagePickerView: View {
-    @State private var image: Image = Image("bread")
     @State private var showingImagePicker = false
     @State private var showingActionSheet = false
     @Binding var inputImage: UIImage?
+    
+    var image: some View {
+        get{
+            Group{
+                if inputImage == nil{
+                    LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                        .mask(Image( "bread").resizable().scaledToFit())
+                        .frame(height: 250)
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.init(.systemBackground)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                        .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+                        
+                } else{
+                    Image(uiImage: inputImage!).resizable().scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+                }
+            }.padding()
+        }
+    }
     
     var body: some View {
         VStack {
             Text("Bild auswählen")
                 .font(.largeTitle)
-            
             Spacer()
-            
             image
-                .resizable()
-                .scaledToFit()
-                .background(BackgroundGradient())
-                .clipShape(RoundedRectangle(cornerRadius: 15))
-                .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
-                .padding()
-
-            
             Button("bearbeiten") {
                 self.showingActionSheet = true
             }
@@ -60,7 +70,7 @@ struct ImagePickerView: View {
     
     func loadImage() {
         guard let inputImage = inputImage else { return }
-        image = Image(uiImage: inputImage)
+        self.inputImage = inputImage
     }
     
 }
