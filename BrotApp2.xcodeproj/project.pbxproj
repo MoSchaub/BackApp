@@ -31,6 +31,7 @@
 		CD6A9A272340262B00748249 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A262340262B00748249 /* Recipe.swift */; };
 		CD6A9A292340267F00748249 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A282340267F00748249 /* RecipeStore.swift */; };
 		CD743C552443B7790058DDA0 /* IngredientDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD743C542443B7790058DDA0 /* IngredientDetail.swift */; };
+		CDA617132445C742009DA261 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA617122445C742009DA261 /* KeyboardResponder.swift */; };
 		CDBD71E12439FA1D00BE2DBD /* FavouriteButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */; };
 		CDBD71E5243A3DFD00BE2DBD /* StrechyHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBD71E4243A3DFC00BE2DBD /* StrechyHeader.swift */; };
 		CDBEE899244473A200E094CB /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE898244473A200E094CB /* StepRow.swift */; };
@@ -78,6 +79,7 @@
 		CD6A9A262340262B00748249 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		CD6A9A282340267F00748249 /* RecipeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
 		CD743C542443B7790058DDA0 /* IngredientDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetail.swift; sourceTree = "<group>"; };
+		CDA617122445C742009DA261 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		CDBD71E02439FA1D00BE2DBD /* FavouriteButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteButtonStyle.swift; sourceTree = "<group>"; };
 		CDBD71E4243A3DFC00BE2DBD /* StrechyHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrechyHeader.swift; sourceTree = "<group>"; };
 		CDBEE898244473A200E094CB /* StepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepRow.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 			children = (
 				CDD5505D24433DB0000F909C /* CategoryPicker.swift */,
 				CD06E0F72442DC2C00566F82 /* AddStepView.swift */,
+				CDA617122445C742009DA261 /* KeyboardResponder.swift */,
 				CDD5505B24432690000F909C /* AddIngredientView.swift */,
 			);
 			path = Components;
@@ -401,6 +404,7 @@
 				CDBD71E12439FA1D00BE2DBD /* FavouriteButtonStyle.swift in Sources */,
 				CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */,
 				CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */,
+				CDA617132445C742009DA261 /* KeyboardResponder.swift in Sources */,
 				CDE13F562343B42000019202 /* StepDetail.swift in Sources */,
 				CDBEE89D2444E6A900E094CB /* Ingredient.swift in Sources */,
 				CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */,

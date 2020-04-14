@@ -20,7 +20,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var themperature : Int
     
-    //add logic for themperture calc for bulkliquids
+    var notes: String
     
     init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
         id = UUID()
@@ -28,6 +28,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         self.name = name
         self.ingredients = ingredients
         self.themperature = themperature
+        self.notes = ""
     }
     
     var formattedTime: String{

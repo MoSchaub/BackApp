@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct StepDetail: View {
+    @ObservedObject var keyboardResponder = KeyboardResponder()
+    
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var recipe: Recipe
@@ -25,7 +27,7 @@ struct StepDetail: View {
     let roomTemp: Int
     
     var disabled: Bool{
-        self.step.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || self.step.ingredients.isEmpty
+        self.step.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || self.step.ingredients.isEmpty && self.step.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
     var nameSection: some View{
@@ -44,93 +46,126 @@ struct StepDetail: View {
         }
     }
     
-    var body: some View {
-        ScrollView{
-            VStack(alignment: .leading) {
+    var timeSection: some View{
+        NavigationLink(destination: stepTimePicker(time: self.$step.time)) {
+            HStack {
+                Text("Dauer:")
+                Spacer()
+                Text(self.step.formattedTime)
+                Image(systemName: "chevron.right")
+            }
+            .padding()
+            .padding(.horizontal)
+            .background(BackgroundGradient())
+            .padding(.vertical)
+        }.buttonStyle(PlainButtonStyle())
+    }
+    
+    var tempSection: some View {
+        NavigationLink(destination: stepTempPicker(temp: self.$step.themperature) ) {
+            HStack {
+                Text("Temperatur")
+                Spacer()
+                Text(self.step.formattedTemp)
+                Image(systemName: "chevron.right")
+            }
+            .padding()
+            .padding(.horizontal)
+            .background(BackgroundGradient())
+            .padding(.vertical)
+        }.buttonStyle(PlainButtonStyle())
+    }
+    
+    var notesSection: some View{
+        VStack(alignment: .leading, spacing: 3.0) {
+            Text("Notizen").secondary()
+                .padding(.leading)
+                .padding(.leading)
+            TextField("Notizen...",text: self.$step.notes, onEditingChanged: { (editing) in
+                self.isEditing = editing
+            }, onCommit: {
                 
-                self.nameSection
-                
-                NavigationLink(destination: stepTimePicker(time: self.$step.time)) {
-                    HStack {
-                        Text("Dauer:")
-                        Spacer()
-                        Text(self.step.formattedTime)
-                        Image(systemName: "chevron.right")
-                    }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
-                    .padding(.vertical)
-                }.buttonStyle(PlainButtonStyle())
-                
-                NavigationLink(destination: stepTempPicker(temp: self.$step.themperature) ) {
-                    HStack {
-                        Text("Temperatur")
-                        Spacer()
-                        Text(self.step.formattedTemp)
-                        Image(systemName: "chevron.right")
-                    }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
-                    .padding(.vertical)
-                }.buttonStyle(PlainButtonStyle())
-                
-                VStack(alignment: .leading, spacing: 3.0 ){
-                    Text("Zutaten").secondary()
-                        .padding(.leading)
-                        .padding(.leading)
-                    ForEach(self.step.ingredients){ ingredient in
-                        NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, deleteEnabled: true)){
-                            IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
-                            .padding()
-                            .padding(.horizontal)
-                            .background(BackgroundGradient())
-                        }.buttonStyle(PlainButtonStyle())
-                    }
-                    NavigationLink(destination: AddIngredientView(step: self.$step) ){
-                        HStack {
-                            Text("Zutat hinzufügen")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
+            })
+                .padding()
+                .padding(.leading)
+                .background(BackgroundGradient())
+        }
+    }
+    
+    var ingredientsSection: some View {
+        VStack(alignment: .leading, spacing: 3.0 ){
+            Text("Zutaten").secondary()
+                .padding(.leading)
+                .padding(.leading)
+            ForEach(self.step.ingredients){ ingredient in
+                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, deleteEnabled: true)){
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
                         .padding()
                         .padding(.horizontal)
                         .background(BackgroundGradient())
-                    }.buttonStyle(PlainButtonStyle())
-                    
-                    if self.deleteEnabled{
-                        Button(action: {
-                            self.delete()
-                        }){
-                            HStack {
-                                Text("Löschen")
-                                    .foregroundColor(self.recipe.steps.count > 1 ? .red : .secondary)
-                                Spacer()
-                            }
-                            .padding()
-                            .padding(.horizontal)
-                            .background(BackgroundGradient())
-                            .padding(.vertical)
-                        }
-                    .disabled(self.recipe.steps.count < 2)
-                    } else{
-                        Button(action: {
-                            self.save()
-                        }){
-                            HStack {
-                                Text("OK")
-                                Spacer()
-                            }
-                            .padding()
-                            .padding(.horizontal)
-                            .background(BackgroundGradient())
-                            .padding(.vertical)
-                        }.disabled(self.disabled)
-                    }
+                }.buttonStyle(PlainButtonStyle())
+            }
+            NavigationLink(destination: AddIngredientView(step: self.$step) ){
+                HStack {
+                    Text("Zutat hinzufügen")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .padding()
+                .padding(.horizontal)
+                .background(BackgroundGradient())
+            }.buttonStyle(PlainButtonStyle())
+        }
+    }
+    
+    var deleteButton: some View{
+        Button(action: {
+            self.delete()
+        }){
+            HStack {
+                Text("Löschen")
+                    .foregroundColor(self.recipe.steps.count > 1 ? .red : .secondary)
+                Spacer()
+            }
+            .padding()
+            .padding(.horizontal)
+            .background(BackgroundGradient())
+            .padding(.vertical)
+        }
+        .disabled(self.recipe.steps.count < 2)
+    }
+    
+    var okButton: some View {
+        Button(action: {
+            self.save()
+        }){
+            HStack {
+                Text("OK")
+                Spacer()
+            }
+            .padding()
+            .padding(.horizontal)
+            .background(BackgroundGradient())
+            .padding(.vertical)
+        }.disabled(self.disabled)
+    }
+    
+    var body: some View {
+        ScrollView{
+            VStack(alignment: .leading) {
+                self.nameSection
+                self.notesSection
+                self.timeSection
+                self.tempSection
+                self.ingredientsSection
+                if self.deleteEnabled{
+                    self.deleteButton
+                } else{
+                    self.okButton
                 }
             }
         }
+        //.offset(y: -keyboardResponder.currentHeight)
         .navigationBarTitle(self.title)
         .navigationBarHidden(self.isEditing)
     }
