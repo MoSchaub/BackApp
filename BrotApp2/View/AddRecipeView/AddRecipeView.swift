@@ -105,21 +105,7 @@ struct AddRecipeView: View {
                 .padding(.leading)
                 ForEach(self.recipe.steps){step in
                     NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: step)!], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
-                        HStack {
-                            VStack(alignment: .leading){
-                                HStack {
-                                    Text(step.name).font(.headline)
-                                    Spacer()
-                                    Text(step.formattedTime).secondary()
-                                }.padding(.horizontal)
-                                
-                                ForEach(step.ingredients){ ingredient in
-                                    IngredientRow(ingredient: ingredient, step: step, roomTemp: self.recipeStore.roomThemperature).padding(.horizontal)
-                                }
-                            }
-                            Image(systemName: "chevron.right").padding(.trailing)
-                        }.padding()
-                            .background(BackgroundGradient())
+                        StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
                     }.buttonStyle(PlainButtonStyle())
                     
                 }
@@ -142,14 +128,7 @@ struct AddRecipeView: View {
             self.save()
             self.isPresented = false
         }){
-            HStack {
-                Text("hinzufügen")
-                Spacer()
-            }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
-            .padding(.vertical)
+            Text("hinzufügen").neomorphic()
         }.disabled(self.disabled)
     }
     

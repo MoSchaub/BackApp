@@ -16,7 +16,10 @@ struct StepDetail: View {
     @Binding var recipe: Recipe
     @Binding var step: Step
     
-    @State var isEditing = false
+    @State private var isEditing = false
+    @State private var showingIngredientsOrSubstepsActionSheet = false
+    @State private var showingAddIngredientView = false
+    @State private var showingSubStepPicker = false
     
     let deleteEnabled: Bool
     
@@ -97,15 +100,29 @@ struct StepDetail: View {
             Text("Zutaten").secondary()
                 .padding(.leading)
                 .padding(.leading)
+            ForEach(self.step.subSteps){ subStep in
+                StepRow(step: subStep, recipe: self.recipe, inLink: false, roomTemp: self.roomTemp)
+                    .padding(.bottom)
+            }
             ForEach(self.step.ingredients){ ingredient in
                 NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, deleteEnabled: true)){
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
-                        .padding()
-                        .padding(.horizontal)
-                        .background(BackgroundGradient())
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp, inLink: true, background: true)
+                        .padding(.bottom)
                 }.buttonStyle(PlainButtonStyle())
             }
-            NavigationLink(destination: AddIngredientView(step: self.$step) ){
+            NavigationLink(destination: AddIngredientView(step: self.$step), isActive: self.$showingAddIngredientView) {
+                EmptyView()
+            }
+            NavigationLink(destination: self.subStepPicker, isActive: self.$showingSubStepPicker) {
+                EmptyView()
+            }
+            Button(action: {
+                if self.recipe.steps.isEmpty{
+                    self.showingAddIngredientView = true
+                } else{
+                    self.showingIngredientsOrSubstepsActionSheet = true
+                }
+            }){
                 HStack {
                     Text("Zutat hinzufügen")
                     Spacer()
@@ -115,6 +132,27 @@ struct StepDetail: View {
                 .padding(.horizontal)
                 .background(BackgroundGradient())
             }.buttonStyle(PlainButtonStyle())
+        }.actionSheet(isPresented: self.$showingIngredientsOrSubstepsActionSheet) {
+            ActionSheet(title: Text("Zutat oder Schritt?"), buttons: [.default(Text("Zutat"), action: {
+                self.showingAddIngredientView = true
+            }),.default(Text("Schritt"), action: {
+                //TODO: Present all steps with at least one ingredient
+                self.showingSubStepPicker = true
+            }),.cancel()])
+        }
+    }
+    
+    var subStepPicker: some View {
+        let stepsWithIngredients = self.recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
+        return VStack{
+            ForEach(stepsWithIngredients){step in
+                Button(action: {
+                    self.step.subSteps.append(step)
+                    self.showingSubStepPicker = false
+                }){
+                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.roomTemp)
+                }.buttonStyle(PlainButtonStyle())
+            }
         }
     }
     

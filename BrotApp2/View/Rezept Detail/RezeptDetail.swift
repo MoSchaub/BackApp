@@ -9,7 +9,11 @@
 import SwiftUI
 
 struct RezeptDetail: View {
-    @State var editMode = false
+    @State private var editMode = false
+    
+    @State private var showingSchedule = false
+    @State private var showingScheduleAc = false
+    @State private var showingDatePicker = false
     
     @Binding var recipe: Recipe
     
@@ -41,7 +45,7 @@ struct RezeptDetail: View {
                 Image(systemName: "pencil")
                     .foregroundColor(.primary)
             }.toggleStyle(NeomorphicToggleStyle())
-
+            
         }
     }
     
@@ -88,13 +92,13 @@ struct RezeptDetail: View {
                         HStack{
                             Spacer()
                             Image(systemName: "chevron.right")
-                                
+                            
                         }
                         .padding(.trailing)
                         .padding(.trailing)
                     }
                 }
-            .buttonStyle(PlainButtonStyle())
+                .buttonStyle(PlainButtonStyle())
             } else{
                 self.image
             }
@@ -126,59 +130,110 @@ struct RezeptDetail: View {
     }
     
     var infoStrip: some View{
-        Group {
-            if !editMode {
-                HStack{
-                    Spacer()
-                    
-                    VStack {
-                        Text("\(recipe.totalTime)")
-                        Text("Min").secondary()
-                    }
-                    
-                    Spacer()
-                    
-                    VStack{
-                        Text("\(recipe.numberOfIngredients)")
-                        Text("Zutaten").secondary()
-                    }
-                    
-                    Spacer()
-                    
-                    VStack{
-                        Text("\(recipe.steps.count)")
-                        Text("Schritte").secondary()
-                    }
-                    Spacer()
-                }.background(BackgroundGradient())
-            } else {
-                /*@START_MENU_TOKEN@*/EmptyView()/*@END_MENU_TOKEN@*/
+        HStack{
+            Spacer()
+            VStack {
+                Text("\(recipe.totalTime)")
+                Text("Min").secondary()
+            }
+            Spacer()
+            VStack{
+                Text("\(recipe.numberOfIngredients)")
+                Text("Zutaten").secondary()
+            }
+            Spacer()
+            VStack{
+                Text("\(recipe.steps.count)")
+                Text("Schritte").secondary()
+            }
+            Spacer()
+        }.background(BackgroundGradient())
+    }
+    
+    var datePickerForm: some View {
+        ZStack {
+            LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground))
+            VStack{
+                MODatePicker(date: self.$recipe.date)
+                    .frame(width: UIScreen.main.bounds.width - 60)
+                    .clipped()
+                    .background(BackgroundGradient())
+                Button(action:{
+                    self.showingDatePicker = false
+                    self.showingSchedule = true
+                }){
+                    Text("weiter")
+                        .foregroundColor(.primary)
+                        .padding()
+                        .background(BackgroundGradient())
+                }.padding()
+                
+                Button(action:{
+                    self.showingDatePicker = false
+                    self.showingScheduleAc = true
+                }) {
+                    Text("zurück")
+                        .foregroundColor(.primary)
+                        .padding()
+                        .background(BackgroundGradient())
+                }.padding()
             }
         }
     }
     
-    var startSection: some View {
-        Group {
-            if editMode {
-                VStack(alignment: .leading){
-                    HStack {
-                        Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
-                            .padding(.leading)
-                            .padding(.top)
-                        Spacer()
-                    }
-                    Picker(" ", selection: self.$recipe.inverted){
-                        Text("Start").tag(false)
-                        Text("Ende").tag(true)
-                    }.pickerStyle(SegmentedPickerStyle())
+    var startButton: some View{
+        VStack {
+            Button(action: {
+                self.showingScheduleAc = true
+            }) {
+                HStack {
+                    Text("Zeitplan erstellen")
+                    Spacer()
+                    Image(systemName: "chevron.right")
                 }
-                .background(BackgroundGradient())
-                .padding([.leading, .bottom, .trailing])
-            } else {
+                .neomorphic()
+            }.buttonStyle(PlainButtonStyle())
+                .actionSheet(isPresented: self.$showingScheduleAc) {
+                    ActionSheet(title: Text("Start- oder Enddatum angeben?"), buttons: [.default(Text("Start")){ self.scheduleACSetup(with: false)}, .default(Text("Ende")){ self.scheduleACSetup(with: true)}, .cancel()])
+            }
+            NavigationLink(destination: ScheduleView(recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature), isActive: self.$showingSchedule) {
                 EmptyView()
             }
+            .sheet(isPresented: self.$showingDatePicker) {
+                self.datePickerForm
+            }
         }
+        
     }
+    
+    func scheduleACSetup(with end: Bool){
+        self.recipe.inverted = end
+        self.showingDatePicker = true
+        self.showingScheduleAc = false
+    }
+    
+//    var startSection: some View {
+//        Group {
+//            if editMode {
+//                VStack(alignment: .leading){
+//                    HStack {
+//                        Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
+//                            .padding(.leading)
+//                            .padding(.top)
+//                        Spacer()
+//                    }
+//                    Picker(" ", selection: self.$recipe.inverted){
+//                        Text("Start").tag(false)
+//                        Text("Ende").tag(true)
+//                    }.pickerStyle(SegmentedPickerStyle())
+//                }
+//                .background(BackgroundGradient())
+//                .padding([.leading, .bottom, .trailing])
+//            } else {
+//                EmptyView()
+//            }
+//        }
+//    }
     
     var stepSections: some View {
         ForEach(self.recipe.steps){step in
@@ -188,8 +243,20 @@ struct RezeptDetail: View {
                         StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
+                        HStack {
+                            Text("Schritt hinzufügen")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                        .padding()
+                        .padding(.horizontal)
+                        .background(BackgroundGradient())
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 } else {
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                    EmptyView()
                 }
             }
         }
@@ -199,18 +266,18 @@ struct RezeptDetail: View {
         Group {
             if self.editMode {
                 Button(action: {
-                        self.delete()
-                    }){
-                        HStack {
-                            Text("Löschen")
-                                .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
-                            Spacer()
-                        }
-                        .padding()
-                        .padding(.horizontal)
-                        .background(BackgroundGradient())
-                        .padding(.vertical)
+                    self.delete()
+                }){
+                    HStack {
+                        Text("Löschen")
+                            .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
+                        Spacer()
                     }
+                    .padding()
+                    .padding(.horizontal)
+                    .background(BackgroundGradient())
+                    .padding(.vertical)
+                }
                 .disabled(self.recipeStore.recipes.count < 1 )
             } else {
                 EmptyView()
@@ -219,31 +286,33 @@ struct RezeptDetail: View {
     }
     
     var body: some View {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 5) {
-                    self.nameSection
-                    if !editMode{
-                        self.categorySection
-                    }
-                    self.imageSection
-                    if editMode{
-                        self.categorySection
-                    }
-                    self.infoStrip
-                    Text("Arbeitsschritte")
-                        .secondary()
-                        .padding(.leading)
-                        .padding(.leading)
-                    self.startSection
-                    self.stepSections
-                    self.deleteSection
+        ScrollView {
+            VStack(alignment: .leading, spacing: 5) {
+                self.nameSection
+                if !editMode{
+                    self.categorySection
                 }
-                .frame(maxWidth: .infinity)
-                .navigationBarTitle(self.title)
-                .navigationBarItems(
-                    trailing: self.trailingButtons
-                )
+                self.imageSection
+                if editMode{
+                    self.categorySection
+                }
+                if !editMode{
+                    self.infoStrip
+                    self.startButton
+                }
+                Text("Arbeitsschritte")
+                    .secondary()
+                    .padding(.leading)
+                    .padding(.leading)
+                self.stepSections
+                self.deleteSection
             }
+            .frame(maxWidth: .infinity)
+            .navigationBarTitle(self.title)
+            .navigationBarItems(
+                trailing: self.trailingButtons
+            )
+        }
     }
     
     func fav(){

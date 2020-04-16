@@ -16,14 +16,11 @@ struct StepRow: View {
     let roomTemp: Int
     
     var body: some View {
-       VStack{
+        VStack{
             HStack {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(step.name).font(.headline)
-                    Text(step.formattedTime).secondary()
-                }
+                Text(step.name).font(.headline)
                 Spacer()
-                Text(self.recipe.formattedStartDate(for: step))
+                Text(step.formattedTime).secondary()
                 if self.inLink{
                     Image(systemName: "chevron.right")
                 }
@@ -31,12 +28,27 @@ struct StepRow: View {
             
             ForEach(step.ingredients){ ingredient in
                 HStack{
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp, inLink: false, background: false)
+                }.padding([.top, .leading, .trailing])
+            }
+            
+            ForEach(step.subSteps){substep in
+                HStack{
+                    Text(substep.name)
+                    Spacer()
+                    Text("\(substep.totalAmount)")
                 }.padding(.horizontal)
             }
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(step.notes)
+                        .lineLimit(nil)
+                    Spacer()
+                }
+            }.padding([.horizontal,.top])
         }
-        .padding()
-        .background(BackgroundGradient())
+        .neomorphic()
     }
 }
 

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct IngredientDetail: View {
-    @State private var amountText = "0.00 g"
+    @State private var amountText = ""
     
     @Binding var ingredient : Ingredient
     @Binding var step: Step
@@ -39,9 +39,8 @@ struct IngredientDetail: View {
                         .padding(.leading)
                         .padding(.leading)
                     HStack {
-                        TextField("Menge", text: self.$amountText) {
-                            self.ingredient.amount = Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
-                            self.amountText = self.ingredient.formatted(rest: self.amountText)
+                        TextField("0.00 g", text: self.$amountText) {
+                            self.formatAmountText()
                         }
                         Spacer()
                     }.padding()
@@ -69,7 +68,7 @@ struct IngredientDetail: View {
                     .padding(.horizontal)
                     .background(BackgroundGradient())
                     .padding(.vertical)
-                }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || self.amountText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
             }
             if self.deleteEnabled{
                 Button(action: {
@@ -88,12 +87,23 @@ struct IngredientDetail: View {
             }
         }
         .onAppear{
-            self.amountText =  self.ingredient.formattedAmount
+            self.formatAmountText()
+            if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
+                self.amountText = self.ingredient.formattedAmount
+            }
         }
         .navigationBarTitle(self.title)
     }
     
+    func formatAmountText(){
+        guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
+        self.ingredient.amount = Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+        self.amountText = self.ingredient.formatted(rest: self.amountText)
+    }
+    
     func save(){
+        self.formatAmountText()
+        guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
         if let index = self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}){
             self.step.ingredients[index] = self.ingredient
         } else {

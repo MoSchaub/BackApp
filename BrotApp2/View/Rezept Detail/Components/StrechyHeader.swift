@@ -203,7 +203,6 @@ struct StrechyHeader<Content: View, L: View, T: View>: View {
                     Spacer()
                     
                     self.trailing
-                        .buttonStyle(FavouriteButtonStyle())
                         .padding([.top, .trailing])
                 }
                 Spacer()

@@ -27,6 +27,7 @@ struct Recipe: Hashable, Codable{
     ///property containing wether the recipe is a favourite
     var isFavourite: Bool
     
+    ///property that contains the category of the recipe eg. Bread
     var category: Category
     
     //MARK: Date Properties
@@ -34,6 +35,10 @@ struct Recipe: Hashable, Codable{
     ///property containing wether the "date" property is the end date or the start date
     var inverted : Bool
     
+    //TODO:Frage an papa wie hier die implementation aussehen muss.
+//    ///for how many items eg breads, rolls, etc the the ingredients are calculated
+//    var times: Double
+//
     ///property used to make the date json compatible and strores the date as an string
     private var dateString: String
     
@@ -174,15 +179,13 @@ struct Recipe: Hashable, Codable{
         self.category = category
     }
     
-    //TODO: Remove this one
-    func text() -> String {
+    func text(roomTemp: Int) -> String {
         var h = startDate
         var text = ""
         
-        for brotValue in steps {
-            text += "\(brotValue.name) am \(dateFormatter.string(from: h))"
-            text += "\n"
-            h = h.addingTimeInterval(brotValue.time)
+        for step in steps {
+            text += step.text(startDate: h, roomTemp: roomTemp)
+            h = h.addingTimeInterval(step.time)
         }
         text += "fertig am \(dateFormatter.string(from: endDate))"
         return text
