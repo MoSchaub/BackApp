@@ -11,10 +11,6 @@ import SwiftUI
 struct RezeptDetail: View {
     @State private var editMode = false
     
-    @State private var showingSchedule = false
-    @State private var showingScheduleAc = false
-    @State private var showingDatePicker = false
-    
     @Binding var recipe: Recipe
     
     @EnvironmentObject var recipeStore: RecipeStore
@@ -150,90 +146,16 @@ struct RezeptDetail: View {
         }.background(BackgroundGradient())
     }
     
-    var datePickerForm: some View {
-        ZStack {
-            LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground))
-            VStack{
-                MODatePicker(date: self.$recipe.date)
-                    .frame(width: UIScreen.main.bounds.width - 60)
-                    .clipped()
-                    .background(BackgroundGradient())
-                Button(action:{
-                    self.showingDatePicker = false
-                    self.showingSchedule = true
-                }){
-                    Text("weiter")
-                        .foregroundColor(.primary)
-                        .padding()
-                        .background(BackgroundGradient())
-                }.padding()
-                
-                Button(action:{
-                    self.showingDatePicker = false
-                    self.showingScheduleAc = true
-                }) {
-                    Text("zurück")
-                        .foregroundColor(.primary)
-                        .padding()
-                        .background(BackgroundGradient())
-                }.padding()
-            }
-        }
-    }
-    
     var startButton: some View{
-        VStack {
-            Button(action: {
-                self.showingScheduleAc = true
-            }) {
-                HStack {
-                    Text("Zeitplan erstellen")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .neomorphic()
-            }.buttonStyle(PlainButtonStyle())
-                .actionSheet(isPresented: self.$showingScheduleAc) {
-                    ActionSheet(title: Text("Start- oder Enddatum angeben?"), buttons: [.default(Text("Start")){ self.scheduleACSetup(with: false)}, .default(Text("Ende")){ self.scheduleACSetup(with: true)}, .cancel()])
+        NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
+            HStack {
+                Text("Zeitplan erstellen")
+                Spacer()
+                Image(systemName: "chevron.right")
             }
-            NavigationLink(destination: ScheduleView(recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature), isActive: self.$showingSchedule) {
-                EmptyView()
-            }
-            .sheet(isPresented: self.$showingDatePicker) {
-                self.datePickerForm
-            }
-        }
-        
+            .neomorphic()
+        }.buttonStyle(PlainButtonStyle())
     }
-    
-    func scheduleACSetup(with end: Bool){
-        self.recipe.inverted = end
-        self.showingDatePicker = true
-        self.showingScheduleAc = false
-    }
-    
-//    var startSection: some View {
-//        Group {
-//            if editMode {
-//                VStack(alignment: .leading){
-//                    HStack {
-//                        Text(self.recipe.inverted ? "Ende am " + recipe.formattedEndDate : "Start am " + recipe.formattedStartDate)
-//                            .padding(.leading)
-//                            .padding(.top)
-//                        Spacer()
-//                    }
-//                    Picker(" ", selection: self.$recipe.inverted){
-//                        Text("Start").tag(false)
-//                        Text("Ende").tag(true)
-//                    }.pickerStyle(SegmentedPickerStyle())
-//                }
-//                .background(BackgroundGradient())
-//                .padding([.leading, .bottom, .trailing])
-//            } else {
-//                EmptyView()
-//            }
-//        }
-//    }
     
     var stepSections: some View {
         ForEach(self.recipe.steps){step in

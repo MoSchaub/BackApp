@@ -35,10 +35,9 @@ struct Recipe: Hashable, Codable{
     ///property containing wether the "date" property is the end date or the start date
     var inverted : Bool
     
-    //TODO:Frage an papa wie hier die implementation aussehen muss.
-//    ///for how many items eg breads, rolls, etc the the ingredients are calculated
-//    var times: Double
-//
+   ///for how many items eg breads, rolls, etc the the ingredients are calculated
+    var times: Decimal?
+
     ///property used to make the date json compatible and strores the date as an string
     private var dateString: String
     
@@ -177,6 +176,7 @@ struct Recipe: Hashable, Codable{
         self.imageString = imageString
         self.isFavourite = isFavourite
         self.category = category
+        self.times = Decimal(integerLiteral: 1)
     }
     
     func text(roomTemp: Int) -> String {
@@ -194,7 +194,7 @@ struct Recipe: Hashable, Codable{
 }
 
 extension Recipe: Identifiable{
-    var id: String{
-        UUID().uuidString
+    var id: UUID{
+        UUID()
     }
 }

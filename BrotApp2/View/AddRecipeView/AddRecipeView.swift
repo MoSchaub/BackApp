@@ -93,6 +93,23 @@ struct AddRecipeView: View {
         }.buttonStyle(PlainButtonStyle())
     }
     
+    var numberFormatter: NumberFormatter{
+        let nF = NumberFormatter()
+        nF.numberStyle = .decimal
+        return nF
+    }
+    
+    var timesSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Anzahl").secondary()
+                .padding(.leading, 35)
+            DecimalField("Anzahl eingeben", value: self.$recipe.times, formatter: self.numberFormatter)
+                .padding(.leading)
+                .padding()
+                .background(BackgroundGradient())
+        }
+    }
+    
     var stepSection: some View {
         VStack {
             VStack(alignment: .leading, spacing: 2.0){
@@ -137,6 +154,7 @@ struct AddRecipeView: View {
             ScrollView{
                 VStack(alignment: .leading){
                     self.name
+                    self.timesSection
                     self.imageButton
                     self.categoryButton
                     self.stepSection

@@ -12,6 +12,7 @@ struct ScheduleView: View {
     
     let recipe: Recipe
     let roomTemp: Int
+    let times: Decimal?
     
     @State private var showingShareSheet = false
     
@@ -21,6 +22,27 @@ struct ScheduleView: View {
         }.toggleStyle(NeomorphicToggleStyle())
             .sheet(isPresented: self.$showingShareSheet) {
                 ShareSheet(activityItems: [self.recipe.text(roomTemp: self.roomTemp)])
+        }
+    }
+    
+    var factor: Double {
+        let times = self.times ?? 1
+        let recipeTimes = self.recipe.times ?? 1
+        let devided = times/recipeTimes
+        return Double(truncating: devided as NSNumber)
+    }
+    
+    func customIngredientRow(ingredient: Ingredient, step: Step) -> some View{
+        HStack {
+            Text(ingredient.name)
+            Spacer()
+            if ingredient.isBulkLiquid{
+                Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C")
+                Spacer()
+            } else{
+                EmptyView()
+            }
+            Text(ingredient.scaledFormattedAmount(with: self.factor))
         }
     }
     
@@ -38,7 +60,7 @@ struct ScheduleView: View {
             
             ForEach(step.ingredients){ ingredient in
                 HStack{
-                    IngredientRow(ingredient: ingredient, step: step, roomTemp: self.roomTemp, inLink: false, background: false)
+                    self.customIngredientRow(ingredient: ingredient, step: step)
                 }.padding([.top, .leading, .trailing])
             }
             
@@ -82,7 +104,7 @@ struct ScheduleView: View {
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScheduleView(recipe: Recipe.example, roomTemp: 20)
+            ScheduleView(recipe: Recipe.example, roomTemp: 20, times: 20)
         }
     }
 }
@@ -104,7 +126,5 @@ struct ShareSheet: UIViewControllerRepresentable {
         return controller
     }
       
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-        // nothing to do here
-    }
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
