@@ -26,7 +26,7 @@ struct ImagePickerView: View {
                         .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
                         
                 } else{
-                    Image(uiImage: inputImage!).resizable().scaledToFit()
+                    Image(uiImage: inputImage!.imageFlippedForRightToLeftLayoutDirection()).resizable().scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
                     .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
@@ -69,9 +69,10 @@ struct ImagePickerView: View {
     }
     
     func loadImage() {
-        guard let inputImage = inputImage else { return }
-        self.inputImage = inputImage
+        guard let inputImage = self.inputImage else { return }
+        self.inputImage! =  inputImage.resizeTo(width: 300)
     }
+
     
 }
 
@@ -79,5 +80,17 @@ struct ImagePickerView_Previews: PreviewProvider {
     static var previews: some View {
         ImagePickerView(inputImage: .constant(nil))
             .environment(\.colorScheme, .light)
+    }
+}
+
+extension UIImage{
+    func resizeTo(width: CGFloat) -> UIImage{
+        let scale = width/self.size.width
+        let newHeight = self.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: width, height: newHeight))
+        self.draw(in: CGRect(x: 0, y: 0, width: width, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
     }
 }

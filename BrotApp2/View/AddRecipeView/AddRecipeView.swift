@@ -17,7 +17,7 @@ struct AddRecipeView: View {
     
     @Binding var isPresented: Bool
     
-    @State private var recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", imageString: "", isFavourite: false, category: Category.example)
+    @State private var recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", isFavourite: false, category: Category.example)
     
     var disabled: Bool{
         recipe.name.isEmpty || recipe.steps.isEmpty

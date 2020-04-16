@@ -74,21 +74,21 @@ struct Recipe: Hashable, Codable{
     //MARK: Image properties
     
     ///property used to make the image json compatible and stores the image as base64 encoded String
-    private var imageString: String
+    private var imageString: Data?
     
     ///getter and setter for the image
     var image: UIImage?{
         get{
-            if let data = Data(base64Encoded: imageString){
-                return UIImage(data: data)
+            if let data = imageString{
+                return UIImage(data: data)?.resizeTo(width: 300)
             } else{ return nil }
         }
         set{
             if newValue == nil{
-                imageString = ""
+                imageString = nil
             }
             else {
-                imageString = newValue!.base64(format: .PNG)
+                imageString = newValue!.pngData()
             }
         }
     }
@@ -166,14 +166,13 @@ struct Recipe: Hashable, Codable{
         return "error"
     }
     
-    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), imageString: "", isFavourite: false, category: Category.example)
+    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), isFavourite: false, category: Category.example)
     
-    init(name:String, brotValues: [Step], inverted: Bool, dateString: String, imageString: String, isFavourite: Bool, category: Category) {
+    init(name:String, brotValues: [Step], inverted: Bool, dateString: String, isFavourite: Bool, category: Category) {
         self.name = name
         self.steps = brotValues
         self.inverted = inverted
         self.dateString = dateString
-        self.imageString = imageString
         self.isFavourite = isFavourite
         self.category = category
         self.times = Decimal(integerLiteral: 1)
