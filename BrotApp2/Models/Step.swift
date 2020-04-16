@@ -70,13 +70,13 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         return Int( diff / bulkLiquid.amount)
     }
     
-    func text(startDate: Date, roomTemp: Int) -> String{
+    func text(startDate: Date, roomTemp: Int, scaleFactor: Double) -> String{
         var text = ""
         text += "\(self.name) am \(dateFormatter.string(from: startDate))"
         text += "\n"
         
         for ingredient in self.ingredients{
-            text += ingredient.name + ": " + ingredient.formattedAmount + "\(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )"
+            text += ingredient.name + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) + "\(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )"
             text += "\n"
         }
         for subStep in self.subSteps{

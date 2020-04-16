@@ -21,7 +21,7 @@ struct ScheduleView: View {
             Image(systemName: "square.and.arrow.up")
         }.toggleStyle(NeomorphicToggleStyle())
             .sheet(isPresented: self.$showingShareSheet) {
-                ShareSheet(activityItems: [self.recipe.text(roomTemp: self.roomTemp)])
+                ShareSheet(activityItems: [self.recipe.text(roomTemp: self.roomTemp, scaleFactor: self.factor)])
         }
     }
     

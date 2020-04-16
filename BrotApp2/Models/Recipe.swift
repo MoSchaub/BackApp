@@ -179,12 +179,12 @@ struct Recipe: Hashable, Codable{
         self.times = Decimal(integerLiteral: 1)
     }
     
-    func text(roomTemp: Int) -> String {
+    func text(roomTemp: Int, scaleFactor: Double) -> String {
         var h = startDate
         var text = ""
         
         for step in steps {
-            text += step.text(startDate: h, roomTemp: roomTemp)
+            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor)
             h = h.addingTimeInterval(step.time)
         }
         text += "fertig am \(dateFormatter.string(from: endDate))"
