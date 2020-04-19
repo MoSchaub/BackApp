@@ -14,11 +14,10 @@ struct ImagePicker: UIViewControllerRepresentable {
         let parent: ImagePicker
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            parent.presentationMode.wrappedValue.dismiss()
             if let uiImage = info[.originalImage] as? UIImage {
                 parent.image = uiImage
             }
-
-            parent.presentationMode.wrappedValue.dismiss()
         }
 
         init(_ parent: ImagePicker) {

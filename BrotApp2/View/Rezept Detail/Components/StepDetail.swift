@@ -101,8 +101,13 @@ struct StepDetail: View {
                 .padding(.leading)
                 .padding(.leading)
             ForEach(self.step.subSteps){ subStep in
-                StepRow(step: subStep, recipe: self.recipe, inLink: false, roomTemp: self.roomTemp)
-                    .padding(.bottom)
+                HStack {
+                    Text(subStep.name).font(.headline)
+                    Spacer()
+                    Text(subStep.formattedTime).secondary()
+                }
+                .neomorphic()
+                .padding(.bottom)
             }
             ForEach(self.step.ingredients){ ingredient in
                 NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, deleteEnabled: true)){

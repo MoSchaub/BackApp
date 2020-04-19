@@ -13,77 +13,102 @@ final class RecipeStore: ObservableObject{
     
     @Published var roomThemperature = 20
     
-    @Published var recipes = [Recipe](){
-        didSet{
-            self.update()
-        }
-    }
+    @Published var recipes = [Recipe]()
     
-    func fitered(text: String)-> [Recipe]{
-        recipes.filter{$0.name.lowercased().contains(text.lowercased()) || text == ""}
+    func encodedRecipes()-> Data{
+        try! JSONEncoder().encode(self.recipes)
     }
     
     @Published var categories = [
         Category(name: "Brot", image: UIImage(named: "bread")!),
-        Category(name: "brötchen", image: UIImage(named: "roll")!),
-        Category(name: "kuchen", image: UIImage(named: "cake")!)
+        Category(name: "Brötchen", image: UIImage(named: "roll")!),
+        Category(name: "Kuchen", image: UIImage(named: "cake")!)
     ]
     
-    private let key = "recipeStore"
-    
-    init() {
-        if let recipeStore = UserDefaults.standard.data(forKey: key){
-            let decoder = JSONDecoder()
-            if let decoded = try? decoder.decode(RecipeStore.self, from: recipeStore){
-                self.recipes = decoded.recipes
-                self.categories = decoded.categories
-                self.roomThemperature = decoded.roomThemperature
-                return
+    var latest: [Recipe]{
+        var recipes = [Recipe]()
+        if self.recipes.count < 10{
+            for recipe in self.recipes{
+                recipes.append(recipe)
+            }
+        } else{
+            for i in 0..<10{
+                recipes.append(self.recipes[i])
             }
         }
+        return recipes
     }
+    
+    var favourites: [Recipe]{
+        self.recipes.filter({$0.isFavourite})
+    }
+    
+    init() {}
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.recipes = try container.decode([Recipe].self, forKey: .recipes)
         self.categories = try container.decode([Category].self, forKey: .categories)
     }
-    
-    func update(){
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(self){
-            UserDefaults.standard.set(encoded,forKey:key)
-        }
-    }
-
-    func deleteRecipe(recipe: Recipe){
-        if let index = recipes.firstIndex(where: { $0.id == recipe.id}){
-            recipes.remove(at: index)
-            self.update()
-        }
-    }
        
     func addRecipe(recipe: Recipe){
         recipes.append(recipe)
-        update()
+        self.write()
     }
     
-    func edit(recipe: Recipe){
-        if let index = recipes.firstIndex(where: {$0.id == recipe.id}){
-            recipes[index] = recipe
-            update()
+    func write(){
+        let data = encodedRecipes()
+        
+        let file = getDocumentsDirectory().appendingPathComponent("recipes.json")
+
+        do {
+            try data.write(to: file, options: .atomic)
+                print("sucessfully wrote to file")
+        } catch {
+            print("failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding")
         }
     }
     
-    func find(step: Step, in recipe: Recipe) -> (rezeptIndex: Int?, stepIndex: Int?){
-        guard let rezeptIndex = self.recipes.firstIndex(of: recipe) else {
-            return (nil, nil)
+    func load() -> [Recipe]? {
+        let data: Data
+        
+        if UserDefaults.standard.bool(forKey: "fileC"){
+            // Do something with the file here.
+            let url = getDocumentsDirectory().appendingPathComponent("recipes.json")
+            do {
+                data = try Data(contentsOf: url)
+            } catch {
+                print("Couldn't load \(url) from main bundle:\n\(error)")
+                return nil
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                print("suceesfully loaded file")
+                return try decoder.decode([Recipe].self, from: data)
+            } catch {
+                print("Couldn't parse \(url) as \([Recipe].self):\n\(error)")
+                return nil
+            }
+            
+        } else {
+            //create file
+            let filename = getDocumentsDirectory().appendingPathComponent("recipes.json")
+            do {
+                try "".write(to: filename, atomically: true, encoding: .utf8)
+                print("created file at \(filename)")
+            } catch  {
+                print("error creating file")
+            }
+            UserDefaults.standard.set(true, forKey: "fileC")
+            
+            return nil
         }
-        let recipe = self.recipes[rezeptIndex]
-        guard let stepIndex = recipe.steps.firstIndex(of: step) else {
-            return (rezeptIndex, nil)
-        }
-        return (rezeptIndex, stepIndex)
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
     
     static var example : RecipeStore{

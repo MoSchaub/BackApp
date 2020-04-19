@@ -10,7 +10,9 @@ import Foundation
 
 struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     
-    var id: UUID
+    var id: UUID{
+        UUID()
+    }
     
     var name: String
     
@@ -54,7 +56,6 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     }
     
     init(name: String, amount: Double) {
-        self.id = UUID()
         self.name = name
         self.amount = amount
         self.isBulkLiquid = false

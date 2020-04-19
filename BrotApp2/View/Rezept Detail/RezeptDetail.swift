@@ -158,10 +158,11 @@ struct RezeptDetail: View {
     }
     
     var stepSections: some View {
-        ForEach(self.recipe.steps){step in
-            Group {
-                if self.editMode {
-                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: step)!], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
+        ForEach<Range<Int>, Int, AnyView>(0..<recipe.steps.count, id: \.self){ n in
+            let step = self.recipe.steps[n]
+            if self.editMode {
+               return AnyView( VStack {
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
                         StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -176,10 +177,10 @@ struct RezeptDetail: View {
                         .background(BackgroundGradient())
                     }
                     .buttonStyle(PlainButtonStyle())
-                } else {
-                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                    EmptyView()
-                }
+                })
+                
+            } else {
+               return AnyView(StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature))
             }
         }
     }
@@ -235,6 +236,8 @@ struct RezeptDetail: View {
                 trailing: self.trailingButtons
             )
         }
+        .navigationBarHidden(false)
+        .navigationBarBackButtonHidden(false)
     }
     
     func fav(){

@@ -96,6 +96,8 @@ struct BottomSheetView<Content: View>: View {
     }
 }
 
+
+
 struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         BottomSheetView(isOpen: .constant(false), maxHeight: 600, minHeight: 100) {

@@ -9,32 +9,36 @@
 import SwiftUI
 
 struct Category: Codable, Hashable, Identifiable {
-    var id: UUID
+    var id: UUID{
+        UUID()
+    }
     
     var name: String
 
-    private var imageString: String
+    private var imageData: Data?
     
     ///getter and setter for the image
     var image: UIImage?{
         get{
-            let data = Data(base64Encoded: imageString)
-            return UIImage(data: data!)
+            if let data = imageData{
+                return UIImage(data: data)
+            } else {
+                return nil
+            }
         }
         set{
             if newValue == nil{
-                imageString = UIImage().base64(format: .PNG)
+                imageData = nil
             }
             else {
-                imageString = newValue!.base64(format: .PNG)
+                imageData = newValue!.jpegData(compressionQuality: 1)
             }
         }
     }
     
-    init(name: String, image: UIImage) {
-        self.id = UUID()
+    init(name: String, image: UIImage? = nil) {
         self.name = name
-        self.imageString = ""
+        self.imageData = nil
         self.image = image
     }
     

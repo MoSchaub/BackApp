@@ -143,7 +143,6 @@ struct AddRecipeView: View {
     var addButton: some View {
         Button(action: {
             self.save()
-            self.isPresented = false
         }){
             Text("hinzufügen").neomorphic()
         }.disabled(self.disabled)
@@ -162,9 +161,9 @@ struct AddRecipeView: View {
                 }
             }
             .navigationBarTitle(self.title)
-            .navigationBarItems(trailing: Button("Abbrechen"){
+            .navigationBarItems(leading: Button("Abbrechen"){
                 self.presentationMode.wrappedValue.dismiss()
-            }.foregroundColor(.accentColor))
+            }.foregroundColor(.accentColor) , trailing: Button("OK"){ self.save()}.disabled(self.disabled))
         }.onAppear(){
             self.recipe.category = self.recipeStore.categories.first ?? Category.example
         }
@@ -185,6 +184,7 @@ struct AddRecipeView: View {
     
     func save(){
         recipeStore.addRecipe(recipe: self.recipe)
+        self.isPresented = false
     }
     
 }

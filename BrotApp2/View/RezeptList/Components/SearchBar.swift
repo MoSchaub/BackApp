@@ -61,7 +61,7 @@ struct SearchBar: View {
                 
                 TextField(searchBarTitle, text: $searchText, onEditingChanged: { isEditing in
                     self.showCancelButton = true
-                    self.isSearching = true
+                    self.isSearching = isEditing
                 }, onCommit: {
                     print("onCommit")
                 }).foregroundColor(.primary)

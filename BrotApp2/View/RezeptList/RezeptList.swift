@@ -16,76 +16,58 @@ struct RezeptList: View {
     
     @State private var showingAddRecipeView = false
     @State private var showingRoomTempSheet = false
-
     
-    var roomThemperturePicker: some View{
-        VStack {
-            Picker("", selection: $recipeStore.roomThemperature){
-                ForEach(-10...50, id: \.self){ n in
-                    Text("\(n)")
-                }
-            }
-            .labelsHidden()
-            .padding(.horizontal)
-            Button("OK"){
-                self.showingRoomTempSheet = false
-            }
+    @State private var showingDocumentPicker = false
+    @State var url: URL? = nil{
+        didSet{
+            self.loadFile()
         }
     }
     
-    var roomThemperatureSection: some View{
-        Button(action: {
-            self.showingRoomTempSheet = true
-        }){
-            HStack {
-            Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
-                .padding(.leading)
-            
-            Spacer()
-            Image(systemName: "chevron.up").padding(.trailing)
-            
-        }
+    var addButton: some View{
+       Image(systemName: "plus")
         .padding()
-        .padding(.vertical)
-        .background(BackgroundGradient().padding(.vertical))
-        .sheet(isPresented: self.$showingRoomTempSheet) {
-            self.roomThemperturePicker
-            }
-            
+        .foregroundColor(.accentColor)
+        .onTapGesture {
+            self.showingAddRecipeView = true
         }
-            
-            .buttonStyle(PlainButtonStyle())
     }
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 30) {
-                    VStack(alignment: .leading) {
-                        SearchBar(searchText: self.$searchText, isSearching: self.$searching)
-                        roomThemperatureSection.sheet(isPresented: self.$showingRoomTempSheet) {
-                            self.roomThemperturePicker
-                        }
+        VStack {
+            List {
+                SearchBar(searchText: self.$searchText, isSearching: self.$searching)
+                ForEach(recipeStore.recipes.filter {
+                    self.searchText.isEmpty ? true : $0.name.lowercased().contains(self.searchText.lowercased())
+                }){ recipe in
+                    NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(of: recipe)!]).environmentObject(self.recipeStore)) {
+                        Card(recipe: recipe, width: UIScreen.main.bounds.width - 30)
                     }
-                    ForEach(0..<recipeStore.recipes.count, id: \.self){ number in
-                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[number]).environmentObject(self.recipeStore)) {
-                            Card(recipe: self.recipeStore.recipes[number], width: UIScreen.main.bounds.width - 30)
-                            .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                        }.buttonStyle(PlainButtonStyle())
-                    }
-                }.frame(maxWidth: .infinity)
-                    .padding(.bottom)
-            }.navigationBarItems(trailing: Button(action: {
-                self.showingAddRecipeView = true
-            }){
-                Image(systemName: "square.and.pencil")
-                .padding()
-            })
+                    .disabled(self.searching)
+                }
+                .padding(.bottom)
+            }
+            .navigationBarItems(trailing: self.addButton)
             .navigationBarTitle("Rezepte")
-        }
-        .sheet(isPresented: self.$showingAddRecipeView) {
+            .navigationBarHidden(self.searching)
+            .sheet(isPresented: self.$showingAddRecipeView) {
                 AddRecipeView(isPresented: self.$showingAddRecipeView)
                     .environmentObject(self.recipeStore)
+            }
+            
+        }
+    }
+    
+    func loadFile() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if let url = self.url{
+                if let recipes: [Recipe] = load(url: url){
+                    self.recipeStore.recipes += recipes
+                }else if let recipe: Recipe = load(url: url){
+                    self.recipeStore.recipes.append(recipe)
+                }
+                
+            }
         }
     }
     
@@ -93,24 +75,11 @@ struct RezeptList: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        NavigationView{
         RezeptList()
             .environment(\.colorScheme, .light)
             .environmentObject(RecipeStore())
-    }
-}
-
-
-struct NoButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-    }
-}
-
-extension View {
-    func delayTouches() -> some View {
-        Button(action: {}) {
-            highPriorityGesture(TapGesture())
         }
-        .buttonStyle(NoButtonStyle())
     }
 }
+

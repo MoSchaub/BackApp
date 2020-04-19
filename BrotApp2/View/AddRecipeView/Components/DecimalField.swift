@@ -91,7 +91,6 @@ struct DecimalField : View {
                 self.textValue = self.formatter.string(from: NSDecimalNumber(decimal: value)) ?? ""
             }
         }
-        .keyboardType(.decimalPad)
     }
 }
 

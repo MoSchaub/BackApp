@@ -10,7 +10,9 @@ import Foundation
 
 struct Step: Equatable, Identifiable, Hashable, Codable {
 
-    var id: UUID
+    var id: UUID{
+        UUID()
+    }
     
     var time : TimeInterval
     
@@ -25,7 +27,6 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     var subSteps: [Step]
     
     init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
-        id = UUID()
         self.time = time
         self.name = name
         self.ingredients = ingredients
@@ -76,7 +77,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         text += "\n"
         
         for ingredient in self.ingredients{
-            text += ingredient.name + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) + "\(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )"
+            text += ingredient.name + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) + " \(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )"
             text += "\n"
         }
         for subStep in self.subSteps{

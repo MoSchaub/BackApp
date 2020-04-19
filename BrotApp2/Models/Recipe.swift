@@ -88,7 +88,7 @@ struct Recipe: Hashable, Codable{
                 imageString = nil
             }
             else {
-                imageString = newValue!.pngData()
+                imageString = newValue!.jpegData(compressionQuality: 1)
             }
         }
     }

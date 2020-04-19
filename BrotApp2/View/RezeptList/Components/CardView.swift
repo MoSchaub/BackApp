@@ -19,13 +19,12 @@ struct Card: View {
     var image: some View {
         Group{
             if recipe.image == nil{
-                LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(Color.init(.secondarySystemBackground),Color.primary)
                     .mask(Image("bread").resizable().scaledToFill())
                     .background(BackgroundGradient())
                     .frame(width: CGFloat(width / 1.75), height: CGFloat(width / 1.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
                     .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                    .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
 
             } else{
                 Image(uiImage: recipe.image!).resizable().scaledToFill()
@@ -61,15 +60,7 @@ struct Card: View {
                 }
                 Spacer()
             }.padding(.top)
-                .frame(height: CGFloat(width / 1.75))
-            Image(systemName: "chevron.right")
-                .padding(.trailing)
-            Spacer()
         }
-        .background(BackgroundGradient())
-        .clipShape(RoundedRectangle(cornerRadius: 13))
-        .frame(width: width, height: CGFloat(width / 1.75))
-        .drawingGroup()
     }
     
     func color() -> Color{

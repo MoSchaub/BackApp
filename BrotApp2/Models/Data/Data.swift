@@ -8,27 +8,34 @@
 
 import Foundation
 
-let RezeptData: [Recipe] = load("Rezepte.json")
+//let RezeptData: [Recipe] = load("Rezepte.json")
 
-func load<T: Decodable>(_ filename: String, as type: T.Type = T.self) -> T {
+func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
     let data: Data
     
-    guard let file = Bundle.main.url(forResource: filename, withExtension: nil)
-        else {
-            fatalError("Couldn't find \(filename) in main bundle.")
+    // Also start accessing the content's security-scoped URL.
+    guard url.startAccessingSecurityScopedResource() else {
+        print("error accessing the file")
+        return nil
     }
     
+    // Make sure you release the security-scoped resource when you are done.
+    do { url.stopAccessingSecurityScopedResource() }
+    
+    // Do something with the file here.
     do {
-        data = try Data(contentsOf: file)
+        data = try Data(contentsOf: url)
     } catch {
-        fatalError("Couldn't load \(filename) from main bundle:\n\(error)")
+        print("Couldn't load \(url) from main bundle:\n\(error)")
+        return nil
     }
     
     do {
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: data)
     } catch {
-        fatalError("Couldn't parse \(filename) as \(T.self):\n\(error)")
+        print("Couldn't parse \(url) as \(T.self):\n\(error)")
+        return nil
     }
 }
 
