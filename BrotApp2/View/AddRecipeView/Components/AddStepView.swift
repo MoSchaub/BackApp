@@ -18,10 +18,6 @@ struct AddStepView: View {
     @State private var step = Step(name: "", time: 60, ingredients: [], themperature: 20)
     @State private var warningAlertShown = false
     
-     var disabled: Bool{
-           self.step.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || self.step.ingredients.isEmpty && self.step.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-       }
-    
     var backButton: some View{
         Button(action: {
             self.warningAlertShown = true
@@ -42,7 +38,7 @@ struct AddStepView: View {
             self.save()
         }){
             Text("Speichern")
-        }.disabled(self.disabled)
+        }
     }
     
     var body: some View {

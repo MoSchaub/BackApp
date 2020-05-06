@@ -43,6 +43,8 @@ final class RecipeStore: ObservableObject{
         self.recipes.filter({$0.isFavourite})
     }
     
+    @Published var isArray = false
+    
     init() {}
     
     init(from decoder: Decoder) throws {
@@ -56,6 +58,56 @@ final class RecipeStore: ObservableObject{
         self.write()
     }
     
+    //- MARK: File managemnet
+    
+    @Published var showingInputAlert = false
+    @Published var inputAlertTitle = ""
+    @Published var inputAlertMessage = ""
+    
+    func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
+        let data: Data
+        
+        // Make sure you release the security-scoped resource when you are done.
+        do { url.stopAccessingSecurityScopedResource() }
+        
+        // Do something with the file here.
+        do {
+            data = try Data(contentsOf: url)
+        } catch {
+            print("Couldn't load \(url) from main bundle:\n\(error)")
+            self.inputAlertTitle = "Fehler"
+            self.inputAlertMessage = error.localizedDescription
+            self.showingInputAlert = true
+            return nil
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let decoded =  try decoder.decode(T.self, from: data)
+            if let recipes = decoded as? [Recipe] {
+                self.isArray = true
+                for recipe in recipes{
+                    if self.recipes.contains(where: {$0.id == recipe.id}){
+                        self.inputAlertTitle = "Fehler"
+                        self.inputAlertMessage = "Die Datei enhält bereits existierende Rezepte"
+                        self.showingInputAlert = true
+                        return nil
+                    }
+                }
+                self.inputAlertTitle = "Erfolg"
+                self.inputAlertMessage = "Die Rezepte wurden importiert"
+                self.showingInputAlert = true
+            }
+            return decoded
+        } catch {
+            print("Couldn't parse \(url) as \(T.self):\n\(error)")
+            self.inputAlertTitle = "Fehler"
+            self.inputAlertMessage = "Die Datei enhält keine Rezepte"
+            self.showingInputAlert = true
+            return nil
+        }
+    }
+    
     func write(){
         let data = encodedRecipes()
         
@@ -63,7 +115,7 @@ final class RecipeStore: ObservableObject{
 
         do {
             try data.write(to: file, options: .atomic)
-                print("sucessfully wrote to file")
+            print("sucessfully wrote to \(file)")
         } catch {
             print("failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding")
         }
@@ -85,7 +137,13 @@ final class RecipeStore: ObservableObject{
             do {
                 let decoder = JSONDecoder()
                 print("suceesfully loaded file")
-                return try decoder.decode([Recipe].self, from: data)
+                let recipes = try decoder.decode([Recipe].self, from: data)
+                for recipe in recipes{
+                    if self.recipes.contains(where: {$0.id == recipe.id}){
+                    return nil
+                    }
+                }
+                return recipes
             } catch {
                 print("Couldn't parse \(url) as \([Recipe].self):\n\(error)")
                 return nil
@@ -106,6 +164,12 @@ final class RecipeStore: ObservableObject{
         }
     }
     
+    func exportToUrl() -> URL{
+        //make sure the file is up to date
+        self.write()
+        return getDocumentsDirectory().appendingPathComponent("recipes.json")
+    }
+    
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
@@ -114,6 +178,12 @@ final class RecipeStore: ObservableObject{
     static var example : RecipeStore{
         let recipeStore = RecipeStore()
         recipeStore.recipes.append(Recipe.example)
+        let recipe1 = Recipe(name: "Recipe1", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        recipeStore.recipes.append(recipe1)
+        let recipe2 = Recipe(name: "Recipe2", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        recipeStore.recipes.append(recipe2)
+        let recipe3 = Recipe(name: "Recipe3", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        recipeStore.recipes.append(recipe3)
         return recipeStore
     }
     

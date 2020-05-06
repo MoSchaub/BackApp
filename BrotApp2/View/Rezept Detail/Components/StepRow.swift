@@ -48,7 +48,8 @@ struct StepRow: View {
                 }
             }.padding([.horizontal,.top])
         }
-        .neomorphic()
+        .neomorphic(enabled: inLink)
+        
     }
 }
 

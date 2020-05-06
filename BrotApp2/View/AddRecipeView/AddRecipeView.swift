@@ -37,8 +37,9 @@ struct AddRecipeView: View {
                 .padding(.leading, 35)
             TextField("Name eingeben", text: self.$recipe.name)
                 .padding(.leading)
-                .padding()
+                .padding(.vertical)
                 .background(BackgroundGradient())
+                .padding([.horizontal,.bottom])
         }
     }
     
@@ -87,9 +88,7 @@ struct AddRecipeView: View {
                     Image(systemName: "chevron.right")
                 }
             }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
+        .neomorphic()
         }.buttonStyle(PlainButtonStyle())
     }
     
@@ -104,9 +103,10 @@ struct AddRecipeView: View {
             Text("Anzahl").secondary()
                 .padding(.leading, 35)
             DecimalField("Anzahl eingeben", value: self.$recipe.times, formatter: self.numberFormatter)
-                .padding(.leading)
-                .padding()
-                .background(BackgroundGradient())
+            .padding(.leading)
+            .padding(.vertical)
+            .background(BackgroundGradient())
+            .padding([.horizontal,.bottom])
         }
     }
     
@@ -132,9 +132,8 @@ struct AddRecipeView: View {
                     Text("Schritt hinzufügen")
                     Spacer()
                     Image(systemName: "chevron.right")
-                }.padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
+                }
+                .neomorphic()
             }
             .buttonStyle(PlainButtonStyle())
         }

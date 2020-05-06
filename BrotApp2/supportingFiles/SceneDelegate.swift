@@ -31,6 +31,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.makeKeyAndVisible()
         }
     }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>){
+        //called when oping files in app
+        for context in URLContexts{
+            if let recipes = self.recipeStore.load(url: context.url, as: [Recipe].self){
+                print(recipes)
+                self.recipeStore.recipes.append(contentsOf: recipes)
+            } else if !self.recipeStore.isArray, let recipe = self.recipeStore.load(url: context.url, as: Recipe.self){
+                self.recipeStore.recipes.append(recipe)
+            }
+            self.recipeStore.isArray = false
+        }
+        
+    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

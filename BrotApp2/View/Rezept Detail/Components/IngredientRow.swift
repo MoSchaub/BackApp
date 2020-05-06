@@ -34,5 +34,6 @@ struct IngredientRow: View {
         .padding(.all, self.background ? nil : 0)
         .padding(.horizontal, self.background ? nil : 0)
         .background(self.background ? AnyView(BackgroundGradient()) : AnyView(EmptyView()))
+        .padding(.horizontal, self.background ? nil : 0)
     }
 }

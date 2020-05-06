@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CD6A9A0B2340252400748249"
-               BuildableName = "BrotApp2.app"
+               BuildableName = "BackApp.app"
                BlueprintName = "BrotApp2"
                ReferencedContainer = "container:BrotApp2.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BrotApp2.app"
+            BuildableName = "BackApp.app"
             BlueprintName = "BrotApp2"
             ReferencedContainer = "container:BrotApp2.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BrotApp2.app"
+            BuildableName = "BackApp.app"
             BlueprintName = "BrotApp2"
             ReferencedContainer = "container:BrotApp2.xcodeproj">
          </BuildableReference>

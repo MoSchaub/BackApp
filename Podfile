@@ -7,5 +7,6 @@ target 'BrotApp2' do
 
   # Pods for BrotApp2
 	#pod 'Parse'
+  #pod 'UBottomSheet'
 
 end

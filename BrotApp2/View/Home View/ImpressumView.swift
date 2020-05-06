@@ -1,0 +1,40 @@
+//
+//  ImpressumView.swift
+//  BrotApp2
+//
+//  Created by Moritz Schaub on 28.04.20.
+//  Copyright © 2020 Moritz Schaub. All rights reserved.
+//
+
+import SwiftUI
+
+struct ImpressumView: View {
+    
+    private var text : String
+    
+    var body: some View {
+        ScrollView {
+            Text(text).lineLimit(nil)
+                .padding(.leading)
+                .navigationBarTitle("Impressum", displayMode: .inline)
+        }
+    }
+    
+    init() {
+         self.text = "failed to load file"
+        if let url = Bundle.main.url(forResource: "BackAppImpressum.txt", withExtension: nil){
+            if let string = try? String(contentsOf: url){
+                self.text = string
+            }
+        }
+    }
+    
+}
+
+struct ImpressumView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ImpressumView()
+        }
+    }
+}

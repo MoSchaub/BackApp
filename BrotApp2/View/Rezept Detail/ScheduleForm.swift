@@ -30,9 +30,9 @@ struct ScheduleForm: View {
             Text("Anzahl").secondary()
                 .padding(.leading, 35)
             DecimalField("Anzahl eingeben", value: self.$times, formatter: self.numberFormatter)
-                .padding(.leading)
-                .padding()
+                .padding([.leading, .vertical])
                 .background(BackgroundGradient())
+                .padding([.horizontal,.bottom])
         }
     }
     
@@ -72,7 +72,9 @@ struct ScheduleForm: View {
                         Text("weiter")
                             .foregroundColor(.primary)
                             .padding()
-                            .background(BackgroundGradient())
+                            .background(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)).edgesIgnoringSafeArea(.all))
+                            .clipShape(RoundedRectangle(cornerRadius: 13))
+                            .shadow(color: Color(.secondarySystemBackground), radius: 10, x: 5, y: 5)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding()
@@ -89,7 +91,9 @@ struct ScheduleForm: View {
                         Text("zurück")
                             .foregroundColor(.primary)
                             .padding()
-                            .background(BackgroundGradient())
+                            .background(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)).edgesIgnoringSafeArea(.all))
+                            .clipShape(RoundedRectangle(cornerRadius: 13))
+                            .shadow(color: Color(.secondarySystemBackground), radius: 10, x: 5, y: 5)
                     }.padding()
                 }
             }

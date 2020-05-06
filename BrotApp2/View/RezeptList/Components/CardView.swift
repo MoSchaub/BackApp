@@ -14,21 +14,20 @@ struct Card: View {
     @EnvironmentObject private var rezeptStore: RecipeStore
     
     var recipe: Recipe
-    var width: CGFloat = 350
+    var width: CGFloat = 300
     
     var image: some View {
         Group{
             if recipe.image == nil{
-                LinearGradient(Color.init(.secondarySystemBackground),Color.primary)
+                LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image("bread").resizable().scaledToFill())
                     .background(BackgroundGradient())
-                    .frame(width: CGFloat(width / 1.75), height: CGFloat(width / 1.75))
+                    .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
                     .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-
             } else{
                 Image(uiImage: recipe.image!).resizable().scaledToFill()
-                    .frame(width: CGFloat(width / 1.75), height: CGFloat(width / 1.75))
+                    .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
             }
         }
@@ -40,27 +39,28 @@ struct Card: View {
             VStack{
                 HStack {
                     Text(recipe.name)
-                        .font(.title)
+                        .font(.callout)
                         .fontWeight(.bold)
                     Spacer()
                 }
                 HStack {
                     Text(recipe.formattedTotalTime)
-                        .font(.headline)
+                        .font(.caption)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.trailing)
                     Spacer()
                 }
                 HStack {
                     Text(recipe.formattedStartBisEnde)
-                        .font(.footnote)
+                        .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(Color.secondary)
                     Spacer()
                 }
                 Spacer()
-            }.padding(.top)
-        }
+            }.frame(height: width / 3.75)
+        }.frame(width: width)
+        
     }
     
     func color() -> Color{

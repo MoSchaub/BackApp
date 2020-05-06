@@ -10,6 +10,7 @@ import SwiftUI
 
 struct RezeptDetail: View {
     @State private var editMode = false
+    @State private var deleting = false
     
     @Binding var recipe: Recipe
     
@@ -53,8 +54,9 @@ struct RezeptDetail: View {
                         .padding(.leading, 35)
                     TextField("Name eingeben", text: self.$recipe.name)
                         .padding(.leading)
-                        .padding()
+                        .padding(.vertical)
                         .background(BackgroundGradient())
+                        .padding([.horizontal,.bottom])
                 }
             } else{
                 EmptyView()
@@ -110,17 +112,14 @@ struct RezeptDetail: View {
                         Spacer()
                         Text(recipe.category.name).secondary()
                         Image("chevron.right")
-                    }.padding()
-                        .padding(.horizontal)
-                        .background(BackgroundGradient())
+                    }
+                        .neomorphic()
                 }.buttonStyle(PlainButtonStyle())
             } else {
                 HStack {
                     Text(recipe.category.name).secondary()
                     Spacer()
-                }.padding()
-                    .padding(.leading)
-                    .background(BackgroundGradient())
+                }.padding(.leading)
             }
         }
     }
@@ -143,7 +142,7 @@ struct RezeptDetail: View {
                 Text("Schritte").secondary()
             }
             Spacer()
-        }.background(BackgroundGradient())
+        }
     }
     
     var startButton: some View{
@@ -158,55 +157,51 @@ struct RezeptDetail: View {
     }
     
     var stepSections: some View {
-        ForEach<Range<Int>, Int, AnyView>(0..<recipe.steps.count, id: \.self){ n in
-            let step = self.recipe.steps[n]
-            if self.editMode {
-               return AnyView( VStack {
-                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
-                        StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
+        Group{
+            if self.editMode{
+               VStack {
+                    ForEach(0..<recipe.steps.count, id: \.self){ n in
+                        NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
+                            StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
+                        }.buttonStyle(PlainButtonStyle())
                     }
-                    .buttonStyle(PlainButtonStyle())
                     NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
                         HStack {
                             Text("Schritt hinzufügen")
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
-                        .padding()
-                        .padding(.horizontal)
-                        .background(BackgroundGradient())
+                    .neomorphic()
                     }
                     .buttonStyle(PlainButtonStyle())
-                })
-                
+                }
             } else {
-               return AnyView(StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature))
+               ForEach(0..<recipe.steps.count, id: \.self){ n in
+                    StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                }
             }
         }
     }
     
-    var deleteSection: some View{
-        Group {
-            if self.editMode {
-                Button(action: {
-                    self.delete()
-                }){
-                    HStack {
-                        Text("Löschen")
-                            .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
-                        Spacer()
-                    }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
-                    .padding(.vertical)
-                }
-                .disabled(self.recipeStore.recipes.count < 1 )
-            } else {
-                EmptyView()
-            }
-        }
-    }
+//    var deleteSection: some View{
+//        Group {
+//            if self.editMode {
+//                Button(action: {
+//                    self.delete()
+//                }){
+//                    HStack {
+//                        Text("Löschen")
+//                            .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
+//                        Spacer()
+//                    }
+//                    .neomorphic()
+//                }
+//                .disabled(self.recipeStore.recipes.count < 1 )
+//            } else {
+//                EmptyView()
+//            }
+//        }
+//    }
     
     var body: some View {
         ScrollView {
@@ -228,7 +223,7 @@ struct RezeptDetail: View {
                     .padding(.leading)
                     .padding(.leading)
                 self.stepSections
-                self.deleteSection
+                //self.deleteSection
             }
             .frame(maxWidth: .infinity)
             .navigationBarTitle(self.title)
@@ -246,9 +241,16 @@ struct RezeptDetail: View {
     
     func delete(){
         if self.recipeStore.recipes.count > 1, let index = self.recipeStore.recipes.firstIndex(of: self.recipe){
+            
             self.presentationMode.wrappedValue.dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                print("hello")
+            }
+            print("Hello2")
+            if !self.deleting{
+                self.deleting = true
                 self.recipeStore.recipes.remove(at: index)
+                self.deleting = false
             }
         }
     }

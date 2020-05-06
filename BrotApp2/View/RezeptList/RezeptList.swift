@@ -17,37 +17,29 @@ struct RezeptList: View {
     @State private var showingAddRecipeView = false
     @State private var showingRoomTempSheet = false
     
-    @State private var showingDocumentPicker = false
-    @State var url: URL? = nil{
-        didSet{
-            self.loadFile()
-        }
-    }
-    
     var addButton: some View{
-       Image(systemName: "plus")
-        .padding()
-        .foregroundColor(.accentColor)
-        .onTapGesture {
-            self.showingAddRecipeView = true
+        Text("Rezept hinzufügen")
+            .padding()
+            .foregroundColor(.accentColor)
+            .onTapGesture {
+                self.showingAddRecipeView = true
         }
     }
     
     var body: some View {
         VStack {
             List {
-                SearchBar(searchText: self.$searchText, isSearching: self.$searching)
-                ForEach(recipeStore.recipes.filter {
-                    self.searchText.isEmpty ? true : $0.name.lowercased().contains(self.searchText.lowercased())
-                }){ recipe in
-                    NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(of: recipe)!]).environmentObject(self.recipeStore)) {
-                        Card(recipe: recipe, width: UIScreen.main.bounds.width - 30)
+                self.addButton
+                ForEach(0..<recipeStore.recipes.count, id: \.self){n in
+                    NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[n]).environmentObject(self.recipeStore)) {
+                        Card(recipe: self.recipeStore.recipes[n], width: UIScreen.main.bounds.width - 30)
                     }
-                    .disabled(self.searching)
                 }
+                .onDelete(perform: self.deleteRecipes)
+                .onMove(perform: self.moveRecipes)
                 .padding(.bottom)
             }
-            .navigationBarItems(trailing: self.addButton)
+            .navigationBarItems(trailing: EditButton())
             .navigationBarTitle("Rezepte")
             .navigationBarHidden(self.searching)
             .sheet(isPresented: self.$showingAddRecipeView) {
@@ -58,18 +50,14 @@ struct RezeptList: View {
         }
     }
     
-    func loadFile() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if let url = self.url{
-                if let recipes: [Recipe] = load(url: url){
-                    self.recipeStore.recipes += recipes
-                }else if let recipe: Recipe = load(url: url){
-                    self.recipeStore.recipes.append(recipe)
-                }
-                
-            }
-        }
+    func deleteRecipes(at offsets: IndexSet){
+        self.recipeStore.recipes.remove(atOffsets: offsets)
     }
+    
+    func moveRecipes(from source: IndexSet, to destination: Int) {
+        self.recipeStore.recipes.move(fromOffsets: source, toOffset: destination)
+    }
+
     
 }
 

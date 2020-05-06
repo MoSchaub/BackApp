@@ -6,7 +6,7 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 
 var dateFormatter: DateFormatter{
     let formatter = DateFormatter()
@@ -16,7 +16,9 @@ var dateFormatter: DateFormatter{
 
 var isoFormatter = ISO8601DateFormatter()
 
-struct Recipe: Hashable, Codable{
+struct Recipe: Hashable, Codable, Identifiable{
+    
+    var id: String
     
     ///name of the recipe
     var name: String
@@ -169,6 +171,7 @@ struct Recipe: Hashable, Codable{
     static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), isFavourite: false, category: Category.example)
     
     init(name:String, brotValues: [Step], inverted: Bool, dateString: String, isFavourite: Bool, category: Category) {
+        self.id = UUID().uuidString
         self.name = name
         self.steps = brotValues
         self.inverted = inverted
@@ -177,7 +180,6 @@ struct Recipe: Hashable, Codable{
         self.category = category
         self.times = Decimal(integerLiteral: 1)
     }
-    
     func text(roomTemp: Int, scaleFactor: Double) -> String {
         var h = startDate
         var text = ""
@@ -190,10 +192,4 @@ struct Recipe: Hashable, Codable{
         return text
     }
     
-}
-
-extension Recipe: Identifiable{
-    var id: UUID{
-        UUID()
-    }
 }

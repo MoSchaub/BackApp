@@ -10,9 +10,7 @@ import Foundation
 
 struct Step: Equatable, Identifiable, Hashable, Codable {
 
-    var id: UUID{
-        UUID()
-    }
+    var id: String
     
     var time : TimeInterval
     
@@ -27,6 +25,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     var subSteps: [Step]
     
     init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
+        self.id = UUID().uuidString
         self.time = time
         self.name = name
         self.ingredients = ingredients

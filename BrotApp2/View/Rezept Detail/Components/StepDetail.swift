@@ -29,10 +29,6 @@ struct StepDetail: View {
     
     let roomTemp: Int
     
-    var disabled: Bool{
-        self.step.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || self.step.ingredients.isEmpty && self.step.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-    
     var nameSection: some View{
         VStack(alignment: .leading, spacing: 3.0) {
             Text("Name").secondary()
@@ -43,9 +39,10 @@ struct StepDetail: View {
             }, onCommit: {
                 
             })
-                .padding()
                 .padding(.leading)
+                .padding(.vertical)
                 .background(BackgroundGradient())
+                .padding([.horizontal,.bottom])
         }
     }
     
@@ -57,10 +54,7 @@ struct StepDetail: View {
                 Text(self.step.formattedTime)
                 Image(systemName: "chevron.right")
             }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
-            .padding(.vertical)
+            .neomorphic()
         }.buttonStyle(PlainButtonStyle())
     }
     
@@ -72,10 +66,7 @@ struct StepDetail: View {
                 Text(self.step.formattedTemp)
                 Image(systemName: "chevron.right")
             }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
-            .padding(.vertical)
+            .neomorphic()
         }.buttonStyle(PlainButtonStyle())
     }
     
@@ -89,9 +80,10 @@ struct StepDetail: View {
             }, onCommit: {
                 
             })
-                .padding()
                 .padding(.leading)
+                .padding(.vertical)
                 .background(BackgroundGradient())
+                .padding([.horizontal,.bottom])
         }
     }
     
@@ -136,6 +128,7 @@ struct StepDetail: View {
                 .padding()
                 .padding(.horizontal)
                 .background(BackgroundGradient())
+                .padding(.horizontal)
             }.buttonStyle(PlainButtonStyle())
         }.actionSheet(isPresented: self.$showingIngredientsOrSubstepsActionSheet) {
             ActionSheet(title: Text("Zutat oder Schritt?"), buttons: [.default(Text("Zutat"), action: {
@@ -170,10 +163,7 @@ struct StepDetail: View {
                     .foregroundColor(self.recipe.steps.count > 1 ? .red : .secondary)
                 Spacer()
             }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
-            .padding(.vertical)
+            .neomorphic()
         }
         .disabled(self.recipe.steps.count < 2)
     }
@@ -186,11 +176,8 @@ struct StepDetail: View {
                 Text("OK")
                 Spacer()
             }
-            .padding()
-            .padding(.horizontal)
-            .background(BackgroundGradient())
-            .padding(.vertical)
-        }.disabled(self.disabled)
+            .neomorphic()
+        }
     }
     
     var body: some View {
@@ -210,7 +197,7 @@ struct StepDetail: View {
         }
         //.offset(y: -keyboardResponder.currentHeight)
         .navigationBarTitle(self.title)
-        .navigationBarHidden(self.isEditing)
+        //.navigationBarHidden(self.isEditing)
     }
     
     func save(){

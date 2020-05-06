@@ -30,9 +30,10 @@ struct IngredientDetail: View {
                         .padding(.leading)
                         .padding(.leading)
                     TextField("Name", text: $ingredient.name)
-                        .padding()
                         .padding(.leading)
+                        .padding(.vertical)
                         .background(BackgroundGradient())
+                        .padding([.horizontal,.bottom])
                 }
                 VStack(alignment: .leading, spacing: 3.0) {
                     Text("Menge").secondary()
@@ -43,19 +44,18 @@ struct IngredientDetail: View {
                             self.formatAmountText()
                         }
                         Spacer()
-                    }.padding()
+                    }
                         .padding(.leading)
+                        .padding(.vertical)
                         .background(BackgroundGradient())
-                        .padding(.bottom)
+                        .padding([.horizontal,.bottom])
                 }
 
                 HStack {
                     Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
                     Spacer()
                 }
-                .padding()
-                .padding(.leading)
-                .background(BackgroundGradient())
+                .neomorphic()
                 
                 Button(action: {
                     self.save()
@@ -64,10 +64,7 @@ struct IngredientDetail: View {
                         Text("OK")
                         Spacer()
                     }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
-                    .padding(.vertical)
+                .neomorphic()
                 }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
             }
             if self.deleteEnabled{
@@ -79,10 +76,7 @@ struct IngredientDetail: View {
                             .foregroundColor(.red)
                         Spacer()
                     }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(BackgroundGradient())
-                    .padding(.vertical)
+                .neomorphic()
                 }
             }
         }

@@ -96,12 +96,22 @@ struct BottomSheetView<Content: View>: View {
     }
 }
 
+extension View{
+    func bottomSheet<Content: View>(open: Binding<Bool>, @ViewBuilder  content: () -> Content) -> some View{
+        ZStack {
+            self
+            BottomSheetView(isOpen: open, maxHeight: UIScreen.main.bounds.height - 50, minHeight: 75, content: content)
+                .resignKeyboardOnDragGesture()
+        }
+    }
+}
 
 
 struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
-        BottomSheetView(isOpen: .constant(false), maxHeight: 600, minHeight: 100) {
-            Rectangle().fill(Color.red)
-        }.edgesIgnoringSafeArea(.all)
+        Text("Hello world")
+            .bottomSheet(open: .constant(false)) {
+                Rectangle().fill(Color.red)
+        }
     }
 }

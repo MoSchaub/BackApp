@@ -9,15 +9,15 @@
 import SwiftUI
 
 extension View{
-    func neomorphic() -> some View{
+    func neomorphic(enabled: Bool = true) -> some View{
         HStack{
             self
             Spacer()
         }
         .padding()
         .padding(.horizontal)
-        .background(BackgroundGradient())
-        .padding(.vertical)
+        .background(enabled ? AnyView(BackgroundGradient()) : AnyView(EmptyView()))
+        .padding()
     }
 }
 
