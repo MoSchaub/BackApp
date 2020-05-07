@@ -42,6 +42,10 @@ struct Category: Codable, Hashable, Identifiable {
         self.image = image
     }
     
+    static func == (lhs: Category, rhs: Category) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
     static var example = Category(name: "Brot", image: UIImage(named: "bread")!)
     
 }

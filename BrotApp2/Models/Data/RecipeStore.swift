@@ -87,7 +87,7 @@ final class RecipeStore: ObservableObject{
             if let recipes = decoded as? [Recipe] {
                 self.isArray = true
                 for recipe in recipes{
-                    if self.recipes.contains(where: {$0.id == recipe.id}){
+                    if self.recipes.contains(where: {$0 == recipe}){
                         self.inputAlertTitle = "Fehler"
                         self.inputAlertMessage = "Die Datei enhält bereits existierende Rezepte"
                         self.showingInputAlert = true
@@ -139,7 +139,7 @@ final class RecipeStore: ObservableObject{
                 print("suceesfully loaded file")
                 let recipes = try decoder.decode([Recipe].self, from: data)
                 for recipe in recipes{
-                    if self.recipes.contains(where: {$0.id == recipe.id}){
+                    if self.recipes.contains(where: {$0 == recipe}){
                     return nil
                     }
                 }

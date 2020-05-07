@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -51,13 +51,9 @@
 		CDE13F512343B12F00019202 /* BrotValueDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F502343B12F00019202 /* BrotValueDetail.swift */; };
 		CDE13F532343B3D200019202 /* MOTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F522343B3D200019202 /* MOTimePicker.swift */; };
 		CDE13F562343B42000019202 /* StepDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F552343B42000019202 /* StepDetail.swift */; };
-		DFD8F625798E7253320A3953 /* Pods_BrotApp2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */; };
-		F3EBDBE18076141E80644253 /* Pods_BrotApp2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDF37966B0638810D73E4E4 /* Pods_BrotApp2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4FDF37966B0638810D73E4E4 /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.release.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.release.xcconfig"; sourceTree = "<group>"; };
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD06E0F72442DC2C00566F82 /* AddStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStepView.swift; sourceTree = "<group>"; };
 		CD0D0CCD243CCB3C00B14E7E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -105,7 +101,6 @@
 		CDE13F502343B12F00019202 /* BrotValueDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrotValueDetail.swift; sourceTree = "<group>"; };
 		CDE13F522343B3D200019202 /* MOTimePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOTimePicker.swift; sourceTree = "<group>"; };
 		CDE13F552343B42000019202 /* StepDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetail.swift; sourceTree = "<group>"; };
-		F4721B5665AD9BC1C8A4D52B /* Pods-BrotApp2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrotApp2.debug.xcconfig"; path = "Target Support Files/Pods-BrotApp2/Pods-BrotApp2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,8 +108,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFD8F625798E7253320A3953 /* Pods_BrotApp2.framework in Frameworks */,
-				F3EBDBE18076141E80644253 /* Pods_BrotApp2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,14 +121,6 @@
 			);
 			name = Frameworks;
 			path = ../..;
-			sourceTree = "<group>";
-		};
-		8216FB586CC5ED62B660A9C6 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4FDF37966B0638810D73E4E4 /* Pods_BrotApp2.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		CD0D0CD0243CCB6E00B14E7E /* RezeptList */ = {
@@ -236,8 +221,6 @@
 				CD75BFC824629961005C902A /* bread.png */,
 				CD6A9A0E2340252400748249 /* BrotApp2 */,
 				CD6A9A0D2340252400748249 /* Products */,
-				EC838EE672262A0D7A170A19 /* Pods */,
-				8216FB586CC5ED62B660A9C6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -321,15 +304,6 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		EC838EE672262A0D7A170A19 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F4721B5665AD9BC1C8A4D52B /* Pods-BrotApp2.debug.xcconfig */,
-				9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -337,11 +311,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BrotApp2" */;
 			buildPhases = (
-				30DF158D0758DC3FE3986C10 /* [CP] Check Pods Manifest.lock */,
 				CD6A9A082340252400748249 /* Sources */,
 				CD6A9A092340252400748249 /* Frameworks */,
 				CD6A9A0A2340252400748249 /* Resources */,
-				289061876C44E0FCFEC83BB0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -404,48 +376,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		289061876C44E0FCFEC83BB0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrotApp2/Pods-BrotApp2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrotApp2/Pods-BrotApp2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrotApp2/Pods-BrotApp2-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		30DF158D0758DC3FE3986C10 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrotApp2-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CD6A9A082340252400748249 /* Sources */ = {
@@ -623,7 +553,6 @@
 		};
 		CD6A9A212340252600748249 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F4721B5665AD9BC1C8A4D52B /* Pods-BrotApp2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -644,7 +573,6 @@
 		};
 		CD6A9A222340252600748249 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9BAA818C1EB61E42A1749401 /* Pods-BrotApp2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

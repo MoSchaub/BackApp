@@ -59,6 +59,27 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
         self.amount = amount
         self.isBulkLiquid = false
     }
+    
+    enum CodingKeys: CodingKey{
+        case name
+        case amount
+        case isBulkLiquid
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID().uuidString
+        self.name = try container.decode(String.self, forKey: .name)
+        self.amount = try container.decode(Double.self, forKey: .amount)
+        self.isBulkLiquid = try container.decode(Bool.self, forKey: .isBulkLiquid)
+    }
+    
+    static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
+        return
+            lhs.name == rhs.name &&
+            lhs.amount == rhs.amount &&
+            lhs.isBulkLiquid == rhs.isBulkLiquid
+    }
 }
 
 

@@ -18,7 +18,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var ingredients: [Ingredient]
     
-    var themperature : Int
+    var temperature : Int
     
     var notes: String
     
@@ -29,7 +29,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         self.time = time
         self.name = name
         self.ingredients = ingredients
-        self.themperature = themperature
+        self.temperature = themperature
         self.notes = ""
         self.subSteps = []
     }
@@ -39,7 +39,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     }
     
     var formattedTemp: String{
-        String(self.themperature) + " °C"
+        String(self.temperature) + " °C"
     }
     
     var totalAmount: Double{
@@ -62,11 +62,11 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         }
         var totalAmount = self.totalAmount
         for step in self.subSteps{
-            summOfMassTempProductOfNonBulkLiquids += step.totalAmount * Double(step.themperature)
+            summOfMassTempProductOfNonBulkLiquids += step.totalAmount * Double(step.temperature)
             totalAmount += step.totalAmount
         }
         
-        let diff = Double(self.themperature) * totalAmount - summOfMassTempProductOfNonBulkLiquids
+        let diff = Double(self.temperature) * totalAmount - summOfMassTempProductOfNonBulkLiquids
         return Int( diff / bulkLiquid.amount)
     }
     
@@ -80,7 +80,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
             text += "\n"
         }
         for subStep in self.subSteps{
-            text += subStep.name + ": " + "\(self.totalAmount)" + "\(subStep.themperature)" + "° C"
+            text += subStep.name + ": " + "\(self.totalAmount)" + "\(subStep.temperature)" + "° C"
             text += "\n"
         }
         if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
@@ -88,6 +88,37 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
             text += "\n"
         }
         return text
+    }
+    
+    //MARK: init from Json and ==
+    
+    enum CodingKeys: CodingKey{
+        case time
+        case name
+        case ingredients
+        case temperature
+        case notes
+        case subSteps
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID().uuidString
+        self.time = try container.decode(TimeInterval.self, forKey: .time)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.ingredients = try container.decode([Ingredient].self, forKey: .ingredients)
+        self.temperature = try container.decode(Int.self, forKey: .temperature)
+        self.notes = try container.decode(String.self, forKey: .notes)
+        self.subSteps = try container.decode([Step].self, forKey: .subSteps)
+    }
+    
+    static func == (lhs: Step, rhs: Step) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.time == rhs.time &&
+            lhs.ingredients == rhs.ingredients &&
+            lhs.temperature == rhs.temperature &&
+            lhs.notes == rhs.notes &&
+            lhs.subSteps == rhs.subSteps
     }
     
 }

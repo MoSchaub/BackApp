@@ -107,11 +107,15 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     ///number of all ingredients used in the recipe
     var numberOfIngredients: Int{
-        var number = 0
+        var ingredients = [Ingredient]()
         for step in steps{
-            number += step.ingredients.count
+            for ingredient in step.ingredients{
+                if !ingredients.contains(where: { $0.name.lowercased() == ingredient.name.lowercased()}){
+                    ingredients.append(ingredient)
+                }
+            }
         }
-        return number
+        return ingredients.count
     }
     
     
@@ -180,6 +184,30 @@ struct Recipe: Hashable, Codable, Identifiable{
         self.category = category
         self.times = Decimal(integerLiteral: 1)
     }
+    
+    enum CodingKeys: CodingKey {
+        case name
+        case steps
+        case inverted
+        case isFavourite
+        case category
+        case times
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID().uuidString
+        self.name = try container.decode(String.self, forKey: .name)
+        self.steps = try container.decode([Step].self, forKey: .steps)
+        self.inverted = try container.decode(Bool.self, forKey: .inverted)
+        self.dateString = dateFormatter.string(from: Date())
+        self.isFavourite = try container.decode(Bool.self, forKey: .isFavourite)
+        self.category = try container.decode(Category.self, forKey: .category)
+        self.times = try container.decode(Decimal.self, forKey: .times)
+    }
+    
+    
+    
     func text(roomTemp: Int, scaleFactor: Double) -> String {
         var h = startDate
         var text = ""
@@ -192,4 +220,15 @@ struct Recipe: Hashable, Codable, Identifiable{
         return text
     }
     
+}
+
+extension Recipe: Equatable{
+    static func == (lhs: Recipe, rhs: Recipe) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.steps == rhs.steps &&
+            lhs.inverted == rhs.inverted &&
+            lhs.isFavourite == rhs.isFavourite &&
+            lhs.category == rhs.category &&
+            lhs.times == rhs.times 
+    }
 }

@@ -59,7 +59,7 @@ struct StepDetail: View {
     }
     
     var tempSection: some View {
-        NavigationLink(destination: stepTempPicker(temp: self.$step.themperature) ) {
+        NavigationLink(destination: stepTempPicker(temp: self.$step.temperature) ) {
             HStack {
                 Text("Temperatur")
                 Spacer()
