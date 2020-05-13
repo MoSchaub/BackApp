@@ -1,0 +1,7 @@
+Datenschutzerklärung
+Wir sammeln, verwenden, speichern oder haben keinen Zugriff auf Ihre persönlichen Daten.
+Alle Daten werden nur lokal gespeichert.
+Eventuell müssten sie Zugriff auf Ihre Dateien gewähren, aber nur, damit Sie Dateien in unsere App importieren oder um Dateien aus der  exportieren zu können. Wir verarbeiten diese Daten nicht und haben auch keinen Zugang zu diesen.
+Wenn Sie ein Bild zu einem Rezept hinzufügen, werden die Daten des Bildes lokal gespeichert, aber wir haben keinen Zugriff auf diese Daten und sie werden mit niemandem geteilt, es sei denn, Sie selbst entscheiden sich diese Daten zu teilen.
+Wenn Sie Fragen zu dieser Datenschutzerklärung oder anderen Dingen bezüglich dieser App haben, können Sie uns unter backApp@heimbaecker.de kontaktieren
+

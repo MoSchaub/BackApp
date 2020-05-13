@@ -15,6 +15,7 @@ struct HomeView: View {
     
     @State private var showingAddRecipeView = false
     @State private var showingRoomTempSheet = false
+    @State private var showingAboutView = false
     
     @State private var showingDocumentPicker = false
     @State private var showingShareSheet = false
@@ -50,13 +51,17 @@ struct HomeView: View {
             HStack {
                 Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
                 Spacer()
-                Image(systemName: "chevron.up")
+                Image(systemName: "chevron.right")
                 
             }
             .neomorphic()
-            .sheet(isPresented: self.$showingRoomTempSheet) {
-                self.roomThemperturePicker
+            .onTapGesture {
+                self.showingAboutView = false
+                self.showingRoomTempSheet = true
             }
+            NavigationLink(destination: self.roomThemperturePicker, isActive: self.$showingRoomTempSheet, label: {
+                EmptyView()
+            })
             
         }
             
@@ -97,9 +102,6 @@ struct HomeView: View {
         .sheet(isPresented: self.$showingShareSheet) {
             ShareSheet(activityItems: [self.recipeStore.exportToUrl()])
         }
-//        .sheet(isPresented: self.$showingDocumentPicker,onDismiss: self.loadFile) {
-//            DocumentPicker(url: self.$url)
-//        }
     }
     
     var donateButton: some View {
@@ -114,15 +116,22 @@ struct HomeView: View {
     }
     
     var aboutButton: some View{
-        NavigationLink(destination: ImpressumView()) {
-            HStack{
-                Text("Über diese App")
-                Spacer()
-                Image(systemName: "chevron.right")
+        VStack {
+            Button(action: {
+                self.showingRoomTempSheet = false
+                self.showingAboutView = true
+            }){
+                HStack{
+                    Text("Über diese App")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .neomorphic()
+            }.buttonStyle(PlainButtonStyle())
+            NavigationLink(destination: ImpressumView(), isActive: self.$showingAboutView) {
+                EmptyView()
             }
-            .neomorphic()
-        }.buttonStyle(PlainButtonStyle())
-        
+        }
     }
     
     var recipesSection: some View{
@@ -187,9 +196,7 @@ struct HomeView: View {
                     self.favoritesSection
                     self.recipesSection
                       .padding(.bottom)
-                    self.roomThemperatureSection.sheet(isPresented: self.$showingRoomTempSheet) {
-                        self.roomThemperturePicker
-                    }
+                    self.roomThemperatureSection
                     self.importButton
                     self.exportButton
                    // self.donateButton

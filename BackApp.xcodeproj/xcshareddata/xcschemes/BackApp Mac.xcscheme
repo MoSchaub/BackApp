@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD6A9A0B2340252400748249"
-               BuildableName = "BackApp.app"
-               BlueprintName = "BackApp iOS"
+               BlueprintIdentifier = "CDB5EE22246BCCF800E35376"
+               BuildableName = "BackApp Mac.app"
+               BlueprintName = "BackApp Mac"
                ReferencedContainer = "container:BackApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BackApp.app"
-            BlueprintName = "BackApp iOS"
+            BlueprintIdentifier = "CDB5EE22246BCCF800E35376"
+            BuildableName = "BackApp Mac.app"
+            BlueprintName = "BackApp Mac"
             ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BackApp.app"
-            BlueprintName = "BackApp iOS"
+            BlueprintIdentifier = "CDB5EE22246BCCF800E35376"
+            BuildableName = "BackApp Mac.app"
+            BlueprintName = "BackApp Mac"
             ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

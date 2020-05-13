@@ -9,12 +9,10 @@
 /* Begin PBXBuildFile section */
 		CD06E0F82442DC2C00566F82 /* AddStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD06E0F72442DC2C00566F82 /* AddStepView.swift */; };
 		CD0D0CCE243CCB3C00B14E7E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D0CCD243CCB3C00B14E7E /* HomeView.swift */; };
-		CD0D0CD3243CCD0300B14E7E /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D0CD2243CCD0300B14E7E /* Category.swift */; };
 		CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */; };
 		CD0E1B4B2448753B006405EB /* ScheduleForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0E1B4A2448753B006405EB /* ScheduleForm.swift */; };
 		CD2A9D7C243476E700D0E9FC /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2A9D7B243476E700D0E9FC /* CardView.swift */; };
 		CD2EA5872442089200E535B5 /* BackgroundGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2EA5862442089200E535B5 /* BackgroundGradient.swift */; };
-		CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD31CEA523A29A57005E36DA /* UIImageExtension.swift */; };
 		CD365D292435255A006B9628 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD365D282435255A006B9628 /* SearchBar.swift */; };
 		CD3A43A22419844E00E40EB4 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3A43A02419844E00E40EB4 /* ImagePickerView.swift */; };
 		CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3A43A12419844E00E40EB4 /* ImagePicker.swift */; };
@@ -26,25 +24,39 @@
 		CD6A9A162340252600748249 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A152340252600748249 /* Assets.xcassets */; };
 		CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A182340252600748249 /* Preview Assets.xcassets */; };
 		CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */; };
-		CD6A9A242340255E00748249 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A232340255E00748249 /* Step.swift */; };
-		CD6A9A272340262B00748249 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A262340262B00748249 /* Recipe.swift */; };
-		CD6A9A292340267F00748249 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A282340267F00748249 /* RecipeStore.swift */; };
 		CD743C552443B7790058DDA0 /* IngredientDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD743C542443B7790058DDA0 /* IngredientDetail.swift */; };
 		CD75BFC924629961005C902A /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
-		CDA45B80245861560076594D /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDA45B7F245861560076594D /* PrivacyPolicy.txt */; };
 		CDA45B82245883BD0076594D /* ImpressumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA45B81245883BD0076594D /* ImpressumView.swift */; };
 		CDA617132445C742009DA261 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA617122445C742009DA261 /* KeyboardResponder.swift */; };
 		CDB109B1244867CE00B468E5 /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB109B0244867CE00B468E5 /* DecimalField.swift */; };
+		CDB5EE26246BCCF800E35376 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE25246BCCF800E35376 /* AppDelegate.swift */; };
+		CDB5EE28246BCCF800E35376 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE27246BCCF800E35376 /* ContentView.swift */; };
+		CDB5EE2A246BCCF900E35376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE29246BCCF900E35376 /* Assets.xcassets */; };
+		CDB5EE2D246BCCF900E35376 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE2C246BCCF900E35376 /* Preview Assets.xcassets */; };
+		CDB5EE30246BCCF900E35376 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE2E246BCCF900E35376 /* Main.storyboard */; };
+		CDB5EE51246BDF6900E35376 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
+		CDB5EE52246BDF6900E35376 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
+		CDB5EE53246BDF6900E35376 /* BackAppImpressum.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */; };
+		CDB5EE61246BE0C700E35376 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5D246BE0C700E35376 /* Recipe.swift */; };
+		CDB5EE62246BE0C700E35376 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5E246BE0C700E35376 /* Step.swift */; };
+		CDB5EE63246BE0C700E35376 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5F246BE0C700E35376 /* Ingredient.swift */; };
+		CDB5EE64246BE0C700E35376 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE60246BE0C700E35376 /* Category.swift */; };
+		CDB5EE65246BE0D600E35376 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5D246BE0C700E35376 /* Recipe.swift */; };
+		CDB5EE66246BE0D600E35376 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5E246BE0C700E35376 /* Step.swift */; };
+		CDB5EE67246BE0D600E35376 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5F246BE0C700E35376 /* Ingredient.swift */; };
+		CDB5EE68246BE0D600E35376 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE60246BE0C700E35376 /* Category.swift */; };
+		CDB5EE69246BE0DC00E35376 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
+		CDB5EE6A246BE0DC00E35376 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
+		CDB5EE6B246BE0DC00E35376 /* BackAppImpressum.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */; };
+		CDB5EE6D246BE35800E35376 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE6C246BE35700E35376 /* Default-568h@2x.png */; };
 		CDBEE899244473A200E094CB /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE898244473A200E094CB /* StepRow.swift */; };
 		CDBEE89B2444877700E094CB /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89A2444877700E094CB /* NeomorphicToggleStyle.swift */; };
-		CDBEE89D2444E6A900E094CB /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89C2444E6A800E094CB /* Ingredient.swift */; };
 		CDBEE89F2444F1AD00E094CB /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBEE89E2444F1AD00E094CB /* IngredientRow.swift */; };
 		CDC0C11424465A4200B47A20 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC0C11324465A4200B47A20 /* ViewExtension.swift */; };
 		CDC0C11624465CEE00B47A20 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC0C11524465CEE00B47A20 /* ScheduleView.swift */; };
 		CDC7F5522441E0B5005834D5 /* TextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7F5512441E0B5005834D5 /* TextViewExtension.swift */; };
 		CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC17F0243E54D100C4098E /* AddRecipeView.swift */; };
 		CDCC17F3243EFB1B00C4098E /* testTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC17F2243EFB1B00C4098E /* testTabBar.swift */; };
-		CDCE3B49245CBC6200092C16 /* BackAppImpressum.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDCE3B48245CBC6200092C16 /* BackAppImpressum.txt */; };
 		CDD5505C24432690000F909C /* AddIngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD5505B24432690000F909C /* AddIngredientView.swift */; };
 		CDD5505E24433DB0000F909C /* CategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD5505D24433DB0000F909C /* CategoryPicker.swift */; };
 		CDE13F4F2343AB7C00019202 /* RezeptDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */; };
@@ -53,16 +65,27 @@
 		CDE13F562343B42000019202 /* StepDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F552343B42000019202 /* StepDetail.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CDB5EE1E246B3A9400E35376 /* Embed PlugIns */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed PlugIns";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD06E0F72442DC2C00566F82 /* AddStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStepView.swift; sourceTree = "<group>"; };
 		CD0D0CCD243CCB3C00B14E7E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		CD0D0CD2243CCD0300B14E7E /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		CD0D2E1923A15DA100C7B927 /* MODatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MODatePicker.swift; sourceTree = "<group>"; };
 		CD0E1B4A2448753B006405EB /* ScheduleForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD2A9D7B243476E700D0E9FC /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		CD2EA5862442089200E535B5 /* BackgroundGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundGradient.swift; sourceTree = "<group>"; };
-		CD31CEA523A29A57005E36DA /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		CD365D282435255A006B9628 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		CD3A43A02419844E00E40EB4 /* ImagePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		CD3A43A12419844E00E40EB4 /* ImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -76,25 +99,36 @@
 		CD6A9A182340252600748249 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CD6A9A1B2340252600748249 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD6A9A1D2340252600748249 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD6A9A232340255E00748249 /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
-		CD6A9A262340262B00748249 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
-		CD6A9A282340267F00748249 /* RecipeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
 		CD743C542443B7790058DDA0 /* IngredientDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetail.swift; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
-		CDA45B7F245861560076594D /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDA45B81245883BD0076594D /* ImpressumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImpressumView.swift; sourceTree = "<group>"; };
 		CDA617122445C742009DA261 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		CDB109B0244867CE00B468E5 /* DecimalField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalField.swift; sourceTree = "<group>"; };
+		CDB5EE0D246B2B7800E35376 /* BackApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackApp.entitlements; sourceTree = "<group>"; };
+		CDB5EE23246BCCF800E35376 /* BackApp Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BackApp Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDB5EE25246BCCF800E35376 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CDB5EE27246BCCF800E35376 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CDB5EE29246BCCF900E35376 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CDB5EE2C246BCCF900E35376 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CDB5EE2F246BCCF900E35376 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CDB5EE31246BCCF900E35376 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDB5EE32246BCCF900E35376 /* BackApp_Mac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackApp_Mac.entitlements; sourceTree = "<group>"; };
+		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
+		CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
+		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
+		CDB5EE5D246BE0C700E35376 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		CDB5EE5E246BE0C700E35376 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
+		CDB5EE5F246BE0C700E35376 /* Ingredient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		CDB5EE60246BE0C700E35376 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		CDB5EE6C246BE35700E35376 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CDBEE898244473A200E094CB /* StepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepRow.swift; sourceTree = "<group>"; };
 		CDBEE89A2444877700E094CB /* NeomorphicToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeomorphicToggleStyle.swift; sourceTree = "<group>"; };
-		CDBEE89C2444E6A800E094CB /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		CDBEE89E2444F1AD00E094CB /* IngredientRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
 		CDC0C11324465A4200B47A20 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		CDC0C11524465CEE00B47A20 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		CDC7F5512441E0B5005834D5 /* TextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewExtension.swift; sourceTree = "<group>"; };
 		CDCC17F0243E54D100C4098E /* AddRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeView.swift; sourceTree = "<group>"; };
 		CDCC17F2243EFB1B00C4098E /* testTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testTabBar.swift; sourceTree = "<group>"; };
-		CDCE3B48245CBC6200092C16 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
 		CDD5505B24432690000F909C /* AddIngredientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIngredientView.swift; sourceTree = "<group>"; };
 		CDD5505D24433DB0000F909C /* CategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPicker.swift; sourceTree = "<group>"; };
 		CDE13F4E2343AB7C00019202 /* RezeptDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RezeptDetail.swift; sourceTree = "<group>"; };
@@ -105,6 +139,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		CD6A9A092340252400748249 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDB5EE20246BCCF800E35376 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -139,17 +180,6 @@
 				CD2A9D7B243476E700D0E9FC /* CardView.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		CD0D2E1623A15C0000C7B927 /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				CD6A9A282340267F00748249 /* RecipeStore.swift */,
-				CD31CEA523A29A57005E36DA /* UIImageExtension.swift */,
-				CDA45B7F245861560076594D /* PrivacyPolicy.txt */,
-				CDCE3B48245CBC6200092C16 /* BackAppImpressum.txt */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 		CD0D2E1723A15C4800C7B927 /* View */ = {
@@ -218,9 +248,12 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				CDB5EE6C246BE35700E35376 /* Default-568h@2x.png */,
 				CD75BFC824629961005C902A /* bread.png */,
 				CD6A9A0E2340252400748249 /* BrotApp2 */,
+				CDB5EE24246BCCF800E35376 /* BackApp Mac */,
 				CD6A9A0D2340252400748249 /* Products */,
+				CDB5EE1A246B3A9400E35376 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -228,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				CD6A9A0C2340252400748249 /* BackApp.app */,
+				CDB5EE23246BCCF800E35376 /* BackApp Mac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -235,9 +269,11 @@
 		CD6A9A0E2340252400748249 /* BrotApp2 */ = {
 			isa = PBXGroup;
 			children = (
+				CDB5EE0D246B2B7800E35376 /* BackApp.entitlements */,
 				CD0D2E1823A15C5F00C7B927 /* supportingFiles */,
+				CDB5EE5C246BE0C700E35376 /* Models */,
+				CDB5EE4D246BDF6900E35376 /* Data */,
 				CD0D2E1723A15C4800C7B927 /* View */,
-				CD6A9A252340256700748249 /* Models */,
 				CD6A9A152340252600748249 /* Assets.xcassets */,
 				CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */,
 				CD6A9A1D2340252600748249 /* Info.plist */,
@@ -255,16 +291,63 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		CD6A9A252340256700748249 /* Models */ = {
+		CDB5EE1A246B3A9400E35376 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CD6A9A232340255E00748249 /* Step.swift */,
-				CDBEE89C2444E6A800E094CB /* Ingredient.swift */,
-				CD6A9A262340262B00748249 /* Recipe.swift */,
-				CD0D0CD2243CCD0300B14E7E /* Category.swift */,
-				CD0D2E1623A15C0000C7B927 /* Data */,
 			);
-			path = Models;
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CDB5EE24246BCCF800E35376 /* BackApp Mac */ = {
+			isa = PBXGroup;
+			children = (
+				CDB5EE27246BCCF800E35376 /* ContentView.swift */,
+				CDB5EE29246BCCF900E35376 /* Assets.xcassets */,
+				CDB5EE32246BCCF900E35376 /* BackApp_Mac.entitlements */,
+				CDB5EE31246BCCF900E35376 /* Info.plist */,
+				CDB5EE5B246BDF8600E35376 /* supporting Files */,
+				CDB5EE2B246BCCF900E35376 /* Preview Content */,
+			);
+			path = "BackApp Mac";
+			sourceTree = "<group>";
+		};
+		CDB5EE2B246BCCF900E35376 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CDB5EE2C246BCCF900E35376 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CDB5EE4D246BDF6900E35376 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */,
+				CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */,
+				CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		CDB5EE5B246BDF8600E35376 /* supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CDB5EE25246BCCF800E35376 /* AppDelegate.swift */,
+				CDB5EE2E246BCCF900E35376 /* Main.storyboard */,
+			);
+			path = "supporting Files";
+			sourceTree = "<group>";
+		};
+		CDB5EE5C246BE0C700E35376 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CDB5EE5D246BE0C700E35376 /* Recipe.swift */,
+				CDB5EE5E246BE0C700E35376 /* Step.swift */,
+				CDB5EE5F246BE0C700E35376 /* Ingredient.swift */,
+				CDB5EE60246BE0C700E35376 /* Category.swift */,
+			);
+			name = Models;
+			path = Data/Models;
 			sourceTree = "<group>";
 		};
 		CDE13F542343B3E800019202 /* CustomViews */ = {
@@ -307,23 +390,43 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CD6A9A0B2340252400748249 /* BrotApp2 */ = {
+		CD6A9A0B2340252400748249 /* BackApp iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BrotApp2" */;
+			buildConfigurationList = CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BackApp iOS" */;
 			buildPhases = (
 				CD6A9A082340252400748249 /* Sources */,
 				CD6A9A092340252400748249 /* Frameworks */,
 				CD6A9A0A2340252400748249 /* Resources */,
+				CDB5EE1E246B3A9400E35376 /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = BrotApp2;
+			name = "BackApp iOS";
 			packageProductDependencies = (
 			);
 			productName = BrotApp2;
 			productReference = CD6A9A0C2340252400748249 /* BackApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CDB5EE22246BCCF800E35376 /* BackApp Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CDB5EE33246BCCF900E35376 /* Build configuration list for PBXNativeTarget "BackApp Mac" */;
+			buildPhases = (
+				CDB5EE1F246BCCF800E35376 /* Sources */,
+				CDB5EE20246BCCF800E35376 /* Frameworks */,
+				CDB5EE21246BCCF800E35376 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BackApp Mac";
+			packageProductDependencies = (
+			);
+			productName = "BackApp Mac";
+			productReference = CDB5EE23246BCCF800E35376 /* BackApp Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -332,16 +435,19 @@
 		CD6A9A042340252400748249 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastSwiftUpdateCheck = 1140;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
 					CD6A9A0B2340252400748249 = {
 						CreatedOnToolsVersion = 11.0;
 					};
+					CDB5EE22246BCCF800E35376 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
 				};
 			};
-			buildConfigurationList = CD6A9A072340252400748249 /* Build configuration list for PBXProject "BrotApp2" */;
+			buildConfigurationList = CD6A9A072340252400748249 /* Build configuration list for PBXProject "BackApp" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -356,7 +462,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CD6A9A0B2340252400748249 /* BrotApp2 */,
+				CD6A9A0B2340252400748249 /* BackApp iOS */,
+				CDB5EE22246BCCF800E35376 /* BackApp Mac */,
 			);
 		};
 /* End PBXProject section */
@@ -366,12 +473,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDB5EE51246BDF6900E35376 /* PrivacyPolicy.txt in Resources */,
 				CD6A9A1C2340252600748249 /* LaunchScreen.storyboard in Resources */,
 				CD6A9A192340252600748249 /* Preview Assets.xcassets in Resources */,
+				CDB5EE53246BDF6900E35376 /* BackAppImpressum.txt in Resources */,
 				CD75BFC924629961005C902A /* bread.png in Resources */,
+				CDB5EE6D246BE35800E35376 /* Default-568h@2x.png in Resources */,
 				CD6A9A162340252600748249 /* Assets.xcassets in Resources */,
-				CDCE3B49245CBC6200092C16 /* BackAppImpressum.txt in Resources */,
-				CDA45B80245861560076594D /* PrivacyPolicy.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDB5EE21246BCCF800E35376 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDB5EE30246BCCF900E35376 /* Main.storyboard in Resources */,
+				CDB5EE6B246BE0DC00E35376 /* BackAppImpressum.txt in Resources */,
+				CDB5EE69246BE0DC00E35376 /* PrivacyPolicy.txt in Resources */,
+				CDB5EE2D246BCCF900E35376 /* Preview Assets.xcassets in Resources */,
+				CDB5EE2A246BCCF900E35376 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,25 +507,23 @@
 				CD0D2E1A23A15DA100C7B927 /* MODatePicker.swift in Sources */,
 				CDCC17F1243E54D100C4098E /* AddRecipeView.swift in Sources */,
 				CDA617132445C742009DA261 /* KeyboardResponder.swift in Sources */,
+				CDB5EE65246BE0D600E35376 /* Recipe.swift in Sources */,
 				CDE13F562343B42000019202 /* StepDetail.swift in Sources */,
-				CDBEE89D2444E6A900E094CB /* Ingredient.swift in Sources */,
 				CDC0C11424465A4200B47A20 /* ViewExtension.swift in Sources */,
 				CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */,
-				CD6A9A272340262B00748249 /* Recipe.swift in Sources */,
 				CD6A9A102340252400748249 /* AppDelegate.swift in Sources */,
 				CD6A9A122340252400748249 /* SceneDelegate.swift in Sources */,
-				CD6A9A292340267F00748249 /* RecipeStore.swift in Sources */,
 				CDE13F532343B3D200019202 /* MOTimePicker.swift in Sources */,
 				CD65D6D22439239900047822 /* BottomSheetView.swift in Sources */,
 				CDD5505E24433DB0000F909C /* CategoryPicker.swift in Sources */,
 				CD06E0F82442DC2C00566F82 /* AddStepView.swift in Sources */,
 				CDA45B82245883BD0076594D /* ImpressumView.swift in Sources */,
 				CDD5505C24432690000F909C /* AddIngredientView.swift in Sources */,
+				CDB5EE66246BE0D600E35376 /* Step.swift in Sources */,
 				CD2A9D7C243476E700D0E9FC /* CardView.swift in Sources */,
-				CD31CEA623A29A57005E36DA /* UIImageExtension.swift in Sources */,
-				CD0D0CD3243CCD0300B14E7E /* Category.swift in Sources */,
+				CDB5EE52246BDF6900E35376 /* RecipeStore.swift in Sources */,
+				CDB5EE67246BE0D600E35376 /* Ingredient.swift in Sources */,
 				CDBEE89F2444F1AD00E094CB /* IngredientRow.swift in Sources */,
-				CD6A9A242340255E00748249 /* Step.swift in Sources */,
 				CDC7F5522441E0B5005834D5 /* TextViewExtension.swift in Sources */,
 				CDB109B1244867CE00B468E5 /* DecimalField.swift in Sources */,
 				CDBEE89B2444877700E094CB /* NeomorphicToggleStyle.swift in Sources */,
@@ -417,9 +535,24 @@
 				CD743C552443B7790058DDA0 /* IngredientDetail.swift in Sources */,
 				CDBEE899244473A200E094CB /* StepRow.swift in Sources */,
 				CD0D0CCE243CCB3C00B14E7E /* HomeView.swift in Sources */,
+				CDB5EE68246BE0D600E35376 /* Category.swift in Sources */,
 				CDE13F4F2343AB7C00019202 /* RezeptDetail.swift in Sources */,
 				CDCC17F3243EFB1B00C4098E /* testTabBar.swift in Sources */,
 				CDC0C11624465CEE00B47A20 /* ScheduleView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDB5EE1F246BCCF800E35376 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDB5EE28246BCCF800E35376 /* ContentView.swift in Sources */,
+				CDB5EE6A246BE0DC00E35376 /* RecipeStore.swift in Sources */,
+				CDB5EE26246BCCF800E35376 /* AppDelegate.swift in Sources */,
+				CDB5EE63246BE0C700E35376 /* Ingredient.swift in Sources */,
+				CDB5EE62246BE0C700E35376 /* Step.swift in Sources */,
+				CDB5EE61246BE0C700E35376 /* Recipe.swift in Sources */,
+				CDB5EE64246BE0C700E35376 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +565,14 @@
 				CD6A9A1B2340252600748249 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		CDB5EE2E246BCCF900E35376 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CDB5EE2F246BCCF900E35376 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -488,6 +629,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -542,6 +684,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -555,6 +698,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BrotApp2/BackApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"BrotApp2/Preview Content\"";
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
@@ -564,8 +708,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BrotApp2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppIos;
 				PRODUCT_NAME = BackApp;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -575,6 +720,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BrotApp2/BackApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"BrotApp2/Preview Content\"";
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
@@ -584,17 +730,66 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BrotApp2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppIos;
 				PRODUCT_NAME = BackApp;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CDB5EE34246BCCF900E35376 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "BackApp Mac/BackApp_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"BackApp Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "BackApp Mac/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CDB5EE35246BCCF900E35376 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "BackApp Mac/BackApp_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"BackApp Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "BackApp Mac/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CD6A9A072340252400748249 /* Build configuration list for PBXProject "BrotApp2" */ = {
+		CD6A9A072340252400748249 /* Build configuration list for PBXProject "BackApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD6A9A1E2340252600748249 /* Debug */,
@@ -603,11 +798,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BrotApp2" */ = {
+		CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BackApp iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD6A9A212340252600748249 /* Debug */,
 				CD6A9A222340252600748249 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CDB5EE33246BCCF900E35376 /* Build configuration list for PBXNativeTarget "BackApp Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CDB5EE34246BCCF900E35376 /* Debug */,
+				CDB5EE35246BCCF900E35376 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
