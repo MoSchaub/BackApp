@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1130"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CD6A9A0B2340252400748249"
                BuildableName = "BackApp.app"
-               BlueprintName = "BrotApp2"
-               ReferencedContainer = "container:BrotApp2.xcodeproj">
+               BlueprintName = "BackApp Ios"
+               ReferencedContainer = "container:BackApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,8 +46,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CD6A9A0B2340252400748249"
             BuildableName = "BackApp.app"
-            BlueprintName = "BrotApp2"
-            ReferencedContainer = "container:BrotApp2.xcodeproj">
+            BlueprintName = "BackApp Ios"
+            ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CD6A9A0B2340252400748249"
             BuildableName = "BackApp.app"
-            BlueprintName = "BrotApp2"
-            ReferencedContainer = "container:BrotApp2.xcodeproj">
+            BlueprintName = "BackApp Ios"
+            ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
