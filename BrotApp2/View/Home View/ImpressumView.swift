@@ -7,16 +7,21 @@
 //
 
 import SwiftUI
-
 struct ImpressumView: View {
     
     private var text : String
     
     var body: some View {
         ScrollView {
+            #if os(macOS)
+            Text(text).lineLimit(nil)
+                .padding(.leading)
+            
+            #else
             Text(text).lineLimit(nil)
                 .padding(.leading)
                 .navigationBarTitle("Impressum", displayMode: .inline)
+            #endif
         }
     }
     

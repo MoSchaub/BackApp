@@ -46,19 +46,19 @@ struct AddRecipeView: View {
     var image: some View {
         Group{
             if recipe.image == nil{
-                LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image( "bread").resizable().scaledToFit())
                     .frame(height: 250)
                     .background(BackgroundGradient())
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                    .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
                     
             } else{
                 Image(uiImage: recipe.image!).resizable().scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-                .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
+                .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
+                .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
             }
         }
     }
@@ -153,7 +153,7 @@ struct AddRecipeView: View {
                 VStack(alignment: .leading){
                     self.name
                     self.timesSection
-                    self.imageButton
+                    //self.imageButton
                     self.categoryButton
                     self.stepSection
                     self.addButton
@@ -163,9 +163,10 @@ struct AddRecipeView: View {
             .navigationBarItems(leading: Button("Abbrechen"){
                 self.presentationMode.wrappedValue.dismiss()
             }.foregroundColor(.accentColor) , trailing: Button("OK"){ self.save()}.disabled(self.disabled))
+            
         }.onAppear(){
             self.recipe.category = self.recipeStore.categories.first ?? Category.example
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
     
     func stepIndex(for step: Step) -> Int? {
@@ -190,6 +191,6 @@ struct AddRecipeView: View {
 
 struct AddRecipeView_Previews: PreviewProvider {
     static var previews: some View {
-        AddRecipeView(isPresented: .constant(true)).environmentObject(RecipeStore.example)
+        AddRecipeView(isPresented: .constant(true)).environmentObject(RecipeStore.example).environment(\.colorScheme, .dark)
     }
 }

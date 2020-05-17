@@ -20,35 +20,6 @@ struct Category: Codable, Hashable, Identifiable {
     var name: String
 
     private var imageData: Data?
-    
-    #if os(macOS)
-    ///getter and setter for the image
-    var image: NSImage?{
-        get{
-        if let data = imageData{
-        return NSImage(data: data)
-        } else {
-        return nil
-        }
-        }
-        set{
-        if newValue == nil{
-        imageData = nil
-        }
-        else {
-        imageData = newValue!.tiffRepresentation
-        }
-        }
-    }
-    
-    init(name: String, image: NSImage? = nil) {
-           self.name = name
-           self.imageData = nil
-           self.image = image
-    }
-    
-    
-    #elseif os(iOS)
     ///getter and setter for the image
     var image: UIImage?{
         get{
@@ -71,11 +42,21 @@ struct Category: Codable, Hashable, Identifiable {
     
     init(name: String, image: UIImage? = nil) {
         self.name = name
-        self.imageData = nil
         self.image = image
     }
     
-    #endif
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.imageData = try container.decode(Data?.self, forKey: .imageData)
+    }
+    
+    enum CodingKeys: CodingKey {
+        case name
+        case imageData
+    }
+    
+    
      static var example = Category(name: "Brot")
     static func == (lhs: Category, rhs: Category) -> Bool {
         return lhs.name == rhs.name

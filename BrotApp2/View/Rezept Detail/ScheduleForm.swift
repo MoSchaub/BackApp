@@ -42,7 +42,7 @@ struct ScheduleForm: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)).edgesIgnoringSafeArea(.all)
+            LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all)
             ScrollView {
                 VStack(){
                     
@@ -72,9 +72,9 @@ struct ScheduleForm: View {
                         Text("weiter")
                             .foregroundColor(.primary)
                             .padding()
-                            .background(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)).edgesIgnoringSafeArea(.all))
+                            .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
                             .clipShape(RoundedRectangle(cornerRadius: 13))
-                            .shadow(color: Color(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                            .shadow(color: Color("Color2"), radius: 10, x: 5, y: 5)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding()
@@ -91,9 +91,9 @@ struct ScheduleForm: View {
                         Text("zurück")
                             .foregroundColor(.primary)
                             .padding()
-                            .background(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)).edgesIgnoringSafeArea(.all))
+                            .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
                             .clipShape(RoundedRectangle(cornerRadius: 13))
-                            .shadow(color: Color(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                            .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
                     }.padding()
                 }
             }
@@ -101,8 +101,12 @@ struct ScheduleForm: View {
             .onAppear{
                 self.times = self.recipe.times
             }
-        .navigationBarTitle(Text(recipe.name), displayMode: .inline)
-        
+        .navigationBarTitle(
+            Text(recipe.name),
+            
+            displayMode: NavigationBarItem.TitleDisplayMode.inline
+            
+        )
     }
 }
 

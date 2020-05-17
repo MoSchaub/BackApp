@@ -146,7 +146,17 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack{
                     ForEach(0..<recipeStore.latest.count, id: \.self){n in
-                       ImageCard(recipe: self.recipeStore.latest[n]).environmentObject(self.recipeStore)
+                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { self.recipeStore.latest[n] == $0 }) ?? 0]).environmentObject(self.recipeStore)) {
+                            Card(recipe: self.recipeStore.latest[n])
+                                .background(
+                                    self.background
+                                )
+                                .padding([.horizontal])
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.bottom)
+                        
+                        //ImageCard(recipe: self.recipeStore.latest[n]).environmentObject(self.recipeStore)
                     }
                 }
             }
@@ -163,7 +173,25 @@ struct HomeView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack{
                         ForEach(0..<recipeStore.favourites.count, id: \.self){n in
-                            ImageCard(recipe: self.recipeStore.favourites[n]).environmentObject(self.recipeStore)
+                            NavigationLink(
+                                destination: RezeptDetail(
+                                    recipe: self.$recipeStore.recipes[
+                                        self.recipeStore.recipes.firstIndex(
+                                            where: { self.recipeStore.favourites[n] == $0 }
+                                            ) ?? 0
+                                    ]
+                                )
+                                    .environmentObject(self.recipeStore)
+                            ) {
+                                Card(recipe: self.recipeStore.favourites[n])
+                                    .background(
+                                        self.background
+                                )
+                                    .padding([.horizontal])
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .padding(.bottom)
+                            //ImageCard(recipe: self.recipeStore.favourites[n]).environmentObject(self.recipeStore)
                         }
                     }
                 }
@@ -246,7 +274,7 @@ struct ImageCard: View {
 
     
     var body: some View{
-        if let index = self.recipeStore.recipes.firstIndex(where: { self.recipe.id == $0.id}){
+        if let index = self.recipeStore.recipes.firstIndex(where: { self.recipe == $0 }){
             return AnyView(
                 NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[index]).environmentObject(self.recipeStore)) {
                     Card(recipe: self.recipe)

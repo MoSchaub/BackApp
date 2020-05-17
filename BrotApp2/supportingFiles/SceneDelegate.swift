@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>){
-        //called when oping files in app
+        //called when opening files in app
         for context in URLContexts{
             if let recipes = self.recipeStore.load(url: context.url, as: [Recipe].self){
                 print(recipes)

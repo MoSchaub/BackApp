@@ -109,6 +109,7 @@ struct ScheduleView_Previews: PreviewProvider {
     }
 }
 
+#if os(iOS)
 struct ShareSheet: UIViewControllerRepresentable {
     typealias Callback = (_ activityType: UIActivity.ActivityType?, _ completed: Bool, _ returnedItems: [Any]?, _ error: Error?) -> Void
       
@@ -128,3 +129,44 @@ struct ShareSheet: UIViewControllerRepresentable {
       
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
+#elseif os(macOS)
+struct ShareSheet: NSViewRepresentable {
+    let activityItems: [Any]
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+            let picker = NSSharingServicePicker(items: activityItems)
+            picker.delegate = context.coordinator
+
+            // !! MUST BE CALLED IN ASYNC, otherwise blocks update
+            DispatchQueue.main.async {
+                picker.show(relativeTo: .zero, of: nsView, preferredEdge: .minY)
+            }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(owner: self)
+    }
+
+    class Coordinator: NSObject, NSSharingServicePickerDelegate {
+        let owner: ShareSheet
+
+        init(owner: ShareSheet) {
+            self.owner = owner
+        }
+
+        func sharingServicePicker(_ sharingServicePicker: NSSharingServicePicker, didChoose service: NSSharingService?) {
+
+            // do here whatever more needed here with selected service
+
+            sharingServicePicker.delegate = nil   //cleanup
+        }
+    }
+}
+
+
+#endif

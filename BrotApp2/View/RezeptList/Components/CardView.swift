@@ -19,16 +19,23 @@ struct Card: View {
     var image: some View {
         Group{
             if recipe.image == nil{
-                LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image("bread").resizable().scaledToFill())
                     .background(BackgroundGradient())
                     .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
-                    .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
             } else{
+                #if os(iOS)
                 Image(uiImage: recipe.image!).resizable().scaledToFill()
                     .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
+                #elseif os(macOS)
+                Image(nsImage: recipe.image!).resizable().scaledToFill()
+                    .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
+                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                #endif
+                
             }
         }
     }
@@ -78,7 +85,7 @@ struct Card: View {
 struct CardView_Previews: PreviewProvider {
     
     static var previews: some View {
-        Card(recipe: Recipe.example, width: UIScreen.main.bounds.width - 20)
+        Card(recipe: Recipe.example, width: 350 )
             .environment(\.colorScheme, .light)
             .environmentObject(RecipeStore())
     }

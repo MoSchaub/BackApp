@@ -9,21 +9,24 @@
 import SwiftUI
 
 struct IngredientDetail: View {
-    @State private var amountText = ""
-    
     @Binding var ingredient : Ingredient
     @Binding var step: Step
     
-    let deleteEnabled: Bool
+    @State private var amountText = ""
     
+    #if os(iOS)
     @Environment(\.presentationMode) var presentationMode
-
+    let deleteEnabled: Bool
+    #elseif os(macOS)
+    @Binding var selection: Int?
+    #endif
     var title: String {
         self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "neue Zutat" : self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     var body: some View{
         ScrollView{
+            #if os(iOS)
             VStack(alignment: .leading) {
                 VStack(alignment: .leading, spacing: 3.0) {
                     Text("Name").secondary()
@@ -79,6 +82,44 @@ struct IngredientDetail: View {
                 .neomorphic()
                 }
             }
+            #elseif os(macOS)
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Name:")
+                    TextField("Name eingeben", text: $ingredient.name)
+                    Spacer()
+                }
+                .padding([.leading,.top])
+                
+                HStack {
+                    Text("Menge:")
+                    TextField("0.00 g", text: self.$amountText) {
+                        self.formatAmountText()
+                    }
+                    Spacer()
+                }
+                .padding(.leading)
+
+                HStack {
+                    Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
+                    Spacer()
+                }
+                .padding(.leading)
+                
+                Spacer()
+                
+                Button(action: {
+                    self.save()
+                }){
+                    HStack {
+                        Text("OK")
+                        Spacer()
+                    }
+                }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
+                    .padding(.leading)
+            }
+            
+            #endif
         }
         .onAppear{
             self.formatAmountText()
@@ -98,20 +139,26 @@ struct IngredientDetail: View {
     func save(){
         self.formatAmountText()
         guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
-        if let index = self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}){
+        if let index = self.step.ingredients.firstIndex(of: self.ingredient){
             self.step.ingredients[index] = self.ingredient
         } else {
             self.step.ingredients.append(self.ingredient)
         }
+        #if os(iOS)
         self.presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+        self.selection = nil
+        #endif
     }
     
+    #if os(iOS)
     func delete(){
-        if self.step.ingredients.count > 1, let index = self.step.ingredients.firstIndex(of: self.ingredient){
+        if let index = self.step.ingredients.firstIndex(of: self.ingredient){
             self.presentationMode.wrappedValue.dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 self.step.ingredients.remove(at: index)
             }
         }
     }
+    #endif
 }

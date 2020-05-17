@@ -8,6 +8,79 @@
 
 import SwiftUI
 
+#if os(macOS)
+
+typealias UIScreen = NSRect
+
+extension NSRect{
+    static var main: NSRect{
+       NSScreen.main!.visibleFrame
+    }
+    
+    var bounds : CGRect{
+        self
+    }
+    
+    
+}
+
+struct EditButton: View{
+    var body: some View{
+        EmptyView()
+    }
+}
+
+extension View{
+    func navigationBarBackButtonHidden(_ hidesBackButton: Bool) -> some View {
+        self
+    }
+    
+    func navigationBarItems<L, T>(leading: L, trailing: T) -> some View where L : View, T : View{
+       
+        self
+        //TODO: add Buttons
+    }
+    
+    func navigationBarItems<T>(trailing: T) -> some View where T : View{
+       
+        self
+        //TODO: add Buttons
+    }
+    
+    func navigationBarItems<L>(leading: L) -> some View where L : View{
+       
+        self
+        //TODO: add Buttons
+    }
+    
+
+    func navigationBarTitle(_ titleKey: String) -> some View {
+        self
+    }
+    func navigationBarTitle(_ title: Text, displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
+        self
+    }
+    
+    func navigationBarHidden(_ hidden: Bool) -> some View{
+        self
+    }
+    
+}
+
+struct NavigationBarItem {
+    enum TitleDisplayMode {
+        case inline
+    }
+}
+
+extension Image{
+    init(systemName: String) {
+        self = Image(nsImage: NSImage(named: systemName) ?? NSImage())
+    }
+}
+
+#endif
+
 struct AddStepView: View {
     @Environment(\.presentationMode) var presentationMode
     
@@ -58,39 +131,6 @@ struct AddStepsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             AddStepView(recipe: .constant(Recipe.example), roomTemp: 20)
-        }
-    }
-}
-
-struct stepTimePicker: View {
-    
-    @Environment(\.presentationMode) var presentationMode
-    
-    @Binding var time: TimeInterval
-    
-    var body: some View {
-        VStack {
-            MOTimePicker(time: self.$time)
-            Button("OK"){ self.presentationMode.wrappedValue.dismiss()}
-        }
-    }
-}
-
-struct stepTempPicker: View{
-    @Environment(\.presentationMode) var presentationMode
-    
-    @Binding var temp: Int
-    
-    var body: some View {
-        VStack {
-            Picker(" ",selection: self.$temp){
-                ForEach(-10...50, id: \.self){ n in
-                    Text("\(n)")
-                }
-            }
-            .labelsHidden()
-            .padding()
-            Button("OK"){ self.presentationMode.wrappedValue.dismiss()}
         }
     }
 }

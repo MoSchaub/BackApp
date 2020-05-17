@@ -21,9 +21,11 @@ struct StepRow: View {
                 Text(step.name).font(.headline)
                 Spacer()
                 Text(step.formattedTime).secondary()
+                #if os(iOS)
                 if self.inLink{
                     Image(systemName: "chevron.right")
                 }
+                #endif
             }.padding(.horizontal)
             
             ForEach(step.ingredients){ ingredient in
@@ -36,7 +38,7 @@ struct StepRow: View {
                 HStack{
                     Text(substep.name)
                     Spacer()
-                    Text("\(substep.totalAmount)")
+                    Text(substep.totalFormattedAmount)
                 }.padding(.horizontal)
             }
             
@@ -53,3 +55,18 @@ struct StepRow: View {
     }
 }
 
+
+struct StepRow_Previews: PreviewProvider {
+    
+    static var recipe: Recipe{
+        let i = Ingredient(name: "Mehl", amount: 100)
+        let b2 = Step(name: "Sub", time: 60, ingredients: [], themperature: 20)
+        var b = Step(name: "Schritt1", time: 60, ingredients: [i], themperature: 20)
+        b.subSteps.append(b2)
+        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false, category: Category.example)
+    }
+    
+    static var previews: some View {
+        StepRow(step: recipe.steps.first!, recipe: recipe, inLink: false , roomTemp: 20)
+    }
+}

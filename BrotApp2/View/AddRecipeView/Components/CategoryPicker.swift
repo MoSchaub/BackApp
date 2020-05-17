@@ -31,6 +31,7 @@ struct CategoryPicker: View {
                             
                             Spacer()
                             if self.recipe.category == self.recipeStore.categories[n]{
+                                
                                 Image(systemName: "checkmark")
                                     .foregroundColor(.accentColor)
                             }

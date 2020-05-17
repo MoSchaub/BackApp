@@ -9,6 +9,7 @@
 import SwiftUI
 
 extension View{
+    #if os(iOS)
     func neomorphic(enabled: Bool = true) -> some View{
         HStack{
             self
@@ -19,6 +20,15 @@ extension View{
         .background(enabled ? AnyView(BackgroundGradient()) : AnyView(EmptyView()))
         .padding()
     }
+    #elseif os(macOS)
+    func neomorphic(enabled: Bool = true) -> some View{
+        HStack{
+            self
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
+    #endif
 }
 
 struct ViewExtension_Previews: PreviewProvider {

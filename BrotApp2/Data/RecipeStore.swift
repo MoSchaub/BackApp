@@ -197,7 +197,6 @@ final class RecipeStore: ObservableObject{
     
 }
 
-@available(iOS 13.0, *)
 extension RecipeStore: Codable{
     
     enum CodingKeys: CodingKey{

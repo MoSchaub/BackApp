@@ -28,7 +28,11 @@ struct IngredientRow: View {
             }
             Text(ingredient.formattedAmount)
             if self.inLink{
+            #if os(iOS)
             Image(systemName: "chevron.right")
+            #elseif os(macOS)
+            
+            #endif
             }
         }
         .padding(.all, self.background ? nil : 0)

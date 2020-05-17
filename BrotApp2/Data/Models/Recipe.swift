@@ -37,9 +37,9 @@ struct Recipe: Hashable, Codable, Identifiable{
     ///property containing wether the "date" property is the end date or the start date
     var inverted : Bool
     
-   ///for how many items eg breads, rolls, etc the the ingredients are calculated
+    ///for how many items eg breads, rolls, etc the the ingredients are calculated
     var times: Decimal?
-
+    
     ///property used to make the date json compatible and strores the date as an string
     private var dateString: String
     
@@ -74,42 +74,26 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     
     //MARK: Image properties
-    #if os(macOS)
     ///getter and setter for the image
-    var image: NSImage?{
+    var image: UIImage?{
         get{
         if let data = imageString{
-        return NSImage(data: data)
-        } else {
-        return nil
-        }
+        return UIImage(data: data)?.resizeTo(width: 300)
+        } else{ return nil }
         }
         set{
         if newValue == nil{
         imageString = nil
-        }
-        else {
-        imageString = newValue!.tiffRepresentation
-        }
-        }
-    }
-    #elseif os(iOS)
-    ///getter and setter for the image
-    var image: UIImage?{
-        get{
-            if let data = imageString{
-        return UIImage(data: data) //.resizeTo(width: 300)
-            } else{ return nil }
-        }
-        set{
-            if newValue == nil{
-                imageString = nil
-            } else {
-                imageString = newValue!.jpegData(compressionQuality: 1)
+        } else {
+            if let jpegData = newValue!.jpegData(compressionQuality: 1){
+                self.imageString = jpegData
+            } else if let pngData = newValue!.pngData(){
+                self.imageString = pngData
             }
+        
+        }
         }
     }
-    #endif
     ///property used to make the image json compatible and stores the image as base64 encoded String
     private var imageString: Data?
     
@@ -207,6 +191,7 @@ struct Recipe: Hashable, Codable, Identifiable{
         case steps
         case inverted
         case isFavourite
+        case imageString
         case category
         case times
     }
@@ -214,16 +199,15 @@ struct Recipe: Hashable, Codable, Identifiable{
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = UUID().uuidString
+        self.dateString = dateFormatter.string(from: Date())
         self.name = try container.decode(String.self, forKey: .name)
         self.steps = try container.decode([Step].self, forKey: .steps)
         self.inverted = try container.decode(Bool.self, forKey: .inverted)
-        self.dateString = dateFormatter.string(from: Date())
         self.isFavourite = try container.decode(Bool.self, forKey: .isFavourite)
+        self.imageString = try container.decodeIfPresent(Data.self, forKey: .imageString)
         self.category = try container.decode(Category.self, forKey: .category)
         self.times = try container.decode(Decimal.self, forKey: .times)
     }
-    
-    
     
     func text(roomTemp: Int, scaleFactor: Double) -> String {
         var h = startDate
@@ -239,8 +223,6 @@ struct Recipe: Hashable, Codable, Identifiable{
     
 }
 
-@available(iOS 10.0, *)
-@available(OSX 10.12, *)
 extension Recipe: Equatable{
     static func == (lhs: Recipe, rhs: Recipe) -> Bool {
         return lhs.name == rhs.name &&

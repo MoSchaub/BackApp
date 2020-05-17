@@ -22,16 +22,16 @@ struct NeomorphicBackground<S: Shape>: View {
         ZStack {
             if isHighlighted {
                 shape
-                    .fill(LinearGradient(Color(.systemBackground), Color(.secondarySystemBackground)))
+                    .fill(LinearGradient(Color("Color2"), Color("Color1")))
                     .frame(height: 40)
-                    .overlay(shape.stroke(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)), lineWidth: 4))
-                    .shadow(color: Color.init(.secondarySystemBackground).opacity(0.4), radius: 10, x: 5, y: 5)
+                    .overlay(shape.stroke(LinearGradient(Color("Color1"),Color("Color2")), lineWidth: 4))
+                    .shadow(color: Color("Color1").opacity(0.4), radius: 10, x: 5, y: 5)
             } else {
                 shape
-                    .fill(LinearGradient(Color.init(.secondarySystemBackground),Color.init(.systemBackground)))
+                    .fill(LinearGradient(Color("Color1"),Color("Color2")))
                     .frame(height: 40)
-                    .shadow(color: Color.init(.secondarySystemBackground).opacity(0.4), radius: 10, x: -10, y: -10)
-                    .shadow(color: Color.init(.systemBackground), radius: 10, x: 10, y: 10)
+                    .shadow(color: Color("Color1").opacity(0.4), radius: 10, x: -10, y: -10)
+                    .shadow(color: Color("Color2"), radius: 10, x: 10, y: 10)
             }
         }
     }
@@ -55,13 +55,22 @@ struct NeomorphicToggleStyle: ToggleStyle {
 struct NeoToggleStyle_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
-            Color(.systemBackground).edgesIgnoringSafeArea(.all)
+            Color("Color2").edgesIgnoringSafeArea(.all)
             VStack {
                 Toggle(isOn: .constant(true)) {
+                    #if os(iOS)
                     Image(systemName: "pencil")
+                    #elseif os(macOS)
+                    Image(nsImage: NSImage(named: "pencil")!)
+                    #endif
+                    
                 }.toggleStyle(NeomorphicToggleStyle())
                 Toggle(isOn: .constant(false)) {
+                    #if os(iOS)
                     Image(systemName: "pencil")
+                    #elseif os(macOS)
+                    Image(nsImage: NSImage(named: "pencil")!)
+                    #endif
                 }.toggleStyle(NeomorphicToggleStyle())
             }
         }.environment(\.colorScheme, .light)

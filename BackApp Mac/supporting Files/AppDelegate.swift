@@ -10,14 +10,16 @@ import Cocoa
 import SwiftUI
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     var window: NSWindow!
+    
+    let recipeStore = RecipeStore()
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
+        let contentView = ContentView().environmentObject(self.recipeStore)
 
         // Create the window and set the content view. 
         window = NSWindow(
@@ -28,12 +30,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.setFrameAutosaveName("Main Window")
         window.contentView = NSHostingView(rootView: contentView)
         window.makeKeyAndOrderFront(nil)
+        window.delegate = self
     }
 
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+    func windowWillClose(_ notification: Notification) {
+        //save file
+        recipeStore.write()
     }
-
+    
+    func applicationWillResignActive(_ notification: Notification) {
+        
+        
+    }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+        //load file
+        if let recipes: [Recipe] = recipeStore.load(){
+            recipeStore.recipes = recipes
+        }
+    }
+    
+    func applicationWillHide(_ notification: Notification) {
+        
+    }
+    
+    func applicationWillUnhide(_ notification: Notification) {
+        
+    }
 
 }
 

@@ -32,7 +32,7 @@ struct RezeptList: View {
                 self.addButton
                 ForEach(0..<recipeStore.recipes.count, id: \.self){n in
                     NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[n]).environmentObject(self.recipeStore)) {
-                        Card(recipe: self.recipeStore.recipes[n], width: UIScreen.main.bounds.width - 30)
+                        Card(recipe: self.recipeStore.recipes[n])
                     }
                 }
                 .onDelete(perform: self.deleteRecipes)

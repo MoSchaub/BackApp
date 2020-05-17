@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 struct MOTimePicker: UIViewRepresentable {
     
     @Binding var time:TimeInterval
@@ -43,4 +44,41 @@ struct MOTimePicker: UIViewRepresentable {
     }
     
 }
+#elseif os(macOS)
+
+struct MOTimePicker: View {
+    @EnvironmentObject private var timePickerModel: TimePickerModel
+    
+    var body: some View{
+        MOTimePickerComponent(timePickerModel: self._timePickerModel).equatable()
+            
+    }
+}
+
+struct MOTimePickerComponent: View, Equatable{
+    static func == (lhs: MOTimePickerComponent, rhs: MOTimePickerComponent) -> Bool {
+        lhs.timePickerModel.hours == rhs.timePickerModel.hours && lhs.timePickerModel.minutes == rhs.timePickerModel.minutes
+    }
+    
+    @EnvironmentObject var timePickerModel: TimePickerModel
+    
+    var body: some View{
+        HStack{
+            Picker("",selection: self.$timePickerModel.hours) {
+                ForEach(0 ..< 24, id: \.self){ n in
+                    Text("\(n) \(n == 1 ? "Stunde" : "Stunden")").tag(n)
+                }
+            }.frame(width: 115)
+            
+            Picker("",selection: self.$timePickerModel.minutes) {
+                ForEach(0 ..< 60, id: \.self){ n in
+                    Text("\(n) \(n == 1 ? "Minute" : "Minuten" )").tag(n)
+                }
+            }.frame(width: 115)
+            
+        }
+    }
+}
+
+#endif
 
