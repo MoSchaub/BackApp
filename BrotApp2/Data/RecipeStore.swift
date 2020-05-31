@@ -9,30 +9,23 @@
 import SwiftUI
 import Combine
 
+struct RecipeDetailModel: Identifiable {
+    var id: UUID = UUID()
+    
+    
+    
+}
+
 final class RecipeStore: ObservableObject{
-    
-    @Published var roomThemperature = 20
-    
+
     @Published var recipes = [Recipe]()
-    
-    func encodedRecipes()-> Data{
-        try! JSONEncoder().encode(self.recipes)
-    }
-    
-    #if os(macOS)
-    @Published var categories = [
-        Category(name: "Brot", image: NSImage(named: "bread")!),
-        Category(name: "Brötchen", image: NSImage(named: "roll")!),
-        Category(name: "Kuchen", image: NSImage(named: "cake")!)
-    ]
-    #elseif os(iOS)
+    @Published var roomThemperature = 20
     @Published var categories = [
         Category(name: "Brot", image: UIImage(named: "bread")!),
         Category(name: "Brötchen", image: UIImage(named: "roll")!),
         Category(name: "Kuchen", image: UIImage(named: "cake")!)
     ]
-    #endif
-    
+
     var latest: [Recipe]{
         var recipes = [Recipe]()
         if self.recipes.count < 10{
@@ -51,8 +44,134 @@ final class RecipeStore: ObservableObject{
         self.recipes.filter({$0.isFavourite})
     }
     
-    @Published var isArray = false
     
+    
+    /// selection of RecipeDetail
+    ///1: ImagePickerView
+    ///2: CategoryPicker
+    ///3: ScheduleForm
+    ///4: AddStepView
+   @Published var rDSelection: Int? = nil{
+        didSet{
+            if self.rDSelection != nil {
+                self.selectedStep = nil
+            }
+        }
+    }
+    
+    @Published var selectedStep: Step? = nil{
+        didSet{
+            if self.selectedStep != nil {
+                self.rDSelection = nil
+            }
+        }
+    }
+    func save(recipe: Recipe){
+        self.addRecipe(recipe: recipe)
+        //self.isPresented = false
+    }
+    
+    func delete(step: Step, from recipe: Recipe){
+        if recipe.steps.count > 1, let stepIndex = recipe.steps.firstIndex(of: step){
+            
+            self.selectedIngredient = nil
+            self.selectedSubstep = nil
+            //dont set selected Step to nil (crashes if Ingredient or Substep is shown
+        
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                if let recipeIndex = self.recipes.firstIndex(of: recipe){
+                    self.recipes[recipeIndex].steps.remove(at: stepIndex)
+                }
+            }
+        }
+    }
+    
+    @Published var sDSelection: Int? = nil{
+        didSet{
+            if self.sDSelection != nil {
+                self.selectedSubstep = nil
+                self.selectedIngredient = nil
+            }
+        }
+    }
+    
+    @Published var selectedIngredient: Ingredient? = nil{
+        didSet{
+            if self.selectedIngredient != nil {
+                self.sDSelection = nil
+                self.selectedSubstep = nil
+            }
+        }
+    }
+    
+    @Published var selectedSubstep: Step? = nil{
+        didSet{
+            if self.selectedSubstep != nil {
+                self.sDSelection = nil
+                self.selectedIngredient = nil
+            }
+        }
+    }
+
+    func save(step: Step, to recipe: Recipe){
+        if !recipe.steps.contains(step){
+            if let recipeIndex = self.recipes.firstIndex(of: recipe){
+                self.recipes[recipeIndex].steps.append(step)
+            }
+        }
+        self.selectedSubstep = nil
+        self.selectedIngredient = nil
+        self.selectedStep = nil
+        self.sDSelection = nil
+        self.rDSelection = nil
+    }
+
+    func deleteIngredient(of step: Step, in recipe: Recipe) {
+        if let ingredientIndex = step.ingredients.firstIndex(of: self.selectedIngredient!), step.ingredients.count > ingredientIndex {
+            self.sDSelection = nil
+            self.selectedIngredient = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                if let recipeIndex = self.recipes.firstIndex(of: recipe), let stepIndex = recipe.steps.firstIndex(of: step) {
+                    self.recipes[recipeIndex].steps[stepIndex].ingredients.remove(at: ingredientIndex)
+                }
+            }
+        }
+    }
+    
+    func deleteSubstep(of step: Step, in recipe: Recipe) {
+        if let substepIndex = step.subSteps.firstIndex(of: self.selectedSubstep!), step.subSteps.count > substepIndex{
+            self.sDSelection = nil
+            self.selectedSubstep = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                if let recipeIndex = self.recipes.firstIndex(of: recipe), let stepIndex = recipe.steps.firstIndex(of: step) {
+                self.recipes[recipeIndex].steps[stepIndex].subSteps.remove(at: substepIndex)
+                }
+            }
+        }
+    }
+    
+    @Published var selectedRecipe: Recipe? = nil{
+        didSet{
+            if self.selectedRecipe != nil {
+                self.hSelection = nil
+            }
+        }
+    }
+    
+    @Published var showingAddRecipeView = false
+    
+    @Published var newRecipePublisher = NotificationCenter.default.publisher(for: .init("addRecipe"))
+    
+    @Published var hSelection: Int? = nil {
+        didSet{
+            if self.hSelection != nil {
+                self.selectedRecipe = nil
+            }
+        }
+    }
+    
+    
+
     init() {}
     
     init(from decoder: Decoder) throws {
@@ -71,6 +190,11 @@ final class RecipeStore: ObservableObject{
     @Published var showingInputAlert = false
     @Published var inputAlertTitle = ""
     @Published var inputAlertMessage = ""
+    @Published var isArray = false
+    
+    func encodedRecipes()-> Data{
+        try! JSONEncoder().encode(self.recipes)
+    }
     
     func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
         let data: Data

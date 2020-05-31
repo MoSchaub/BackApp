@@ -9,16 +9,14 @@
 import SwiftUI
 
 struct RezeptDetail: View {
-    @State private var editMode = false
-    @State private var deleting = false
     
     @Binding var recipe: Recipe
     
-    @EnvironmentObject var recipeStore: RecipeStore
+    @EnvironmentObject private var recipeStore: RecipeStore
     
-    @Environment(\.presentationMode) var presentationMode
+    let isDetail: Bool
     
-    var title: String{
+    private var title: String{
         if recipe.name.isEmpty{
             return "Rezept hinzufügen"
         } else {
@@ -26,45 +24,31 @@ struct RezeptDetail: View {
         }
     }
     
-    var trailingButtons: some View{
-        HStack{
-            Toggle(isOn: self.$recipe.isFavourite) {
-                if self.recipe.isFavourite{
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(.primary)
-                } else{
-                    Image(systemName: "heart")
-                        .foregroundColor(.primary)
-                }
-            }.toggleStyle(NeomorphicToggleStyle())
-            
-            Toggle(isOn: self.$editMode) {
-                Image(systemName: "pencil")
+    private var trailingButton: some View{
+        Toggle(isOn: self.$recipe.isFavourite) {
+            if self.recipe.isFavourite{
+                Image(systemName: "heart.fill")
                     .foregroundColor(.primary)
-            }.toggleStyle(NeomorphicToggleStyle())
-            
-        }
-    }
-    
-    var nameSection: some View{
-        Group{
-            if editMode{
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Name").secondary()
-                        .padding(.leading, 35)
-                    TextField("Name eingeben", text: self.$recipe.name)
-                        .padding(.leading)
-                        .padding(.vertical)
-                        .background(BackgroundGradient())
-                        .padding([.horizontal,.bottom])
-                }
             } else{
-                EmptyView()
+                Image(systemName: "heart")
+                    .foregroundColor(.primary)
             }
+        }.toggleStyle(NeomorphicToggleStyle())
+    }
+    
+    private var nameSection: some View{
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Name").secondary()
+                .padding(.leading, 35)
+            TextField("Name eingeben", text: self.$recipe.name)
+                .padding(.leading)
+                .padding(.vertical)
+                .background(BackgroundGradient())
+                .padding([.horizontal,.bottom])
         }
     }
     
-    var image: some View {
+    private var image: some View {
         Group{
             if recipe.image == nil{
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -72,12 +56,8 @@ struct RezeptDetail: View {
                     .frame(height: 250)
                     .background(BackgroundGradient())
             } else{
-                #if os(iOS)
                 Image(uiImage: recipe.image!).resizable().scaledToFit()
-                #elseif os(macOS)
-                Image(nsImage: recipe.image!).resizable().scaledToFit()
-                #endif
-                }
+            }
         }
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
@@ -85,50 +65,35 @@ struct RezeptDetail: View {
         .padding()
     }
     
-    var imageSection: some View{
-        Group{
-            if self.editMode{
-                NavigationLink(destination: ImagePickerView(inputImage: self.$recipe.image)) {
-                    ZStack {
-                        self.image
-                        HStack{
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                            
-                        }
-                        .padding(.trailing)
-                        .padding(.trailing)
-                    }
-                }
-                .buttonStyle(PlainButtonStyle())
-            } else{
+    private var imageSection: some View{
+        NavigationLink(destination: ImagePickerView(inputImage: self.$recipe.image), tag: 1, selection: self.$recipeStore.rDSelection) {
+            ZStack {
                 self.image
-            }
-        }
-    }
-    
-    var categorySection: some View{
-        Group {
-            if self.editMode {
-                NavigationLink(destination: CategoryPicker(recipe: self.$recipe)) {
-                    HStack {
-                        Text("Kategorie:")
-                        Spacer()
-                        Text(recipe.category.name).secondary()
-                        Image("chevron.right")
-                    }
-                        .neomorphic()
-                }.buttonStyle(PlainButtonStyle())
-            } else {
-                HStack {
-                    Text(recipe.category.name).secondary()
+                HStack{
                     Spacer()
-                }.padding(.leading)
+                    Image(systemName: "chevron.right")
+                    
+                }
+                .padding(.trailing)
+                .padding(.trailing)
             }
         }
+        .buttonStyle(PlainButtonStyle())
     }
     
-    var infoStrip: some View{
+    private var categorySection: some View{
+        NavigationLink(destination: CategoryPicker(recipe: self.$recipe), tag: 2, selection: self.$recipeStore.rDSelection) {
+            HStack {
+                Text("Kategorie:")
+                Spacer()
+                Text(recipe.category.name).secondary()
+                Image("chevron.right")
+            }
+            .neomorphic()
+        }.buttonStyle(PlainButtonStyle())
+    }
+    
+    private var infoStrip: some View{
         HStack{
             Spacer()
             VStack {
@@ -149,8 +114,8 @@ struct RezeptDetail: View {
         }
     }
     
-    var startButton: some View{
-        NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
+    private var startButton: some View{
+        NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 3, selection: self.$recipeStore.rDSelection) {
             HStack {
                 Text("Zeitplan erstellen")
                 Spacer()
@@ -160,30 +125,22 @@ struct RezeptDetail: View {
         }.buttonStyle(PlainButtonStyle())
     }
     
-    var stepSections: some View {
-        Group{
-            if self.editMode{
-               VStack {
-                    ForEach(0..<recipe.steps.count, id: \.self){ n in
-                        NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)) {
-                            StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
-                        }.buttonStyle(PlainButtonStyle())
-                    }
-                    NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
-                        HStack {
-                            Text("Schritt hinzufügen")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                    .neomorphic()
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-            } else {
-               ForEach(0..<recipe.steps.count, id: \.self){ n in
-                    StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                }
+    private var stepSections: some View {
+        VStack {
+            ForEach(0..<recipe.steps.count, id: \.self){ n in
+                NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true).environmentObject(self.recipeStore)) {
+                    StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
+                }.buttonStyle(PlainButtonStyle())
             }
+            NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 4, selection: self.$recipeStore.rDSelection) {
+                HStack {
+                    Text("Schritt hinzufügen")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .neomorphic()
+            }
+            .buttonStyle(PlainButtonStyle())
         }
     }
     
@@ -211,17 +168,12 @@ struct RezeptDetail: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 5) {
                 self.nameSection
-                if !editMode{
-                    self.categorySection
-                }
                 self.imageSection
-                if editMode{
-                    self.categorySection
-                }
-                if !editMode{
+                if self.isDetail{
                     self.infoStrip
                     self.startButton
                 }
+                self.categorySection
                 Text("Arbeitsschritte")
                     .secondary()
                     .padding(.leading)
@@ -230,11 +182,12 @@ struct RezeptDetail: View {
                 //self.deleteSection
             }
             .frame(maxWidth: .infinity)
-            .navigationBarTitle(self.title)
-            .navigationBarItems(
-                trailing: self.trailingButtons
-            )
         }
+        
+        .navigationBarTitle(self.title)
+        .navigationBarItems(
+            trailing: self.trailingButton
+        )
         .navigationBarHidden(false)
         .navigationBarBackButtonHidden(false)
     }
@@ -242,23 +195,6 @@ struct RezeptDetail: View {
     func fav(){
         self.recipe.isFavourite.toggle()
     }
-    
-    func delete(){
-        if self.recipeStore.recipes.count > 1, let index = self.recipeStore.recipes.firstIndex(of: self.recipe){
-            
-            self.presentationMode.wrappedValue.dismiss()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                print("hello")
-            }
-            print("Hello2")
-            if !self.deleting{
-                self.deleting = true
-                self.recipeStore.recipes.remove(at: index)
-                self.deleting = false
-            }
-        }
-    }
-    
 }
 
 
@@ -267,7 +203,7 @@ struct RezeptDetail: View {
 struct RezeptDetail_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RezeptDetail(recipe: .constant(Recipe.example))
+            RezeptDetail(recipe: .constant(Recipe.example), isDetail: true)
                 .environmentObject(RecipeStore.example)
                 .environment(\.colorScheme, .light)
         }

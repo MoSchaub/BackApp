@@ -16,7 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     let recipeStore = RecipeStore()
 
-
+    @IBOutlet weak var newRecipeButton: NSMenuItem!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView().environmentObject(self.recipeStore)
@@ -36,6 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         //save file
         recipeStore.write()
+        exit(1)
     }
     
     func applicationWillResignActive(_ notification: Notification) {
@@ -50,13 +52,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
     
-    func applicationWillHide(_ notification: Notification) {
+    
+    @IBAction func newRecipeSelected(_ sender: NSMenuItem) {
         
+        NotificationCenter.default.post(Notification(name: .addRecipe))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.updateMenuItems()
+        }
     }
     
-    func applicationWillUnhide(_ notification: Notification) {
-        
+    func updateMenuItems() {
+        if self.recipeStore.showingAddRecipeView {
+            self.newRecipeButton.isEnabled = false
+            self.newRecipeButton.state = .on
+        } else {
+            self.newRecipeButton.isEnabled = true
+        }
     }
+    
+}
 
+extension Notification.Name {
+    static let addRecipe = Notification.Name("addRecipe")
 }
 

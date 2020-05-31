@@ -148,7 +148,7 @@ struct AddRecipe: View {
                 }
             }else if self.selectedStep != nil{
                 VStack {
-                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: self.selectedStep!) ?? 0], deleteEnabled: true, roomTemp: self.recipeStore.roomThemperature)
+                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: self.selectedStep!) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)
                     Button(action: {
                         self.deleteStep()
                     }){

@@ -39,7 +39,7 @@ struct CategoryPicker: View {
                         .padding()
                         .padding(.horizontal)
                         .background(BackgroundGradient())
-                        .padding(.bottom)
+                        .padding()
                     }.buttonStyle(PlainButtonStyle())
                     
                 }

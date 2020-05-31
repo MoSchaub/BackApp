@@ -118,8 +118,7 @@ struct HomeView: View {
     var aboutButton: some View{
         VStack {
             Button(action: {
-                self.showingRoomTempSheet = false
-                self.showingAboutView = true
+                self.recipeStore.hSelection = 2
             }){
                 HStack{
                     Text("Über diese App")
@@ -128,9 +127,6 @@ struct HomeView: View {
                 }
                 .neomorphic()
             }.buttonStyle(PlainButtonStyle())
-            NavigationLink(destination: ImpressumView(), isActive: self.$showingAboutView) {
-                EmptyView()
-            }
         }
     }
     
@@ -146,7 +142,7 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack{
                     ForEach(0..<recipeStore.latest.count, id: \.self){n in
-                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { self.recipeStore.latest[n] == $0 }) ?? 0]).environmentObject(self.recipeStore)) {
+                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { self.recipeStore.latest[n] == $0 }) ?? 0], isDetail: true).environmentObject(self.recipeStore)) {
                             Card(recipe: self.recipeStore.latest[n])
                                 .background(
                                     self.background
@@ -179,7 +175,7 @@ struct HomeView: View {
                                         self.recipeStore.recipes.firstIndex(
                                             where: { self.recipeStore.favourites[n] == $0 }
                                             ) ?? 0
-                                    ]
+                                    ], isDetail: true
                                 )
                                     .environmentObject(self.recipeStore)
                             ) {
@@ -276,7 +272,7 @@ struct ImageCard: View {
     var body: some View{
         if let index = self.recipeStore.recipes.firstIndex(where: { self.recipe == $0 }){
             return AnyView(
-                NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[index]).environmentObject(self.recipeStore)) {
+                NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[index], isDetail: true).environmentObject(self.recipeStore)) {
                     Card(recipe: self.recipe)
                         .background(self.background)
                         .padding([.horizontal])

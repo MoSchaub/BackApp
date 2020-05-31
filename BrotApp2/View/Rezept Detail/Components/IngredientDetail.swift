@@ -18,7 +18,8 @@ struct IngredientDetail: View {
     @Environment(\.presentationMode) var presentationMode
     let deleteEnabled: Bool
     #elseif os(macOS)
-    @Binding var selection: Int?
+    @EnvironmentObject private var recipeStore: RecipeStore
+    let creating: Bool
     #endif
     var title: String {
         self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "neue Zutat" : self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -107,16 +108,14 @@ struct IngredientDetail: View {
                 .padding(.leading)
                 
                 Spacer()
-                
-                Button(action: {
-                    self.save()
-                }){
-                    HStack {
+                if self.creating {
+                    Button(action: {
+                        self.save()
+                    }){
                         Text("OK")
-                        Spacer()
-                    }
-                }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
-                    .padding(.leading)
+                    }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
+                        .padding(.leading)
+                }
             }
             
             #endif
@@ -147,7 +146,7 @@ struct IngredientDetail: View {
         #if os(iOS)
         self.presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
-        self.selection = nil
+        self.recipeStore.selectedIngredient = nil
         #endif
     }
     

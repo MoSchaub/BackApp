@@ -11,11 +11,6 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject private var recipeStore: RecipeStore
-    @State private var searchText = ""
-    
-    @State private var showingAddRecipeView = false
-    @State private var selectedRecipe: Recipe? = nil
-    
     
     var roomThemperatureSection: some View{
         HStack {
@@ -54,9 +49,9 @@ struct ContentView: View {
     }
     
     var aboutButton: some View{
-        HStack {
-            NavigationLink(destination: ImpressumView()) {
-                Text("Über diese App")
+        HStack{
+            Button("Über diese App"){
+                self.recipeStore.hSelection = 1
             }
             Spacer()
         }
@@ -64,8 +59,8 @@ struct ContentView: View {
     
     var deleteRecipeButton: some View{
         Button("Löschen"){
-            if let index = self.recipeStore.recipes.firstIndex(of: self.selectedRecipe!), index < self.recipeStore.recipes.count {
-                self.selectedRecipe = nil
+            if let index = self.recipeStore.recipes.firstIndex(of: self.recipeStore.selectedRecipe!), index < self.recipeStore.recipes.count {
+                self.recipeStore.selectedRecipe = nil
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                     self.recipeStore.recipes.remove(at: index)
                 }
@@ -73,7 +68,7 @@ struct ContentView: View {
                 //select next
                 if self.recipeStore.recipes.count > 1{
                     guard let lastRecipe = self.recipeStore.recipes.last else { return }
-                    self.selectedRecipe = lastRecipe
+                    self.recipeStore.selectedRecipe = lastRecipe
                 }
             }
         }
@@ -88,11 +83,13 @@ struct ContentView: View {
                 HStack {
                     Text("Rezepte").secondary()
                     Spacer()
-                    Button("hinzufügen"){
-                        self.showingAddRecipeView = true
+                    Button("+"){
+                        self.recipeStore.showingAddRecipeView = true
+                    }.onReceive(self.recipeStore.newRecipePublisher) { (_) in
+                        self.recipeStore.showingAddRecipeView = true
                     }
-                }
-                List(selection: self.$selectedRecipe) {
+                }.padding()
+                List(selection: self.$recipeStore.selectedRecipe) {
                     ForEach(self.recipeStore.recipes) { recipe in
                         Card(recipe: recipe).tag(recipe)
                     }
@@ -109,20 +106,19 @@ struct ContentView: View {
                 }
                 .padding(.leading)
                 
-                .sheet(isPresented: self.$showingAddRecipeView) {
+                .sheet(isPresented: self.$recipeStore.showingAddRecipeView) {
                     AddRecipe()
                         .environmentObject(self.recipeStore)
                 }
             }
             .frame(minWidth: 300, idealWidth: 300, maxWidth: 400, minHeight: 200, idealHeight: 800, maxHeight: .infinity)
-            if self.selectedRecipe != nil{
-                VStack {
-                    RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(of: self.selectedRecipe!) ?? 0]).environmentObject(self.recipeStore)
-                    self.deleteRecipeButton
-                }
+            if self.recipeStore.selectedRecipe != nil{
+                RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(of: self.recipeStore.selectedRecipe!) ?? 0]).frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if self.recipeStore.hSelection == 1 {
+                ImpressumView()
             }
             
-        }
+        }.environmentObject(self.recipeStore)
         .frame(minWidth: 1055 ,maxWidth: .infinity, minHeight: 515, idealHeight: 800, maxHeight: .infinity)
     }
     

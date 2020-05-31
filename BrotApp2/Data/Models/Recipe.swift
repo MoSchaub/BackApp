@@ -120,6 +120,20 @@ struct Recipe: Hashable, Codable, Identifiable{
     }
     
     
+    var timesText: String{
+        get{
+            return self.times?.description ?? ""
+        }
+        set{
+            if let int = Int(newValue){
+                self.times = Decimal(integerLiteral: int)
+            } else{
+                self.times = nil
+            }
+        }
+    }
+    
+    
     //MARK: formatted Properties
     
     ///formatted total time

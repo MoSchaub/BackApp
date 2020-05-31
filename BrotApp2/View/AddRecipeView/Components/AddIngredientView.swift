@@ -17,10 +17,8 @@ struct AddIngredientView: View{
     #if os(iOS)
     @Environment(\.presentationMode) var presentationMode
     @State private var warningAlertShown = false
-    #elseif os(macOS)
-    @Binding var selection: Int?
     #endif
-#if os(iOS)
+    #if os(iOS)
     var backButton: some View{
         Button(action: {
             self.warningAlertShown = true
@@ -59,7 +57,7 @@ struct AddIngredientView: View{
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
         #elseif os(macOS)
-        return IngredientDetail(ingredient: self.$ingredient, step: self.$step, selection: self.$selection)
+        return IngredientDetail(ingredient: self.$ingredient, step: self.$step, creating: true)
         #endif
         
         
@@ -71,7 +69,7 @@ struct AddIngredientView_Previews: PreviewProvider {
         #if os(iOS)
         return AddIngredientView(step: .constant(Step(name: "", time: 60, ingredients: [], themperature: 20)))
         #elseif os(macOS)
-        return AddIngredientView(step: .constant(Step(name: "", time: 60, ingredients: [], themperature: 20)), selection: .constant(nil))
+        return AddIngredientView(step: .constant(Step(name: "", time: 60, ingredients: [], themperature: 20)))
         #endif
         
     }

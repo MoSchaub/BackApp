@@ -83,6 +83,7 @@ extension Image{
 
 struct AddStepView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var recipeStore: RecipeStore
     
     @Binding var recipe: Recipe
     
@@ -115,7 +116,7 @@ struct AddStepView: View {
     }
     
     var body: some View {
-        StepDetail(recipe: self.$recipe, step: self.$step, deleteEnabled: false, roomTemp: self.roomTemp)
+        StepDetail(recipe: self.$recipe, step: self.$step, deleteEnabled: false).environmentObject(self.recipeStore)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
     }

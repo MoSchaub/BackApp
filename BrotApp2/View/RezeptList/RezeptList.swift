@@ -31,7 +31,7 @@ struct RezeptList: View {
             List {
                 self.addButton
                 ForEach(0..<recipeStore.recipes.count, id: \.self){n in
-                    NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[n]).environmentObject(self.recipeStore)) {
+                    NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[n], isDetail: true).environmentObject(self.recipeStore)) {
                         Card(recipe: self.recipeStore.recipes[n])
                     }
                 }
