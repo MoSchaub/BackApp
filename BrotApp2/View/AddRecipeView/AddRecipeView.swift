@@ -17,7 +17,7 @@ struct AddRecipeView: View {
     @State private var recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", isFavourite: false, category: Category.example)
     
     var disabled: Bool{
-        recipe.name.isEmpty || recipe.steps.isEmpty
+        recipe.name.isEmpty || recipe.steps.isEmpty || recipeStore.contains(recipe: recipe)
     }
     
     var title: String{

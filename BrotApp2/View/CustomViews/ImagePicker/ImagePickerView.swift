@@ -11,12 +11,12 @@ import SwiftUI
 struct ImagePickerView: View {
     @State private var showingImagePicker = false
     @State private var showingActionSheet = false
-    @Binding var inputImage: UIImage?
+    @Binding var imageData: Data?
     
     var image: some View {
         get{
             Group{
-                if inputImage == nil{
+                if imageData == nil{
                     LinearGradient(
                         gradient: Gradient(colors: [Color("Color1"),Color.primary]),
                         startPoint: .topLeading,
@@ -36,7 +36,7 @@ struct ImagePickerView: View {
                         .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
                         
                 } else{
-                    Image(uiImage: inputImage!.imageFlippedForRightToLeftLayoutDirection()).resizable().scaledToFit()
+                    Image(uiImage: UIImage(data: imageData!)!.imageFlippedForRightToLeftLayoutDirection()).resizable().scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 15))
                         .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
                         .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
@@ -63,7 +63,7 @@ struct ImagePickerView: View {
                         self.showingImagePicker = true
                     }),
                     .destructive(Text("Bild entfernen"), action: {
-                        self.inputImage = nil
+                        self.imageData = nil
                         self.loadImage()
                     }),
                     .cancel()
@@ -71,7 +71,7 @@ struct ImagePickerView: View {
             }
         }
         .sheet(isPresented: $showingImagePicker,onDismiss: self.loadImage) {
-            ImagePicker(image: self.$inputImage)
+            ImagePicker(imageData: self.$imageData)
         }
         .onAppear{
             self.loadImage()
@@ -79,8 +79,8 @@ struct ImagePickerView: View {
     }
     
     func loadImage() {
-        guard let inputImage = self.inputImage else { return }
-        self.inputImage! =  inputImage.resizeTo(width: 300)
+        guard let imageData = self.imageData else { return }
+        self.imageData =  imageData
     }
 
     
@@ -88,7 +88,7 @@ struct ImagePickerView: View {
 
 struct ImagePickerView_Previews: PreviewProvider {
     static var previews: some View {
-        ImagePickerView(inputImage: .constant(nil))
+        ImagePickerView(imageData: .constant(nil))
             .environment(\.colorScheme, .light)
     }
 }
@@ -109,8 +109,8 @@ extension UIImage{
 
 struct ImagePickerView: View {
     
-    @Binding var inputImage: NSImage?
-    let filteredImage: NSImage?
+    @Binding var imageData: Data?
+    let image: NSImage?
     
     var body: some View {
         VStack(spacing: 16) {
@@ -121,40 +121,28 @@ struct ImagePickerView: View {
                     Text("Select image")
                 }
             }
-            InputImageView(image: self.$inputImage, filteredImage: filteredImage)
-            if inputImage != nil {
-                Button(action: saveToFile) {
-                    Text("Save image")
-                }
-            }
+            InputImageView(imageData: $imageData, image: image)
         }
     }
     
     private func selectFile() {
         NSOpenPanel.openImage { (result) in
             if case let .success(image) = result {
-                self.inputImage = image.resizeTo(width: 300)
+                self.imageData = image.jpegData(compressionQuality: 0.8)
             }
         }
-    }
-    
-    private func saveToFile() {
-        guard let image = filteredImage ?? inputImage else {
-            return
-        }
-        NSSavePanel.saveImage(image, completion: { _ in  })
     }
 }
 
 struct InputImageView: View {
     
-    @Binding var image: NSImage?
-    let filteredImage: NSImage?
+    @Binding var imageData: Data?
+    let image: NSImage?
         
     var body: some View {
         ZStack {
-            if image != nil {
-                Image(nsImage: filteredImage != nil ? filteredImage! : image!)
+            if imageData != nil {
+                Image(nsImage: (image != nil ? image! : NSImage(data:imageData!))!)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {
@@ -178,7 +166,7 @@ struct InputImageView: View {
                         guard let image = NSImage(contentsOf: url) else {
                             return
                         }
-                        self.image = image
+                        self.imageData = image.jpegData(compressionQuality: 0.8)
                     }
                 }
             }
@@ -201,47 +189,13 @@ extension NSImage{
         }
     }
     
-    func jpegData(compressionQuality: Int) -> Data?{
+    func jpegData(compressionQuality: Double) -> Data?{
         if let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) {
         let bits = NSBitmapImageRep(cgImage: cgImage)
             let data = bits.representation(using: .jpeg, properties: [.compressionFactor:compressionQuality])
             return data
         } else {
             return nil
-        }
-    }
-}
-
-
-extension NSSavePanel {
-    
-    static func saveImage(_ image: NSImage, completion: @escaping (_ result: Result<Bool, Error>) -> ()) {
-        let savePanel = NSSavePanel()
-        savePanel.canCreateDirectories = true
-        savePanel.showsTagField = false
-        savePanel.nameFieldStringValue = "image.jpg"
-        savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
-        savePanel.begin { (result) in
-            guard result == .OK,
-                let url = savePanel.url else {
-                completion(.failure(
-                    NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get file location"])
-                ))
-                return
-            }
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                guard
-                    let data = image.tiffRepresentation,
-                    let imageRep = NSBitmapImageRep(data: data) else { return }
-                
-                do {
-                    let imageData = imageRep.representation(using: .jpeg, properties: [.compressionFactor: 1.0])
-                    try imageData?.write(to: url)
-                } catch {
-                    completion(.failure(error))
-                }
-            }
         }
     }
 }
@@ -280,7 +234,6 @@ extension NSImage{
         smallImage.lockFocus()
         self.size = newSize
         NSGraphicsContext.current?.imageInterpolation = .high
-        //self.draw(in: CGRect(origin: .zero, size: newSize))
         smallImage.unlockFocus()
         return smallImage
     }

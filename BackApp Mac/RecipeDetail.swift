@@ -15,20 +15,20 @@ struct RecipeDetail: View {
     
     private var image: some View {
         Group{
-            if recipe.image == nil{
+            if recipe.imageString == nil{
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .mask(Image( "bread").resizable().scaledToFit())
+                    .mask(Image("bread").resizable().scaledToFit())
                     .frame(minWidth: 50, idealWidth: 75, maxWidth: 100, minHeight: 50, idealHeight: 75, maxHeight: 100)
                     .background(BackgroundGradient())
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
                     .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
-                    
             } else{
-                Image(nsImage: recipe.image!).resizable().scaledToFit().frame(minWidth: 50, idealWidth: 75, maxWidth: 100, minHeight: 50, idealHeight: 75, maxHeight: 90)
+                Image(nsImage: NSImage(data: recipe.imageString!)!).resizable().scaledToFill()
+                    .frame(minWidth: 50, idealWidth: 75, maxWidth: 100, minHeight: 50, idealHeight: 75, maxHeight: 90)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
-                .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
+                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
             }
         }
     }
@@ -113,6 +113,15 @@ struct RecipeDetail: View {
             }
         }
     }
+    
+    private var deleteButton: some View {
+        Button("Löschen") {
+            self.recipeStore.delete(recipe: self.recipe)
+        }
+        .disabled(self.recipeStore.recipes.count <= 1)
+        .foregroundColor(self.recipeStore.recipes.count <= 1 ? .gray : .red)
+    }
+    
     var body: some View {
         
         NavigationView {
@@ -126,7 +135,7 @@ struct RecipeDetail: View {
                 self.categorySection
                 
                 self.stepsSection
-                
+                self.deleteButton
                 Spacer()
             }
             .padding(.vertical)
@@ -149,7 +158,7 @@ struct RecipeDetail: View {
                 }
             } else if self.recipeStore.rDSelection == 1 {
                 ZStack {
-                    ImagePickerView(inputImage: self.$recipe.image, filteredImage: .none)
+                    ImagePickerView(imageData: self.$recipe.imageString, image: .none)
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     VStack {

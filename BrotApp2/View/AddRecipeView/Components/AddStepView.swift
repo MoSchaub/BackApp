@@ -116,7 +116,8 @@ struct AddStepView: View {
     }
     
     var body: some View {
-        StepDetail(recipe: self.$recipe, step: self.$step, deleteEnabled: false).environmentObject(self.recipeStore)
+        StepDetail(recipe: self.$recipe, step: self.$step, deleteEnabled: false)
+            .environmentObject(self.recipeStore)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
     }

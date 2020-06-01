@@ -32,20 +32,19 @@ struct AddRecipe: View {
     
     var image: some View {
         Group{
-            if recipe.image == nil{
+            if recipe.imageString == nil{
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .mask(Image( "bread").resizable().scaledToFit())
+                    .mask(Image("bread").resizable().scaledToFit())
                     .frame(height: 250)
                     .background(BackgroundGradient())
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
                     .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
-                    
             } else{
-                Image(nsImage: recipe.image!).resizable().scaledToFit()
+                Image(nsImage: NSImage(data: recipe.imageString!)!).resizable().scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
-                .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
+                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
+                    .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
             }
         }
     }
@@ -135,7 +134,9 @@ struct AddRecipe: View {
             }
             .frame(minWidth: 290, idealWidth: 300, maxWidth: 500, minHeight: 700, idealHeight: 700, maxHeight: .infinity, alignment: .leading)
             if self.selectedStep == nil && self.selection == 1{
-                ImagePickerView(inputImage: self.$recipe.image, filteredImage: nil)
+                ImagePickerView(imageData: self.$recipe.imageString, image: .none)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if self.selectedStep == nil && self.selection == 2 {
                 VStack{
                     AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)

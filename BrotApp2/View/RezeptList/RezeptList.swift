@@ -33,7 +33,7 @@ struct RezeptList: View {
                 ForEach(0..<recipeStore.recipes.count, id: \.self){n in
                     NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[n], isDetail: true).environmentObject(self.recipeStore)) {
                         Card(recipe: self.recipeStore.recipes[n])
-                    }
+                    }.accessibility(identifier: self.recipeStore.recipes[n].name)
                 }
                 .onDelete(perform: self.deleteRecipes)
                 .onMove(perform: self.moveRecipes)
@@ -52,6 +52,7 @@ struct RezeptList: View {
     
     func deleteRecipes(at offsets: IndexSet){
         self.recipeStore.recipes.remove(atOffsets: offsets)
+        self.recipeStore.write()
     }
     
     func moveRecipes(from source: IndexSet, to destination: Int) {

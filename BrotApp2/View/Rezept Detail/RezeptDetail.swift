@@ -50,13 +50,13 @@ struct RezeptDetail: View {
     
     private var image: some View {
         Group{
-            if recipe.image == nil{
+            if recipe.imageString == nil{
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image( "bread").resizable().scaledToFit())
                     .frame(height: 250)
                     .background(BackgroundGradient())
             } else{
-                Image(uiImage: recipe.image!).resizable().scaledToFit()
+                Image(uiImage: UIImage(data: recipe.imageString!)!).resizable().scaledToFit()
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -66,7 +66,7 @@ struct RezeptDetail: View {
     }
     
     private var imageSection: some View{
-        NavigationLink(destination: ImagePickerView(inputImage: self.$recipe.image), tag: 1, selection: self.$recipeStore.rDSelection) {
+        NavigationLink(destination: ImagePickerView(imageData: self.$recipe.imageString), tag: 1, selection: self.$recipeStore.rDSelection) {
             ZStack {
                 self.image
                 HStack{
@@ -132,7 +132,7 @@ struct RezeptDetail: View {
                     StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
                 }.buttonStyle(PlainButtonStyle())
             }
-            NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 4, selection: self.$recipeStore.rDSelection) {
+            NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature).environmentObject(self.recipeStore), tag: 4, selection: self.$recipeStore.rDSelection) {
                 HStack {
                     Text("Schritt hinzufügen")
                     Spacer()

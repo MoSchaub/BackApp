@@ -18,7 +18,7 @@ struct Card: View {
     
     var image: some View {
         Group{
-            if recipe.image == nil{
+            if recipe.imageString == nil{
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image("bread").resizable().scaledToFill())
                     .background(BackgroundGradient())
@@ -27,15 +27,14 @@ struct Card: View {
                     .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
             } else{
                 #if os(iOS)
-                Image(uiImage: recipe.image!).resizable().scaledToFill()
+                Image(uiImage: UIImage(data: recipe.imageString!)!).resizable().scaledToFill()
                     .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
                     .clipShape(RoundedRectangle(cornerRadius: 13))
                 #elseif os(macOS)
-                Image(nsImage: recipe.image!).resizable().scaledToFill()
-                    .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                Image(nsImage: NSImage(data: recipe.imageString!)!).resizable().scaledToFill()
+                .frame(width: CGFloat(width / 3.75), height: CGFloat(width / 3.75))
+                .clipShape(RoundedRectangle(cornerRadius: 13))
                 #endif
-                
             }
         }
     }

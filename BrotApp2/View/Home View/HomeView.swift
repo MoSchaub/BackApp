@@ -204,6 +204,7 @@ struct HomeView: View {
         .onTapGesture {
             self.showingAddRecipeView = true
         }
+    .accessibility(label: Text("Rezept hinzufügen"))
     }
     
     var background: some View{

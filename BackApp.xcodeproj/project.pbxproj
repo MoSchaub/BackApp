@@ -19,6 +19,11 @@
 		CD3A43A32419844E00E40EB4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3A43A12419844E00E40EB4 /* ImagePicker.swift */; };
 		CD3B6DC22448EC2700D3381F /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B6DC12448EC2700D3381F /* DocumentPicker.swift */; };
 		CD65D6D22439239900047822 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65D6D12439239900047822 /* BottomSheetView.swift */; };
+		CD69EF96248420E100372064 /* BackAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD69EF95248420E100372064 /* BackAppUITests.swift */; };
+		CD69EFAD2485412F00372064 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5D246BE0C700E35376 /* Recipe.swift */; };
+		CD69EFAE2485412F00372064 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5E246BE0C700E35376 /* Step.swift */; };
+		CD69EFAF2485412F00372064 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE5F246BE0C700E35376 /* Ingredient.swift */; };
+		CD69EFB02485412F00372064 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE60246BE0C700E35376 /* Category.swift */; };
 		CD6A9A102340252400748249 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A0F2340252400748249 /* AppDelegate.swift */; };
 		CD6A9A122340252400748249 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A112340252400748249 /* SceneDelegate.swift */; };
 		CD6A9A142340252400748249 /* RezeptList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6A9A132340252400748249 /* RezeptList.swift */; };
@@ -90,6 +95,16 @@
 		CDE13F562343B42000019202 /* StepDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE13F552343B42000019202 /* StepDetail.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CD69EF98248420E100372064 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD6A9A042340252400748249 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CD6A9A0B2340252400748249;
+			remoteInfo = "BackApp iOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		CDB5EE1E246B3A9400E35376 /* Embed PlugIns */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -117,6 +132,9 @@
 		CD3A43A12419844E00E40EB4 /* ImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		CD3B6DC12448EC2700D3381F /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		CD65D6D12439239900047822 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
+		CD69EF93248420E100372064 /* BackAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BackAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD69EF95248420E100372064 /* BackAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackAppUITests.swift; sourceTree = "<group>"; };
+		CD69EF97248420E100372064 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD6A19EE247985F700A7A08A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD6A19FA2479920A00A7A08A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6A19FC2479925900A7A08A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -168,6 +186,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CD69EF90248420E100372064 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD6A9A092340252400748249 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -277,12 +302,22 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		CD69EF94248420E100372064 /* BackAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CD69EF95248420E100372064 /* BackAppUITests.swift */,
+				CD69EF97248420E100372064 /* Info.plist */,
+			);
+			path = BackAppUITests;
+			sourceTree = "<group>";
+		};
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
 				CD1B6A182483F7FF00597931 /* Default-568h@2x.png */,
 				CD75BFC824629961005C902A /* bread.png */,
 				CD6A9A0E2340252400748249 /* BrotApp2 */,
+				CD69EF94248420E100372064 /* BackAppUITests */,
 				CDC8A0692483D208005433E1 /* BackApp Mac */,
 				CD6A9A0D2340252400748249 /* Products */,
 				CDB5EE1A246B3A9400E35376 /* Frameworks */,
@@ -294,6 +329,7 @@
 			children = (
 				CD6A9A0C2340252400748249 /* BackApp.app */,
 				CDB5EE23246BCCF800E35376 /* BackApp.app */,
+				CD69EF93248420E100372064 /* BackAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -348,7 +384,7 @@
 				CDB5EE60246BE0C700E35376 /* Category.swift */,
 			);
 			name = Models;
-			path = Data/Models;
+			path = "New Group/Models";
 			sourceTree = "<group>";
 		};
 		CDC8A0692483D208005433E1 /* BackApp Mac */ = {
@@ -422,6 +458,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CD69EF92248420E100372064 /* BackAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD69EF9C248420E100372064 /* Build configuration list for PBXNativeTarget "BackAppUITests" */;
+			buildPhases = (
+				CD69EF8F248420E100372064 /* Sources */,
+				CD69EF90248420E100372064 /* Frameworks */,
+				CD69EF91248420E100372064 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD69EF99248420E100372064 /* PBXTargetDependency */,
+			);
+			name = BackAppUITests;
+			productName = BackAppUITests;
+			productReference = CD69EF93248420E100372064 /* BackAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		CD6A9A0B2340252400748249 /* BackApp iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD6A9A202340252600748249 /* Build configuration list for PBXNativeTarget "BackApp iOS" */;
@@ -471,6 +525,10 @@
 				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
+					CD69EF92248420E100372064 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = CD6A9A0B2340252400748249;
+					};
 					CD6A9A0B2340252400748249 = {
 						CreatedOnToolsVersion = 11.0;
 					};
@@ -497,11 +555,19 @@
 			targets = (
 				CD6A9A0B2340252400748249 /* BackApp iOS */,
 				CDB5EE22246BCCF800E35376 /* BackApp */,
+				CD69EF92248420E100372064 /* BackAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CD69EF91248420E100372064 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD6A9A0A2340252400748249 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -535,6 +601,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CD69EF8F248420E100372064 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD69EFAF2485412F00372064 /* Ingredient.swift in Sources */,
+				CD69EFB02485412F00372064 /* Category.swift in Sources */,
+				CD69EF96248420E100372064 /* BackAppUITests.swift in Sources */,
+				CD69EFAD2485412F00372064 /* Recipe.swift in Sources */,
+				CD69EFAE2485412F00372064 /* Step.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD6A9A082340252400748249 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -616,6 +694,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		CD69EF99248420E100372064 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CD6A9A0B2340252400748249 /* BackApp iOS */;
+			targetProxy = CD69EF98248420E100372064 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		CD6A9A1A2340252600748249 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -647,6 +733,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		CD69EF9A248420E100372064 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				INFOPLIST_FILE = BackAppUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "BackApp iOS";
+			};
+			name = Debug;
+		};
+		CD69EF9B248420E100372064 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				INFOPLIST_FILE = BackAppUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.BackAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "BackApp iOS";
+			};
+			name = Release;
+		};
 		CD6A9A1E2340252600748249 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -862,6 +988,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CD69EF9C248420E100372064 /* Build configuration list for PBXNativeTarget "BackAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD69EF9A248420E100372064 /* Debug */,
+				CD69EF9B248420E100372064 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CD6A9A072340252400748249 /* Build configuration list for PBXProject "BackApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

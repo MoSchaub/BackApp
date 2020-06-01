@@ -55,11 +55,11 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
         Self.formattedAmount(for: self.amount * factor)
     }
     
-    init(name: String, amount: Double) {
+    init(name: String, amount: Double, isBulkLiquid: Bool = false) {
         self.id = UUID().uuidString
         self.name = name
         self.amount = amount
-        self.isBulkLiquid = false
+        self.isBulkLiquid = isBulkLiquid
     }
     
     enum CodingKeys: CodingKey{

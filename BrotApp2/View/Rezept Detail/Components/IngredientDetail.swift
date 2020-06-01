@@ -11,14 +11,54 @@ import SwiftUI
 struct IngredientDetail: View {
     @Binding var ingredient : Ingredient
     @Binding var step: Step
+    let recipe: Recipe
+    
+    @EnvironmentObject private var recipeStore: RecipeStore
     
     @State private var amountText = ""
     
     #if os(iOS)
     @Environment(\.presentationMode) var presentationMode
     let deleteEnabled: Bool
+    @State private var warningAlertShown = false
+    
+    var backButton: some View{
+        Button(action: {
+            if !self.deleteEnabled {
+                self.warningAlertShown = true
+            } else {
+                self.presentationMode.wrappedValue.dismiss()
+            }
+        }) {
+            HStack{
+                
+                Image(systemName: "chevron.left")
+                Text("zurück")
+                
+            }
+        }.alert(isPresented: self.$warningAlertShown) {
+            Alert(title: Text("Achtung"), message: Text("Diese Zutat wird nicht gespeichert"), primaryButton: .default(Text("OK"), action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }), secondaryButton: .cancel())
+        }
+    }
+    
+    var saveButton: some View {
+        Button(action: {
+            self.save()
+        }){
+            HStack {
+                Text("OK")
+                Spacer()
+            }
+        }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
+    }
     #elseif os(macOS)
-    @EnvironmentObject private var recipeStore: RecipeStore
+    
+    let backButton = EmptyView()
+    
+    var saveButton = EmptyView()
+    
     let creating: Bool
     #endif
     var title: String {
@@ -60,16 +100,6 @@ struct IngredientDetail: View {
                     Spacer()
                 }
                 .neomorphic()
-                
-                Button(action: {
-                    self.save()
-                }){
-                    HStack {
-                        Text("OK")
-                        Spacer()
-                    }
-                .neomorphic()
-                }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
             }
             if self.deleteEnabled{
                 Button(action: {
@@ -113,13 +143,21 @@ struct IngredientDetail: View {
                         self.save()
                     }){
                         Text("OK")
-                    }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
+                    }.disabled(ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil || stepContains(ingredient: ingredient))
                         .padding(.leading)
+                } else {
+                    Button(action: {
+                        self.delete()
+                    }) {
+                        Text("Löschen").foregroundColor(.red)
+                    }.padding(.leading)
                 }
             }
             
             #endif
         }
+        .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
+        .navigationBarBackButtonHidden(true)
         .onAppear{
             self.formatAmountText()
             if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
@@ -135,29 +173,33 @@ struct IngredientDetail: View {
         self.amountText = self.ingredient.formatted(rest: self.amountText)
     }
     
+    func stepContains(ingredient: Ingredient) -> Bool {
+        self.step.ingredients.contains(where: {$0.name == self.ingredient.name})
+    }
+    
     func save(){
         self.formatAmountText()
         guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
-        if let index = self.step.ingredients.firstIndex(of: self.ingredient){
-            self.step.ingredients[index] = self.ingredient
-        } else {
+        if !stepContains(ingredient: self.ingredient) {
             self.step.ingredients.append(self.ingredient)
         }
         #if os(iOS)
         self.presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
-        self.recipeStore.selectedIngredient = nil
+        if creating {
+            self.recipeStore.sDSelection = nil
+        } else {
+            self.recipeStore.selectedIngredient = nil
+        }
         #endif
     }
     
-    #if os(iOS)
+    
     func delete(){
-        if let index = self.step.ingredients.firstIndex(of: self.ingredient){
-            self.presentationMode.wrappedValue.dismiss()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                self.step.ingredients.remove(at: index)
-            }
-        }
+        self.recipeStore.deleteIngredient(of: step, in: recipe)
+        #if os(iOS)
+        self.presentationMode.wrappedValue.dismiss()
+        #endif
     }
-    #endif
+    
 }

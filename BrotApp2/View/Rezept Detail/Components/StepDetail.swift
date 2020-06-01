@@ -125,12 +125,12 @@ struct StepDetail: View {
                 .padding(.bottom)
             }
             ForEach(self.step.ingredients){ ingredient in
-                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, deleteEnabled: true)){
+                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, recipe: self.recipe, deleteEnabled: true).environmentObject(self.recipeStore)){
                     IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature, inLink: true, background: true)
                         .padding(.bottom)
                 }.buttonStyle(PlainButtonStyle())
             }
-            NavigationLink(destination: AddIngredientView(step: self.$step), tag: 2, selection: self.$recipeStore.sDSelection) {
+            NavigationLink(destination: AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore), tag: 2, selection: self.$recipeStore.sDSelection) {
                 EmptyView()
             }.hidden()
             NavigationLink(destination: self.subStepPicker, tag: 3, selection: self.$recipeStore.sDSelection) {
@@ -255,7 +255,11 @@ struct StepDetail: View {
     
     var okButton: some View {
         return Button(action: {
-            self.recipeStore.save(step: self.step, to: self.recipe)
+            if self.recipeStore.recipes.contains(self.recipe) {
+                self.recipeStore.save(step: self.step, to: self.recipe)
+            } else if !self.recipe.steps.contains(self.step) {
+                self.recipe.steps.append(self.step)
+            }
             #if os(iOS)
             self.presentationMode.wrappedValue.dismiss()
              #endif
@@ -304,7 +308,7 @@ struct StepDetail: View {
                 self.ingredientOrStep
             } else if self.recipeStore.sDSelection == 2{
                 VStack {
-                    AddIngredientView(step: self.$step).environmentObject(self.recipeStore)
+                    AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore)
                     Button("Abbrechen"){ self.recipeStore.sDSelection = nil}
                         .padding(.bottom)
                 }
@@ -312,26 +316,8 @@ struct StepDetail: View {
             } else if self.recipeStore.sDSelection == 3 {
                 self.subStepPicker
                 .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
-            } else if self.recipeStore.selectedSubstep == nil && self.recipeStore.selectedIngredient != nil &&  self.step.ingredients.contains(self.recipeStore.selectedIngredient ?? Ingredient(name: "", amount: 0)){
-                ZStack {
-                    IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: self.recipeStore.selectedIngredient ?? Ingredient(name: "", amount: 0)) ?? 0], step: self.$step, creating: false).environmentObject(self.recipeStore)
-                    VStack {
-
-                        Spacer()
-
-                        Button("OK"){
-                            self.recipeStore.selectedIngredient = nil
-                        }
-                        
-                        Button(action: {
-                            self.recipeStore.deleteIngredient(of: self.step, in: self.recipe)
-                        }){
-                            Text("Löschen")
-                                .foregroundColor(.red)
-                        }.padding(.bottom)
-                    }
-
-                }.frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
+            } else if self.recipeStore.selectedSubstep == nil && self.recipeStore.selectedIngredient != nil {
+                IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: self.recipeStore.selectedIngredient ?? Ingredient(name: "", amount: 0)) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore).frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
             } else if self.recipeStore.selectedIngredient == nil && self.recipeStore.selectedSubstep != nil{
                 VStack {
                     StepDetail(recipe: self.$recipe, step: self.$step.subSteps[self.step.subSteps.firstIndex(of: self.recipeStore.selectedSubstep!) ?? 0], deleteEnabled: false)

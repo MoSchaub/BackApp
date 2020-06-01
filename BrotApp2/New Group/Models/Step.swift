@@ -24,13 +24,13 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var subSteps: [Step]
     
-    init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
+    init(name: String, time: TimeInterval, ingredients: [Ingredient] = [] , themperature: Int = 20, notes: String = "") {
         self.id = UUID().uuidString
         self.time = time
         self.name = name
         self.ingredients = ingredients
         self.temperature = themperature
-        self.notes = ""
+        self.notes = notes
         self.subSteps = []
     }
     

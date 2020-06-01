@@ -21,9 +21,9 @@ final class RecipeStore: ObservableObject{
     @Published var recipes = [Recipe]()
     @Published var roomThemperature = 20
     @Published var categories = [
-        Category(name: "Brot", image: UIImage(named: "bread")!),
-        Category(name: "Brötchen", image: UIImage(named: "roll")!),
-        Category(name: "Kuchen", image: UIImage(named: "cake")!)
+        Category(name: "Brot", imageData: UIImage(named: "bread")!.jpegData(compressionQuality: 0.8)),
+        Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
+        Category(name: "Kuchen", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
     ]
 
     var latest: [Recipe]{
@@ -66,9 +66,21 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
+    
+    func contains(recipe: Recipe) -> Bool {
+        self.recipes.contains(where: { $0.name == recipe.name})
+    }
+    
     func save(recipe: Recipe){
-        self.addRecipe(recipe: recipe)
-        //self.isPresented = false
+        if !self.contains(recipe: recipe) {
+            self.addRecipe(recipe: recipe)
+        }
+    }
+    
+    func delete(recipe: Recipe){
+        if recipes.count > 1 ,let index = recipes.firstIndex(of: recipe) {
+            self.recipes.remove(at: index)
+        }
     }
     
     func delete(step: Step, from recipe: Recipe){

@@ -6,7 +6,7 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
 var dateFormatter: DateFormatter{
     let formatter = DateFormatter()
@@ -74,28 +74,8 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     
     //MARK: Image properties
-    ///getter and setter for the image
-    var image: UIImage?{
-        get{
-        if let data = imageString{
-        return UIImage(data: data)?.resizeTo(width: 300)
-        } else{ return nil }
-        }
-        set{
-        if newValue == nil{
-        imageString = nil
-        } else {
-            if let jpegData = newValue!.jpegData(compressionQuality: 1){
-                self.imageString = jpegData
-            } else if let pngData = newValue!.pngData(){
-                self.imageString = pngData
-            }
-        
-        }
-        }
-    }
     ///property used to make the image json compatible and stores the image as base64 encoded String
-    private var imageString: Data?
+    var imageString: Data?
     
     /// total time of all the steps in the brotValues array
     var totalTime: Int {
@@ -187,9 +167,21 @@ struct Recipe: Hashable, Codable, Identifiable{
         return "error"
     }
     
-    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), isFavourite: false, category: Category.example)
+    static var example: Recipe {
+        let vollkornMehl = Ingredient(name: "Vollkornmehl", amount: 50)
+        let anstellgut = Ingredient(name: "Anstellgut TA 200", amount: 120, isBulkLiquid: false)
+        let olivenöl = Ingredient(name: "Olivenöl", amount: 40, isBulkLiquid: true)
+        let saaten = Ingredient(name: "Saaten", amount: 30)
+        let salz = Ingredient(name: "Salz", amount: 5)
+        
+        let schritt1 = Step(name: "Mischen", time: 2, ingredients: [anstellgut,vollkornMehl,olivenöl,saaten,salz], themperature: 20)
+        
+        let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
+        
+        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen], category: Category(name: "Brot"))
+    }
     
-    init(name:String, brotValues: [Step], inverted: Bool, dateString: String, isFavourite: Bool, category: Category) {
+    init(name:String, brotValues: [Step], inverted: Bool = false , dateString: String = "", isFavourite: Bool = false, category: Category) {
         self.id = UUID().uuidString
         self.name = name
         self.steps = brotValues
