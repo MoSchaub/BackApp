@@ -127,10 +127,12 @@ struct RezeptDetail: View {
     
     private var stepSections: some View {
         VStack {
-            ForEach(0..<recipe.steps.count, id: \.self){ n in
-                NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[n], deleteEnabled: true).environmentObject(self.recipeStore)) {
-                    StepRow(step: self.recipe.steps[n], recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
-                }.buttonStyle(PlainButtonStyle())
+            ForEach(recipe.steps){ step in
+                if self.recipe.steps.contains(where: {$0.id == step.id}) {
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: { $0.id == step.id}) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)) {
+                        StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
+                    }.buttonStyle(PlainButtonStyle())
+                }
             }
             NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature).environmentObject(self.recipeStore), tag: 4, selection: self.$recipeStore.rDSelection) {
                 HStack {
@@ -143,26 +145,6 @@ struct RezeptDetail: View {
             .buttonStyle(PlainButtonStyle())
         }
     }
-    
-//    var deleteSection: some View{
-//        Group {
-//            if self.editMode {
-//                Button(action: {
-//                    self.delete()
-//                }){
-//                    HStack {
-//                        Text("Löschen")
-//                            .foregroundColor(self.recipeStore.recipes.count < 1 ? .secondary : .red)
-//                        Spacer()
-//                    }
-//                    .neomorphic()
-//                }
-//                .disabled(self.recipeStore.recipes.count < 1 )
-//            } else {
-//                EmptyView()
-//            }
-//        }
-//    }
     
     var body: some View {
         ScrollView {

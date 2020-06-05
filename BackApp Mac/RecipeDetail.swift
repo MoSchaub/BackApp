@@ -142,7 +142,7 @@ struct RecipeDetail: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             if self.recipeStore.selectedStep != nil && self.recipeStore.recipes.count > 0{
                 ZStack {
-                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: self.recipeStore.selectedStep ?? Step(name: "", time: 0, ingredients: [], themperature: 20)) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)
+                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == recipeStore.selectedStep?.id}) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)
                     VStack {
                             Spacer()
                             Button(action: {

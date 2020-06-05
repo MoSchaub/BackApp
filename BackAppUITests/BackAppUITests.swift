@@ -42,18 +42,16 @@ class BackAppUITests: XCTestCase {
         for step in recipe.steps {
             elementsQuery.buttons["Schritt hinzufügen"].tap()
             
-            let elementsQuery2 = app.scrollViews.otherElements
-                        
-            let nameTextField = elementsQuery2.textFields["Name"]
+            let nameTextField = XCUIApplication().scrollViews.otherElements.textFields["Name"]
             nameTextField.tap()
             nameTextField.typeText(step.name)
-            returnButton.tap()
+            
             
             let notesTextField = elementsQuery.textFields["Notizen..."]
             notesTextField.tap()
             notesTextField.typeText(step.notes)
             returnButton.tap()
-                
+            
             for ingredient in step.ingredients {
                 let zutatHinzufügenButton = elementsQuery.buttons["Zutat hinzufügen"]
                 zutatHinzufügenButton.tap()

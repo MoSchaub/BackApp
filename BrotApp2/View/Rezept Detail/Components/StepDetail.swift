@@ -136,9 +136,6 @@ struct StepDetail: View {
             NavigationLink(destination: self.subStepPicker, tag: 3, selection: self.$recipeStore.sDSelection) {
                 EmptyView()
             }.hidden()
-            NavigationLink(destination: self.ingredientOrStep, tag: 1, selection: self.$recipeStore.sDSelection) {
-                EmptyView()
-            }.hidden()
             Button(action: {
                 let stepsWithIngredients = self.recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
                 if stepsWithIngredients.isEmpty{
@@ -158,6 +155,7 @@ struct StepDetail: View {
                 .padding(.horizontal)
             }.buttonStyle(PlainButtonStyle())
         }
+        
         #elseif os(macOS)
         return VStack{
             HStack{
@@ -192,6 +190,40 @@ struct StepDetail: View {
         #endif
     }
     
+    private var subStepPicker: some View {
+        let stepsWithIngredients = self.recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
+        return List{
+            ForEach(stepsWithIngredients){step in
+                Button(action: {
+                        self.step.subSteps.append(step)
+                        self.recipeStore.selectedSubstep = step
+                    #if os(iOS)
+                    self.recipeStore.sDSelection = nil
+                    #endif
+                }){
+                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                }.buttonStyle(PlainButtonStyle())
+            }
+        }
+
+    }
+    
+    #if os(iOS)
+    
+    private var ingredientOrStep: ActionSheet{
+        let buttons = [
+        ActionSheet.Button.default(Text("Zutat"), action: {
+        self.recipeStore.sDSelection = 2 //add ingredient
+        }),
+        .default(Text("Schritt"), action: {
+        self.recipeStore.sDSelection = 3 // add Substep
+        }),
+        .cancel()
+        ]
+        return ActionSheet(title: Text("Schritt oder Zutat?"), buttons: buttons)
+    }
+    #elseif os(macOS)
+    
     private var ingredientOrStep: some View{
         VStack{
             Button("Zutat"){
@@ -208,35 +240,8 @@ struct StepDetail: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
-    
-    private var subStepPicker: some View {
-        let stepsWithIngredients = self.recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
-        #if os(iOS)
-        return VStack{
-            ForEach(stepsWithIngredients){step in
-                Button(action: {
-                    self.step.subSteps.append(step)
-                    self.recipeStore.sDSelection = 3
-                }){
-                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                }.buttonStyle(PlainButtonStyle())
-            }
-        }
-        #elseif os(macOS)
-        return List{
-            ForEach(stepsWithIngredients){step in
-                Button(action: {
-                    self.step.subSteps.append(step)
-                    self.recipeStore.sDSelection = nil
-                }){
-                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                }.buttonStyle(PlainButtonStyle())
-            }
-        }
-        
-        #endif
-    }
-    
+    #endif
+
     #if os(iOS)
     var deleteButton: some View{
         Button(action: {
@@ -280,6 +285,7 @@ struct StepDetail: View {
                 self.timeSection
                 self.tempSection
                 self.ingredientsSection
+                    .actionSheet(isPresented: self.$recipeStore.sDShowingSubstepOrIngredientSheet, content: {self.ingredientOrStep})
                 Spacer()
                 if self.deleteEnabled{
                     self.deleteButton
@@ -317,10 +323,10 @@ struct StepDetail: View {
                 self.subStepPicker
                 .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
             } else if self.recipeStore.selectedSubstep == nil && self.recipeStore.selectedIngredient != nil {
-                IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: self.recipeStore.selectedIngredient ?? Ingredient(name: "", amount: 0)) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore).frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
-            } else if self.recipeStore.selectedIngredient == nil && self.recipeStore.selectedSubstep != nil{
+                IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: {$0.id == self.recipeStore.selectedIngredient?.id}) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore).frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
+            } else if self.recipeStore.selectedIngredient == nil && self.recipeStore.selectedSubstep != nil && self.step.subSteps.count > 0{
                 VStack {
-                    StepDetail(recipe: self.$recipe, step: self.$step.subSteps[self.step.subSteps.firstIndex(of: self.recipeStore.selectedSubstep!) ?? 0], deleteEnabled: false)
+                    StepDetail(recipe: self.$recipe, step: self.$step.subSteps[self.step.subSteps.firstIndex(where: {$0.id == self.recipeStore.selectedSubstep?.id}) ?? 0], deleteEnabled: false)
                     
                     Button(action: {
                         self.recipeStore.deleteSubstep(of: self.step, in: self.recipe)

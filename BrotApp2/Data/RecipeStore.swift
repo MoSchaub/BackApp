@@ -80,6 +80,7 @@ final class RecipeStore: ObservableObject{
     func delete(recipe: Recipe){
         if recipes.count > 1 ,let index = recipes.firstIndex(of: recipe) {
             self.recipes.remove(at: index)
+            self.write()
         }
     }
     
@@ -101,11 +102,16 @@ final class RecipeStore: ObservableObject{
     @Published var sDSelection: Int? = nil{
         didSet{
             if self.sDSelection != nil {
+                if self.sDSelection == 1 {
+                    sDShowingSubstepOrIngredientSheet = true
+                }
                 self.selectedSubstep = nil
                 self.selectedIngredient = nil
             }
         }
     }
+    
+    @Published var sDShowingSubstepOrIngredientSheet = false
     
     @Published var selectedIngredient: Ingredient? = nil{
         didSet{
