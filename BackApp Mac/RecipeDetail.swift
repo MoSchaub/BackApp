@@ -158,7 +158,7 @@ struct RecipeDetail: View {
                 }
             } else if self.recipeStore.rDSelection == 1 {
                 ZStack {
-                    ImagePickerView(imageData: self.$recipe.imageString, image: .none)
+                    ImagePickerView(imageData: self.$recipe.imageString)
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     VStack {

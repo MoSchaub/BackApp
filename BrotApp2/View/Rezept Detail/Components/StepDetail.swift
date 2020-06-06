@@ -352,6 +352,7 @@ struct stepTimePicker: View {
     var body: some View {
         VStack {
             MOTimePicker(time: self.$time)
+                .accessibility(identifier: "time")
             Button("OK"){ self.presentationMode.wrappedValue.dismiss()}
         }
     }

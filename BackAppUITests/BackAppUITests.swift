@@ -68,7 +68,8 @@ class BackAppUITests: XCTestCase {
             }
             
             app.tables.cells.buttons["1 Minute"].tap()
-            app.datePickers/*@START_MENU_TOKEN@*/.pickers.pickerWheels["1 Min."]/*[[".pickers.pickerWheels[\"1 Min.\"]",".pickerWheels[\"1 Min.\"]"],[[[-1,1],[-1,0]]],[1]]@END_MENU_TOKEN@*/.adjust(toPickerWheelValue: "\(Int(step.time))")
+                        
+            XCUIApplication().datePickers["time"].pickers.pickerWheels["1 Min."].adjust(toPickerWheelValue: "\(Int(step.time))")
             
             app.buttons["OK"].tap()
             

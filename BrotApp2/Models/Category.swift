@@ -26,6 +26,6 @@ struct Category: Codable, Hashable, Identifiable {
         return lhs.name == rhs.name
     }
     
-    static var example = Category(name: "Brot", imageData: UIImage(named: "bread")?.jpegData(compressionQuality: 0.8))
+    static var example = Category(name: "Brot")
     
 }

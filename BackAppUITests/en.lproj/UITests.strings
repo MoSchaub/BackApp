@@ -1,0 +1,10 @@
+/* 
+  UITests.strings
+  BackApp
+
+  Created by Moritz Schaub on 06.06.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+/* datepicker wheel name */
+"minutes" = "1 min";
