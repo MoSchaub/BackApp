@@ -9,10 +9,6 @@
 import SwiftUI
 import Combine
 
-#if os(macOS)
-typealias UIImage = NSImage
-#endif
-
 final class RecipeStore: ObservableObject{
 
     @Published var recipes = [Recipe]()
