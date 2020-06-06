@@ -26,15 +26,8 @@ struct StepDetail: View {
 
     private var nameSection: some View{
          #if os(iOS)
-        return VStack(alignment: .leading, spacing: 3.0) {
-            Text("Name").secondary()
-                .padding(.leading)
-                .padding(.leading)
-            TextField("Name", text: self.$step.name)
-                .padding(.leading)
-                .padding(.vertical)
-                .background(BackgroundGradient())
-                .padding([.horizontal,.bottom])
+        return Section(header: Text("Name")) {
+            TextField("Name eingeben", text: self.$step.name)
         }
         #elseif os(macOS)
         return HStack{
@@ -49,15 +42,11 @@ struct StepDetail: View {
     
     private var timeSection: some View{
         #if os(iOS)
-        return NavigationLink(destination: stepTimePicker(time: self.$step.time)) {
-            HStack {
-                Text("Dauer:")
-                Spacer()
+        return Section(header: Text("Dauer")) {
+            NavigationLink(destination: stepTimePicker(time: self.$step.time)) {
                 Text(step.formattedTime)
-                Image(systemName: "chevron.right")
             }
-            .neomorphic()
-        }.buttonStyle(PlainButtonStyle())
+        }
         #elseif os(macOS)
         return HStack {
             Text("Dauer:").padding(.leading)
@@ -69,15 +58,11 @@ struct StepDetail: View {
     
     private var tempSection: some View {
         #if os(iOS)
-        return NavigationLink(destination: stepTempPicker(temp: self.$step.temperature) ) {
-            HStack {
-                Text("Temperatur")
-                Spacer()
+        return Section(header: Text("Temperatur")) {
+            NavigationLink(destination: stepTempPicker(temp: self.$step.temperature) ) {
                 Text(self.step.formattedTemp)
-                Image(systemName: "chevron.right")
             }
-            .neomorphic()
-        }.buttonStyle(PlainButtonStyle())
+        }
         #elseif os(macOS)
         return Picker("Temperatur:", selection: self.$step.temperature){
             ForEach(-10...50, id: \.self){ n in
@@ -89,15 +74,8 @@ struct StepDetail: View {
     
     private var notesSection: some View{
         #if os(iOS)
-        return VStack(alignment: .leading, spacing: 3.0) {
-            Text("Notizen").secondary()
-                .padding(.leading)
-                .padding(.leading)
+        return Section(header: Text("Notizen")) {
             TextField("Notizen...",text: self.$step.notes)
-                .padding(.leading)
-                .padding(.vertical)
-                .background(BackgroundGradient())
-                .padding([.horizontal,.bottom])
         }
         #elseif os(macOS)
         return HStack{
@@ -111,31 +89,26 @@ struct StepDetail: View {
     
     private var ingredientsSection: some View {
         #if os(iOS)
-        return VStack(alignment: .leading, spacing: 3.0 ){
-            Text("Zutaten").secondary()
-                .padding(.leading)
-                .padding(.leading)
+        return Section(header: Text("Zutaten")) {
             ForEach(self.step.subSteps){ subStep in
                 HStack {
                     Text(subStep.name).font(.headline)
                     Spacer()
                     Text(subStep.formattedTime).secondary()
                 }
-                .neomorphic()
-                .padding(.bottom)
             }
+            .onDelete(perform: deleteSubsteps)
+            .onMove(perform: moveSubsteps)
+            
             ForEach(self.step.ingredients){ ingredient in
-                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(of: ingredient)!], step: self.$step, recipe: self.recipe, deleteEnabled: true).environmentObject(self.recipeStore)){
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature, inLink: true, background: true)
-                        .padding(.bottom)
-                }.buttonStyle(PlainButtonStyle())
+                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: { $0.id == ingredient.id}) ?? 0], step: self.$step, recipe: self.recipe, deleteEnabled: true).environmentObject(self.recipeStore)){
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature)
+                }
+                
             }
-            NavigationLink(destination: AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore), tag: 2, selection: self.$recipeStore.sDSelection) {
-                EmptyView()
-            }.hidden()
-            NavigationLink(destination: self.subStepPicker, tag: 3, selection: self.$recipeStore.sDSelection) {
-                EmptyView()
-            }.hidden()
+            .onMove(perform: moveIngredients)
+            .onDelete(perform: deleteIngredients)
+            
             Button(action: {
                 let stepsWithIngredients = self.recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
                 if stepsWithIngredients.isEmpty{
@@ -147,15 +120,10 @@ struct StepDetail: View {
                 HStack {
                     Text("Zutat hinzufügen")
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.right").foregroundColor(.secondary)
                 }
-                .padding()
-                .padding(.horizontal)
-                .background(BackgroundGradient())
-                .padding(.horizontal)
-            }.buttonStyle(PlainButtonStyle())
-        }
-        
+            }.foregroundColor(.primary)
+        }.actionSheet(isPresented: self.$recipeStore.sDShowingSubstepOrIngredientSheet, content: {self.ingredientOrStep})
         #elseif os(macOS)
         return VStack{
             HStack{
@@ -177,14 +145,18 @@ struct StepDetail: View {
                         StepRow(step: sub, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
                             .tag(sub)
                     }
+                .onMove(perform: moveSubsteps)
+                .onDelete(perform: deleteSubsteps)
                 }
             }
             
             List(selection: self.$recipeStore.selectedIngredient){
                 //Ingredients
                 ForEach(self.step.ingredients){ ingredient in
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature, inLink: false, background: false).tag(ingredient)
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature).tag(ingredient)
                 }
+                .onMove(perform: moveIngredients)
+                .onDelete(perform: deleteIngredients)
             }
         }
         #endif
@@ -202,7 +174,7 @@ struct StepDetail: View {
                     #endif
                 }){
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                }.buttonStyle(PlainButtonStyle())
+                }
             }
         }
 
@@ -255,6 +227,17 @@ struct StepDetail: View {
             .neomorphic()
         }
     }
+    
+    var navigationSection: some View {
+        Section {
+        NavigationLink(destination: AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore), tag: 2, selection: self.$recipeStore.sDSelection) {
+        EmptyView()
+        }.hidden()
+        NavigationLink(destination: self.subStepPicker, tag: 3, selection: self.$recipeStore.sDSelection) {
+        EmptyView()
+        }.hidden()
+        }.hidden()
+    }
     #endif
     
     
@@ -268,31 +251,25 @@ struct StepDetail: View {
             #if os(iOS)
             self.presentationMode.wrappedValue.dismiss()
              #endif
-        }){
-            HStack {
-                Text("OK")
-                Spacer()
-            }.neomorphic()
-        }
+        }){ Text("OK") }
     }
    
     var body: some View {
         #if os(iOS)
-        return ScrollView{
-            VStack(alignment: .leading) {
-                self.nameSection
-                self.notesSection
-                self.timeSection
-                self.tempSection
-                self.ingredientsSection
-                    .actionSheet(isPresented: self.$recipeStore.sDShowingSubstepOrIngredientSheet, content: {self.ingredientOrStep})
-                Spacer()
-                if self.deleteEnabled{
-                    self.deleteButton
-                } else{
-                    self.okButton
-                }
+        return VStack {
+            List{
+                    self.nameSection
+                    self.notesSection
+                    self.timeSection
+                    self.tempSection
+                    self.ingredientsSection
+                    if self.deleteEnabled{
+                        self.deleteButton
+                    } else{
+                        self.okButton
+                    }
             }
+            self.navigationSection
         }
         .navigationBarTitle(self.title)
         #elseif os(macOS)
@@ -344,6 +321,24 @@ struct StepDetail: View {
         }
         #endif
     }
+    
+    func deleteIngredients(at offsets: IndexSet){
+        self.step.ingredients.remove(atOffsets: offsets)
+    }
+    
+    func moveIngredients(from source: IndexSet, to offset: Int){
+        self.step.ingredients.move(fromOffsets: source, toOffset: offset)
+    }
+    
+    func deleteSubsteps(at offsets: IndexSet){
+        self.step.subSteps.remove(atOffsets: offsets)
+    }
+    
+    func moveSubsteps(from source: IndexSet, to offset: Int){
+        self.step.subSteps.move(fromOffsets: source, toOffset: offset)
+    }
+    
+    
 
 }
 

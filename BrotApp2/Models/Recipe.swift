@@ -6,7 +6,7 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
 var dateFormatter: DateFormatter{
     let formatter = DateFormatter()
@@ -37,9 +37,9 @@ struct Recipe: Hashable, Codable, Identifiable{
     ///property containing wether the "date" property is the end date or the start date
     var inverted : Bool
     
-   ///for how many items eg breads, rolls, etc the the ingredients are calculated
+    ///for how many items eg breads, rolls, etc the the ingredients are calculated
     var times: Decimal?
-
+    
     ///property used to make the date json compatible and strores the date as an string
     private var dateString: String
     
@@ -74,27 +74,8 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     
     //MARK: Image properties
-    
     ///property used to make the image json compatible and stores the image as base64 encoded String
-    private var imageString: Data?
-    
-    ///getter and setter for the image
-    var image: UIImage?{
-        get{
-            if let data = imageString{
-                return UIImage(data: data)?.resizeTo(width: 300)
-            } else{ return nil }
-        }
-        set{
-            if newValue == nil{
-                imageString = nil
-            }
-            else {
-                imageString = newValue!.jpegData(compressionQuality: 1)
-            }
-        }
-    }
-    
+    var imageString: Data?
     
     /// total time of all the steps in the brotValues array
     var totalTime: Int {
@@ -116,6 +97,20 @@ struct Recipe: Hashable, Codable, Identifiable{
             }
         }
         return ingredients.count
+    }
+    
+    
+    var timesText: String{
+        get{
+            return self.times?.description ?? ""
+        }
+        set{
+            if let int = Int(newValue){
+                self.times = Decimal(integerLiteral: int)
+            } else{
+                self.times = nil
+            }
+        }
     }
     
     
@@ -172,9 +167,21 @@ struct Recipe: Hashable, Codable, Identifiable{
         return "error"
     }
     
-    static var example = Recipe(name: "Rezept", brotValues: [Step(name: "Schritt1", time: 60, ingredients: [Ingredient](), themperature: 20)], inverted: true, dateString: isoFormatter.string(from: Date()), isFavourite: false, category: Category.example)
+    static var example: Recipe {
+        let vollkornMehl = Ingredient(name: "Vollkornmehl", amount: 50)
+        let anstellgut = Ingredient(name: "Anstellgut TA 200", amount: 120, isBulkLiquid: false)
+        let olivenöl = Ingredient(name: "Olivenöl", amount: 40, isBulkLiquid: true)
+        let saaten = Ingredient(name: "Saaten", amount: 30)
+        let salz = Ingredient(name: "Salz", amount: 5)
+        
+        let schritt1 = Step(name: "Mischen", time: 2, ingredients: [anstellgut,vollkornMehl,olivenöl,saaten,salz], themperature: 20)
+        
+        let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
+        
+        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen], category: Category(name: "Brot"))
+    }
     
-    init(name:String, brotValues: [Step], inverted: Bool, dateString: String, isFavourite: Bool, category: Category) {
+    init(name:String, brotValues: [Step], inverted: Bool = false , dateString: String = "", isFavourite: Bool = false, category: Category) {
         self.id = UUID().uuidString
         self.name = name
         self.steps = brotValues
@@ -190,6 +197,7 @@ struct Recipe: Hashable, Codable, Identifiable{
         case steps
         case inverted
         case isFavourite
+        case imageString
         case category
         case times
     }
@@ -197,16 +205,15 @@ struct Recipe: Hashable, Codable, Identifiable{
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = UUID().uuidString
+        self.dateString = dateFormatter.string(from: Date())
         self.name = try container.decode(String.self, forKey: .name)
         self.steps = try container.decode([Step].self, forKey: .steps)
         self.inverted = try container.decode(Bool.self, forKey: .inverted)
-        self.dateString = dateFormatter.string(from: Date())
         self.isFavourite = try container.decode(Bool.self, forKey: .isFavourite)
+        self.imageString = try container.decodeIfPresent(Data.self, forKey: .imageString)
         self.category = try container.decode(Category.self, forKey: .category)
         self.times = try container.decode(Decimal.self, forKey: .times)
     }
-    
-    
     
     func text(roomTemp: Int, scaleFactor: Double) -> String {
         var h = startDate

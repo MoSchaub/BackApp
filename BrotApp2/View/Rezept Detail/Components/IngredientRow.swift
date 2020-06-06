@@ -13,8 +13,6 @@ struct IngredientRow: View {
     let ingredient: Ingredient
     let step: Step
     let roomTemp: Int
-    let inLink: Bool
-    let background : Bool
     
     var body: some View {
         HStack {
@@ -27,17 +25,6 @@ struct IngredientRow: View {
                 EmptyView()
             }
             Text(ingredient.formattedAmount)
-            if self.inLink{
-            #if os(iOS)
-            Image(systemName: "chevron.right")
-            #elseif os(macOS)
-            
-            #endif
-            }
         }
-        .padding(.all, self.background ? nil : 0)
-        .padding(.horizontal, self.background ? nil : 0)
-        .background(self.background ? AnyView(BackgroundGradient()) : AnyView(EmptyView()))
-        .padding(.horizontal, self.background ? nil : 0)
     }
 }

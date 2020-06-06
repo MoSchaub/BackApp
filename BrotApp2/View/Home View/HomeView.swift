@@ -14,8 +14,6 @@ struct HomeView: View {
     @State private var searchText = ""
     
     @State private var showingAddRecipeView = false
-    @State private var showingRoomTempSheet = false
-    @State private var showingAboutView = false
     
     @State private var showingDocumentPicker = false
     @State private var showingShareSheet = false
@@ -37,44 +35,24 @@ struct HomeView: View {
             .background(BackgroundGradient())
             Text("\(self.recipeStore.roomThemperature) °C")
             Button("OK"){
-                self.showingRoomTempSheet = false
+                self.recipeStore.hSelection = nil
             }
             .padding()
-            .background(BackgroundGradient())
         }
     }
     
     var roomThemperatureSection: some View{
-        Button(action: {
-            self.showingRoomTempSheet = true
-        }){
-            HStack {
-                Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
-                Spacer()
-                Image(systemName: "chevron.right")
-                
-            }
-            .neomorphic()
-            .onTapGesture {
-                self.showingAboutView = false
-                self.showingRoomTempSheet = true
-            }
-            NavigationLink(destination: self.roomThemperturePicker, isActive: self.$showingRoomTempSheet, label: {
-                EmptyView()
-            })
-            
-        }
-            
-        .buttonStyle(PlainButtonStyle())
+        NavigationLink(destination: self.roomThemperturePicker, tag: 1, selection: self.$recipeStore.hSelection, label: {
+            Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
+        })
     }
     
     var importButton: some View{
         HStack{
             Text("Rezept(e) aus Datei importieren")
             Spacer()
-            Image(systemName: "chevron.up")
+            Image(systemName: "chevron.up").foregroundColor(.secondary)
         }
-        .neomorphic()
         .onTapGesture {
                 self.showingDocumentPicker = true
         }
@@ -93,9 +71,8 @@ struct HomeView: View {
         HStack{
             Text("Rezepte exportieren")
             Spacer()
-            Image(systemName: "chevron.up")
+            Image(systemName: "chevron.up").foregroundColor(.secondary)
         }
-        .neomorphic()
         .onTapGesture {
             self.showingShareSheet = true
         }
@@ -105,95 +82,16 @@ struct HomeView: View {
     }
     
     var donateButton: some View {
-        HStack{
-            Text("Spenden").foregroundColor(.accentColor)
-            Spacer()
-            Image(systemName: "chevron.up")
-        }.onTapGesture {
-            //open donatePage
+        Text("Spenden")
+            .foregroundColor(.accentColor)
+            .onTapGesture {
+                //open donatePage
         }
-        .neomorphic()
     }
     
     var aboutButton: some View{
-        VStack {
-            Button(action: {
-                self.recipeStore.hSelection = 2
-            }){
-                HStack{
-                    Text("Über diese App")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .neomorphic()
-            }.buttonStyle(PlainButtonStyle())
-        }
-    }
-    
-    var recipesSection: some View{
-        VStack {
-            HStack{
-                Text("Rezepte").font(.headline).fontWeight(.bold)
-                Spacer()
-                NavigationLink(destination: RezeptList().environmentObject(self.recipeStore)) {
-                    Text("Alle ansehen").secondary()
-                }
-            }.padding([.horizontal, .top])
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack{
-                    ForEach(0..<recipeStore.latest.count, id: \.self){n in
-                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { self.recipeStore.latest[n] == $0 }) ?? 0], isDetail: true).environmentObject(self.recipeStore)) {
-                            Card(recipe: self.recipeStore.latest[n])
-                                .background(
-                                    self.background
-                                )
-                                .padding([.horizontal])
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.bottom)
-                        
-                        //ImageCard(recipe: self.recipeStore.latest[n]).environmentObject(self.recipeStore)
-                    }
-                }
-            }
-        }
-    }
-    
-    var favoritesSection: AnyView {
-        if !self.recipeStore.favourites.isEmpty{
-          return AnyView(  VStack {
-                HStack{
-                    Text("Favoriten").font(.headline).fontWeight(.bold)
-                    Spacer()
-                }.padding([.horizontal, .top])
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack{
-                        ForEach(0..<recipeStore.favourites.count, id: \.self){n in
-                            NavigationLink(
-                                destination: RezeptDetail(
-                                    recipe: self.$recipeStore.recipes[
-                                        self.recipeStore.recipes.firstIndex(
-                                            where: { self.recipeStore.favourites[n] == $0 }
-                                            ) ?? 0
-                                    ], isDetail: true
-                                )
-                                    .environmentObject(self.recipeStore)
-                            ) {
-                                Card(recipe: self.recipeStore.favourites[n])
-                                    .background(
-                                        self.background
-                                )
-                                    .padding([.horizontal])
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .padding(.bottom)
-                            //ImageCard(recipe: self.recipeStore.favourites[n]).environmentObject(self.recipeStore)
-                        }
-                    }
-                }
-            })
-        } else {
-          return AnyView(EmptyView())
+        NavigationLink(destination: ImpressumView(), tag: 2, selection: self.$recipeStore.hSelection) {
+            Text("Über diese App")
         }
     }
     
@@ -216,24 +114,35 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView{
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack{
-                    self.favoritesSection
-                    self.recipesSection
-                      .padding(.bottom)
-                    self.roomThemperatureSection
-                    self.importButton
-                    self.exportButton
-                   // self.donateButton
-                    self.aboutButton
+            List {
+                Section(header: HStack {
+                    Text("Rezepte")
+                    Spacer()
+                    self.addButton
+                        .sheet(isPresented: self.$showingAddRecipeView) {
+                            AddRecipeView(isPresented: self.$showingAddRecipeView)
+                                .environmentObject(self.recipeStore)
+                    }
+                }) {
+                    ForEach(recipeStore.recipes){ recipe in
+                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { recipe.id == $0.id }) ?? 0], isDetail: true).environmentObject(self.recipeStore)) {
+                            Card(recipe: recipe)
+                        }.accessibility(identifier: recipe.name)
+                    }
+                    .onMove(perform: moveRecipes)
+                    .onDelete(perform: deleteRecipes)
                 }
-            }.padding(.bottom)
-                .navigationBarTitle("BrotApp", displayMode: .inline)
-            .navigationBarItems(trailing: self.addButton)
-            .sheet(isPresented: self.$showingAddRecipeView) {
-                AddRecipeView(isPresented: self.$showingAddRecipeView)
-                    .environmentObject(self.recipeStore)
+                
+                self.roomThemperatureSection
+                self.importButton
+                self.exportButton
+                // self.donateButton
+                self.aboutButton
             }
+            .listStyle(GroupedListStyle())
+            .navigationBarTitle("BrotApp", displayMode: .automatic)
+            .navigationBarItems(trailing: EditButton().padding())
+            
         }
     }
     
@@ -250,40 +159,20 @@ struct HomeView: View {
             }
         }
     }
+    
+    func deleteRecipes(at offsets: IndexSet){
+        self.recipeStore.recipes.remove(atOffsets: offsets)
+        self.recipeStore.write()
+    }
+    
+    func moveRecipes(from source: IndexSet, to destination: Int) {
+        self.recipeStore.recipes.move(fromOffsets: source, toOffset: destination)
+    }
+    
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView().environmentObject(RecipeStore.example)
-    }
-}
-
-struct ImageCard: View {
-    let recipe: Recipe
-    @EnvironmentObject var recipeStore: RecipeStore
-    
-    var background: some View{
-        RoundedRectangle(cornerRadius: 15)
-        .fill(LinearGradient(gradient: Gradient(colors: [Color.init(.secondarySystemBackground),Color.init(.systemBackground)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-        .shadow(color: Color.init(.secondarySystemBackground), radius: 10, x: 5, y: 5)
-        .shadow(color: Color.init(.systemBackground), radius: 10, x: -5, y: -5)
-    }
-
-    
-    var body: some View{
-        if let index = self.recipeStore.recipes.firstIndex(where: { self.recipe == $0 }){
-            return AnyView(
-                NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[index], isDetail: true).environmentObject(self.recipeStore)) {
-                    Card(recipe: self.recipe)
-                        .background(self.background)
-                        .padding([.horizontal])
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding(.bottom)
-                
-            )
-        } else {
-            return AnyView(EmptyView())
-        }
     }
 }

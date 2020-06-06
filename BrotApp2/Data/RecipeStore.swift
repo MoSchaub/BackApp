@@ -9,12 +9,9 @@
 import SwiftUI
 import Combine
 
-struct RecipeDetailModel: Identifiable {
-    var id: UUID = UUID()
-    
-    
-    
-}
+#if os(macOS)
+typealias UIImage = NSImage
+#endif
 
 final class RecipeStore: ObservableObject{
 
@@ -25,26 +22,6 @@ final class RecipeStore: ObservableObject{
         Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
         Category(name: "Kuchen", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
     ]
-
-    var latest: [Recipe]{
-        var recipes = [Recipe]()
-        if self.recipes.count < 10{
-            for recipe in self.recipes{
-                recipes.append(recipe)
-            }
-        } else{
-            for i in 0..<10{
-                recipes.append(self.recipes[i])
-            }
-        }
-        return recipes
-    }
-    
-    var favourites: [Recipe]{
-        self.recipes.filter({$0.isFavourite})
-    }
-    
-    
     
     /// selection of RecipeDetail
     ///1: ImagePickerView
