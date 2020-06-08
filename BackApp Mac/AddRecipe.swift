@@ -11,105 +11,23 @@ import SwiftUI
 struct AddRecipe: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var recipeStore: RecipeStore
+    @ObservedObject private var recipeStore: RecipeStore
     
-    @State private var recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", isFavourite: false, category: Category.example)
-    @State private var selection: Int? = nil
-    @State private var selectedStep: Step? = nil
+    let addRecipe: (Recipe) -> Void
     
-    var disabled: Bool{
-        recipe.name.isEmpty || recipe.steps.isEmpty
+    init( addRecipe: @escaping (Recipe) -> Void){
+        self.addRecipe = addRecipe
+        self.recipeStore = RecipeStore()
+        let recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", isFavourite: false, category: recipeStore.categories.first!)
+        recipeStore.addRecipe(recipe: recipe)
+        recipeStore.selectedRecipe = recipe
     }
-    
-    var name: some View {
-        HStack {
-            Text("Name:")
-            TextField("Name eingeben", text: self.$recipe.name)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            Spacer()
-        }.padding([.leading,.top])
-    }
-    
-    var image: some View {
-        Group{
-            if recipe.imageString == nil{
-                LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .mask(Image("bread").resizable().scaledToFit())
-                    .frame(height: 250)
-                    .background(BackgroundGradient())
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
-                    .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
-            } else{
-                Image(uiImage: UIImage(data: recipe.imageString!)!).resizable().scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
-                    .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
-            }
-        }
-    }
-    
-    var imageButton: some View {
-        Button(action: {
-            self.selection = 1
-            self.selectedStep = nil
-        }) {
-            image
-                .padding([.leading, .bottom, .trailing])
-        }
-        .buttonStyle(PlainButtonStyle())
-        .frame(minWidth: 300)
-    }
-    
-    var categoryButton: some View {
-        Picker(selection: self.$recipe.category, label: Text("Kategorie: ")) {
-            ForEach(self.recipeStore.categories){ c in
-                Text(c.name).tag(c)
-            }
-        }.padding(.horizontal)
-    }
-    
-    var numberFormatter: NumberFormatter{
-        let nF = NumberFormatter()
-        nF.numberStyle = .decimal
-        return nF
-    }
-    
-    var timesSection: some View {
-        HStack {
-            Text("Anzahl:")
-            DecimalField("Anzahl eingeben", value: self.$recipe.times, formatter: self.numberFormatter)
-            Spacer()
-        }.padding(.leading)
-    }
-    
-    var stepSection: some View {
-        VStack {
-            HStack {
-                Text("Arbeitsschritte").secondary()
-                    .padding(.leading)
-                Spacer()
-                Button("hinzufügen"){
-                    self.selection = 2
-                    self.selectedStep = nil
-                }.padding(.horizontal)
-            }
-            
-            List(selection: self.$selectedStep){
-                ForEach(self.recipe.steps){step in
-                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                        .tag(step)
-                }
-            }
-        }
-    }
-    
     var addButton: some View {
         Button(action: {
             self.save()
         }){
             Text("hinzufügen").padding(.leading)
-        }.disabled(self.disabled)
+        }
     }
     
     var cancelButton: some View{
@@ -119,80 +37,20 @@ struct AddRecipe: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading){
-                self.name
-                self.timesSection
-                self.imageButton
-                self.categoryButton
-                self.stepSection
+        VStack{
+            RecipeDetail(recipe: $recipeStore.recipes[recipeStore.selectedRecipeIndex()!], creating: true).environmentObject(recipeStore)
+            HStack{
+                addButton
+                cancelButton
                 Spacer()
-                HStack {
-                    self.addButton
-                    self.cancelButton
-                }.padding([.leading, .bottom, .trailing])
-            }
-            .frame(minWidth: 290, idealWidth: 300, maxWidth: 500, minHeight: 700, idealHeight: 700, maxHeight: .infinity, alignment: .leading)
-            if self.selectedStep == nil && self.selection == 1{
-                ImagePickerView(imageData: self.$recipe.imageString)
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if self.selectedStep == nil && self.selection == 2 {
-                VStack{
-                    AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)
-                    Button(action: {
-                        self.selection = nil
-                    }) {
-                        Text("Abbrechen").neomorphic()
-                    }
-                    .padding(.bottom)
-                }
-            }else if self.selectedStep != nil{
-                VStack {
-                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(of: self.selectedStep!) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)
-                    Button(action: {
-                        self.deleteStep()
-                    }){
-                        HStack {
-                            Text("Löschen")
-                                .foregroundColor(.red)
-                            Spacer()
-                        }
-                    }.disabled(self.recipe.steps.count <= 1)
-                    Button(action: {
-                        self.selectedStep = nil
-                    }) {
-                        Text("Abbrechen").neomorphic()
-                    }
-                    .padding(.bottom)
-                }
-            }
-        }.onAppear(){
-            self.recipe.category = self.recipeStore.categories.first ?? Category.example
-        }
+            }.padding()
+        }.frame(minWidth: 600, idealWidth: 700, maxWidth: .infinity, minHeight: 700, idealHeight: 700, maxHeight: .infinity, alignment: .leading)
     }
 
-    func deleteStep(){
-        if let index = self.recipe.steps.firstIndex(of: self.selectedStep!), self.recipe.steps.count > index {
-            self.selection = nil
-            self.selectedStep = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.recipe.steps.remove(at: index)
-                
-            }
-        }
-    }
     
     func save(){
-        recipeStore.addRecipe(recipe: self.recipe)
+        self.addRecipe(self.recipeStore.recipes.first!)
         self.presentationMode.wrappedValue.dismiss()
     }
     
 }
-
-struct AddRecipe_Previews: PreviewProvider {
-    static var previews: some View {
-        AddRecipe().environmentObject(RecipeStore.example)
-    }
-}
-

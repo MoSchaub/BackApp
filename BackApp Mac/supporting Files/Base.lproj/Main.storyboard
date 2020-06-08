@@ -116,8 +116,9 @@
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="delete:" target="Ady-hI-5gd" id="2Pi-FN-Fsf"/>
+                                                <action selector="deleteItem:" target="Voe-Tx-rLC" id="vHx-wk-s0w"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Alles auswählen" keyEquivalent="a" id="Iby-N8-AMH">

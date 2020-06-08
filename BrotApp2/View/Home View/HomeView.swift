@@ -162,7 +162,6 @@ struct HomeView: View {
     
     func deleteRecipes(at offsets: IndexSet){
         self.recipeStore.recipes.remove(atOffsets: offsets)
-        self.recipeStore.write()
     }
     
     func moveRecipes(from source: IndexSet, to destination: Int) {

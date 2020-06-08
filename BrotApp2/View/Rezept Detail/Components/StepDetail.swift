@@ -299,7 +299,7 @@ struct StepDetail: View {
             } else if self.recipeStore.sDSelection == 3 {
                 self.subStepPicker
                 .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
-            } else if self.recipeStore.selectedSubstep == nil && self.recipeStore.selectedIngredient != nil {
+            } else if self.recipeStore.selectedIngredient != nil {
                 IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: {$0.id == self.recipeStore.selectedIngredient?.id}) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore).frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
             } else if self.recipeStore.selectedIngredient == nil && self.recipeStore.selectedSubstep != nil && self.step.subSteps.count > 0{
                 VStack {
