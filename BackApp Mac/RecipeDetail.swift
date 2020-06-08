@@ -13,6 +13,8 @@ struct RecipeDetail: View {
     
     @Binding var recipe: Recipe
     
+    let creating: Bool
+    
     private var image: some View {
         Group{
             if recipe.imageString == nil{
@@ -55,7 +57,9 @@ struct RecipeDetail: View {
             TextField("Name eingeben",text: $recipe.name).font(.title)
                 .textFieldStyle(PlainTextFieldStyle())
             Spacer()
-            exportButton
+            if !creating {
+                exportButton
+            }
         }.padding(.horizontal)
         .frame(maxWidth: .infinity ,maxHeight: 100)
     }
@@ -110,16 +114,10 @@ struct RecipeDetail: View {
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature).tag(step)
                     Divider()
                 }
+                .onDelete(perform: deleteStep)
+                .onMove(perform: moveSteps)
             }
         }
-    }
-    
-    private var deleteButton: some View {
-        Button("Löschen") {
-            self.recipeStore.delete(recipe: self.recipe)
-        }
-        .disabled(self.recipeStore.recipes.count <= 1)
-        .foregroundColor(self.recipeStore.recipes.count <= 1 ? .gray : .red)
     }
     
     var body: some View {
@@ -135,7 +133,6 @@ struct RecipeDetail: View {
                 self.categorySection
                 
                 self.stepsSection
-                self.deleteButton
                 Spacer()
             }
             .padding(.vertical)
@@ -158,7 +155,7 @@ struct RecipeDetail: View {
                 }
             } else if self.recipeStore.rDSelection == 1 {
                 ZStack {
-                    ImagePickerView(imageData: self.$recipe.imageString, image: .none)
+                    ImagePickerView(imageData: self.$recipe.imageString)
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     VStack {
@@ -219,10 +216,18 @@ struct RecipeDetail: View {
         }
     }
     
+    func deleteStep(at offsets: IndexSet) {
+        recipe.steps.remove(atOffsets: offsets)
+    }
+    
+    func moveSteps(from source: IndexSet, to offset: Int) {
+        recipe.steps.move(fromOffsets: source, toOffset: offset)
+    }
+    
 }
 
 struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetail(recipe: .constant(Recipe.example)).environmentObject(RecipeStore.example)
+        RecipeDetail(recipe: .constant(Recipe.example), creating: false).environmentObject(RecipeStore.example)
     }
 }

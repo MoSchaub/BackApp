@@ -25,26 +25,10 @@ struct RezeptDetail: View {
     }
     
     private var trailingButton: some View{
-        Toggle(isOn: self.$recipe.isFavourite) {
-            if self.recipe.isFavourite{
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.primary)
-            } else{
-                Image(systemName: "heart")
-                    .foregroundColor(.primary)
-            }
-        }.toggleStyle(NeomorphicToggleStyle())
-    }
-    
-    private var nameSection: some View{
-        VStack(alignment: .leading, spacing: 0) {
-            Text("Name").secondary()
-                .padding(.leading, 35)
-            TextField("Name eingeben", text: self.$recipe.name)
-                .padding(.leading)
-                .padding(.vertical)
-                .background(BackgroundGradient())
-                .padding([.horizontal,.bottom])
+        Image(systemName: recipe.isFavourite ? "heart.fill" : "heart")
+            .foregroundColor(.accentColor)
+            .onTapGesture {
+                self.$recipe.isFavourite.wrappedValue.toggle()
         }
     }
     
@@ -54,7 +38,6 @@ struct RezeptDetail: View {
                 LinearGradient(gradient: Gradient(colors: [Color("Color1"),Color.primary]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .mask(Image( "bread").resizable().scaledToFit())
                     .frame(height: 250)
-                    .background(BackgroundGradient())
             } else{
                 Image(uiImage: UIImage(data: recipe.imageString!)!).resizable().scaledToFit()
             }
@@ -63,34 +46,6 @@ struct RezeptDetail: View {
         .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
         .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
         .padding()
-    }
-    
-    private var imageSection: some View{
-        NavigationLink(destination: ImagePickerView(imageData: self.$recipe.imageString), tag: 1, selection: self.$recipeStore.rDSelection) {
-            ZStack {
-                self.image
-                HStack{
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                    
-                }
-                .padding(.trailing)
-                .padding(.trailing)
-            }
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    private var categorySection: some View{
-        NavigationLink(destination: CategoryPicker(recipe: self.$recipe), tag: 2, selection: self.$recipeStore.rDSelection) {
-            HStack {
-                Text("Kategorie:")
-                Spacer()
-                Text(recipe.category.name).secondary()
-                Image("chevron.right")
-            }
-            .neomorphic()
-        }.buttonStyle(PlainButtonStyle())
     }
     
     private var infoStrip: some View{
@@ -114,69 +69,63 @@ struct RezeptDetail: View {
         }
     }
     
-    private var startButton: some View{
-        NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 3, selection: self.$recipeStore.rDSelection) {
-            HStack {
-                Text("Zeitplan erstellen")
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-            .neomorphic()
-        }.buttonStyle(PlainButtonStyle())
-    }
-    
-    private var stepSections: some View {
-        VStack {
-            ForEach(recipe.steps){ step in
-                if self.recipe.steps.contains(where: {$0.id == step.id}) {
-                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: { $0.id == step.id}) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)) {
-                        StepRow(step: step, recipe: self.recipe, inLink: true, roomTemp: self.recipeStore.roomThemperature)
-                    }.buttonStyle(PlainButtonStyle())
-                }
-            }
-            NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature).environmentObject(self.recipeStore), tag: 4, selection: self.$recipeStore.rDSelection) {
-                HStack {
-                    Text("Schritt hinzufügen")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .neomorphic()
-            }
-            .buttonStyle(PlainButtonStyle())
-        }
-    }
-    
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 5) {
-                self.nameSection
-                self.imageSection
-                if self.isDetail{
-                    self.infoStrip
-                    self.startButton
-                }
-                self.categorySection
-                Text("Arbeitsschritte")
-                    .secondary()
-                    .padding(.leading)
-                    .padding(.leading)
-                self.stepSections
-                //self.deleteSection
+        List{
+            Section(header: Text("Name")) {
+                TextField("Name eingeben", text: self.$recipe.name)
             }
-            .frame(maxWidth: .infinity)
+            
+            Section(header: Text("Bild")) {
+                NavigationLink(destination: ImagePickerView(imageData: self.$recipe.imageString), tag: 1, selection: self.$recipeStore.rDSelection) {
+                    self.image
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            
+            if self.isDetail{
+                self.infoStrip
+                NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 3, selection: self.$recipeStore.rDSelection) {
+                    Text("Zeitplan erstellen")
+                }
+            }
+            
+            Picker(selection: $recipe.category, label: Text("Kategorie")) {
+                ForEach(recipeStore.categories) { catergory in
+                    Text(catergory.name).tag(catergory)
+                }
+            }.pickerStyle(SegmentedPickerStyle())
+            
+            Section(header: Text("Schritte")) {
+                ForEach(recipe.steps){ step in
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == step.id}) ?? 0], deleteEnabled: false)) {
+                        StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                    }
+                }
+                .onDelete(perform: deleteStep)
+                .onMove(perform: moveSteps)
+                NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature).environmentObject(self.recipeStore), tag: 4, selection: self.$recipeStore.rDSelection) {
+                    Text("Schritt hinzufügen")
+                }
+            }
+            
         }
-        
+        .listStyle(GroupedListStyle())
         .navigationBarTitle(self.title)
         .navigationBarItems(
             trailing: self.trailingButton
         )
-        .navigationBarHidden(false)
-        .navigationBarBackButtonHidden(false)
+            .navigationBarHidden(false)
+            .navigationBarBackButtonHidden(false)
     }
     
-    func fav(){
-        self.recipe.isFavourite.toggle()
+    func deleteStep(at offsets: IndexSet) {
+        recipe.steps.remove(atOffsets: offsets)
     }
+    
+    func moveSteps(from source: IndexSet, to offset: Int) {
+        recipe.steps.move(fromOffsets: source, toOffset: offset)
+    }
+    
 }
 
 

@@ -24,13 +24,13 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var subSteps: [Step]
     
-    init(name: String, time: TimeInterval, ingredients: [Ingredient], themperature: Int) {
+    init(name: String, time: TimeInterval, ingredients: [Ingredient] = [] , themperature: Int = 20, notes: String = "") {
         self.id = UUID().uuidString
         self.time = time
         self.name = name
         self.ingredients = ingredients
         self.temperature = themperature
-        self.notes = ""
+        self.notes = notes
         self.subSteps = []
     }
     
@@ -50,6 +50,11 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         return amount
     }
     
+    var totalFormattedAmount: String{
+        Ingredient.formattedAmount(for: self.totalAmount)
+    }
+    
+    
     ///Themperature for bulk liquids so the step has the right Temperature
     func themperature(for bulkLiquid: Ingredient, roomThemperature: Int) -> Int {
         
@@ -67,7 +72,12 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         }
         
         let diff = Double(self.temperature) * totalAmount - summOfMassTempProductOfNonBulkLiquids
-        return Int( diff / bulkLiquid.amount)
+        if bulkLiquid.amount != 0{
+            return Int( diff / bulkLiquid.amount)
+        } else {
+            return 0
+        }
+        
     }
     
     func text(startDate: Date, roomTemp: Int, scaleFactor: Double) -> String{

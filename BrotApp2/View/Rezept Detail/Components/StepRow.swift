@@ -29,9 +29,7 @@ struct StepRow: View {
             }.padding(.horizontal)
             
             ForEach(step.ingredients){ ingredient in
-                HStack{
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp, inLink: false, background: false)
-                }.padding([.top, .leading, .trailing])
+                IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
             }
             
             ForEach(step.subSteps){substep in
@@ -41,17 +39,9 @@ struct StepRow: View {
                     Text(substep.totalFormattedAmount)
                 }.padding(.horizontal)
             }
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(step.notes)
-                        .lineLimit(nil)
-                    Spacer()
-                }
-            }.padding([.horizontal,.top])
+            Text(step.notes)
+                .lineLimit(nil)
         }
-        .neomorphic(enabled: inLink)
-        
     }
 }
 

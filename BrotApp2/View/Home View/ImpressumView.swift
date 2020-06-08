@@ -20,7 +20,7 @@ struct ImpressumView: View {
             #else
             Text(text).lineLimit(nil)
                 .padding(.leading)
-                .navigationBarTitle("Impressum", displayMode: .inline)
+                .navigationBarTitle("Impressum", displayMode: .automatic)
             #endif
         }
     }

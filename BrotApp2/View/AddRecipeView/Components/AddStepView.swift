@@ -124,7 +124,7 @@ struct AddStepView: View {
     
     func save(){
         self.recipe.steps.append(self.step)
-        self.presentationMode.wrappedValue.dismiss()
+        self.recipeStore.rDSelection = nil
     }
     
 }

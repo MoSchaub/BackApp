@@ -66,55 +66,34 @@ struct IngredientDetail: View {
     }
     
     var body: some View{
-        ScrollView{
-            #if os(iOS)
-            VStack(alignment: .leading) {
-                VStack(alignment: .leading, spacing: 3.0) {
-                    Text("Name").secondary()
-                        .padding(.leading)
-                        .padding(.leading)
-                    TextField("Name", text: $ingredient.name)
-                        .padding(.leading)
-                        .padding(.vertical)
-                        .background(BackgroundGradient())
-                        .padding([.horizontal,.bottom])
-                }
-                VStack(alignment: .leading, spacing: 3.0) {
-                    Text("Menge").secondary()
-                        .padding(.leading)
-                        .padding(.leading)
-                    HStack {
-                        TextField("0.00 g", text: self.$amountText) {
-                            self.formatAmountText()
-                        }
-                        Spacer()
-                    }
-                        .padding(.leading)
-                        .padding(.vertical)
-                        .background(BackgroundGradient())
-                        .padding([.horizontal,.bottom])
-                }
-
-                HStack {
-                    Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
-                    Spacer()
-                }
-                .neomorphic()
+        #if os(iOS)
+        return List {
+            Section(header: Text("Name")) {
+                TextField("Name eingeben", text: $ingredient.name)
             }
-            if self.deleteEnabled{
-                Button(action: {
-                    self.delete()
-                }){
-                    HStack {
-                        Text("Löschen")
-                            .foregroundColor(.red)
-                        Spacer()
-                    }
-                .neomorphic()
+            
+            Section(header: Text("Menge")) {
+                TextField("0.00 g", text: self.$amountText) {
+                    self.formatAmountText()
                 }
             }
-            #elseif os(macOS)
-            VStack(alignment: .leading) {
+        
+            Section {
+                Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
+            }
+        }
+        .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
+            .navigationBarBackButtonHidden(true)
+            .onAppear{
+                self.formatAmountText()
+                if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
+                    self.amountText = self.ingredient.formattedAmount
+                }
+        }
+        .navigationBarTitle(self.title)
+            
+        #elseif os(macOS)
+            return VStack(alignment: .leading) {
                 HStack {
                     Text("Name:")
                     TextField("Name eingeben", text: $ingredient.name)
@@ -153,18 +132,13 @@ struct IngredientDetail: View {
                     }.padding(.leading)
                 }
             }
-            
-            #endif
-        }
-        .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
-        .navigationBarBackButtonHidden(true)
-        .onAppear{
-            self.formatAmountText()
-            if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
-                self.amountText = self.ingredient.formattedAmount
+            .onAppear{
+                self.formatAmountText()
+                if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
+                    self.amountText = self.ingredient.formattedAmount
+                }
             }
-        }
-        .navigationBarTitle(self.title)
+        #endif
     }
     
     func formatAmountText(){

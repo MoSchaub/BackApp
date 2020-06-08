@@ -1,0 +1,108 @@
+
+/* Class = "NSMenuItem"; title = "Zoomen"; ObjectID = "5X3-z8-1qN"; */
+"5X3-z8-1qN.title" = "Zoom";
+
+/* Class = "NSMenuItem"; title = "Widerrufen"; ObjectID = "5yH-2a-ryj"; */
+"5yH-2a-ryj.title" = "Undo";
+
+/* Class = "NSMenuItem"; title = "im Dock ablegen"; ObjectID = "6gd-AL-3u5"; */
+"6gd-AL-3u5.title" = "Minimize";
+
+/* Class = "NSMenuItem"; title = "Dienste"; ObjectID = "7nH-u2-YV3"; */
+"7nH-u2-YV3.title" = "Services";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Main Menu";
+
+/* Class = "NSMenuItem"; title = "Bearbeiten"; ObjectID = "B9K-Ft-sqV"; */
+"B9K-Ft-sqV.title" = "Edit";
+
+/* Class = "NSMenuItem"; title = "Alles auswählen"; ObjectID = "Iby-N8-AMH"; */
+"Iby-N8-AMH.title" = "Select All";
+
+/* Class = "NSMenuItem"; title = "Hilfe"; ObjectID = "JaK-ql-wbF"; */
+"JaK-ql-wbF.title" = "Help";
+
+/* Class = "NSMenu"; title = "Dienste"; ObjectID = "Jkm-uO-qqg"; */
+"Jkm-uO-qqg.title" = "Services";
+
+/* Class = "NSMenuItem"; title = "Exportieren …"; ObjectID = "KMh-HY-cH3"; */
+"KMh-HY-cH3.title" = "Export …";
+
+/* Class = "NSMenuItem"; title = "BackApp beenden"; ObjectID = "Kl3-m7-Frn"; */
+"Kl3-m7-Frn.title" = "Quit BackApp";
+
+/* Class = "NSMenuItem"; title = "Wiederholen"; ObjectID = "UzU-eh-C0T"; */
+"UzU-eh-C0T.title" = "Redo";
+
+/* Class = "NSMenuItem"; title = "BackApp ausblenden"; ObjectID = "VJJ-0B-wQb"; */
+"VJJ-0B-wQb.title" = "Hide BackApp";
+
+/* Class = "NSMenuItem"; title = "BackApp"; ObjectID = "VTr-Za-3oZ"; */
+"VTr-Za-3oZ.title" = "BackApp";
+
+/* Class = "NSMenuItem"; title = "Über BackApp"; ObjectID = "Zj8-Kl-681"; */
+"Zj8-Kl-681.title" = "About BackApp";
+
+/* Class = "NSMenu"; title = "Fenster"; ObjectID = "b5f-gS-BtX"; */
+"b5f-gS-BtX.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "Einstellungen…"; ObjectID = "eVl-af-cLH"; */
+"eVl-af-cLH.title" = "Settings…";
+
+/* Class = "NSMenuItem"; title = "Fenster schließen"; ObjectID = "f0M-pO-u4w"; */
+"f0M-pO-u4w.title" = "Close";
+
+/* Class = "NSMenuItem"; title = "Alle Rezepte exportieren"; ObjectID = "fq1-hZ-NEb"; */
+"fq1-hZ-NEb.title" = "Export all Recipes";
+
+/* Class = "NSMenuItem"; title = "Löschen"; ObjectID = "g76-lH-KaS"; */
+"g76-lH-KaS.title" = "Delete";
+
+/* Class = "NSMenuItem"; title = "Importieren ..."; ObjectID = "j0N-iU-MJg"; */
+"j0N-iU-MJg.title" = "Import ...";
+
+/* Class = "NSMenuItem"; title = "BackApp Hilfe"; ObjectID = "jwF-iq-enx"; */
+"jwF-iq-enx.title" = "BackApp Help";
+
+/* Class = "NSMenu"; title = "Hilfe"; ObjectID = "kNg-Jt-epr"; */
+"kNg-Jt-epr.title" = "Help";
+
+/* Class = "NSMenuItem"; title = "Rezept exportieren"; ObjectID = "mRs-d7-EVQ"; */
+"mRs-d7-EVQ.title" = "Export recipe";
+
+/* Class = "NSMenu"; title = "Bearbeiten"; ObjectID = "mzv-Xe-XO7"; */
+"mzv-Xe-XO7.title" = "Edit";
+
+/* Class = "NSMenu"; title = "Datei"; ObjectID = "nCw-oi-F0V"; */
+"nCw-oi-F0V.title" = "File";
+
+/* Class = "NSMenuItem"; title = "Kopieren"; ObjectID = "nHW-8N-4Zf"; */
+"nHW-8N-4Zf.title" = "Copy";
+
+/* Class = "NSMenuItem"; title = "Datei"; ObjectID = "nnQ-I9-ZE6"; */
+"nnQ-I9-ZE6.title" = "File";
+
+/* Class = "NSMenuItem"; title = "Neues Rezept"; ObjectID = "oQ1-18-19T"; */
+"oQ1-18-19T.title" = "New Recipe";
+
+/* Class = "NSMenu"; title = "BackApp"; ObjectID = "ona-eQ-1Du"; */
+"ona-eQ-1Du.title" = "BackApp";
+
+/* Class = "NSMenuItem"; title = "Ausschneiden"; ObjectID = "otF-hq-yNH"; */
+"otF-hq-yNH.title" = "Cut";
+
+/* Class = "NSMenuItem"; title = "Fenster"; ObjectID = "vld-MI-Qvj"; */
+"vld-MI-Qvj.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "Alle einblenden"; ObjectID = "wM2-3K-eyt"; */
+"wM2-3K-eyt.title" = "Show all";
+
+/* Class = "NSMenu"; title = "Exportieren …"; ObjectID = "xDQ-Pa-yB1"; */
+"xDQ-Pa-yB1.title" = "Export …";
+
+/* Class = "NSMenuItem"; title = "Andere ausblenden"; ObjectID = "y51-pQ-3f8"; */
+"y51-pQ-3f8.title" = "Hide others";
+
+/* Class = "NSMenuItem"; title = "Einfügen"; ObjectID = "yBR-rm-JBL"; */
+"yBR-rm-JBL.title" = "Paste";

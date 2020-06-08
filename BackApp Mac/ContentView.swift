@@ -56,28 +56,8 @@ struct ContentView: View {
             Spacer()
         }
     }
-    
-    var deleteRecipeButton: some View{
-        Button("Löschen"){
-            if let index = self.recipeStore.recipes.firstIndex(of: self.recipeStore.selectedRecipe!), index < self.recipeStore.recipes.count {
-                self.recipeStore.selectedRecipe = nil
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                    self.recipeStore.recipes.remove(at: index)
-                }
-                self.recipeStore.recipes.remove(at: index)
-                //select next
-                if self.recipeStore.recipes.count > 1{
-                    guard let lastRecipe = self.recipeStore.recipes.last else { return }
-                    self.recipeStore.selectedRecipe = lastRecipe
-                }
-            }
-        }
-        .foregroundColor(.red)
-        .padding()
-    }
 
     var body: some View {
-        
         NavigationView{
             VStack{
                 HStack {
@@ -93,8 +73,12 @@ struct ContentView: View {
                     ForEach(self.recipeStore.recipes) { recipe in
                         Card(recipe: recipe).tag(recipe)
                     }
+                    .onDelete(perform: deleteRecipes)
+                    .onMove(perform: moveRecipes)
+                    .onTapGesture {
+                        self.recipeStore.selectedRecipeClicked = true
+                    }
                 }
-                
                 Divider()
                 
                 Group {
@@ -107,13 +91,14 @@ struct ContentView: View {
                 .padding(.leading)
                 
                 .sheet(isPresented: self.$recipeStore.showingAddRecipeView) {
-                    AddRecipe()
-                        .environmentObject(self.recipeStore)
+                    AddRecipe { recipe in
+                        self.recipeStore.addRecipe(recipe: recipe)
+                    }
                 }
             }
             .frame(minWidth: 300, idealWidth: 300, maxWidth: 400, minHeight: 200, idealHeight: 800, maxHeight: .infinity)
             if self.recipeStore.selectedRecipe != nil{
-                RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: {$0.id == recipeStore.selectedRecipe?.id}) ?? 0]).frame(maxWidth: .infinity, maxHeight: .infinity)
+                RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: {$0.id == recipeStore.selectedRecipe?.id}) ?? 0], creating: false).frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if self.recipeStore.hSelection == 1 {
                 ImpressumView()
             }
@@ -168,6 +153,15 @@ struct ContentView: View {
 
             }
         }
+    }
+    
+    func deleteRecipes(at offsets: IndexSet){
+        self.recipeStore.recipes.remove(atOffsets: offsets)
+        //self.recipeStore.write()
+    }
+    
+    func moveRecipes(from source: IndexSet, to destination: Int) {
+        self.recipeStore.recipes.move(fromOffsets: source, toOffset: destination)
     }
     
 }

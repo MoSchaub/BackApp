@@ -110,7 +110,7 @@ extension UIImage{
 struct ImagePickerView: View {
     
     @Binding var imageData: Data?
-    let image: NSImage?
+    let image: NSImage? = nil
     
     var body: some View {
         VStack(spacing: 16) {
@@ -177,6 +177,12 @@ struct InputImageView: View {
 }
 
 typealias UIImage = NSImage
+
+extension Image {
+    init(uiImage: UIImage) {
+        self = Image(nsImage: uiImage)
+    }
+}
 
 extension NSImage{
     func pngData() -> Data? {

@@ -7,44 +7,21 @@
 //
 
 import SwiftUI
-import Combine
-
-struct RecipeDetailModel: Identifiable {
-    var id: UUID = UUID()
-    
-    
-    
-}
 
 final class RecipeStore: ObservableObject{
 
-    @Published var recipes = [Recipe]()
+    @Published var recipes = [Recipe](){
+        didSet {
+            self.write()
+        }
+    }
+    
     @Published var roomThemperature = 20
     @Published var categories = [
         Category(name: "Brot", imageData: UIImage(named: "bread")!.jpegData(compressionQuality: 0.8)),
         Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
         Category(name: "Kuchen", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
     ]
-
-    var latest: [Recipe]{
-        var recipes = [Recipe]()
-        if self.recipes.count < 10{
-            for recipe in self.recipes{
-                recipes.append(recipe)
-            }
-        } else{
-            for i in 0..<10{
-                recipes.append(self.recipes[i])
-            }
-        }
-        return recipes
-    }
-    
-    var favourites: [Recipe]{
-        self.recipes.filter({$0.isFavourite})
-    }
-    
-    
     
     /// selection of RecipeDetail
     ///1: ImagePickerView
@@ -59,10 +36,46 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    @Published var selectedStep: Step? = nil{
-        didSet{
-            if self.selectedStep != nil {
+    var selectedStepClicked = false{
+        didSet {
+            if self.selectedStepClicked {
+                self.selectedRecipeClicked = false
+                self.selectedIngredientClicked = false
+                self.selectedSubstepClicked = false
+            }
+        }
+    }
+    var selectedStep: Step? = nil{
+        willSet {
+            if newValue != nil {
                 self.rDSelection = nil
+                self.selectedStepClicked = true
+            } else {
+                self.selectedStepClicked = false
+                self.selectedIngredient = nil
+                self.selectedSubstep = nil
+            }
+            self.objectWillChange.send()
+        }
+    }
+    
+    func selectedStepIndex() -> Int? {
+        if let recipeIndex = selectedRecipeIndex(){
+            return recipes[recipeIndex].steps.firstIndex(where: { $0.id == selectedStep?.id})
+        }
+        return nil
+    }
+    
+    func deleteSelectedStep() {
+        if let index = selectedStepIndex(), index < selectedRecipe!.steps.count {
+            selectedStep = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self.recipes[self.selectedRecipeIndex()!].steps.remove(at: index)
+            }
+            //select next
+            if self.selectedRecipe!.steps.count > 1{
+                guard let lastStep = self.recipes[self.selectedRecipeIndex()!].steps.last else { return }
+                selectedStep = lastStep
             }
         }
     }
@@ -74,13 +87,6 @@ final class RecipeStore: ObservableObject{
     func save(recipe: Recipe){
         if !self.contains(recipe: recipe) {
             self.addRecipe(recipe: recipe)
-        }
-    }
-    
-    func delete(recipe: Recipe){
-        if recipes.count > 1 ,let index = recipes.firstIndex(of: recipe) {
-            self.recipes.remove(at: index)
-            self.write()
         }
     }
     
@@ -113,23 +119,87 @@ final class RecipeStore: ObservableObject{
     
     @Published var sDShowingSubstepOrIngredientSheet = false
     
+    var selectedIngredientClicked = false{
+        didSet {
+            if self.selectedIngredientClicked {
+                self.selectedRecipeClicked = false
+                self.selectedStepClicked = false
+                self.selectedSubstepClicked = false
+            }
+        }
+    }
     @Published var selectedIngredient: Ingredient? = nil{
         didSet{
             if self.selectedIngredient != nil {
                 self.sDSelection = nil
                 self.selectedSubstep = nil
+                self.selectedIngredientClicked = true
+            } else {
+                self.selectedIngredientClicked = false
             }
         }
     }
     
+    func selectedIngredientIndex() -> Int? {
+        if let recipeIndex = selectedRecipeIndex(), let stepIndex = selectedStepIndex(){
+            return recipes[recipeIndex].steps[stepIndex].ingredients.firstIndex(where: { $0.id == selectedIngredient?.id})
+        }
+        return nil
+    }
+    
+    func deleteSelectedIngredient() {
+        if let index = selectedIngredientIndex(), index < selectedStep!.ingredients.count {
+            selectedIngredient = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self.recipes[self.selectedRecipeIndex()!].steps[self.selectedIngredientIndex()!].ingredients.remove(at: index)
+            }
+            //select next
+            if self.selectedStep!.ingredients.count > 1{
+                selectedIngredient = recipes[selectedRecipeIndex()!].steps[selectedStepIndex()!].ingredients.last
+            }
+        }
+    }
+    
+    var selectedSubstepClicked = false{
+        didSet {
+            if self.selectedSubstepClicked {
+                self.selectedRecipeClicked = false
+                self.selectedStepClicked = false
+                self.selectedIngredientClicked = false
+            }
+        }
+    }
     @Published var selectedSubstep: Step? = nil{
         didSet{
             if self.selectedSubstep != nil {
                 self.sDSelection = nil
                 self.selectedIngredient = nil
+                self.selectedSubstepClicked = true
+            } else {
+                self.selectedStepClicked = false
             }
         }
     }
+    
+    func selectedSubstepIndex() -> Int? {
+           if let recipeIndex = selectedRecipeIndex(), let stepIndex = selectedStepIndex(){
+               return recipes[recipeIndex].steps[stepIndex].subSteps.firstIndex(where: { $0.id == selectedSubstep?.id})
+           }
+           return nil
+       }
+       
+       func deleteSelectedSubstep() {
+           if let index = selectedSubstepIndex(), index < selectedStep!.subSteps.count {
+               selectedSubstep = nil
+               DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                   self.recipes[self.selectedRecipeIndex()!].steps[self.selectedIngredientIndex()!].subSteps.remove(at: index)
+               }
+               //select next
+               if self.selectedStep!.subSteps.count > 1{
+                   selectedSubstep = recipes[selectedRecipeIndex()!].steps[selectedStepIndex()!].subSteps.last
+               }
+           }
+       }
 
     func save(step: Step, to recipe: Recipe){
         if !recipe.steps.contains(step){
@@ -168,10 +238,42 @@ final class RecipeStore: ObservableObject{
         }
     }
     
+    var selectedRecipeClicked = false{
+        didSet {
+            if self.selectedRecipeClicked {
+                self.selectedStepClicked = false
+                self.selectedSubstepClicked = false
+                self.selectedIngredientClicked = false
+            }
+        }
+    }
     @Published var selectedRecipe: Recipe? = nil{
-        didSet{
-            if self.selectedRecipe != nil {
+        willSet{
+            if newValue != nil {
                 self.hSelection = nil
+                self.selectedRecipeClicked = true
+            } else {
+                self.selectedRecipeClicked = false
+                self.selectedStep = nil
+            }
+            objectWillChange.send()
+        }
+    }
+    
+    func selectedRecipeIndex() -> Int? {
+        recipes.firstIndex(where: { $0.id == selectedRecipe?.id})
+    }
+    
+    func deleteSelectedRecipe() {
+        if let index = selectedRecipeIndex(), index < recipes.count {
+            selectedRecipe = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self.recipes.remove(at: index)
+            }
+            //select next
+            if recipes.count > 1{
+                guard let lastRecipe = recipes.last else { return }
+                selectedRecipe = lastRecipe
             }
         }
     }
@@ -188,8 +290,6 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    
-
     init() {}
     
     init(from decoder: Decoder) throws {
@@ -200,7 +300,6 @@ final class RecipeStore: ObservableObject{
        
     func addRecipe(recipe: Recipe){
         recipes.append(recipe)
-        self.write()
     }
     
     //- MARK: File managemnet
@@ -258,7 +357,7 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    func write(){
+    private func write(){
         let data = encodedRecipes()
         
         let file = getDocumentsDirectory().appendingPathComponent("recipes.json")

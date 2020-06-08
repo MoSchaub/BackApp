@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     var window: NSWindow!
     
-    let recipeStore = RecipeStore()
+    var recipeStore = RecipeStore()
 
     @IBOutlet weak var newRecipeButton: NSMenuItem!
     
@@ -35,8 +35,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
-        //save file
-        recipeStore.write()
         exit(1)
     }
     
@@ -61,6 +59,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
     
+    @IBAction func deleteItem(_ sender: NSMenuItem) {
+        if recipeStore.selectedIngredientClicked {
+            recipeStore.deleteSelectedIngredient()
+        } else if recipeStore.selectedSubstepClicked{
+            recipeStore.deleteSelectedSubstep()
+        }else if recipeStore.selectedStepClicked {
+            recipeStore.deleteSelectedStep()
+        } else if recipeStore.selectedRecipeClicked {
+            recipeStore.deleteSelectedRecipe()
+        }
+    }
+    
     func updateMenuItems() {
         if self.recipeStore.showingAddRecipeView {
             self.newRecipeButton.isEnabled = false
@@ -73,6 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 }
 
 extension Notification.Name {
-    static let addRecipe = Notification.Name("addRecipe")
+    static var addRecipe = Notification.Name("addRecipe")
 }
 
