@@ -23,6 +23,8 @@ jobs:
         run: bundle install
         env:
           BUNDLE_GITHUB__COM: x-access-token:${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+          destination: ${{ matrix.destination }}
+          DEVELOPER_DIR: ${{ matrix.xcode }}
       - name: Build and test
         run: bundle exec fastlane scan --destination "${destination}" --scheme "BackApp2"
         env:
