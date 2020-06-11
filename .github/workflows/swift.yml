@@ -18,7 +18,7 @@ jobs:
       - name: Build and test
         run: |
           cd BrotApp2
-          ls la
+          ls
         #xcodebuild clean test -project BackApp.xcodeproj -scheme BrotApp2 -destination "${destination}"
         #bash <(curl -s https://codecov.io/bash)
         env: 
