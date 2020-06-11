@@ -17,8 +17,8 @@ jobs:
         uses: actions/checkout@master
       - name: Build and test
         run: |
-          cd Texstyle
-          xcodebuild clean test -project Texstyle.xcodeproj -scheme Texstyle -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
-          bash <(curl -s https://codecov.io/bash)
+          cd BrotApp2
+          xcodebuild clean test -project BackApp.xcodeproj -scheme BrotApp2 -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+        #bash <(curl -s https://codecov.io/bash)
         env: 
          destination: ${{ matrix.destination }}
