@@ -18,7 +18,8 @@ jobs:
       - name: Build and test
         run: |
           cd BrotApp2
-          xcodebuild clean test -project BackApp.xcodeproj -scheme BrotApp2 -destination "${destination}"
+          ls la
+        #xcodebuild clean test -project BackApp.xcodeproj -scheme BrotApp2 -destination "${destination}"
         #bash <(curl -s https://codecov.io/bash)
         env: 
          destination: ${{ matrix.destination }}
