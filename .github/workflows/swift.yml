@@ -6,27 +6,21 @@ on:
   pull_request:
     branches: [ master ]
 
+name: Test
 jobs:
   test:
-    # Job name is Test
     name: Test
-    # This job runs on macOS
     runs-on: macOS-latest
     strategy:
-      matrix:
-        destination: ['platform=iOS Simulator,OS=13.5,name=iPhone 11 Pro Max']
-        xcode: ['/Applications/Xcode_11.5.app/Contents/Developer']
+        matrix:
+          destination: ['platform=iOS Simulator,OS=13.5,name=iPhone 11']
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Bundle Install
-        run: bundle install
-        env:
-          BUNDLE_GITHUB__COM: x-access-token:${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
-          destination: ${{ matrix.destination }}
-          DEVELOPER_DIR: ${{ matrix.xcode }}
+        uses: actions/checkout@master
       - name: Build and test
-        run: bundle exec fastlane scan --destination "${destination}" --scheme "BackApp2"
-        env:
-          destination: ${{ matrix.destination }}
-          DEVELOPER_DIR: ${{ matrix.xcode }}
+        run: |
+          cd Texstyle
+          xcodebuild clean test -project Texstyle.xcodeproj -scheme Texstyle -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          bash <(curl -s https://codecov.io/bash)
+        env: 
+         destination: ${{ matrix.destination }}
