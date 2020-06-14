@@ -58,19 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             self.updateMenuItems()
         }
     }
-    
-    @IBAction func deleteItem(_ sender: NSMenuItem) {
-        if recipeStore.selectedIngredientClicked {
-            recipeStore.deleteSelectedIngredient()
-        } else if recipeStore.selectedSubstepClicked{
-            recipeStore.deleteSelectedSubstep()
-        }else if recipeStore.selectedStepClicked {
-            recipeStore.deleteSelectedStep()
-        } else if recipeStore.selectedRecipeClicked {
-            recipeStore.deleteSelectedRecipe()
-        }
-    }
-    
+
     func updateMenuItems() {
         if self.recipeStore.showingAddRecipeView {
             self.newRecipeButton.isEnabled = false

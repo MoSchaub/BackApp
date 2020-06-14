@@ -120,12 +120,19 @@ struct HomeView: View {
                     Spacer()
                     self.addButton
                         .sheet(isPresented: self.$showingAddRecipeView) {
-                            AddRecipeView(isPresented: self.$showingAddRecipeView)
-                                .environmentObject(self.recipeStore)
+                            AddRecipe { recipe in
+                                self.recipeStore.addRecipe(recipe: recipe)
+                                self.recipeStore.showingAddRecipeView = false
+                            }
                     }
                 }) {
                     ForEach(recipeStore.recipes){ recipe in
-                        NavigationLink(destination: RezeptDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { recipe.id == $0.id }) ?? 0], isDetail: true).environmentObject(self.recipeStore)) {
+                        NavigationLink(destination: RecipeDetail(
+                            recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { recipe.id == $0.id }) ?? 0],
+                            creating: false,
+                            addRecipe: nil,
+                            dismiss: nil
+                        ).environmentObject(self.recipeStore)) {
                             Card(recipe: recipe)
                         }.accessibility(identifier: recipe.name)
                     }

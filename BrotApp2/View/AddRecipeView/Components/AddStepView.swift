@@ -84,14 +84,11 @@ extension Image{
 struct AddStepView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var recipeStore: RecipeStore
-    
     @Binding var recipe: Recipe
-    
     let roomTemp: Int
-    
     @State private var step = Step(name: "", time: 60, ingredients: [], themperature: 20)
     @State private var warningAlertShown = false
-    
+
     var backButton: some View{
         Button(action: {
             self.warningAlertShown = true
@@ -100,7 +97,7 @@ struct AddStepView: View {
                 Image(systemName: "chevron.left")
                 Text("zurück")
             }
-        }.alert(isPresented: self.$warningAlertShown) {
+        }.alert(isPresented: $warningAlertShown) {
             Alert(title: Text("Achtung"), message: Text("Dieser Schritt wird nicht gespeichert"), primaryButton: .default(Text("OK"), action: {
                 self.presentationMode.wrappedValue.dismiss()
             }), secondaryButton: .cancel())
@@ -108,23 +105,22 @@ struct AddStepView: View {
     }
     
     var saveButton: some View {
-        Button(action: {
-            self.save()
-        }){
+        Button(action: save){
             Text("Speichern")
         }
     }
     
     var body: some View {
-        StepDetail(recipe: self.$recipe, step: self.$step, deleteEnabled: false)
-            .environmentObject(self.recipeStore)
+        StepDetail(recipe: $recipe, step: $step, creating: true)
+            .environmentObject(recipeStore)
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
+            .navigationBarItems(leading: backButton, trailing: saveButton)
     }
     
     func save(){
-        self.recipe.steps.append(self.step)
+        recipeStore.save(step: step, to: recipe)
         self.recipeStore.rDSelection = nil
+        self.presentationMode.wrappedValue.dismiss()
     }
     
 }

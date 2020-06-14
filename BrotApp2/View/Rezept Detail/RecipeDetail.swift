@@ -1,5 +1,5 @@
 //
-//  RezeptDetail.swift
+//  RecipeDetail.swift
 //  BrotApp2
 //
 //  Created by Moritz Schaub on 01.10.19.
@@ -8,13 +8,15 @@
 
 import SwiftUI
 
-struct RezeptDetail: View {
+struct RecipeDetail: View {
     
     @Binding var recipe: Recipe
     
     @EnvironmentObject private var recipeStore: RecipeStore
     
-    let isDetail: Bool
+    let creating: Bool
+    let addRecipe: ((Recipe) -> Void)?
+    let dismiss: (() -> Void)?
     
     private var title: String{
         if recipe.name.isEmpty{
@@ -24,11 +26,27 @@ struct RezeptDetail: View {
         }
     }
     
-    private var trailingButton: some View{
-        Image(systemName: recipe.isFavourite ? "heart.fill" : "heart")
-            .foregroundColor(.accentColor)
-            .onTapGesture {
-                self.$recipe.isFavourite.wrappedValue.toggle()
+    @ViewBuilder
+    private func trailingButton() -> some View {
+        if !creating{
+            Image(systemName: recipe.isFavourite ? "heart.fill" : "heart")
+                .foregroundColor(.accentColor)
+                .onTapGesture {
+                    self.$recipe.isFavourite.wrappedValue.toggle()
+            }
+        } else {
+            Button(action: save) {
+                Text("OK")
+            }
+        }
+        
+    }
+    
+    @ViewBuilder private func leadingButton() -> some View {
+        if creating {
+            Button(action: cancel) {
+                Text("Abrechen")
+            }
         }
     }
     
@@ -82,7 +100,7 @@ struct RezeptDetail: View {
                 .buttonStyle(PlainButtonStyle())
             }
             
-            if self.isDetail{
+            if !creating{
                 self.infoStrip
                 NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 3, selection: self.$recipeStore.rDSelection) {
                     Text("Zeitplan erstellen")
@@ -97,7 +115,7 @@ struct RezeptDetail: View {
             
             Section(header: Text("Schritte")) {
                 ForEach(recipe.steps){ step in
-                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == step.id}) ?? 0], deleteEnabled: false)) {
+                    NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == step.id}) ?? 0], creating: false)) {
                         StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
                     }
                 }
@@ -111,11 +129,7 @@ struct RezeptDetail: View {
         }
         .listStyle(GroupedListStyle())
         .navigationBarTitle(self.title)
-        .navigationBarItems(
-            trailing: self.trailingButton
-        )
-            .navigationBarHidden(false)
-            .navigationBarBackButtonHidden(false)
+        .navigationBarItems(leading: leadingButton(), trailing: trailingButton())
     }
     
     func deleteStep(at offsets: IndexSet) {
@@ -126,19 +140,20 @@ struct RezeptDetail: View {
         recipe.steps.move(fromOffsets: source, toOffset: offset)
     }
     
-}
-
-
-
-
-struct RezeptDetail_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            RezeptDetail(recipe: .constant(Recipe.example), isDetail: true)
-                .environmentObject(RecipeStore.example)
-                .environment(\.colorScheme, .light)
+    func save() {
+        if creating {
+            addRecipe!(self.recipe)
+            self.dismiss!()
         }
     }
+    
+    func cancel() {
+        if creating {
+            self.dismiss!()
+        }
+    }
+    
+    
 }
 
 

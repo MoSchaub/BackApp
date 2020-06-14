@@ -40,7 +40,7 @@ class BackAppUITests: XCTestCase {
         
         for step in recipe.steps {
             app.tables.cells.buttons["Schritt hinzufügen"].tap()
-            
+
             let nameTextField = app.tables.cells.textFields["Name eingeben"]
             nameTextField.tap()
             nameTextField.typeText(step.name)

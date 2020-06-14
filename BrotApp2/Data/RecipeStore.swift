@@ -35,25 +35,13 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
-    
-    var selectedStepClicked = false{
-        didSet {
-            if self.selectedStepClicked {
-                self.selectedRecipeClicked = false
-                self.selectedIngredientClicked = false
-                self.selectedSubstepClicked = false
-            }
-        }
-    }
+
     var selectedStep: Step? = nil{
         willSet {
             if newValue != nil {
                 self.rDSelection = nil
-                self.selectedStepClicked = true
             } else {
-                self.selectedStepClicked = false
                 self.selectedIngredient = nil
-                self.selectedSubstep = nil
             }
             self.objectWillChange.send()
         }
@@ -91,12 +79,8 @@ final class RecipeStore: ObservableObject{
     }
     
     func delete(step: Step, from recipe: Recipe){
-        if recipe.steps.count > 1, let stepIndex = recipe.steps.firstIndex(of: step){
-            
-            self.selectedIngredient = nil
-            self.selectedSubstep = nil
-            //dont set selected Step to nil (crashes if Ingredient or Substep is shown
-        
+        if let stepIndex = recipe.steps.firstIndex(of: step), recipe.steps.count > stepIndex{
+            self.selectedStep = nil
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 if let recipeIndex = self.recipes.firstIndex(of: recipe){
                     self.recipes[recipeIndex].steps.remove(at: stepIndex)
@@ -111,7 +95,6 @@ final class RecipeStore: ObservableObject{
                 if self.sDSelection == 1 {
                     sDShowingSubstepOrIngredientSheet = true
                 }
-                self.selectedSubstep = nil
                 self.selectedIngredient = nil
             }
         }
@@ -119,23 +102,10 @@ final class RecipeStore: ObservableObject{
     
     @Published var sDShowingSubstepOrIngredientSheet = false
     
-    var selectedIngredientClicked = false{
-        didSet {
-            if self.selectedIngredientClicked {
-                self.selectedRecipeClicked = false
-                self.selectedStepClicked = false
-                self.selectedSubstepClicked = false
-            }
-        }
-    }
     @Published var selectedIngredient: Ingredient? = nil{
         didSet{
             if self.selectedIngredient != nil {
                 self.sDSelection = nil
-                self.selectedSubstep = nil
-                self.selectedIngredientClicked = true
-            } else {
-                self.selectedIngredientClicked = false
             }
         }
     }
@@ -159,47 +129,6 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
-    
-    var selectedSubstepClicked = false{
-        didSet {
-            if self.selectedSubstepClicked {
-                self.selectedRecipeClicked = false
-                self.selectedStepClicked = false
-                self.selectedIngredientClicked = false
-            }
-        }
-    }
-    @Published var selectedSubstep: Step? = nil{
-        didSet{
-            if self.selectedSubstep != nil {
-                self.sDSelection = nil
-                self.selectedIngredient = nil
-                self.selectedSubstepClicked = true
-            } else {
-                self.selectedStepClicked = false
-            }
-        }
-    }
-    
-    func selectedSubstepIndex() -> Int? {
-           if let recipeIndex = selectedRecipeIndex(), let stepIndex = selectedStepIndex(){
-               return recipes[recipeIndex].steps[stepIndex].subSteps.firstIndex(where: { $0.id == selectedSubstep?.id})
-           }
-           return nil
-       }
-       
-       func deleteSelectedSubstep() {
-           if let index = selectedSubstepIndex(), index < selectedStep!.subSteps.count {
-               selectedSubstep = nil
-               DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                   self.recipes[self.selectedRecipeIndex()!].steps[self.selectedIngredientIndex()!].subSteps.remove(at: index)
-               }
-               //select next
-               if self.selectedStep!.subSteps.count > 1{
-                   selectedSubstep = recipes[selectedRecipeIndex()!].steps[selectedStepIndex()!].subSteps.last
-               }
-           }
-       }
 
     func save(step: Step, to recipe: Recipe){
         if !recipe.steps.contains(step){
@@ -207,7 +136,6 @@ final class RecipeStore: ObservableObject{
                 self.recipes[recipeIndex].steps.append(step)
             }
         }
-        self.selectedSubstep = nil
         self.selectedIngredient = nil
         self.selectedStep = nil
         self.sDSelection = nil
@@ -225,35 +153,13 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
+
     
-    func deleteSubstep(of step: Step, in recipe: Recipe) {
-        if let substepIndex = step.subSteps.firstIndex(of: self.selectedSubstep!), step.subSteps.count > substepIndex{
-            self.sDSelection = nil
-            self.selectedSubstep = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                if let recipeIndex = self.recipes.firstIndex(of: recipe), let stepIndex = recipe.steps.firstIndex(of: step) {
-                self.recipes[recipeIndex].steps[stepIndex].subSteps.remove(at: substepIndex)
-                }
-            }
-        }
-    }
-    
-    var selectedRecipeClicked = false{
-        didSet {
-            if self.selectedRecipeClicked {
-                self.selectedStepClicked = false
-                self.selectedSubstepClicked = false
-                self.selectedIngredientClicked = false
-            }
-        }
-    }
-    @Published var selectedRecipe: Recipe? = nil{
+    var selectedRecipe: Recipe? = nil{
         willSet{
             if newValue != nil {
                 self.hSelection = nil
-                self.selectedRecipeClicked = true
             } else {
-                self.selectedRecipeClicked = false
                 self.selectedStep = nil
             }
             objectWillChange.send()

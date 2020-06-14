@@ -75,9 +75,6 @@ struct ContentView: View {
                     }
                     .onDelete(perform: deleteRecipes)
                     .onMove(perform: moveRecipes)
-                    .onTapGesture {
-                        self.recipeStore.selectedRecipeClicked = true
-                    }
                 }
                 Divider()
                 
@@ -98,7 +95,8 @@ struct ContentView: View {
             }
             .frame(minWidth: 300, idealWidth: 300, maxWidth: 400, minHeight: 200, idealHeight: 800, maxHeight: .infinity)
             if self.recipeStore.selectedRecipe != nil{
-                RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: {$0.id == recipeStore.selectedRecipe?.id}) ?? 0], creating: false).frame(maxWidth: .infinity, maxHeight: .infinity)
+                RecipeDetail(recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: {$0.id == recipeStore.selectedRecipe?.id}) ?? 0], creating: false, addRecipe: nil, cancel: nil)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if self.recipeStore.hSelection == 1 {
                 ImpressumView()
             }

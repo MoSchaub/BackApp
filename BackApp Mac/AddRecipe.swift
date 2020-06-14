@@ -37,19 +37,24 @@ struct AddRecipe: View {
     }
     
     var body: some View {
-        VStack{
-            RecipeDetail(recipe: $recipeStore.recipes[recipeStore.selectedRecipeIndex()!], creating: true).environmentObject(recipeStore)
-            HStack{
-                addButton
-                cancelButton
-                Spacer()
-            }.padding()
-        }.frame(minWidth: 600, idealWidth: 700, maxWidth: .infinity, minHeight: 700, idealHeight: 700, maxHeight: .infinity, alignment: .leading)
+        #if os(iOS)
+        return NavigationView{
+            RecipeDetail(recipe: $recipeStore.recipes[recipeStore.selectedRecipeIndex()!], creating: true, addRecipe: addRecipe, dismiss: dissmiss)
+                .environmentObject(recipeStore)
+        }
+        #elseif os(macOS)
+        return RecipeDetail(recipe: $recipeStore.recipes[recipeStore.selectedRecipeIndex()!], creating: true, addRecipe: addRecipe, cancel: dissmiss)
+            .environmentObject(recipeStore)
+            .frame(minWidth: 600, idealWidth: 700, maxWidth: .infinity, minHeight: 700, idealHeight: 700, maxHeight: .infinity, alignment: .leading)
+        #endif
     }
 
+    func dissmiss() {
+        presentationMode.wrappedValue.dismiss()
+    }
     
     func save(){
-        self.addRecipe(self.recipeStore.recipes.first!)
+        self.addRecipe(recipeStore.recipes.first!)
         self.presentationMode.wrappedValue.dismiss()
     }
     

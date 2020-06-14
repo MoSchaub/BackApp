@@ -21,7 +21,7 @@ struct IngredientDetail: View {
     @State private var warningAlertShown = false
     
     var backButton: some View{
-        Button(action: dissmiss) {
+        Button(action: {self.dissmiss()}) {
             HStack{
                 Image(systemName: "chevron.left")
                 Text("zurück")
@@ -100,7 +100,7 @@ struct IngredientDetail: View {
                     saveButton
                         .padding()
                     if creating {
-                        Button(action: dissmiss) {
+                        Button(action: {self.dissmiss()}) {
                             Text("Abbrechen")
                         }
                     } else {
@@ -136,13 +136,15 @@ struct IngredientDetail: View {
         if !stepContains(ingredient: ingredient) {
             step.ingredients.append(ingredient)
         }
-        dissmiss()
+        dissmiss(true)
     }
     
-    func dissmiss() {
+    func dissmiss(_ saving: Bool = false) {
         if creating {
             #if os(iOS)
-            warningAlertShown = true
+            if !saving {
+                warningAlertShown = true
+            }
             #elseif os(macOS)
             recipeStore.sDSelection = nil
             #endif

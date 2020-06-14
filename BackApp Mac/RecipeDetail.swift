@@ -14,6 +14,8 @@ struct RecipeDetail: View {
     @Binding var recipe: Recipe
     
     let creating: Bool
+    let addRecipe: ((Recipe) -> Void)?
+    let cancel: (() -> Void)?
     
     private var image: some View {
         Group{
@@ -121,38 +123,39 @@ struct RecipeDetail: View {
     }
     
     var body: some View {
-        
         NavigationView {
             VStack{
-                self.titleSection
-                
+                titleSection
                 Divider()
-                
-                self.nameSection
-                self.amountSection
-                self.categorySection
-                
-                self.stepsSection
+                nameSection
+                amountSection
+                categorySection
+                stepsSection
                 Spacer()
+                HStack {
+                    Button(action: save) {
+                        Text("OK")
+                    }.padding(.leading)
+                    if creating {
+                        Button(action: dismiss) {
+                            Text("Abbrechen")
+                        }
+                    } else {
+                        Button(action: delete) {
+                            Text("Löschen").foregroundColor(.red)
+                        }
+                    }
+                    Spacer()
+                }
             }
             .padding(.vertical)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             if self.recipeStore.selectedStep != nil && self.recipeStore.recipes.count > 0{
-                ZStack {
-                    StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == recipeStore.selectedStep?.id}) ?? 0], deleteEnabled: true).environmentObject(self.recipeStore)
-                    VStack {
-                            Spacer()
-                            Button(action: {
-                                self.recipeStore.delete(step: self.recipeStore.selectedStep!, from: self.recipe)
-                            }){
-                                    Text("Löschen")
-                                        .foregroundColor(.red)
-                            }
-                            .disabled(self.recipe.steps.count <= 1)
-                            .padding()
-                        }
-
-                }
+                StepDetail(
+                    recipe: $recipe,
+                    step: $recipe.steps[recipe.steps.firstIndex(where: {$0.id == recipeStore.selectedStep?.id}) ?? 0],
+                    creating: false
+                ).environmentObject(recipeStore)
             } else if self.recipeStore.rDSelection == 1 {
                 ZStack {
                     ImagePickerView(imageData: self.$recipe.imageString)
@@ -167,27 +170,14 @@ struct RecipeDetail: View {
                         }
                         .padding(.bottom)
                     }
-
+                    
                 }
             } else if self.recipeStore.rDSelection == 4 {
-                ZStack {
-                    AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)
-                    VStack {
-                        Spacer()
-                        Button(action: {
-                            self.recipeStore.rDSelection = nil
-                        }) {
-                            Text("Abbrechen")
-                        }
-                        .padding(.bottom)
-                        .padding(.bottom)
-                        .padding(.bottom)
-                    }
-                }
+                AddStepView(recipe: $recipe, roomTemp: recipeStore.roomThemperature)
             }
         }
     }
-    
+
     func export(){
         let panel = NSSavePanel()
         panel.nameFieldLabel = "Exportiere Rezept als"
@@ -224,10 +214,29 @@ struct RecipeDetail: View {
         recipe.steps.move(fromOffsets: source, toOffset: offset)
     }
     
+    func save() {
+        if creating {
+            addRecipe!(recipe)
+        }
+        dismiss()
+    }
+    
+    func dismiss() {
+        if creating {
+            cancel!()
+        } else {
+            recipeStore.selectedRecipe = nil
+        }
+    }
+    
+    func delete () {
+        recipeStore.deleteSelectedRecipe()
+    }
+    
 }
 
 struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetail(recipe: .constant(Recipe.example), creating: false).environmentObject(RecipeStore.example)
+        RecipeDetail(recipe: .constant(Recipe.example), creating: false, addRecipe: nil, cancel: nil).environmentObject(RecipeStore.example)
     }
 }
