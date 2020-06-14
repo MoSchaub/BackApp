@@ -36,6 +36,8 @@ struct StepRow: View {
                 HStack{
                     Text(substep.name)
                     Spacer()
+                    Text(substep.formattedTemp)
+                    Spacer()
                     Text(substep.totalFormattedAmount)
                 }.padding(.horizontal)
             }

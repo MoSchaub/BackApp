@@ -107,7 +107,7 @@ struct AddStepView: View {
     var saveButton: some View {
         Button(action: save){
             Text("Speichern")
-        }
+        }.disabled(recipe.steps.contains(where: {$0.name == self.step.name}))
     }
     
     var body: some View {

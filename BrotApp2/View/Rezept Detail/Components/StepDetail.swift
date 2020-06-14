@@ -87,11 +87,12 @@ struct StepDetail: View {
     private var ingredientsSection: some View {
         #if os(iOS)
         return Section(header: Text("Zutaten")) {
-            ForEach(step.subSteps){ subStep in
-                HStack {
-                    Text(subStep.name).font(.headline)
-                    Spacer()
-                    Text(subStep.formattedTime).secondary()
+            ForEach(self.step.subSteps, id: \.id){ sub in
+                StepRow(step: sub, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                    .contextMenu{
+                        Button(action: { self.delete(substep: sub)}) {
+                            Text("Löschen")
+                        }
                 }
             }
             .onDelete(perform: deleteSubsteps)
@@ -128,6 +129,11 @@ struct StepDetail: View {
                     //Substeps
                     ForEach(self.step.subSteps, id: \.id){ sub in
                         StepRow(step: sub, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                            .contextMenu{
+                                Button(action: { self.delete(substep: sub)}) {
+                                    Text("Löschen")
+                                }
+                        }
                     }
                 .onMove(perform: moveSubsteps)
                 .onDelete(perform: deleteSubsteps)
@@ -150,9 +156,9 @@ struct StepDetail: View {
         let stepsWithIngredients = recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
         return List{
             ForEach(stepsWithIngredients){step in
-                Button(action: self.pickSubstep){
+                Button(action: {self.pick(Substep: step)}){
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
-                }
+                }.buttonStyle(PlainButtonStyle())
             }
         }
 
@@ -220,7 +226,7 @@ struct StepDetail: View {
     
     
     var okButton: some View {
-        Button(action: save){ Text("OK") }
+        Button(action: save){ Text("OK") }.disabled(recipe.steps.contains(where: {$0.name == self.step.name}))
     }
    
     var body: some View {
@@ -300,6 +306,12 @@ struct StepDetail: View {
         self.step.subSteps.remove(atOffsets: offsets)
     }
     
+    func delete(substep: Step) {
+        if step.subSteps.contains(substep), let index = step.subSteps.firstIndex(where: {substep.id == $0.id} ) {
+            step.subSteps.remove(at: index)
+        }
+    }
+    
     func moveSubsteps(from source: IndexSet, to offset: Int){
         self.step.subSteps.move(fromOffsets: source, toOffset: offset)
     }
@@ -333,11 +345,9 @@ struct StepDetail: View {
         }
     }
     
-    func pickSubstep() {
-        step.subSteps.append(step)
-        #if os(iOS)
+    func pick(Substep: Step) {
+        step.subSteps.append(Substep)
         recipeStore.sDSelection = nil
-        #endif
     }
 
 }

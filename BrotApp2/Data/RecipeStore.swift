@@ -9,10 +9,15 @@
 import SwiftUI
 
 final class RecipeStore: ObservableObject{
+    
+    
 
     @Published var recipes = [Recipe](){
         didSet {
             self.write()
+            if !updating {
+                self.updateSubsteps()
+            }
         }
     }
     
@@ -66,6 +71,26 @@ final class RecipeStore: ObservableObject{
                 selectedStep = lastStep
             }
         }
+    }
+    private var updating = false
+    
+    private func updateSubsteps() {
+        if !updating{
+            updating = true
+            for recipeIndex in recipes.indices where recipes[recipeIndex].steps.contains(where: {!$0.subSteps.isEmpty}) { //recipes where a step has an substeps
+                let recipe = recipes[recipeIndex]
+                for stepIndex in recipe.steps.indices where !recipe.steps[stepIndex].subSteps.isEmpty {
+                    let step = recipe.steps[stepIndex]
+                    for substepIndex in step.subSteps.indices {
+                        if let original = recipe.steps.first(where: {$0.name == step.subSteps[substepIndex].name}) {
+                            recipes[recipeIndex].steps[stepIndex].subSteps[substepIndex] = original
+                        }
+                        
+                    }
+                }
+            }
+        }
+        updating = false
     }
     
     func contains(recipe: Recipe) -> Bool {
