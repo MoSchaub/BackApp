@@ -273,20 +273,7 @@ struct StepDetail: View {
         }
         .navigationBarTitle(self.title)
         #elseif os(macOS)
-        return NavigationView {
-            VStack{
-                self.nameSection
-                self.notesSection
-                self.timeSection
-                self.tempSection
-                self.ingredientsSection
-                Spacer()
-                if !self.deleteEnabled{
-                    self.okButton
-                    .padding(.bottom)
-                }
-            }
-            .frame(minWidth: 310, idealWidth: 350, maxWidth: .infinity)
+        return Group {
             if self.recipeStore.sDSelection == 1{
                 self.ingredientOrStep
             } else if self.recipeStore.sDSelection == 2{
@@ -317,6 +304,20 @@ struct StepDetail: View {
                         Text("OK")
                     }
                 }.frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
+            } else {
+                VStack{
+                    self.nameSection
+                    self.notesSection
+                    self.timeSection
+                    self.tempSection
+                    self.ingredientsSection
+                    Spacer()
+                    if !self.deleteEnabled{
+                        self.okButton
+                        .padding(.bottom)
+                    }
+                }
+                .frame(minWidth: 310, idealWidth: 350, maxWidth: .infinity)
             }
         }
         #endif
