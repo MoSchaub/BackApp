@@ -82,7 +82,6 @@
 		CDC8A0792483D208005433E1 /* RecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A06A2483D208005433E1 /* RecipeDetail.swift */; };
 		CDC8A07B2483D208005433E1 /* TimePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A06D2483D208005433E1 /* TimePickerModel.swift */; };
 		CDC8A07C2483D208005433E1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDC8A06F2483D208005433E1 /* Preview Assets.xcassets */; };
-		CDC8A07D2483D208005433E1 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = CDC8A0712483D208005433E1 /* Main.strings */; };
 		CDC8A07E2483D208005433E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDC8A0742483D208005433E1 /* Main.storyboard */; };
 		CDC8A07F2483D208005433E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A0762483D208005433E1 /* AppDelegate.swift */; };
 		CDC8A0802483D208005433E1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A0772483D208005433E1 /* ContentView.swift */; };
@@ -171,12 +170,12 @@
 		CDC8A06C2483D208005433E1 /* BackApp_Mac.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = BackApp_Mac.entitlements; sourceTree = "<group>"; };
 		CDC8A06D2483D208005433E1 /* TimePickerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerModel.swift; sourceTree = "<group>"; };
 		CDC8A06F2483D208005433E1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		CDC8A0722483D208005433E1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
-		CDC8A0732483D208005433E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		CDC8A0752483D208005433E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CDC8A0762483D208005433E1 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDC8A0772483D208005433E1 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CDC8A0782483D208005433E1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDEEBC6E249684430007F1A4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		CDEEBC70249684460007F1A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,7 +423,6 @@
 			isa = PBXGroup;
 			children = (
 				CDC8A0782483D208005433E1 /* Info.plist */,
-				CDC8A0712483D208005433E1 /* Main.strings */,
 				CDC8A0742483D208005433E1 /* Main.storyboard */,
 				CDC8A0762483D208005433E1 /* AppDelegate.swift */,
 			);
@@ -569,7 +567,6 @@
 				CDB5EE6B246BE0DC00E35376 /* BackAppImpressum.txt in Resources */,
 				CDB5BDA7246DA8D400B7A356 /* Media.xcassets in Resources */,
 				CDC8A07C2483D208005433E1 /* Preview Assets.xcassets in Resources */,
-				CDC8A07D2483D208005433E1 /* Main.strings in Resources */,
 				CDB5EE69246BE0DC00E35376 /* PrivacyPolicy.txt in Resources */,
 				CDB5BDA6246DA8D100B7A356 /* Assets.xcassets in Resources */,
 			);
@@ -692,19 +689,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		CDC8A0712483D208005433E1 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CDC8A0722483D208005433E1 /* de */,
-				CDC8A0732483D208005433E1 /* en */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
 		CDC8A0742483D208005433E1 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CDC8A0752483D208005433E1 /* Base */,
+				CDEEBC6E249684430007F1A4 /* de */,
+				CDEEBC70249684460007F1A4 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
