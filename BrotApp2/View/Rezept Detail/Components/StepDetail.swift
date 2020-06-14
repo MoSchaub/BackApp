@@ -101,7 +101,7 @@ struct StepDetail: View {
             .onMove(perform: moveSubsteps)
             
             ForEach(self.step.ingredients){ ingredient in
-                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: { $0.id == ingredient.id}) ?? 0], step: self.$step, recipe: self.recipe, deleteEnabled: true).environmentObject(self.recipeStore)){
+                NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: { $0.id == ingredient.id}) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore)){
                     IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature)
                 }
                 
@@ -230,7 +230,7 @@ struct StepDetail: View {
     
     var navigationSection: some View {
         Section {
-        NavigationLink(destination: AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore), tag: 2, selection: self.$recipeStore.sDSelection) {
+        NavigationLink(destination: AddIngredientView(step: self.$step, recipe: recipe).environmentObject(self.recipeStore), tag: 2, selection: self.$recipeStore.sDSelection) {
         EmptyView()
         }.hidden()
         NavigationLink(destination: self.subStepPicker, tag: 3, selection: self.$recipeStore.sDSelection) {
@@ -277,12 +277,8 @@ struct StepDetail: View {
             if self.recipeStore.sDSelection == 1{
                 self.ingredientOrStep
             } else if self.recipeStore.sDSelection == 2{
-                VStack {
-                    AddIngredientView(recipe: recipe, step: self.$step).environmentObject(self.recipeStore)
-                    Button("Abbrechen"){ self.recipeStore.sDSelection = nil}
-                        .padding(.bottom)
-                }
-                .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
+                AddIngredientView(step: $step, recipe: recipe).environmentObject(self.recipeStore)
+                        .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
             } else if self.recipeStore.sDSelection == 3 {
                 self.subStepPicker
                 .frame(minWidth: 200, idealWidth: 300, maxWidth: .infinity)
@@ -338,8 +334,6 @@ struct StepDetail: View {
     func moveSubsteps(from source: IndexSet, to offset: Int){
         self.step.subSteps.move(fromOffsets: source, toOffset: offset)
     }
-    
-    
 
 }
 

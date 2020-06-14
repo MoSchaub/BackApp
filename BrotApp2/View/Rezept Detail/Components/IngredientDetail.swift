@@ -9,32 +9,22 @@
 import SwiftUI
 
 struct IngredientDetail: View {
+    @EnvironmentObject private var recipeStore: RecipeStore
+    @State private var amountText = ""
     @Binding var ingredient : Ingredient
     @Binding var step: Step
     let recipe: Recipe
-    
-    @EnvironmentObject private var recipeStore: RecipeStore
-    
-    @State private var amountText = ""
+    let creating: Bool
     
     #if os(iOS)
     @Environment(\.presentationMode) var presentationMode
-    let deleteEnabled: Bool
     @State private var warningAlertShown = false
     
     var backButton: some View{
-        Button(action: {
-            if !self.deleteEnabled {
-                self.warningAlertShown = true
-            } else {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        }) {
+        Button(action: dissmiss) {
             HStack{
-                
                 Image(systemName: "chevron.left")
                 Text("zurück")
-                
             }
         }.alert(isPresented: self.$warningAlertShown) {
             Alert(title: Text("Achtung"), message: Text("Diese Zutat wird nicht gespeichert"), primaryButton: .default(Text("OK"), action: {
@@ -42,27 +32,16 @@ struct IngredientDetail: View {
             }), secondaryButton: .cancel())
         }
     }
-    
-    var saveButton: some View {
-        Button(action: {
-            self.save()
-        }){
-            HStack {
-                Text("OK")
-                Spacer()
-            }
-        }.disabled(self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil)
-    }
-    #elseif os(macOS)
-    
-    let backButton = EmptyView()
-    
-    var saveButton = EmptyView()
-    
-    let creating: Bool
+
     #endif
-    var title: String {
-        self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "neue Zutat" : self.ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
+    private var title: String {
+        ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "neue Zutat" : ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private var saveButton: some View {
+        Button(action: save){
+            Text("OK")
+        }.disabled(ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil || stepContains(ingredient: ingredient) && creating)
     }
     
     var body: some View{
@@ -73,16 +52,16 @@ struct IngredientDetail: View {
             }
             
             Section(header: Text("Menge")) {
-                TextField("0.00 g", text: self.$amountText) {
+                TextField("0.00 g", text: $amountText) {
                     self.formatAmountText()
                 }
             }
         
             Section {
-                Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
+                Toggle("Schüttflüssigkeit", isOn: $ingredient.isBulkLiquid)
             }
         }
-        .navigationBarItems(leading: self.backButton, trailing: self.saveButton)
+        .navigationBarItems(leading: backButton, trailing: saveButton)
             .navigationBarBackButtonHidden(true)
             .onAppear{
                 self.formatAmountText()
@@ -90,7 +69,7 @@ struct IngredientDetail: View {
                     self.amountText = self.ingredient.formattedAmount
                 }
         }
-        .navigationBarTitle(self.title)
+        .navigationBarTitle(title)
             
         #elseif os(macOS)
             return VStack(alignment: .leading) {
@@ -103,7 +82,7 @@ struct IngredientDetail: View {
                 
                 HStack {
                     Text("Menge:")
-                    TextField("0.00 g", text: self.$amountText) {
+                    TextField("0.00 g", text: $amountText) {
                         self.formatAmountText()
                     }
                     Spacer()
@@ -111,25 +90,25 @@ struct IngredientDetail: View {
                 .padding(.leading)
 
                 HStack {
-                    Toggle("Schüttflüssigkeit", isOn: self.$ingredient.isBulkLiquid)
+                    Toggle("Schüttflüssigkeit", isOn: $ingredient.isBulkLiquid)
                     Spacer()
                 }
                 .padding(.leading)
                 
                 Spacer()
-                if self.creating {
-                    Button(action: {
-                        self.save()
-                    }){
-                        Text("OK")
-                    }.disabled(ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) == nil || stepContains(ingredient: ingredient))
-                        .padding(.leading)
-                } else {
-                    Button(action: {
-                        self.delete()
-                    }) {
-                        Text("Löschen").foregroundColor(.red)
-                    }.padding(.leading)
+                HStack {
+                    saveButton
+                        .padding()
+                    if creating {
+                        Button(action: dissmiss) {
+                            Text("Abbrechen")
+                        }
+                    } else {
+                        Button(action: delete) {
+                            Text("Löschen").foregroundColor(.red)
+                        }
+                    }
+                    Spacer()
                 }
             }
             .onAppear{
@@ -142,38 +121,42 @@ struct IngredientDetail: View {
     }
     
     func formatAmountText(){
-        guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
-        self.ingredient.amount = Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
-        self.amountText = self.ingredient.formatted(rest: self.amountText)
+        guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
+        ingredient.amount = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+        amountText = ingredient.formatted(rest: amountText)
     }
     
     func stepContains(ingredient: Ingredient) -> Bool {
-        self.step.ingredients.contains(where: {$0.name == self.ingredient.name})
+        step.ingredients.contains(where: {$0.name == self.ingredient.name})
     }
     
     func save(){
-        self.formatAmountText()
-        guard Double(self.amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
-        if !stepContains(ingredient: self.ingredient) {
-            self.step.ingredients.append(self.ingredient)
+        formatAmountText()
+        guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return }
+        if !stepContains(ingredient: ingredient) {
+            step.ingredients.append(ingredient)
+        }
+        dissmiss()
+    }
+    
+    func dissmiss() {
+        if creating {
+            #if os(iOS)
+            warningAlertShown = true
+            #elseif os(macOS)
+            recipeStore.sDSelection = nil
+            #endif
+        } else {
+           recipeStore.selectedIngredient = nil
         }
         #if os(iOS)
-        self.presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
-        if creating {
-            self.recipeStore.sDSelection = nil
-        } else {
-            self.recipeStore.selectedIngredient = nil
-        }
+        presentationMode.wrappedValue.dismiss()
         #endif
     }
     
-    
     func delete(){
-        self.recipeStore.deleteIngredient(of: step, in: recipe)
-        #if os(iOS)
-        self.presentationMode.wrappedValue.dismiss()
-        #endif
+        recipeStore.deleteIngredient(of: step, in: recipe)
+        dissmiss()
     }
     
 }
