@@ -45,9 +45,9 @@ final class RecipeStore: ObservableObject{
         willSet {
             if newValue != nil {
                 self.rDSelection = nil
-            } else {
-                self.selectedIngredient = nil
             }
+            self.sDSelection = nil
+            self.selectedIngredient = nil
             self.objectWillChange.send()
         }
     }
@@ -184,9 +184,9 @@ final class RecipeStore: ObservableObject{
         willSet{
             if newValue != nil {
                 self.hSelection = nil
-            } else {
-                self.selectedStep = nil
             }
+            self.rDSelection = nil
+            self.selectedStep = nil
             objectWillChange.send()
         }
     }

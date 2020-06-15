@@ -26,7 +26,7 @@ struct StepRow: View {
                     Image(systemName: "chevron.right")
                 }
                 #endif
-            }.padding(.horizontal)
+            }
             
             ForEach(step.ingredients){ ingredient in
                 IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
@@ -39,7 +39,7 @@ struct StepRow: View {
                     Text(substep.formattedTemp)
                     Spacer()
                     Text(substep.totalFormattedAmount)
-                }.padding(.horizontal)
+                }
             }
             Text(step.notes)
                 .lineLimit(nil)

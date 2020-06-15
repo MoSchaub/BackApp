@@ -156,7 +156,7 @@ struct StepDetail: View {
         let stepsWithIngredients = recipe.steps.filter({ $0 != self.step && !$0.ingredients.isEmpty})
         return List{
             ForEach(stepsWithIngredients){step in
-                Button(action: {self.pick(Substep: step)}){
+                Button(action: {self.pick(substep: step)}){
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
                 }.buttonStyle(PlainButtonStyle())
             }
@@ -319,7 +319,7 @@ struct StepDetail: View {
     func delete() {
         recipeStore.delete(step: step, from: recipe)
     }
-    
+
     func dissmiss() {
         if creating {
             recipeStore.rDSelection = nil
@@ -330,31 +330,31 @@ struct StepDetail: View {
         presentationMode.wrappedValue.dismiss()
         #endif
     }
-    
+
     func save() {
         recipeStore.save(step: step, to: recipe)
         dissmiss()
     }
-    
-    func addIngredient()  {
-        let stepsWithIngredients = recipe.steps.filter({ $0 != step && !$0.ingredients.isEmpty})
+
+    func addIngredient() {
+        let stepsWithIngredients = recipe.steps.filter({ $0 != step && !$0.ingredients.isEmpty && !step.subSteps.contains($0)})
         if stepsWithIngredients.isEmpty{
             recipeStore.sDSelection = 2 //ingredient
         } else{
             recipeStore.sDSelection = 1 //ingredient or substep
         }
     }
-    
-    func pick(Substep: Step) {
-        step.subSteps.append(Substep)
-        recipeStore.sDSelection = nil
-    }
 
+    func pick(substep: Step) {
+        if !step.subSteps.contains(where: {$0.name == substep.name}) {
+            step.subSteps.append(substep)
+            recipeStore.sDSelection = nil
+        }
+    }
 }
 
 #if os(iOS)
 struct stepTimePicker: View {
-    
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var time: TimeInterval
