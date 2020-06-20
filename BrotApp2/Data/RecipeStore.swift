@@ -9,8 +9,6 @@
 import SwiftUI
 
 final class RecipeStore: ObservableObject{
-    
-    
 
     @Published var recipes = [Recipe](){
         didSet {

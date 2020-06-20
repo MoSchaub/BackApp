@@ -73,7 +73,6 @@ struct ContentView: View {
                     ForEach(self.recipeStore.recipes) { recipe in
                         Card(recipe: recipe).tag(recipe)
                     }
-                    .onDelete(perform: deleteRecipes)
                     .onMove(perform: moveRecipes)
                 }
                 Divider()
