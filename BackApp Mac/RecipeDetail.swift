@@ -116,7 +116,6 @@ struct RecipeDetail: View {
                     StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature).tag(step)
                     Divider()
                 }
-                .onDelete(perform: deleteStep)
                 .onMove(perform: moveSteps)
             }
         }
@@ -205,22 +204,18 @@ struct RecipeDetail: View {
             }
         }
     }
-    
-    func deleteStep(at offsets: IndexSet) {
-        recipe.steps.remove(atOffsets: offsets)
-    }
-    
+
     func moveSteps(from source: IndexSet, to offset: Int) {
         recipe.steps.move(fromOffsets: source, toOffset: offset)
     }
-    
+
     func save() {
         if creating {
             addRecipe!(recipe)
         }
         dismiss()
     }
-    
+
     func dismiss() {
         if creating {
             cancel!()
@@ -228,11 +223,11 @@ struct RecipeDetail: View {
             recipeStore.selectedRecipe = nil
         }
     }
-    
+
     func delete () {
         recipeStore.deleteSelectedRecipe()
     }
-    
+
 }
 
 struct RecipeDetail_Previews: PreviewProvider {
