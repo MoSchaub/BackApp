@@ -85,7 +85,6 @@ struct AddStepView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var recipeStore: RecipeStore
     @Binding var recipe: Recipe
-    let roomTemp: Int
     @State private var step = Step(name: "", time: 60, ingredients: [], themperature: 20)
     @State private var warningAlertShown = false
 
@@ -128,7 +127,7 @@ struct AddStepView: View {
 struct AddStepsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddStepView(recipe: .constant(Recipe.example), roomTemp: 20)
+            AddStepView(recipe: .constant(Recipe.example))
         }
     }
 }

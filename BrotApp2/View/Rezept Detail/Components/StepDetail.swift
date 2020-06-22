@@ -56,16 +56,36 @@ struct StepDetail: View {
     private var tempSection: some View {
         #if os(iOS)
         return Section(header: Text("Temperatur")) {
-            NavigationLink(destination: stepTempPicker(temp: $step.temperature) ) {
+            NavigationLink(destination: stepTempPicker(step: $step) ) {
                 Text(step.formattedTemp)
             }
         }
         #elseif os(macOS)
-        return Picker("Temperatur:", selection: $step.temperature){
-            ForEach(-10...50, id: \.self){ temperature in
-                Text("\(temperature)° C")
+        return VStack {
+
+            Picker(step.isDynamicTemperature ? "Starttemperatur" : "Temperatur", selection: $step.temperature){
+                ForEach(-10...50, id: \.self){ temperature in
+                    Text("\(temperature)° C")
+                }
+            }.padding(.horizontal)
+
+            if step.isDynamicTemperature {
+                Picker("Endtemperatur",selection: $step.secondTemp){
+                    ForEach(-10...50, id: \.self){ temperature in
+                        Text("\(temperature)° C")
+                    }
+                }
+                .padding(.horizontal)
             }
-        }.padding(.horizontal)
+
+            HStack {
+                Toggle(isOn: $step.isDynamicTemperature) {
+                    Text("Dynamische Temperatur")
+                }
+                Spacer()
+            }.padding(.leading)
+        }
+            
         #endif
     }
     
@@ -371,19 +391,39 @@ struct stepTimePicker: View {
 struct stepTempPicker: View{
     @Environment(\.presentationMode) var presentationMode
     
-    @Binding var temp: Int
+    @Binding var step: Step
     
     var body: some View {
         VStack {
-            Picker(" ",selection: self.$temp){
+
+            Toggle(isOn: $step.isDynamicTemperature) {
+                Text("Dynamische Temperatur")
+            }.padding()
+
+            Text(step.isDynamicTemperature ? "Starttemperatur" : "Temperatur")
+            Picker(" ",selection: $step.temperature){
                 ForEach(-10...50, id: \.self){ n in
                     Text("\(n)")
                 }
             }
             .labelsHidden()
             .padding()
+
+            if step.isDynamicTemperature {
+                Text("Endtemperatur")
+                Picker("",selection: $step.secondTemp){
+                    ForEach(-10...50, id: \.self){ n in
+                        Text("\(n)")
+                    }
+                }
+                .labelsHidden()
+                .padding()
+            }
+            
+            Spacer()
+
             Button("OK"){ self.presentationMode.wrappedValue.dismiss()}
-        }
+        }.navigationBarTitle("" ,displayMode: .inline)
     }
 }
 #endif

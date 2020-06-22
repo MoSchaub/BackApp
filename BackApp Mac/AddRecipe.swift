@@ -27,7 +27,7 @@ struct AddRecipe: View {
             self.save()
         }){
             Text("hinzufügen").padding(.leading)
-        }
+        }.disabled(recipeStore.recipes.first!.steps.isEmpty)
     }
     
     var cancelButton: some View{

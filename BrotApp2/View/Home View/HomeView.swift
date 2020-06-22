@@ -127,12 +127,16 @@ struct HomeView: View {
                     }
                 }) {
                     ForEach(recipeStore.recipes){ recipe in
-                        NavigationLink(destination: RecipeDetail(
-                            recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { recipe.id == $0.id }) ?? 0],
-                            creating: false,
-                            addRecipe: nil,
-                            dismiss: nil
-                        ).environmentObject(self.recipeStore)) {
+                        NavigationLink(
+                            destination: RecipeDetail(
+                                recipe: self.$recipeStore.recipes[self.recipeStore.recipes.firstIndex(where: { self.recipeStore.selectedRecipe?.id == $0.id }) ?? 0],
+                                creating: false,
+                                addRecipe: nil,
+                                dismiss: nil
+                            ).environmentObject(self.recipeStore),
+                            tag: recipe,
+                            selection: self.$recipeStore.selectedRecipe
+                        ) {
                             Card(recipe: recipe)
                         }.accessibility(identifier: recipe.name)
                     }
@@ -168,7 +172,9 @@ struct HomeView: View {
     }
     
     func deleteRecipes(at offsets: IndexSet){
-        self.recipeStore.recipes.remove(atOffsets: offsets)
+        for index in offsets {
+            recipeStore.deleteRecipe(at: index)
+        }
     }
     
     func moveRecipes(from source: IndexSet, to destination: Int) {

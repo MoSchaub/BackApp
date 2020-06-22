@@ -33,19 +33,23 @@ final class RecipeStore: ObservableObject{
     ///4: AddStepView
    @Published var rDSelection: Int? = nil{
         didSet{
+            #if os(macOS)
             if self.rDSelection != nil {
                 self.selectedStep = nil
             }
+            #endif
         }
     }
 
     var selectedStep: Step? = nil{
         willSet {
+            #if os(macOS)
             if newValue != nil {
                 self.rDSelection = nil
             }
             self.sDSelection = nil
             self.selectedIngredient = nil
+            #endif
             self.objectWillChange.send()
         }
     }
@@ -64,10 +68,12 @@ final class RecipeStore: ObservableObject{
                 self.recipes[self.selectedRecipeIndex()!].steps.remove(at: index)
             }
             //select next
+            #if os(macOS)
             if self.selectedRecipe!.steps.count > 1{
                 guard let lastStep = self.recipes[self.selectedRecipeIndex()!].steps.last else { return }
                 selectedStep = lastStep
             }
+            #endif
         }
     }
     private var updating = false
@@ -114,12 +120,14 @@ final class RecipeStore: ObservableObject{
     
     @Published var sDSelection: Int? = nil{
         didSet{
+            #if os(macOS)
             if self.sDSelection != nil {
                 if self.sDSelection == 1 {
                     sDShowingSubstepOrIngredientSheet = true
                 }
                 self.selectedIngredient = nil
             }
+            #endif
         }
     }
     
@@ -127,9 +135,11 @@ final class RecipeStore: ObservableObject{
     
     @Published var selectedIngredient: Ingredient? = nil{
         didSet{
+            #if os(macOS)
             if self.selectedIngredient != nil {
                 self.sDSelection = nil
             }
+            #endif
         }
     }
     
@@ -146,10 +156,12 @@ final class RecipeStore: ObservableObject{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 self.recipes[self.selectedRecipeIndex()!].steps[self.selectedIngredientIndex()!].ingredients.remove(at: index)
             }
+            #if os(macOS)
             //select next
             if self.selectedStep!.ingredients.count > 1{
                 selectedIngredient = recipes[selectedRecipeIndex()!].steps[selectedStepIndex()!].ingredients.last
             }
+            #endif
         }
     }
 
@@ -180,11 +192,13 @@ final class RecipeStore: ObservableObject{
     
     var selectedRecipe: Recipe? = nil{
         willSet{
+            #if os(macOS)
             if newValue != nil {
                 self.hSelection = nil
             }
             self.rDSelection = nil
             self.selectedStep = nil
+            #endif
             objectWillChange.send()
         }
     }
@@ -194,16 +208,24 @@ final class RecipeStore: ObservableObject{
     }
     
     func deleteSelectedRecipe() {
-        if let index = selectedRecipeIndex(), index < recipes.count {
+        if let index = selectedRecipeIndex(){
+            deleteRecipe(at: index)
+        }
+    }
+    
+    func deleteRecipe(at index: Int) {
+        if index < recipes.count {
             selectedRecipe = nil
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 self.recipes.remove(at: index)
             }
             //select next
+            #if os(macOS)
             if recipes.count > 1{
                 guard let lastRecipe = recipes.last else { return }
                 selectedRecipe = lastRecipe
             }
+            #endif
         }
     }
     

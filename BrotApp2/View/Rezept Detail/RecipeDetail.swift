@@ -37,7 +37,7 @@ struct RecipeDetail: View {
         } else {
             Button(action: save) {
                 Text("OK")
-            }
+            }.disabled(recipeStore.recipes.first(where: {$0.id == self.recipeStore.selectedRecipe?.id})?.steps.isEmpty ?? false )
         }
         
     }
@@ -121,7 +121,7 @@ struct RecipeDetail: View {
                 }
                 .onDelete(perform: deleteStep)
                 .onMove(perform: moveSteps)
-                NavigationLink(destination: AddStepView(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature).environmentObject(self.recipeStore), tag: 4, selection: self.$recipeStore.rDSelection) {
+                NavigationLink(destination: AddStepView(recipe: $recipe).environmentObject(recipeStore), tag: 4, selection: $recipeStore.rDSelection) {
                     Text("Schritt hinzufügen")
                 }
             }

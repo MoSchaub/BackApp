@@ -172,7 +172,7 @@ struct RecipeDetail: View {
                     
                 }
             } else if self.recipeStore.rDSelection == 4 {
-                AddStepView(recipe: $recipe, roomTemp: recipeStore.roomThemperature)
+                AddStepView(recipe: $recipe).environmentObject(recipeStore)
             }
         }
     }

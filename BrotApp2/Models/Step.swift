@@ -24,6 +24,14 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     var subSteps: [Step]
     
+    var isDynamicTemperature: Bool {
+        willSet {
+            secondTemp = temperature
+        }
+    }
+    
+    var secondTemp: Int
+    
     init(name: String, time: TimeInterval, ingredients: [Ingredient] = [] , themperature: Int = 20, notes: String = "") {
         self.id = UUID().uuidString
         self.time = time
@@ -32,6 +40,8 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         self.temperature = themperature
         self.notes = notes
         self.subSteps = []
+        self.isDynamicTemperature = false
+        self.secondTemp = temperature
     }
     
     var formattedTime: String{
@@ -39,7 +49,11 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     }
     
     var formattedTemp: String{
-        String(self.temperature) + " °C"
+        if isDynamicTemperature {
+            return "Beginn: \(temperature) ºC, Ende: \(secondTemp) °C"
+        } else {
+            return String(self.temperature) + " °C"
+        }
     }
     
     var totalAmount: Double{
@@ -66,9 +80,9 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
             }
         }
         var totalAmount = self.totalAmount
-        for step in self.subSteps{
-            summOfMassTempProductOfNonBulkLiquids += step.totalAmount * Double(step.temperature)
-            totalAmount += step.totalAmount
+        for substep in subSteps{
+            summOfMassTempProductOfNonBulkLiquids += substep.totalAmount * Double(isDynamicTemperature ? substep.secondTemp : substep.temperature)
+            totalAmount += substep.totalAmount
         }
         
         let diff = Double(self.temperature) * totalAmount - summOfMassTempProductOfNonBulkLiquids
@@ -109,6 +123,8 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         case temperature
         case notes
         case subSteps
+        case isDynamicTemperature
+        case secondTemp
     }
     
     init(from decoder: Decoder) throws {
@@ -120,6 +136,8 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         self.temperature = try container.decode(Int.self, forKey: .temperature)
         self.notes = try container.decode(String.self, forKey: .notes)
         self.subSteps = try container.decode([Step].self, forKey: .subSteps)
+        self.isDynamicTemperature = try container.decode(Bool.self, forKey: .isDynamicTemperature)
+        self.secondTemp = try container.decode(Int.self, forKey: .secondTemp)
     }
     
     static func == (lhs: Step, rhs: Step) -> Bool {
@@ -128,7 +146,9 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
             lhs.ingredients == rhs.ingredients &&
             lhs.temperature == rhs.temperature &&
             lhs.notes == rhs.notes &&
-            lhs.subSteps == rhs.subSteps
+            lhs.subSteps == rhs.subSteps &&
+            lhs.isDynamicTemperature == rhs.isDynamicTemperature &&
+            lhs.secondTemp == rhs.secondTemp
     }
-    
+
 }
