@@ -95,7 +95,7 @@ struct RecipeDetail: View {
             }
             
             Section(header: Text("Bild")) {
-                NavigationLink(destination: ImagePickerView(imageData: self.$recipe.imageString), tag: 1, selection: self.$recipeStore.rDSelection) {
+                NavigationLink(destination: ImagePickerView(imageData: self.$recipe.imageString)) {
                     self.image
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -103,7 +103,7 @@ struct RecipeDetail: View {
             
             if !creating{
                 self.infoStrip
-                NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature), tag: 3, selection: self.$recipeStore.rDSelection) {
+                NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
                     Text("Zeitplan erstellen")
                 }
             }
@@ -122,7 +122,7 @@ struct RecipeDetail: View {
                 }
                 .onDelete(perform: deleteStep)
                 .onMove(perform: moveSteps)
-                NavigationLink(destination: AddStepView(recipe: $recipe).environmentObject(recipeStore), tag: 4, selection: $recipeStore.rDSelection) {
+                NavigationLink(destination: AddStepView(recipe: $recipe).environmentObject(recipeStore)) {
                     Text("Schritt hinzufügen")
                 }
             }

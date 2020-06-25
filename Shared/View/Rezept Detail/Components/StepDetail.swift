@@ -221,8 +221,8 @@ struct StepDetail: View {
     #if os(iOS)
     var deleteButton: some View{
         Button(action: {
-            self.recipeStore.delete(step: self.step, from: self.recipe)
             self.presentationMode.wrappedValue.dismiss()
+            self.recipeStore.delete(step: self.step, from: self.recipe)
         }){
             HStack {
                 Text("Löschen").foregroundColor(.red)
@@ -262,9 +262,15 @@ struct StepDetail: View {
                     deleteButton
                 }
             }
+            .listStyle(GroupedListStyle())
             navigationSection
         }
         .navigationBarTitle(self.title)
+    .navigationBarItems(trailing:
+            Button(action: save){
+                Text("Speichern")
+            }.disabled(recipe.steps.contains(where: {$0.name == self.step.name}))
+        )
         #elseif os(macOS)
         return Group {
             if recipeStore.sDSelection == 1{

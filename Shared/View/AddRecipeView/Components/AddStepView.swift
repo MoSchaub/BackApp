@@ -87,22 +87,9 @@ struct AddStepView: View {
     @Binding var recipe: Recipe
     @State private var step = Step(name: "", time: 60, ingredients: [], themperature: 20)
     
-    var saveButton: some View {
-        Button(action: save){
-            Text("Speichern")
-        }.disabled(recipe.steps.contains(where: {$0.name == self.step.name}))
-    }
-    
     var body: some View {
         StepDetail(recipe: $recipe, step: $step, creating: true)
             .environmentObject(recipeStore)
-            .navigationBarItems(trailing: saveButton)
-    }
-    
-    func save(){
-        recipeStore.save(step: step, to: recipe)
-        self.recipeStore.rDSelection = nil
-        self.presentationMode.wrappedValue.dismiss()
     }
     
 }

@@ -171,10 +171,12 @@ final class RecipeStore: ObservableObject{
                 self.recipes[recipeIndex].steps.append(step)
             }
         }
+        #if os(macOS)
         self.selectedIngredient = nil
         self.selectedStep = nil
         self.sDSelection = nil
         self.rDSelection = nil
+        #endif
     }
 
     func deleteIngredient(of step: Step, in recipe: Recipe) {
@@ -240,8 +242,13 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
+
     
-    init() {}
+    init() {
+        if let recipes = load() {
+            self.recipes = recipes
+        }
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
