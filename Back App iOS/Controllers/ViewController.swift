@@ -11,14 +11,25 @@ import SwiftUI
 
 class ViewController: UITableViewController {
     var recipeStore = RecipeStore()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func loadView() {
+        super.loadView()
         
+        configureTableView()
         title = "Back App"
         navigationController?.navigationBar.prefersLargeTitles = true
         
         navigationItem.leftBarButtonItem = editButtonItem
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
+    func configureTableView() {
+        tableView  = UITableView(frame: tableView.frame, style: .insetGrouped)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
     }
     
     // MARK: - Data Source
@@ -33,7 +44,7 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Rezepte"
+            return "Recipes"
         }
         return nil
     }
@@ -42,21 +53,19 @@ class ViewController: UITableViewController {
         2
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 80
+        } else {
+            return 40
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0, recipeStore.recipes.count > indexPath.row{ //recipe section
-            let cell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath)
-            let recipe = recipeStore.recipes[indexPath.row]
-            cell.textLabel?.text = recipe.name
-            cell.textLabel!.font = UIFont.preferredFont(forTextStyle: .headline)
-            cell.accessoryType = .disclosureIndicator
-            if let imageData = recipe.imageString {
-                cell.imageView?.image = UIImage(data: imageData)
-            } else {
-                cell.imageView?.image = UIImage(named: "bread")
-            }
-            return cell
+            return recipeCell(at: indexPath)
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "other", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = "Raumthemperatur: \(recipeStore.roomThemperature)ºC"
@@ -74,9 +83,27 @@ class ViewController: UITableViewController {
         }
     }
     
+    func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
+        let recipe = recipeStore.recipes[indexPath.row]
+        cell.textLabel?.text = recipe.name
+        cell.detailTextLabel?.text = recipe.formattedTotalTime
+        cell.accessoryType = .disclosureIndicator
+        
+        if let imageData = recipe.imageString {
+            cell.imageView?.image = UIImage(data: imageData)
+        } else {
+            cell.imageView?.image = UIImage(named: "bread")
+        }
+        cell.imageView?.layer.cornerRadius = 10.0
+        cell.imageView?.layer.borderWidth = 1
+        
+        return cell
+    }
+    
     //deleting and moving recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete ,indexPath.section == 0, recipeStore.recipes.count > indexPath.row{
+        if editingStyle == .delete, indexPath.section == 0, recipeStore.recipes.count > indexPath.row {
             recipeStore.recipes.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
@@ -107,13 +134,13 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0, recipeStore.recipes.count > indexPath.row {
             // 1: try loading the "Detail" view controller and typecasting it to be RecipeDetailViewController
-            if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? RecipeDetailViewController {
-                // 2: success! Set its recipe property
-                vc.recipe = recipeStore.recipes[indexPath.row]
-
-                // 3: now push it onto the navigation controller
-                navigationController?.pushViewController(vc, animated: true)
-            }
+            let vc = RecipeDetailViewController(style: .insetGrouped)
+            // 2: success! Set its recipe property
+            vc.recipe = recipeStore.recipes[indexPath.row]
+            vc.recipeStore = recipeStore
+            
+            // 3: now push it onto the navigation controller
+            navigationController?.pushViewController(vc, animated: true)
         } else if indexPath.section == 1 {
             let row = indexPath.row
             if row == 0 {

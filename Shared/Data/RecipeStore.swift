@@ -13,7 +13,7 @@ final class RecipeStore: ObservableObject{
     @Published var recipes = [Recipe](){
         didSet {
             self.write()
-            if !updating {
+            if !updatingSubsteps {
                 self.updateSubsteps()
             }
         }
@@ -76,11 +76,19 @@ final class RecipeStore: ObservableObject{
             #endif
         }
     }
-    private var updating = false
+    
+    func update(recipe: Recipe) {
+        if let recipeIndex = recipes.firstIndex(where: {$0.id == recipe.id }), recipes.count > recipeIndex {
+            recipes[recipeIndex] = recipe
+            write()
+        }
+    }
+    
+    private var updatingSubsteps = false
     
     private func updateSubsteps() {
-        if !updating{
-            updating = true
+        if !updatingSubsteps{
+            updatingSubsteps = true
             for recipeIndex in recipes.indices where recipes[recipeIndex].steps.contains(where: {!$0.subSteps.isEmpty}) { //recipes where a step has an substeps
                 let recipe = recipes[recipeIndex]
                 for stepIndex in recipe.steps.indices where !recipe.steps[stepIndex].subSteps.isEmpty {
@@ -94,7 +102,7 @@ final class RecipeStore: ObservableObject{
                 }
             }
         }
-        updating = false
+        updatingSubsteps = false
     }
     
     func contains(recipe: Recipe) -> Bool {

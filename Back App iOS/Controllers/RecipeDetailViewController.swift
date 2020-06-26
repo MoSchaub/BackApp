@@ -9,16 +9,24 @@
 import UIKit
 
 class RecipeDetailViewController: UITableViewController {
-    var recipe: Recipe?
+    var recipe: Recipe! {
+        willSet {
+            if newValue != nil {
+                recipeStore.update(recipe: newValue!)
+                title = newValue.name
+            }
+        }
+    }
+    var recipeStore = RecipeStore()
     var creating = false 
 
+    override func loadView() {
+        super.loadView()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = recipe?.name
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -37,13 +45,17 @@ class RecipeDetailViewController: UITableViewController {
         default: return 0
         }
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
-        let row = indexPath.row
+        //let row = indexPath.row
         if section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "textField", for: indexPath)
+            let cell: TextFieldTableViewCell
+            cell = TextFieldTableViewCell(style: .default, reuseIdentifier: "textfield")
+            cell.textField.text = recipe.name
+            cell.textChanged = { name in
+                self.recipe.name = name
+            }
             
             
             return cell
@@ -52,40 +64,41 @@ class RecipeDetailViewController: UITableViewController {
     }
     
 
-    /*
-    // Override to support conditional editing of the table view.
+    
+    // conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        indexPath.section == 3 ? true : false
     }
-    */
 
-    /*
-    // Override to support editing the table view.
+
+    
+    //editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
+        if editingStyle == .delete, indexPath.section == 3, let recipe = recipe, recipe.steps.count > indexPath.row {
             // Delete the row from the data source
+            self.recipe!.steps.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
-
-    /*
+    
+    
     // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        guard recipe != nil else { return }
+        guard destinationIndexPath.section == 3 else { return }
+        guard recipe!.steps.count > sourceIndexPath.row else { return }
+        let movedObject = recipe!.steps[sourceIndexPath.row]
+        recipe!.steps.remove(at: sourceIndexPath.row)
+        recipe!.steps.insert(movedObject, at: destinationIndexPath.row)
     }
-    */
+    
 
-    /*
-    // Override to support conditional rearranging of the table view.
+    
+    // conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+        indexPath.section == 3 ? true : false
     }
-    */
+    
 
     /*
     // MARK: - Navigation

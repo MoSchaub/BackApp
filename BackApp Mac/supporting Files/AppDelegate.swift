@@ -38,21 +38,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         exit(1)
     }
     
-    func applicationWillResignActive(_ notification: Notification) {
-        
-        
-    }
-    
-    func applicationDidBecomeActive(_ notification: Notification) {
-        //load file
-        if let recipes: [Recipe] = recipeStore.load(){
-            recipeStore.recipes = recipes
-        }
-    }
-    
     
     @IBAction func newRecipeSelected(_ sender: NSMenuItem) {
-        
         NotificationCenter.default.post(Notification(name: .addRecipe))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.updateMenuItems()
