@@ -80,7 +80,7 @@ struct Recipe: Hashable, Codable, Identifiable{
     /// total time of all the steps in the brotValues array
     var totalTime: Int {
         var allTimes: Int = 0
-        for step in steps {
+        for step in self.steps {
             allTimes += Int(step.time/60)
         }
         return allTimes

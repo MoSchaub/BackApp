@@ -64,6 +64,7 @@ struct RecipeDetail: View {
         .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
         .shadow(color: Color("Color2"), radius: 10, x: -5, y: -5)
         .padding()
+    .drawingGroup()
     }
     
     private var infoStrip: some View{

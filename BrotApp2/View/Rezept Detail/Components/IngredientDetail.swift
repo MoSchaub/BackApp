@@ -18,20 +18,6 @@ struct IngredientDetail: View {
     
     #if os(iOS)
     @Environment(\.presentationMode) var presentationMode
-    @State private var warningAlertShown = false
-    
-    var backButton: some View{
-        Button(action: {self.dissmiss()}) {
-            HStack{
-                Image(systemName: "chevron.left")
-                Text("zurück")
-            }
-        }.alert(isPresented: self.$warningAlertShown) {
-            Alert(title: Text("Achtung"), message: Text("Diese Zutat wird nicht gespeichert"), primaryButton: .default(Text("OK"), action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }), secondaryButton: .cancel())
-        }
-    }
 
     #endif
     private var title: String {
@@ -61,8 +47,7 @@ struct IngredientDetail: View {
                 Toggle("Schüttflüssigkeit", isOn: $ingredient.isBulkLiquid)
             }
         }
-        .navigationBarItems(leading: backButton, trailing: saveButton)
-            .navigationBarBackButtonHidden(true)
+        .navigationBarItems(trailing: saveButton)
             .onAppear{
                 self.formatAmountText()
                 if self.step.ingredients.firstIndex(where: {$0.id == self.ingredient.id}) != nil{
@@ -141,11 +126,7 @@ struct IngredientDetail: View {
     
     func dissmiss(_ saving: Bool = false) {
         if creating {
-            #if os(iOS)
-            if !saving {
-                warningAlertShown = true
-            }
-            #elseif os(macOS)
+            #if os(macOS)
             recipeStore.sDSelection = nil
             #endif
         } else {

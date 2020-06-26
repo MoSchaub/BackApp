@@ -86,22 +86,6 @@ struct AddStepView: View {
     @EnvironmentObject private var recipeStore: RecipeStore
     @Binding var recipe: Recipe
     @State private var step = Step(name: "", time: 60, ingredients: [], themperature: 20)
-    @State private var warningAlertShown = false
-
-    var backButton: some View{
-        Button(action: {
-            self.warningAlertShown = true
-        }) {
-            HStack{
-                Image(systemName: "chevron.left")
-                Text("zurück")
-            }
-        }.alert(isPresented: $warningAlertShown) {
-            Alert(title: Text("Achtung"), message: Text("Dieser Schritt wird nicht gespeichert"), primaryButton: .default(Text("OK"), action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }), secondaryButton: .cancel())
-        }
-    }
     
     var saveButton: some View {
         Button(action: save){
@@ -112,8 +96,7 @@ struct AddStepView: View {
     var body: some View {
         StepDetail(recipe: $recipe, step: $step, creating: true)
             .environmentObject(recipeStore)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: backButton, trailing: saveButton)
+            .navigationBarItems(trailing: saveButton)
     }
     
     func save(){
