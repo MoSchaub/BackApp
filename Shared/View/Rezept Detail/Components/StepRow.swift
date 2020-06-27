@@ -12,7 +12,6 @@ struct StepRow: View {
     
     let step: Step
     let recipe: Recipe
-    let inLink: Bool
     let roomTemp: Int
     
     var body: some View {
@@ -21,11 +20,6 @@ struct StepRow: View {
                 Text(step.name).font(.headline)
                 Spacer()
                 Text(step.formattedTime).secondary()
-                #if os(iOS)
-                if self.inLink{
-                    Image(systemName: "chevron.right")
-                }
-                #endif
             }
             
             ForEach(step.ingredients){ ingredient in
@@ -59,6 +53,6 @@ struct StepRow_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        StepRow(step: recipe.steps.first!, recipe: recipe, inLink: false , roomTemp: 20)
+        StepRow(step: recipe.steps.first!, recipe: recipe, roomTemp: 20)
     }
 }

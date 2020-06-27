@@ -26,7 +26,6 @@ class TextFieldTableViewCell: UITableViewCell {
     
     private func configureTextField() {
         textField.delegate = self
-        textField.borderStyle = .roundedRect
         textField.addTarget(self, action: #selector(updateText), for: .editingChanged)
         setTextFieldConstraints()
     }

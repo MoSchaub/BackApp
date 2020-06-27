@@ -10,16 +10,16 @@ import UIKit
 import SwiftUI
 
 class ViewController: UITableViewController {
-    var recipeStore = RecipeStore()
+    
+    private var recipeStore = RecipeStore()
+    
+    // MARK: - Start functions
     
     override func loadView() {
         super.loadView()
-        
         configureTableView()
-        title = "Back App"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        navigationItem.leftBarButtonItem = editButtonItem
+        configureTitle()
+        configureNavigationBarItems()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,12 +27,22 @@ class ViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView  = UITableView(frame: tableView.frame, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
     }
     
-    // MARK: - Data Source
+    private func configureTitle() {
+        title = "Back App"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func configureNavigationBarItems() {
+        navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
+    }
+    
+    // MARK: - rows and sections
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -61,6 +71,8 @@ class ViewController: UITableViewController {
         }
     }
     
+    // MARK: - Cells
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0, recipeStore.recipes.count > indexPath.row{ //recipe section
             return recipeCell(at: indexPath)
@@ -83,25 +95,33 @@ class ViewController: UITableViewController {
         }
     }
     
-    func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
+    private func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "recipe")
         let recipe = recipeStore.recipes[indexPath.row]
         cell.textLabel?.text = recipe.name
+        cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.text = recipe.formattedTotalTime
+        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .footnote)
         cell.accessoryType = .disclosureIndicator
         
         if let imageData = recipe.imageString {
-            cell.imageView?.image = UIImage(data: imageData)
+            cell.imageView?.image = UIImage(data: imageData) ?? Images.photo
+            cell.imageView?.layer.cornerRadius = 10.0
+            cell.imageView?.layer.borderWidth = 1
         } else {
-            cell.imageView?.image = UIImage(named: "bread")
+            cell.imageView?.image = Images.photo
         }
-        cell.imageView?.layer.cornerRadius = 10.0
-        cell.imageView?.layer.borderWidth = 1
+        cell.imageView?.tintColor = .label
+        cell.imageView?.clipsToBounds = true
+        cell.imageView?.transform = CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5)
+        
         
         return cell
     }
     
-    //deleting and moving recipes
+    // MARK: - Editing
+    
+    //delete recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete, indexPath.section == 0, recipeStore.recipes.count > indexPath.row {
             recipeStore.recipes.remove(at: indexPath.row)
@@ -109,6 +129,7 @@ class ViewController: UITableViewController {
         }
     }
     
+    // move recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard destinationIndexPath.section == 0 else { return }
         guard recipeStore.recipes.count > sourceIndexPath.row else { return }
@@ -117,19 +138,22 @@ class ViewController: UITableViewController {
         recipeStore.recipes.insert(movedObject, at: destinationIndexPath.row)
     }
     
+    //wether a row can be deleted or not
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
             return true
         } else {return false}
     }
     
+    //wether a row can be moved or not
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
             return true
         } else {return false}
     }
     
-    // MARK: - Delegate
+    
+    // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0, recipeStore.recipes.count > indexPath.row {
@@ -155,6 +179,22 @@ class ViewController: UITableViewController {
             }
             
         }
+    }
+    
+    @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
+        let vc = RecipeDetailViewController(style: .insetGrouped) // create vc
+        vc.recipe = Recipe(name: "", brotValues: [], category: recipeStore.categories.first!) //create fresh recipe
+        vc.recipeStore = RecipeStore(true)
+        vc.recipeStore.roomThemperature = recipeStore.roomThemperature
+        vc.recipeStore.categories = recipeStore.categories
+        vc.creating = true
+        vc.saveRecipe = { recipe in
+            self.recipeStore.addRecipe(recipe: recipe)
+            self.tableView.reloadData()
+        }
+        let nv = UINavigationController(rootViewController: vc)
+        
+        present(nv, animated: true)
     }
 
 

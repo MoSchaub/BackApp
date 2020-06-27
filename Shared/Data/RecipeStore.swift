@@ -250,10 +250,9 @@ final class RecipeStore: ObservableObject{
             }
         }
     }
-
     
-    init() {
-        if let recipes = load() {
+    init(_ creating: Bool = false) {
+        if !creating, let recipes = load() {
             self.recipes = recipes
         }
     }

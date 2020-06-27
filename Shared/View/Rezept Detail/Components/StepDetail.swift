@@ -108,7 +108,7 @@ struct StepDetail: View {
         #if os(iOS)
         return Section(header: Text("Zutaten")) {
             ForEach(self.step.subSteps, id: \.id){ sub in
-                StepRow(step: sub, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                StepRow(step: sub, recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature)
                     .contextMenu{
                         Button(action: { self.delete(substep: sub)}) {
                             Text("Löschen")
@@ -177,7 +177,7 @@ struct StepDetail: View {
         return List{
             ForEach(stepsWithIngredients){step in
                 Button(action: {self.pick(substep: step)}){
-                    StepRow(step: step, recipe: self.recipe, inLink: false, roomTemp: self.recipeStore.roomThemperature)
+                    StepRow(step: step, recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature)
                 }.buttonStyle(PlainButtonStyle())
             }
         }
