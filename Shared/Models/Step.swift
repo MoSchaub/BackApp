@@ -125,11 +125,12 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         case subSteps
         case isDynamicTemperature
         case secondTemp
+        case id
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = UUID().uuidString
+        self.id = try container.decode(String.self, forKey: .id)
         self.time = try container.decode(TimeInterval.self, forKey: .time)
         self.name = try container.decode(String.self, forKey: .name)
         self.ingredients = try container.decode([Ingredient].self, forKey: .ingredients)

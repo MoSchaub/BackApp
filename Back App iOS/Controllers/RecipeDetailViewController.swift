@@ -38,6 +38,12 @@ class RecipeDetailViewController: UITableViewController {
         addNavigationBarItems()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.recipe = recipeStore.recipes.first(where: { recipe.id == $0.id })
+        tableView.reloadData()
+    }
+    
     // MARK: - NavigaitonBarItems
     
     private func addNavigationBarItems() {
@@ -138,6 +144,8 @@ class RecipeDetailViewController: UITableViewController {
     private func makeTextFieldCell() -> TextFieldTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "textField") as! TextFieldTableViewCell
         cell.textField.text = recipe.name
+        cell.textField.placeholder = "Name"
+        cell.selectionStyle = .none
         cell.textChanged = { name in
             self.recipe.name = name
         }
@@ -182,6 +190,8 @@ class RecipeDetailViewController: UITableViewController {
     
     private func makeCategoryPickerCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryPicker")!
+        cell.selectionStyle = .none
+        
         let segments = recipeStore.categories.map({$0.name})
         let picker = UISegmentedControl(items: segments)
         picker.frame = .zero
@@ -265,10 +275,21 @@ class RecipeDetailViewController: UITableViewController {
             if indexPath.row == recipe.steps.count {
                 //navigate to addSTepView
             } else {
-                //step detail
+                navigateToStepDetail(at: indexPath)
             }
         default: print("test")
         }
+    }
+    
+    private func navigateToStepDetail(at indexPath: IndexPath) {
+        recipeStore = RecipeStore()
+        let stepDetailVC = StepDetailViewController()
+        stepDetailVC.recipeStore = recipeStore
+        stepDetailVC.recipe = recipe
+        stepDetailVC.step = recipe.steps[indexPath.row]
+        
+        
+        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
     private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {

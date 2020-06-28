@@ -113,8 +113,6 @@ class ViewController: UITableViewController {
         }
         cell.imageView?.tintColor = .label
         cell.imageView?.clipsToBounds = true
-        cell.imageView?.transform = CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5)
-        
         
         return cell
     }

@@ -72,6 +72,7 @@
 		CD76F9FC248BE48500D11DD3 /* RecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */; };
 		CD76F9FE248BE53300D11DD3 /* AddRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A06B2483D208005433E1 /* AddRecipe.swift */; };
 		CD76FA01248BE6BE00D11DD3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD76FA03248BE6BE00D11DD3 /* InfoPlist.strings */; };
+		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
 		CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */; };
 		CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */; };
 		CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */; };
@@ -213,6 +214,7 @@
 		CD76F9DC248BDAD100D11DD3 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		CD76FA02248BE6BE00D11DD3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD76FA04248BE6BF00D11DD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
 		CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		CDA7EE2924A67DBD00763E21 /* Back App iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Back App iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 			children = (
 				CDA7EE2F24A67DBD00763E21 /* ViewController.swift */,
 				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
+				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -868,6 +871,7 @@
 				CDA7EE4D24A67E3C00763E21 /* Recipe.swift in Sources */,
 				CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */,
 				CDA7EE5C24A67E9200763E21 /* AddStepView.swift in Sources */,
+				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
 				CDA7EE5024A67E3D00763E21 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

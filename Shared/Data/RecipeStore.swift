@@ -23,7 +23,7 @@ final class RecipeStore: ObservableObject{
     @Published var categories = [
         Category(name: "Brot", imageData: UIImage(named: "bread")!.jpegData(compressionQuality: 0.8)),
         Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
-        Category(name: "Kuchen", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
+        Category(name: "Sonstiges", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
     ]
     
     /// selection of RecipeDetail
@@ -82,6 +82,23 @@ final class RecipeStore: ObservableObject{
             recipes[recipeIndex] = recipe
             write()
         }
+    }
+    
+    func update(step: Step, in recipe: Recipe) {
+        if let recipeIndex = recipes.firstIndex(where: {recipe.id == $0.id })/*, recipes.count > recipeIndex*/ {
+            if let stepIndex = recipes[recipeIndex].steps.firstIndex(where: {$0.id == step.id }) {
+                recipes[recipeIndex].steps[stepIndex] = step
+            }
+        }
+    }
+    
+    func stepForUpdate(oldStep: Step, in recipe: Recipe) -> Step {
+        if let recipeIndex = recipes.firstIndex(where: {recipe.id == $0.id }){
+            if let stepIndex = recipes[recipeIndex].steps.firstIndex(where: {$0.id == oldStep.id }) {
+                return recipes[recipeIndex].steps[stepIndex]
+            }
+        }
+        return oldStep
     }
     
     private var updatingSubsteps = false

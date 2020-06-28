@@ -200,11 +200,12 @@ struct Recipe: Hashable, Codable, Identifiable{
         case imageString
         case category
         case times
+        case id
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = UUID().uuidString
+        self.id = try container.decode(String.self, forKey: .id)
         self.dateString = dateFormatter.string(from: Date())
         self.name = try container.decode(String.self, forKey: .name)
         self.steps = try container.decode([Step].self, forKey: .steps)

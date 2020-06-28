@@ -37,6 +37,7 @@ class InfoStripTableViewCell: UITableViewCell {
     
     func setUpCell(for recipe: Recipe) {
         self.recipe = recipe
+        selectionStyle = .none
         view = UIHostingController(rootView: infoStrip).view
         view.frame = .zero
         contentView.addSubview(view)
