@@ -113,12 +113,7 @@ struct ContentView: View {
         
         panel.begin { response in
             if response == .OK, let url = panel.url{
-                    if let recipes = self.recipeStore.load(url: url, as: [Recipe].self){
-                        self.recipeStore.recipes += recipes
-                    }else if !self.recipeStore.isArray, let recipe: Recipe = self.recipeStore.load(url: url){
-                        self.recipeStore.recipes.append(recipe)
-                    }
-                    self.recipeStore.isArray = false
+                recipeStore.open(url)
             }
         }
     }

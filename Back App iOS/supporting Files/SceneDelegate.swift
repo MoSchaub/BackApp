@@ -31,9 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
-        for context in URLContexts {
-            
-        }
+        let _ = URLContexts.map({ self.recipeStore.open($0.url)})
     }
 
 }

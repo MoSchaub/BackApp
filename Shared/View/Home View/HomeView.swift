@@ -160,12 +160,7 @@ struct HomeView: View {
     func loadFile() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if let url = self.url{
-                if let recipes = self.recipeStore.load(url: url, as: [Recipe].self){
-                    self.recipeStore.recipes += recipes
-                }else if !self.recipeStore.isArray, let recipe: Recipe = self.recipeStore.load(url: url){
-                    self.recipeStore.recipes.append(recipe)
-                }
-                self.recipeStore.isArray = false
+                self.recipeStore.open(url)
                 self.url = nil
             }
         }
