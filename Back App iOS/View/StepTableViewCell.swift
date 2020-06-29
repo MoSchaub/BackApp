@@ -13,7 +13,11 @@ class StepTableViewCell: UITableViewCell {
     var view: UIView!
     
     func setUpCell(for step: Step, recipe: Recipe, roomTemp: Int) {
-        view = UIHostingController(rootView: StepRow(step: step, recipe: recipe, roomTemp: roomTemp)).view
+        let rootView = ZStack {
+            Color(.tertiarySystemFill)
+            StepRow(step: step, recipe: recipe, roomTemp: roomTemp)
+        }
+        view = UIHostingController(rootView: rootView).view
         view.frame = .zero
         contentView.addSubview(view)
         setViewConstraints()

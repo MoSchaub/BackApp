@@ -14,24 +14,29 @@ class InfoStripTableViewCell: UITableViewCell {
     
     var view: UIView!
     
-    private var infoStrip: some View{
-        HStack{
-            Spacer()
-            VStack {
-                Text("\(recipe.totalTime)")
-                Text("Min").secondary()
+    let color = UIColor.tertiarySystemFill
+    
+    private var infoStrip: some View {
+        ZStack {
+            Color(color)
+            HStack{
+                Spacer()
+                VStack {
+                    Text("\(recipe.totalTime)")
+                    Text("Min").secondary()
+                }
+                Spacer()
+                VStack{
+                    Text("\(recipe.numberOfIngredients)")
+                    Text("Zutaten").secondary()
+                }
+                Spacer()
+                VStack{
+                    Text("\(recipe.steps.count)")
+                    Text("Schritte").secondary()
+                }
+                Spacer()
             }
-            Spacer()
-            VStack{
-                Text("\(recipe.numberOfIngredients)")
-                Text("Zutaten").secondary()
-            }
-            Spacer()
-            VStack{
-                Text("\(recipe.steps.count)")
-                Text("Schritte").secondary()
-            }
-            Spacer()
         }
     }
     

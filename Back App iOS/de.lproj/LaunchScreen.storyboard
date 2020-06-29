@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--BackApp-->
+        <!--Back App-->
         <scene sceneID="1xe-zO-pya">
             <objects>
                 <tableViewController id="iAF-Z9-ZJG" sceneMemberID="viewController">
@@ -20,7 +20,10 @@
                             <outlet property="delegate" destination="iAF-Z9-ZJG" id="aGb-F8-2Sd"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="BackApp" id="bdb-Vw-kzt"/>
+                    <navigationItem key="navigationItem" title="Back App" id="bdb-Vw-kzt">
+                        <barButtonItem key="leftBarButtonItem" title="Bearbeiten" style="plain" id="YBb-c2-i0v"/>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="F2l-5o-aoc"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XEV-N2-Obo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

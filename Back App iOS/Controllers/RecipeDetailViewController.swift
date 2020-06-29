@@ -275,12 +275,23 @@ class RecipeDetailViewController: UITableViewController {
             }
         case 3:
             if indexPath.row == recipe.steps.count {
-                //navigate to addSTepView
+                navigateToAddStepView()
             } else {
                 navigateToStepDetail(at: indexPath)
             }
         default: print("test")
         }
+    }
+    
+    private func navigateToAddStepView() {
+        let stepDetailVC = StepDetailViewController()
+        stepDetailVC.recipeStore = RecipeStore(true)
+        stepDetailVC.recipe = recipe
+        stepDetailVC.step = Step(name: "", time: 60)
+        stepDetailVC.creating = true
+        stepDetailVC.saveStep = recipeStore.save
+        
+        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
     private func navigateToStepDetail(at indexPath: IndexPath) {
@@ -289,7 +300,6 @@ class RecipeDetailViewController: UITableViewController {
         stepDetailVC.recipeStore = recipeStore
         stepDetailVC.recipe = recipe
         stepDetailVC.step = recipe.steps[indexPath.row]
-        
         
         navigationController?.pushViewController(stepDetailVC, animated: true)
     }

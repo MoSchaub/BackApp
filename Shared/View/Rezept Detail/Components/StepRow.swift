@@ -17,7 +17,7 @@ struct StepRow: View {
     var body: some View {
         VStack{
             HStack {
-                Text(step.name).font(.headline)
+                Text(step.formattedName).font(.headline)
                 Spacer()
                 Text(step.formattedTime).secondary()
             }

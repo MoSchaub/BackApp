@@ -56,6 +56,10 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         }
     }
     
+    var formattedName: String {
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannter Schritt" : name
+    }
+    
     var totalAmount: Double{
         var amount = 0.0
         for ingredient in self.ingredients{

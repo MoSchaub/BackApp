@@ -13,15 +13,18 @@ class StepDetailViewController: UITableViewController {
     // MARK: - Properties
     var step: Step! {
         willSet {
-            if newValue != nil, recipe != nil, recipeStore != nil {
+            if newValue != nil { if recipe != nil, recipeStore != nil {
                 recipeStore.update(step: newValue, in: recipe)
-                title = newValue.name
+                }
+                title = newValue.formattedName
             }
         }
     }
     var recipe: Recipe!
     
     var recipeStore: RecipeStore!
+    
+    var initializing = true
     var creating = false
     var saveStep: ((Step, Recipe) -> Void)?
     
@@ -37,15 +40,33 @@ class StepDetailViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = step.name
-        // display an Edit button in the navigation bar for this view controller.
-         navigationItem.rightBarButtonItem = editButtonItem
+        addNavigationBarItems()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.step = recipeStore.stepForUpdate(oldStep: step, in: recipe)
-        tableView.reloadData()
+        if !creating && !initializing {
+            self.step = recipeStore.stepForUpdate(oldStep: step, in: recipe)
+            tableView.reloadData()
+        }
+        initializing = false
+    }
+    
+    // MARK: - navigationBarItems
+    
+    private func addNavigationBarItems() {
+        if creating {
+            navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addStep))
+        } else {
+            navigationItem.rightBarButtonItem = editButtonItem
+        }
+    }
+    
+    @objc private func addStep(_ sender: UIBarButtonItem) {
+        if creating, let saveStep = saveStep {
+            saveStep(step, recipe)
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     // MARK: - Sections and rows
@@ -107,7 +128,6 @@ class StepDetailViewController: UITableViewController {
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.name = text
-            self.tableView.reloadData()
         }
         return cell
     }
