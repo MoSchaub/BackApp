@@ -153,34 +153,16 @@ class StepDetailViewController: UITableViewController {
     
     private func makeDurationCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "duration")!
-        cell.selectionStyle = .none
         
-        datePicker = UIDatePicker(frame: .zero)
-        cell.addSubview(datePicker)
-        
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
-        datePicker.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-        datePicker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-        datePicker.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-        
-        datePicker.datePickerMode = .countDownTimer
-        
-        datePicker.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
-        
-        DispatchQueue.main.async(execute: {
-            self.datePicker.countDownDuration = self.step.time
-        })
+        cell.textLabel?.text = step.formattedTime
+        cell.accessoryType = .disclosureIndicator
             
         return cell
     }
     
-    @objc private func datePickerChanged(_ sender: UIDatePicker) {
-        step.time = sender.countDownDuration
-    }
-    
     private func makeTempCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "temp")!
-        cell.textLabel?.text = "Temperatur: \(step.formattedTemp)"
+        cell.textLabel?.text = step.formattedTemp
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -242,11 +224,22 @@ class StepDetailViewController: UITableViewController {
     // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 3 {
+        if indexPath.section == 2 {
+            navigateToTimePicker()
+        } else if indexPath.section == 3 {
             navigateToTempPicker()
         } else if indexPath.section == 4 {
             navigateToIngredientDetail(creating: indexPath.row >= step.ingredients.count, indexPath: indexPath)
         }
+    }
+    
+    private func navigateToTimePicker() {
+        let timePickerVC = StepTimeTableViewController(style: .insetGrouped)
+        timePickerVC.recipeStore = recipeStore
+        timePickerVC.recipe = recipe
+        timePickerVC.step = step
+        
+        navigationController?.pushViewController(timePickerVC, animated: true)
     }
     
     private func navigateToTempPicker() {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */; };
 		CD1B6A192483F7FF00597931 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CD1B6A182483F7FF00597931 /* Default-568h@2x.png */; };
+		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */; };
 		CD399ACE24AA0FC400232F90 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD399ACD24AA0FC400232F90 /* Launch Screen.storyboard */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
@@ -175,6 +176,7 @@
 		B4B870ECB29F2B49FED4D5FD /* Pods_BrotApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BrotApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTimeTableViewController.swift; sourceTree = "<group>"; };
 		CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		CD399ACD24AA0FC400232F90 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
 				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
 				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
+				CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */,
 				CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */,
 				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
 			);
@@ -892,6 +895,7 @@
 				CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */,
 				CDA7EE5E24A67E9900763E21 /* HomeView.swift in Sources */,
 				CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */,
+				CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */,
 				CDA7EE6E24A67EAB00763E21 /* MOTimePicker.swift in Sources */,
 				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
