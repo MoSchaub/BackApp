@@ -411,11 +411,6 @@ final class RecipeStore: ObservableObject{
                 let decoder = JSONDecoder()
                 print("suceesfully loaded file")
                 let recipes = try decoder.decode([Recipe].self, from: data)
-                for recipe in recipes{
-                    if self.recipes.contains(where: {$0 == recipe}){
-                    return nil
-                    }
-                }
                 return recipes
             } catch {
                 print("Couldn't parse \(url) as \([Recipe].self):\n\(error)")
