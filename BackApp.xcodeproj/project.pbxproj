@@ -485,6 +485,34 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		CD8101F724A9F357000C0220 /* StepDetail */ = {
+			isa = PBXGroup;
+			children = (
+				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
+				CD8101F824A9F36A000C0220 /* Components */,
+			);
+			path = StepDetail;
+			sourceTree = "<group>";
+		};
+		CD8101F824A9F36A000C0220 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */,
+				CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */,
+				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		CD8101F924A9F381000C0220 /* RecipeDetail */ = {
+			isa = PBXGroup;
+			children = (
+				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
+				CD8101F724A9F357000C0220 /* StepDetail */,
+			);
+			path = RecipeDetail;
+			sourceTree = "<group>";
+		};
 		CDA7EE2A24A67DBD00763E21 /* Back App iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -565,11 +593,7 @@
 			isa = PBXGroup;
 			children = (
 				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
-				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
-				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
-				CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */,
-				CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */,
-				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
+				CD8101F924A9F381000C0220 /* RecipeDetail */,
 			);
 			path = Components;
 			sourceTree = "<group>";

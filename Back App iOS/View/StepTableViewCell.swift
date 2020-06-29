@@ -8,15 +8,31 @@
 
 import SwiftUI
 
+struct CellView<C: View>: View{
+    var content: C
+    
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        ZStack {
+            Color(colorScheme == .dark ? .tertiarySystemFill : .clear )
+            content
+        }
+    }
+}
+
+extension View {
+    func cellView() -> some View {
+        CellView(content: self)
+    }
+}
+
 class StepTableViewCell: UITableViewCell {
     
     var view: UIView!
     
     func setUpCell(for step: Step, recipe: Recipe, roomTemp: Int) {
-        let rootView = ZStack {
-            Color(.tertiarySystemFill)
-            StepRow(step: step, recipe: recipe, roomTemp: roomTemp)
-        }
+        let rootView = StepRow(step: step, recipe: recipe, roomTemp: roomTemp).cellView()
         view = UIHostingController(rootView: rootView).view
         view.frame = .zero
         contentView.addSubview(view)
