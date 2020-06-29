@@ -6,8 +6,8 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
 import SwiftUI
+import MobileCoreServices
 
 class CompactHomeViewController: UITableViewController {
     
@@ -178,7 +178,15 @@ class CompactHomeViewController: UITableViewController {
                 
                 navigationController?.pushViewController(vc, animated: true)
             } else if row == 1 {
-                print("import")
+                // Create a document picker for directories.
+                let documentPicker =
+                    UIDocumentPickerViewController(documentTypes: [kUTTypeJSON as String],
+                                                   in: .open)
+
+                documentPicker.delegate = self
+
+                // Present the document picker.
+                present(documentPicker, animated: true, completion: nil)
             } else if row == 2 {
                 let vc = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
                 
@@ -211,6 +219,20 @@ class CompactHomeViewController: UITableViewController {
 }
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
-    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        for url in urls {
+            recipeStore.open(url)
+        }
+        
+        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+            if let selectedRowIndex = self.tableView.indexPathForSelectedRow {
+                self.tableView.deselectRow(at: selectedRowIndex, animated: true)
+            }
+        }))
+        
+        present(alert, animated: true)
+    }
 }
 
