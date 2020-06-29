@@ -12,7 +12,7 @@ class AmountTableViewCell: UITableViewCell {
 
     var textField = UITextField(frame: .zero)
     
-    var textChanged: ((String) -> Void)?
+    private var textChanged: ((String) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -45,6 +45,16 @@ class AmountTableViewCell: UITableViewCell {
             self.textField.text = format(text)
         }
         self.textChanged!(textField.text ?? "0g" )
+    }
+    
+    func setUp(with recipe: Recipe, format: @escaping (String) -> String ) {
+        textField.text = "\(recipe.timesText)"
+        textField.placeholder = "Anzahl an Broten, Brötche, etc"
+        selectionStyle = .none
+        textChanged = { text in
+            self.textField.text = format(text)
+        }
+        self.textChanged!(textField.text ?? "" )
     }
 
 }

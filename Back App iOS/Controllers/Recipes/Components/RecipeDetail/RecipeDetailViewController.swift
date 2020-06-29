@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -78,15 +79,16 @@ class RecipeDetailViewController: UITableViewController {
     // MARK: - Sections and rows
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 5
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
         case 1: return 1
-        case 2: return creating ? 1 : 3
+        case 2: return creating ? 1 : 2
         case 3: return (recipe?.steps.count ?? 0) + 1
+        case 4: return 1
         default: return 0
         }
     }
@@ -97,6 +99,7 @@ class RecipeDetailViewController: UITableViewController {
         case 1: return "Bild"
         case 2: return creating ? "Kategorie" : nil
         case 3: return "Schritte"
+        case 4: return "Anzahl"
         default: return nil
         }
     }
@@ -122,7 +125,7 @@ class RecipeDetailViewController: UITableViewController {
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: "step")
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textField")
         tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: "infoStrip")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryPicker")
+        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: "times")
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -132,12 +135,10 @@ class RecipeDetailViewController: UITableViewController {
         case 0: return makeTextFieldCell()
         case 1: return makeImageViewCell()
         case 2:
-            if row == 0 && !creating {
-                return makeInfoStripCell() //InfoStrip
-            } else if row == 1 && !creating {
+            if row == 1 && !creating {
                 return makeStartRecipeCell()
             } else {
-                return makeCategoryPickerCell()
+                return makeInfoStripCell() //InfoStrip
             }
         case 3:
             if indexPath.row == recipe.steps.count {
@@ -145,6 +146,8 @@ class RecipeDetailViewController: UITableViewController {
             } else {
                 return makeStepCell(forRowAt: indexPath)
             }
+        case 4: return makeTimesCell()
+            
         default: return UITableViewCell()
         }
     }
@@ -195,26 +198,6 @@ class RecipeDetailViewController: UITableViewController {
         return cell
     }
     
-    private func makeCategoryPickerCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryPicker")!
-        cell.selectionStyle = .none
-        
-        let segments = recipeStore.categories.map({$0.name})
-        let picker = UISegmentedControl(items: segments)
-        picker.frame = .zero
-        cell.addSubview(picker)
-        
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-        picker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-        picker.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-        
-        picker.selectedSegmentIndex = recipeStore.categories.firstIndex(of: recipe.category)!
-        picker.addTarget(self, action: #selector(selectCategory), for: .valueChanged)
-    
-        return cell
-    }
-    
     @objc private func selectCategory(_ sender: UISegmentedControl) {
         let selectedItemIndex = sender.selectedSegmentIndex
         recipe.category = recipeStore.categories[selectedItemIndex]
@@ -236,6 +219,18 @@ class RecipeDetailViewController: UITableViewController {
         cell.accessoryType = .disclosureIndicator
         
         return cell
+    }
+    
+    private func makeTimesCell() -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "times") as! AmountTableViewCell
+        cell.setUp(with: recipe, format: format)
+        return cell
+    }
+    
+    private func format(timesText: String) -> String {
+        guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return "1 stk" }
+        recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
+        return recipe.timesText
     }
     
     // MARK: - Editing
@@ -276,7 +271,7 @@ class RecipeDetailViewController: UITableViewController {
         case 1: navigateToImagePicker()
         case 2:
             if indexPath.row == 1 {
-                //navigate to Schedule View
+                navigateToScheduleView()
             }
         case 3:
             if indexPath.row == recipe.steps.count {
@@ -286,6 +281,20 @@ class RecipeDetailViewController: UITableViewController {
             }
         default: print("test")
         }
+    }
+    
+    
+    
+    private func navigateToScheduleView() {
+        let recipeBinding = Binding(get: {
+            return self.recipe!
+        }) { (newValue) in
+            self.recipe = newValue
+        }
+        let scheduleForm = ScheduleForm(recipe: recipeBinding, roomTemp: recipeStore.roomTemperature)
+        let vc = UIHostingController(rootView: scheduleForm)
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func navigateToAddStepView() {

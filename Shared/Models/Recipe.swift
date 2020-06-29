@@ -37,7 +37,7 @@ struct Recipe: Hashable, Codable, Identifiable{
     ///property containing wether the "date" property is the end date or the start date
     var inverted : Bool
     
-    ///for how many items eg breads, rolls, etc the the ingredients are calculated
+    ///for how many items eg breads, rolls, etc the the ingredients are set
     var times: Decimal?
     
     ///property used to make the date json compatible and strores the date as an string
@@ -102,7 +102,11 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     var timesText: String{
         get{
-            return self.times?.description ?? ""
+            if self.times != nil {
+                return times!.description + " stk"
+            } else {
+                return "1 stk"
+            }
         }
         set{
             if let int = Int(newValue){

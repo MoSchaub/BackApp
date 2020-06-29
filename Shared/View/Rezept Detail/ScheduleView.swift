@@ -29,7 +29,7 @@ struct ScheduleView: View {
         let times = self.times ?? 1
         let recipeTimes = self.recipe.times ?? 1
         let devided = times/recipeTimes
-        return Double(truncating: devided as NSNumber)
+        return Double.init(truncating: devided as NSNumber)
     }
     
     func customIngredientRow(ingredient: Ingredient, step: Step) -> some View{
