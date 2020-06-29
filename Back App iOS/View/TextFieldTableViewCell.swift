@@ -46,4 +46,10 @@ extension TextFieldTableViewCell: UITextFieldDelegate {
             textChanged(text)
         }
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.textField.endEditing(true)
+        return false
+    }
+    
 }

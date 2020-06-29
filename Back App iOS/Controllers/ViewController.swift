@@ -96,9 +96,9 @@ class ViewController: UITableViewController {
     }
     
     private func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "recipe")
+        let cell = RecipeTableViewCell(style: .subtitle, reuseIdentifier: "recipe")
         let recipe = recipeStore.recipes[indexPath.row]
-        cell.textLabel?.text = recipe.name
+        cell.textLabel?.text = recipe.formattedName
         cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.text = recipe.formattedTotalTime
         cell.detailTextLabel?.font = .preferredFont(forTextStyle: .footnote)
@@ -106,14 +106,10 @@ class ViewController: UITableViewController {
         
         if let imageData = recipe.imageString {
             cell.imageView?.image = UIImage(data: imageData) ?? Images.photo
-            cell.imageView?.layer.cornerRadius = 10.0
-            cell.imageView?.layer.borderWidth = 1
         } else {
             cell.imageView?.image = Images.photo
+            cell.imageView?.tintColor = .label
         }
-        cell.imageView?.tintColor = .label
-        cell.imageView?.clipsToBounds = true
-        
         return cell
     }
     

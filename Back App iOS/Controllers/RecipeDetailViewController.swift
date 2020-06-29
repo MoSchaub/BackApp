@@ -18,12 +18,13 @@ class RecipeDetailViewController: UITableViewController {
         willSet {
             if newValue != nil {
                 recipeStore.update(recipe: newValue!)
-                title = newValue.name
+                title = newValue.formattedName
             }
         }
     }
     var recipeStore = RecipeStore()
     var creating = false
+    var initializing = true
     var saveRecipe: ((Recipe) -> Void)?
     
     // MARK: - Startup functions
@@ -40,8 +41,11 @@ class RecipeDetailViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.recipe = recipeStore.recipes.first(where: { recipe.id == $0.id })
-        tableView.reloadData()
+        if !creating && !initializing {
+            self.recipe = recipeStore.recipes.first(where: { recipe.id == $0.id })
+            tableView.reloadData()
+        }
+        initializing = false
     }
     
     // MARK: - NavigaitonBarItems
@@ -76,7 +80,7 @@ class RecipeDetailViewController: UITableViewController {
         switch section {
         case 0: return 1
         case 1: return 1
-        case 2: return 3
+        case 2: return creating ? 1 : 3
         case 3: return (recipe?.steps.count ?? 0) + 1
         default: return 0
         }
@@ -86,7 +90,7 @@ class RecipeDetailViewController: UITableViewController {
         switch section {
         case 0: return "Name"
         case 1: return "Bild"
-        case 2: return nil
+        case 2: return creating ? "Kategorie" : nil
         case 3: return "Schritte"
         default: return nil
         }
@@ -109,7 +113,7 @@ class RecipeDetailViewController: UITableViewController {
     
     private func registerCells() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "image")
+        tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: "image")
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: "step")
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textField")
         tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: "infoStrip")
@@ -123,9 +127,9 @@ class RecipeDetailViewController: UITableViewController {
         case 0: return makeTextFieldCell()
         case 1: return makeImageViewCell()
         case 2:
-            if row == 0 {
+            if row == 0 && !creating {
                 return makeInfoStripCell() //InfoStrip
-            } else if row == 1 {
+            } else if row == 1 && !creating {
                 return makeStartRecipeCell()
             } else {
                 return makeCategoryPickerCell()
@@ -153,16 +157,14 @@ class RecipeDetailViewController: UITableViewController {
     }
     
     private func makeImageViewCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "image")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "image") as! ImageTableViewCell
         if let imageData = recipe.imageString {
             cell.imageView?.image = UIImage(data: imageData) ?? Images.photo
-            cell.imageView?.layer.cornerRadius = 10.0
-            cell.imageView?.clipsToBounds = true
-            cell.imageView?.layer.borderWidth = 1
         } else {
             cell.imageView?.image = Images.photo
             cell.imageView?.tintColor = .label
         }
+       
         
         let upIconView = UIImageView(image: UIImage(systemName: "chevron.up"))
         upIconView.tintColor = .tertiaryLabel

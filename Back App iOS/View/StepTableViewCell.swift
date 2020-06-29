@@ -22,7 +22,6 @@ class StepTableViewCell: UITableViewCell {
     
     private func setViewConstraints() {
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40).isActive = true

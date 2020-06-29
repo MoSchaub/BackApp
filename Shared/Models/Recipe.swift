@@ -133,6 +133,10 @@ struct Recipe: Hashable, Codable, Identifiable{
         }
     }
     
+    var formattedName: String {
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannntes Rezept" : name
+    }
+    
     /// startDate formatted using the dateFormatter
     var formattedStartDate: String {
         dateFormatter.string(from: startDate)
