@@ -192,7 +192,7 @@ class StepDetailViewController: UITableViewController {
         
         let ingredient = step.ingredients[indexPath.row]
         cell.textLabel?.text = ingredient.name
-        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: recipeStore.roomThemperature))° C" : "")
+        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: recipeStore.roomTemperature))° C" : "")
         cell.accessoryType = .disclosureIndicator
         
         return cell

@@ -103,7 +103,7 @@ struct RecipeDetail: View {
             
             if !creating{
                 self.infoStrip
-                NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomThemperature)) {
+                NavigationLink(destination: ScheduleForm(recipe: self.$recipe, roomTemp: self.recipeStore.roomTemperature)) {
                     Text("Zeitplan erstellen")
                 }
             }
@@ -117,7 +117,7 @@ struct RecipeDetail: View {
             Section(header: Text("Schritte")) {
                 ForEach(recipe.steps){ step in
                     NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == step.id}) ?? 0], creating: false)) {
-                        StepRow(step: step, recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature)
+                        StepRow(step: step, recipe: self.recipe, roomTemp: self.recipeStore.roomTemperature)
                     }
                 }
                 .onDelete(perform: deleteStep)

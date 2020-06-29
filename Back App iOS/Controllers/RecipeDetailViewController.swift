@@ -50,9 +50,7 @@ class RecipeDetailViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if creating {
-            recipeStore.save(recipe: recipe)
-        }
+        recipeStore.save(recipe: recipe)
     }
     
     // MARK: - NavigaitonBarItems
@@ -226,7 +224,7 @@ class RecipeDetailViewController: UITableViewController {
     private func makeStepCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = StepTableViewCell(style: .default, reuseIdentifier: "step")
         if recipe.steps.count > indexPath.row {
-            cell.setUpCell(for: recipe.steps[indexPath.row], recipe: recipe, roomTemp: recipeStore.roomThemperature)
+            cell.setUpCell(for: recipe.steps[indexPath.row], recipe: recipe, roomTemp: recipeStore.roomTemperature)
         }
         
         return cell

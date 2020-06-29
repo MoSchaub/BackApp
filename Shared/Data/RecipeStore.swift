@@ -19,7 +19,7 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    @Published var roomThemperature = 20
+    @Published var roomTemperature = 20
     @Published var categories = [
         Category(name: "Brot", imageData: UIImage(named: "bread")!.jpegData(compressionQuality: 0.8)),
         Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
@@ -469,6 +469,6 @@ extension RecipeStore: Codable{
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(recipes, forKey: .recipes)
         try container.encode(categories, forKey: .categories)
-        try container.encode(roomThemperature, forKey: .roomThemperature)
+        try container.encode(roomTemperature, forKey: .roomThemperature)
     }
 }

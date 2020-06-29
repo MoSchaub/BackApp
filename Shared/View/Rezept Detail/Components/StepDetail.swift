@@ -108,7 +108,7 @@ struct StepDetail: View {
         #if os(iOS)
         return Section(header: Text("Zutaten")) {
             ForEach(self.step.subSteps, id: \.id){ sub in
-                StepRow(step: sub, recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature)
+                StepRow(step: sub, recipe: self.recipe, roomTemp: self.recipeStore.roomTemperature)
                     .contextMenu{
                         Button(action: { self.delete(substep: sub)}) {
                             Text("Löschen")
@@ -120,7 +120,7 @@ struct StepDetail: View {
             
             ForEach(step.ingredients){ ingredient in
                 NavigationLink(destination: IngredientDetail(ingredient: self.$step.ingredients[self.step.ingredients.firstIndex(where: { $0.id == ingredient.id}) ?? 0], step: self.$step, recipe: self.recipe, creating: false).environmentObject(self.recipeStore)){
-                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomThemperature)
+                    IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.recipeStore.roomTemperature)
                 }
                 
             }
@@ -177,7 +177,7 @@ struct StepDetail: View {
         return List{
             ForEach(stepsWithIngredients){step in
                 Button(action: {self.pick(substep: step)}){
-                    StepRow(step: step, recipe: self.recipe, roomTemp: self.recipeStore.roomThemperature)
+                    StepRow(step: step, recipe: self.recipe, roomTemp: self.recipeStore.roomTemperature)
                 }.buttonStyle(PlainButtonStyle())
             }
         }

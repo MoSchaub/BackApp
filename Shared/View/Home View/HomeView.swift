@@ -25,7 +25,7 @@ struct HomeView: View {
     
     var roomThemperturePicker: some View{
         VStack(spacing: 15) {
-            Picker("", selection: $recipeStore.roomThemperature){
+            Picker("", selection: $recipeStore.roomTemperature){
                 ForEach(-10...50, id: \.self){ n in
                     Text("\(n)")
                 }
@@ -33,7 +33,7 @@ struct HomeView: View {
             .labelsHidden()
             .padding(.horizontal)
             .background(BackgroundGradient())
-            Text("\(self.recipeStore.roomThemperature) °C")
+            Text("\(self.recipeStore.roomTemperature) °C")
             Button("OK"){
                 self.recipeStore.hSelection = nil
             }
@@ -43,7 +43,7 @@ struct HomeView: View {
     
     var roomThemperatureSection: some View{
         NavigationLink(destination: self.roomThemperturePicker, tag: 1, selection: self.$recipeStore.hSelection, label: {
-            Text("Raumtemperatur: \(recipeStore.roomThemperature)°C")
+            Text("Raumtemperatur: \(recipeStore.roomTemperature)°C")
         })
     }
     

@@ -24,6 +24,7 @@ class ViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        recipeStore = RecipeStore()
         tableView.reloadData()
     }
     
@@ -54,7 +55,7 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Recipes"
+            return "Rezepte"
         }
         return nil
     }
@@ -80,7 +81,7 @@ class ViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Raumthemperatur: \(recipeStore.roomThemperature)ºC"
+                cell.textLabel?.text = "Raumtemperatur: \(recipeStore.roomTemperature)ºC"
             case 1:
                 cell.textLabel?.text = "Rezepte aus Datei importieren"
             case 2:
@@ -179,7 +180,7 @@ class ViewController: UITableViewController {
         let vc = RecipeDetailViewController(style: .insetGrouped) // create vc
         vc.recipe = Recipe(name: "", brotValues: [], category: recipeStore.categories.first!) //create fresh recipe
         vc.recipeStore = RecipeStore(true)
-        vc.recipeStore.roomThemperature = recipeStore.roomThemperature
+        vc.recipeStore.roomTemperature = recipeStore.roomTemperature
         vc.recipeStore.categories = recipeStore.categories
         vc.creating = true
         vc.saveRecipe = { recipe in
