@@ -103,7 +103,7 @@ class CompactHomeViewController: UITableViewController {
     }
     
     private func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = RecipeTableViewCell(style: .subtitle, reuseIdentifier: "recipe")
+        let cell = BetterTableViewCell(style: .subtitle, reuseIdentifier: "recipe")
         let recipe = recipeStore.recipes[indexPath.row]
         cell.textLabel?.text = recipe.formattedName
         cell.textLabel?.font = .preferredFont(forTextStyle: .headline)

@@ -1,5 +1,5 @@
 //
-//  RecipeTableViewCell.swift
+//  BetterTableViewCell.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 28.06.20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RecipeTableViewCell: UITableViewCell {
+class BetterTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.setup()
