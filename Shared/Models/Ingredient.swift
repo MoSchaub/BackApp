@@ -24,6 +24,10 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
         Self.formattedAmount(for: self.amount)
     }
     
+    var formattedName: String {
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannte Zutat" : name
+    }
+    
     mutating func formatted(rest: String) -> String{
         let previousFactor = amountFactor(from: rest)
         self.amount *= previousFactor

@@ -11,6 +11,8 @@
 		CD1B6A192483F7FF00597931 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CD1B6A182483F7FF00597931 /* Default-568h@2x.png */; };
 		CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */; };
 		CD399ACE24AA0FC400232F90 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD399ACD24AA0FC400232F90 /* Launch Screen.storyboard */; };
+		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
+		CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */; };
 		CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */; };
 		CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5524A699AD00884CAE /* StepTableViewCell.swift */; };
 		CD69EF96248420E100372064 /* BackAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD69EF95248420E100372064 /* BackAppUITests.swift */; };
@@ -173,6 +175,8 @@
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		CD399ACD24AA0FC400232F90 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
+		CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTableViewCell.swift; sourceTree = "<group>"; };
 		CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoStripTableViewCell.swift; sourceTree = "<group>"; };
 		CD664D5524A699AD00884CAE /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
 		CD69EF93248420E100372064 /* BackAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BackAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -299,6 +303,7 @@
 			children = (
 				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
 				CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */,
+				CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */,
 				CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */,
 				CD664D5524A699AD00884CAE /* StepTableViewCell.swift */,
 				CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */,
@@ -512,6 +517,7 @@
 				CDA7EE2F24A67DBD00763E21 /* ViewController.swift */,
 				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
 				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
+				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -848,6 +854,7 @@
 				CDA7EE6724A67EA200763E21 /* IngredientDetail.swift in Sources */,
 				CDA7EE7024A67EAB00763E21 /* TextViewExtension.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
+				CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */,
 				CDA7EE4F24A67E3D00763E21 /* Ingredient.swift in Sources */,
 				CDA7EE4E24A67E3D00763E21 /* Step.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
@@ -862,6 +869,7 @@
 				CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */,
 				CDA7EE5E24A67E9900763E21 /* HomeView.swift in Sources */,
 				CDA7EE6E24A67EAB00763E21 /* MOTimePicker.swift in Sources */,
+				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
 				CDA7EE7224A67EAB00763E21 /* BackgroundGradient.swift in Sources */,
 				CDA7EE5D24A67E9200763E21 /* AddIngredientView.swift in Sources */,

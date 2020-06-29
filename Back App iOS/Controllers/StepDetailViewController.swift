@@ -45,11 +45,19 @@ class StepDetailViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !creating && !initializing {
+        if !initializing {
             self.step = recipeStore.stepForUpdate(oldStep: step, in: recipe)
             tableView.reloadData()
         }
         initializing = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if creating {
+            recipeStore.save(recipe: recipe)
+            recipeStore.save(step: step, to: recipe)
+        }
     }
     
     // MARK: - navigationBarItems
@@ -236,14 +244,36 @@ class StepDetailViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 3 {
             navigateToTempPicker()
+        } else if indexPath.section == 4 {
+            navigateToIngredientDetail(creating: indexPath.row >= step.ingredients.count, indexPath: indexPath)
         }
     }
     
-    func navigateToTempPicker() {
+    private func navigateToTempPicker() {
         let stepBinding = Binding(get: { self.step!}, set: {self.recipeStore.update(step: $0, in: self.recipe)})
         let tempPickerVC = UIHostingController(rootView: stepTempPicker(step: stepBinding))
         
         navigationController?.pushViewController(tempPickerVC, animated: true)
+    }
+    
+    private func navigateToIngredientDetail(creating: Bool, indexPath: IndexPath) {
+        let ingredientDetailVC = IngredientDetailViewController()
+        
+        ingredientDetailVC.recipeStore = recipeStore
+        ingredientDetailVC.step = step
+        ingredientDetailVC.ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row]
+        ingredientDetailVC.creating = creating
+        
+        if creating {
+            ingredientDetailVC.saveIngredient = save
+        }
+        
+        navigationController?.pushViewController(ingredientDetailVC, animated: true)
+    }
+    
+    private func save(ingredient: Ingredient, step: Step){
+        recipeStore.add(ingredient: ingredient, step: step)
+        tableView.reloadData()
     }
 
 }

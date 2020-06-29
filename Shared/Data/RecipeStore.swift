@@ -92,6 +92,37 @@ final class RecipeStore: ObservableObject{
         }
     }
     
+    private func find(_ ingredient: Ingredient, in step: Step, creating: Bool = false) -> (recipeIndex: Int, stepIndex: Int, ingredientIndex: Int)? {
+        if let recipeIndex = recipes.firstIndex(where: { $0.steps.contains(where: { s in
+            return step.id == s.id})}) {
+            if recipes.count > recipeIndex, let stepIndex = recipes[recipeIndex].steps.firstIndex(where: {$0.id == step.id }) {
+                if recipes[recipeIndex].steps.count > stepIndex {
+                    if creating {
+                        return (recipeIndex, stepIndex, -1)
+                    }
+                    if let ingredientIndex = recipes[recipeIndex].steps[stepIndex].ingredients.firstIndex(where: { $0.id == ingredient.id }) {
+                    if ingredientIndex < recipes[recipeIndex].steps[stepIndex].ingredients.count {
+                        return (recipeIndex, stepIndex, ingredientIndex)
+                    }
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    
+    func update(ingredient: Ingredient, step: Step) {
+        if let indices = find(ingredient, in: step) {
+            recipes[indices.recipeIndex].steps[indices.stepIndex].ingredients[indices.ingredientIndex] = ingredient
+        }
+    }
+    
+    func add(ingredient: Ingredient, step: Step) {
+        if let indices = find(ingredient, in: step, creating: true) {
+            recipes[indices.recipeIndex].steps[indices.stepIndex].ingredients.append(ingredient)
+        }
+    }
+    
     func stepForUpdate(oldStep: Step, in recipe: Recipe) -> Step {
         if let recipeIndex = recipes.firstIndex(where: {recipe.id == $0.id }){
             if let stepIndex = recipes[recipeIndex].steps.firstIndex(where: {$0.id == oldStep.id }) {
@@ -123,12 +154,14 @@ final class RecipeStore: ObservableObject{
     }
     
     func contains(recipe: Recipe) -> Bool {
-        self.recipes.contains(where: { $0.name == recipe.name})
+        self.recipes.contains(where: { $0.id == recipe.id})
     }
     
     func save(recipe: Recipe){
         if !self.contains(recipe: recipe) {
             self.addRecipe(recipe: recipe)
+        } else {
+            update(recipe: recipe)
         }
     }
     
@@ -191,9 +224,12 @@ final class RecipeStore: ObservableObject{
     }
 
     func save(step: Step, to recipe: Recipe){
-        if !recipe.steps.contains(step){
-            if let recipeIndex = self.recipes.firstIndex(of: recipe){
+        if !recipe.steps.contains(where: { step.id == $0.id }) {
+            if let recipeIndex = self.recipes.firstIndex(where: { $0.id == recipe.id }){
                 self.recipes[recipeIndex].steps.append(step)
+            } else {
+                self.recipes.append(recipe)
+                self.recipes[recipes.firstIndex(of: recipes.last!)!].steps.append(step)
             }
         }
         #if os(macOS)
@@ -280,7 +316,7 @@ final class RecipeStore: ObservableObject{
         self.categories = try container.decode([Category].self, forKey: .categories)
     }
        
-    func addRecipe(recipe: Recipe){
+    private func addRecipe(recipe: Recipe){
         recipes.append(recipe)
     }
     

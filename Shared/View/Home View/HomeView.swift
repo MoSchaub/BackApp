@@ -121,7 +121,7 @@ struct HomeView: View {
                     self.addButton
                         .sheet(isPresented: self.$showingAddRecipeView) {
                             AddRecipe { recipe in
-                                self.recipeStore.addRecipe(recipe: recipe)
+                                self.recipeStore.save(recipe: recipe)
                                 self.recipeStore.showingAddRecipeView = false
                             }
                     }

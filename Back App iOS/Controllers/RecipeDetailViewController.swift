@@ -41,11 +41,18 @@ class RecipeDetailViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !creating && !initializing {
+        if !initializing {
             self.recipe = recipeStore.recipes.first(where: { recipe.id == $0.id })
             tableView.reloadData()
         }
         initializing = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if creating {
+            recipeStore.save(recipe: recipe)
+        }
     }
     
     // MARK: - NavigaitonBarItems
@@ -217,7 +224,7 @@ class RecipeDetailViewController: UITableViewController {
     }
     
     private func makeStepCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "step", for: indexPath) as! StepTableViewCell
+        let cell = StepTableViewCell(style: .default, reuseIdentifier: "step")
         if recipe.steps.count > indexPath.row {
             cell.setUpCell(for: recipe.steps[indexPath.row], recipe: recipe, roomTemp: recipeStore.roomThemperature)
         }
@@ -289,13 +296,19 @@ class RecipeDetailViewController: UITableViewController {
         stepDetailVC.recipe = recipe
         stepDetailVC.step = Step(name: "", time: 60)
         stepDetailVC.creating = true
-        stepDetailVC.saveStep = recipeStore.save
+        stepDetailVC.saveStep = saveStep
         
         navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
+    private func saveStep(step: Step, recipe: Recipe){
+        recipeStore.save(step: step, to: recipe)
+        tableView.reloadData()
+    }
+    
     private func navigateToStepDetail(at indexPath: IndexPath) {
         recipeStore = RecipeStore()
+        recipeStore.save(recipe: recipe)
         let stepDetailVC = StepDetailViewController()
         stepDetailVC.recipeStore = recipeStore
         stepDetailVC.recipe = recipe

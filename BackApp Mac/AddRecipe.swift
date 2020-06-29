@@ -19,7 +19,7 @@ struct AddRecipe: View {
         self.addRecipe = addRecipe
         self.recipeStore = RecipeStore()
         let recipe = Recipe(name: "", brotValues: [], inverted: false, dateString: "", isFavourite: false, category: recipeStore.categories.first!)
-        recipeStore.addRecipe(recipe: recipe)
+        recipeStore.save(recipe: recipe)
         recipeStore.selectedRecipe = recipe
     }
     var addButton: some View {

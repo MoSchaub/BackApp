@@ -183,7 +183,7 @@ class ViewController: UITableViewController {
         vc.recipeStore.categories = recipeStore.categories
         vc.creating = true
         vc.saveRecipe = { recipe in
-            self.recipeStore.addRecipe(recipe: recipe)
+            self.recipeStore.save(recipe: recipe)
             self.tableView.reloadData()
         }
         let nv = UINavigationController(rootViewController: vc)
