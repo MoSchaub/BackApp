@@ -11,7 +11,7 @@ import SwiftUI
 
 class CompactHomeViewController: UITableViewController {
     
-    private var recipeStore = RecipeStore()
+    var recipeStore = RecipeStore()
     
     // MARK: - Start functions
     

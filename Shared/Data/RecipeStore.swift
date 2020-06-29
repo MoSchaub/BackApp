@@ -337,7 +337,16 @@ final class RecipeStore: ObservableObject{
         try! JSONEncoder().encode(self.recipes)
     }
     
-    func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
+    func open(_ url: URL) {
+        if let recipes = load(url: url, as: [Recipe].self) {
+            self.recipes.append(contentsOf: recipes)
+        } else if !isArray, let recipe = load(url: url, as: Recipe.self) {
+            save(recipe: recipe)
+        }
+        isArray = false
+    }
+    
+    private func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
         let data: Data
         
         // Make sure you release the security-scoped resource when you are done.
@@ -394,7 +403,7 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    func load() -> [Recipe]? {
+    private func load() -> [Recipe]? {
         let data: Data
         
         if UserDefaults.standard.bool(forKey: "fileC"){
