@@ -322,6 +322,12 @@ final class RecipeStore: ObservableObject{
     
     //- MARK: File managemnet
     
+    func update() {
+        if let recipes = load() {
+            self.recipes = recipes
+        }
+    }
+    
     @Published var showingInputAlert = false
     @Published var inputAlertTitle = ""
     @Published var inputAlertMessage = ""

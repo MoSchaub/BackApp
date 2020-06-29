@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CompactHomeViewController.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 26.06.20.
@@ -9,7 +9,7 @@
 import UIKit
 import SwiftUI
 
-class ViewController: UITableViewController {
+class CompactHomeViewController: UITableViewController {
     
     private var recipeStore = RecipeStore()
     
@@ -24,7 +24,7 @@ class ViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        recipeStore = RecipeStore()
+        recipeStore.update()
         tableView.reloadData()
     }
     
@@ -82,16 +82,21 @@ class ViewController: UITableViewController {
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = "Raumtemperatur: \(recipeStore.roomTemperature)ºC"
+                cell.accessoryType = .disclosureIndicator
             case 1:
                 cell.textLabel?.text = "Rezepte aus Datei importieren"
+                cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
+                cell.accessoryView?.tintColor = .tertiaryLabel
             case 2:
                 cell.textLabel?.text = "alle Rezepte exportieren"
+                cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
+                cell.accessoryView?.tintColor = .tertiaryLabel
             case 3:
                 cell.textLabel?.text = "Über diese App"
             default:
                 cell.textLabel?.text = "\(indexPath.row)"
             }
-            cell.accessoryType = .disclosureIndicator
+           
             return cell
         }
     }
@@ -163,12 +168,22 @@ class ViewController: UITableViewController {
         } else if indexPath.section == 1 {
             let row = indexPath.row
             if row == 0 {
-                print("temp")
-                // room temperaturePicker
+                let vc = RoomTempTableViewController(style: .insetGrouped)
+
+                vc.recipeStore = recipeStore
+                vc.updateTemp = { temp in
+                    self.recipeStore.roomTemperature = temp
+                    self.tableView.reloadData()
+                }
+                
+                navigationController?.pushViewController(vc, animated: true)
             } else if row == 1 {
                 print("import")
             } else if row == 2 {
-                print("export")
+                let vc = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
+                
+                present(vc,animated: true)
+                
             } else if row == 3 {
                 print("about")
             }
@@ -193,5 +208,9 @@ class ViewController: UITableViewController {
     }
 
 
+}
+
+extension CompactHomeViewController: UIDocumentPickerDelegate {
+    
 }
 
