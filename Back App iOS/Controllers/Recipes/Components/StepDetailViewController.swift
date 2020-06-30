@@ -250,8 +250,10 @@ class StepDetailViewController: UITableViewController {
     }
     
     private func navigateToTempPicker() {
-        let stepBinding = Binding(get: { self.step!}, set: {self.recipeStore.update(step: $0, in: self.recipe)})
-        let tempPickerVC = UIHostingController(rootView: stepTempPicker(step: stepBinding))
+        let tempPickerVC = StepTempTableViewController(style: .insetGrouped)
+        tempPickerVC.recipeStore = recipeStore
+        tempPickerVC.recipe = recipe
+        tempPickerVC.step = step
         
         navigationController?.pushViewController(tempPickerVC, animated: true)
     }

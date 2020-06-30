@@ -131,6 +131,7 @@
 		CDB5EE6A246BE0DC00E35376 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
 		CDB5EE6B246BE0DC00E35376 /* BackAppImpressum.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
+		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
 		CDC8A0792483D208005433E1 /* RecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A06A2483D208005433E1 /* RecipeDetail.swift */; };
 		CDC8A07B2483D208005433E1 /* TimePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC8A06D2483D208005433E1 /* TimePickerModel.swift */; };
 		CDC8A07C2483D208005433E1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDC8A06F2483D208005433E1 /* Preview Assets.xcassets */; };
@@ -240,6 +241,7 @@
 		CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
 		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
 		CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
+		CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTempTableViewController.swift; sourceTree = "<group>"; };
 		CDC8A06A2483D208005433E1 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CDC8A06B2483D208005433E1 /* AddRecipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddRecipe.swift; sourceTree = "<group>"; };
 		CDC8A06C2483D208005433E1 /* BackApp_Mac.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = BackApp_Mac.entitlements; sourceTree = "<group>"; };
@@ -516,11 +518,7 @@
 		CDB383E724A61ED80049C2BE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */,
-				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
-				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
-				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
-				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
+				CDBDFDD224AA9593002A6C84 /* Recipes */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -549,6 +547,27 @@
 				CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */,
 			);
 			path = "supporting Files";
+			sourceTree = "<group>";
+		};
+		CDBDFDD224AA9593002A6C84 /* Recipes */ = {
+			isa = PBXGroup;
+			children = (
+				CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */,
+				CDBDFDD324AA95BE002A6C84 /* Components */,
+			);
+			path = Recipes;
+			sourceTree = "<group>";
+		};
+		CDBDFDD324AA95BE002A6C84 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
+				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
+				CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */,
+				CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */,
+				CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		CDC8A0692483D208005433E1 /* BackApp Mac */ = {
@@ -847,6 +866,7 @@
 			files = (
 				CDA7EE7524A67F1400763E21 /* AddRecipe.swift in Sources */,
 				CDA7EE6A24A67EA200763E21 /* StepRow.swift in Sources */,
+				CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */,
 				CDA7EE6124A67E9900763E21 /* CardView.swift in Sources */,
 				CDA7EE6C24A67EA800763E21 /* ImagePicker.swift in Sources */,
 				CDA7EE5B24A67E9200763E21 /* DecimalField.swift in Sources */,

@@ -74,6 +74,5 @@ extension RoomTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         updateTemp!(row - 10)
     }
-    
-    
+
 }

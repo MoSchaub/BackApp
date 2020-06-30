@@ -134,6 +134,5 @@ class IngredientDetailViewController: UITableViewController {
     
     @objc private func toggleTapped(_ sender: UISwitch) {
         ingredient.isBulkLiquid = sender.isOn
-        //tableView.reloadData()
     }
 }
