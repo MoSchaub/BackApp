@@ -324,7 +324,9 @@ final class RecipeStore: ObservableObject{
     
     func update() {
         if let recipes = load() {
-            self.recipes = recipes
+            for recipe in recipes {
+                save(recipe: recipe)
+            }
         }
     }
     

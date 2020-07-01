@@ -39,7 +39,7 @@ class AmountTableViewCell: UITableViewCell {
     
     func setUp(with ingredient: Ingredient, format: @escaping (String) -> String ) {
         textField.text = "\(ingredient.amount)"
-        textField.placeholder = "Menge"
+        textField.placeholder = "Menge in gramm"
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)
@@ -69,5 +69,9 @@ extension AmountTableViewCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.textField.endEditing(true)
         return false
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = nil
     }
 }

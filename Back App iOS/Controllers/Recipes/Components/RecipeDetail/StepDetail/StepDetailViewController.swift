@@ -86,7 +86,7 @@ class StepDetailViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 4 {
-            return step.ingredients.count + 1
+            return step.ingredients.count + 1 + step.subSteps.count
         } else {
             return 1
         }
@@ -112,8 +112,10 @@ class StepDetailViewController: UITableViewController {
         case 2: return makeDurationCell()
         case 3: return makeTempCell()
         case 4:
-            if indexPath.row == step.ingredients.count {
+            if indexPath.row - step.subSteps.count == step.ingredients.count {
                 return makeAddIngredientCell()
+            } else if indexPath.row < step.subSteps.count{
+                return makeSubstepCell(at: indexPath)
             } else {
                 return makeIngredientCell(at: indexPath)
             }
@@ -127,6 +129,7 @@ class StepDetailViewController: UITableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "duration")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "temp")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "addIngredient")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "substep")
     }
 
     private func makeNameCell() -> TextFieldTableViewCell {
@@ -172,9 +175,21 @@ class StepDetailViewController: UITableViewController {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ingredient")
         cell.prepareForReuse()
         
-        let ingredient = step.ingredients[indexPath.row]
+        let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
         cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: recipeStore.roomTemperature))° C" : "")
+        cell.accessoryType = .disclosureIndicator
+        
+        return cell
+    }
+    
+    private func makeSubstepCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "substep")
+        cell.prepareForReuse()
+        
+        let substep = step.subSteps[indexPath.row]
+        cell.textLabel?.text = substep.name
+        cell.detailTextLabel?.text = substep.totalFormattedAmount + " " + substep.formattedTemp
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -194,14 +209,18 @@ class StepDetailViewController: UITableViewController {
     //conditional deletion
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        indexPath.section == 4 && indexPath.row < step.ingredients.count
+        indexPath.section == 4 && indexPath.row < step.ingredients.count - step.subSteps.count
     }
 
     //delete cells
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            step.ingredients.remove(at: indexPath.row)
+            if indexPath.row < step.subSteps.count - 1 {
+                step.subSteps.remove(at: indexPath.row)
+            } else {
+                step.ingredients.remove(at: indexPath.row - step.subSteps.count)
+            }
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -218,7 +237,7 @@ class StepDetailViewController: UITableViewController {
     //conditional moving
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-        indexPath.section == 4 && indexPath.row < step.ingredients.count
+        indexPath.section == 4 && indexPath.row - step.subSteps.count < step.ingredients.count - step.subSteps.count
     }
     
     // MARK: - Navigation
@@ -229,7 +248,26 @@ class StepDetailViewController: UITableViewController {
         } else if indexPath.section == 3 {
             navigateToTempPicker()
         } else if indexPath.section == 4 {
-            navigateToIngredientDetail(creating: indexPath.row >= step.ingredients.count, indexPath: indexPath)
+            if indexPath.row >= step.ingredients.count + step.subSteps.count {
+                let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
+                if stepsWithIngredients.count > 0 {
+                    let alert = UIAlertController(title: "neue Zutat oder Schritt als Zutat?", message: nil, preferredStyle: .actionSheet)
+                    
+                    alert.addAction(UIAlertAction(title: "neue Zutat", style: .default, handler: { _ in
+                        self.navigateToIngredientDetail(creating: true, indexPath: indexPath)
+                    }))
+                    alert.addAction(UIAlertAction(title: "Schritt", style: .default, handler: { _ in
+                        self.showSubstepsActionSheet(possibleSubsteps: stepsWithIngredients)
+                    }))
+                    alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: nil))
+                    
+                    present(alert, animated: true)
+                } else {
+                    navigateToIngredientDetail(creating: true, indexPath: indexPath)
+                }
+            } else if indexPath.row > step.ingredients.count - step.subSteps.count {
+                navigateToIngredientDetail(creating: false, indexPath: indexPath)
+            }
         }
     }
     
@@ -256,7 +294,7 @@ class StepDetailViewController: UITableViewController {
         
         ingredientDetailVC.recipeStore = recipeStore
         ingredientDetailVC.step = step
-        ingredientDetailVC.ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row]
+        ingredientDetailVC.ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row - step.subSteps.count]
         ingredientDetailVC.creating = creating
         
         if creating {
@@ -269,6 +307,21 @@ class StepDetailViewController: UITableViewController {
     private func save(ingredient: Ingredient, step: Step){
         recipeStore.add(ingredient: ingredient, step: step)
         tableView.reloadData()
+    }
+    
+    private func showSubstepsActionSheet(possibleSubsteps: [Step]) {
+        let actionSheet = UIAlertController(title: "Schritt auswählen", message: nil, preferredStyle: .actionSheet)
+        
+        for possibleSubstep in possibleSubsteps {
+            actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
+                self.step.subSteps.append(possibleSubstep)
+                self.tableView.reloadData()
+            }))
+        }
+        
+        actionSheet.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: nil))
+        
+        present(actionSheet, animated: true)
     }
 
 }

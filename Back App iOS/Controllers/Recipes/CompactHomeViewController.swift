@@ -28,7 +28,7 @@ class CompactHomeViewController: UITableViewController {
         recipeStore.update()
         tableView.reloadData()
     }
-    
+
     private func configureTableView() {
         tableView  = UITableView(frame: tableView.frame, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")

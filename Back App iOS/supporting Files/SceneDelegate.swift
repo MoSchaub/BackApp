@@ -29,6 +29,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
     }
     
+    func sceneWillResignActive(_ scene: UIScene) {
+        recipeStore.update()
+    }
+    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
         let _ = URLContexts.map({ self.recipeStore.open($0.url)})

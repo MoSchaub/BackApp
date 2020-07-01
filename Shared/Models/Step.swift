@@ -93,7 +93,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
         if bulkLiquid.amount != 0{
             return Int( diff / bulkLiquid.amount)
         } else {
-            return 0
+            return roomThemperature
         }
         
     }

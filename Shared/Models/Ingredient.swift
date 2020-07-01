@@ -48,6 +48,7 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
         let str = rest.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .whitespacesAndNewlines)
         switch str {
         case "Kg": return 1000
+        case "kg": return 1000
         case "mg": return 0.001
         default: return 1
         }
