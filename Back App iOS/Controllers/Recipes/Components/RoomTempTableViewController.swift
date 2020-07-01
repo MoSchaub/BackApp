@@ -17,7 +17,7 @@ class RoomTempTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tempPicker")
-        title = "Raumtemperatur"
+        title = NSLocalizedString("raumtemperatur", comment: "")
     }
 
     // MARK: rows and sections

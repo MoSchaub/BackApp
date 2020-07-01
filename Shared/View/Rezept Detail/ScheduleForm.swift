@@ -27,9 +27,9 @@ struct ScheduleForm: View {
     
     var timesSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Anzahl").secondary()
+            Text("amount").secondary()
                 .padding(.leading, 35)
-            DecimalField("Anzahl eingeben", value: self.$times, formatter: self.numberFormatter)
+            DecimalField("amountCellPlaceholder2", value: self.$times, formatter: self.numberFormatter)
                 .padding([.leading, .vertical])
                 .background(BackgroundGradient())
                 .padding([.horizontal,.bottom])
@@ -37,7 +37,7 @@ struct ScheduleForm: View {
     }
     
     var alert: Alert{
-        Alert(title: Text("Fehler"), message: Text("Bitte gebe ein welche Menge du machen möchtest"), dismissButton: .default(Text("Ok")))
+        Alert(title: Text("Error"), message: Text("scheduleFormErrorMessage"), dismissButton: .default(Text("Ok")))
     }
     
     var body: some View {
@@ -53,8 +53,8 @@ struct ScheduleForm: View {
                             .frame(width: UIScreen.main.bounds.width - 60)
                             .clipped()
                         Picker("s", selection: self.$recipe.inverted){
-                            Text("Start").tag(false)
-                            Text("Ende").tag(true)
+                            Text("start").tag(false)
+                            Text("end").tag(true)
                         }
                         .pickerStyle(SegmentedPickerStyle())
                         .frame(width: UIScreen.main.bounds.width - 30)
@@ -69,7 +69,7 @@ struct ScheduleForm: View {
                             self.showingAlert = true
                         }
                     }){
-                        Text("weiter")
+                        Text("OK")
                             .foregroundColor(.primary)
                             .padding()
                             .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
@@ -88,7 +88,7 @@ struct ScheduleForm: View {
                     Button(action:{
                        self.presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("zurück")
+                        Text("cancel")
                             .foregroundColor(.primary)
                             .padding()
                             .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
@@ -102,7 +102,7 @@ struct ScheduleForm: View {
                 self.times = self.recipe.times
             }
         .navigationBarTitle(
-            Text(recipe.name),
+            Text(recipe.formattedName),
             
             displayMode: NavigationBarItem.TitleDisplayMode.inline
             

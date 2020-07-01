@@ -30,7 +30,7 @@ class StepTimeTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        title = "Dauer"
+        title = NSLocalizedString("duration", comment: "")
     }
 
     // MARK: - rows and sections

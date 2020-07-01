@@ -17,6 +17,9 @@
 		CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */; };
 		CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5524A699AD00884CAE /* StepTableViewCell.swift */; };
 		CD68D45824AC58B8000D4BD7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */; };
+		CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
+		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
+		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
 		CDA1D80E24A942EC00DDF709 /* BetterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */; };
 		CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */; };
@@ -73,6 +76,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CD68D46824AC64D2000D4BD7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -85,6 +101,10 @@
 		CD664D5524A699AD00884CAE /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
 		CD68D45924AC58B8000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = de; path = "de.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD68D45B24AC58BF000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		CD68D45F24AC5C80000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CD68D46624AC5CBD000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CD68D46724AC5E9E000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CD6A9A152340252600748249 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
 		CD76F999248BDA3000D11DD3 /* DecimalField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalField.swift; sourceTree = "<group>"; };
@@ -118,7 +138,7 @@
 		CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
 		CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetterTableViewCell.swift; sourceTree = "<group>"; };
 		CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
-		CDA7EE2924A67DBD00763E21 /* Back App iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Back App iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDA7EE2924A67DBD00763E21 /* Back App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Back App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactHomeViewController.swift; sourceTree = "<group>"; };
@@ -182,7 +202,7 @@
 		CD6A9A0D2340252400748249 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CDA7EE2924A67DBD00763E21 /* Back App iOS.app */,
+				CDA7EE2924A67DBD00763E21 /* Back App.app */,
 				CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */,
 			);
 			name = Products;
@@ -322,6 +342,8 @@
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
 				CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */,
+				CD68D46024AC5C80000D4BD7 /* Localizable.strings */,
+				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
 			);
 			path = "Back App iOS";
 			sourceTree = "<group>";
@@ -409,6 +431,7 @@
 				CDA7EE2524A67DBD00763E21 /* Sources */,
 				CDA7EE2624A67DBD00763E21 /* Frameworks */,
 				CDA7EE2724A67DBD00763E21 /* Resources */,
+				CD68D46824AC64D2000D4BD7 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -416,7 +439,7 @@
 			);
 			name = "Back App iOS";
 			productName = "Back App iOS";
-			productReference = CDA7EE2924A67DBD00763E21 /* Back App iOS.app */;
+			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CDA7EE3D24A67DC200763E21 /* Back App iOSUITests */ = {
@@ -483,8 +506,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDA7EE5724A67E7000763E21 /* Media.xcassets in Resources */,
+				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD68D45824AC58B8000D4BD7 /* Launch Screen.storyboard in Resources */,
+				CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDA7EE5824A67E7000763E21 /* Assets.xcassets in Resources */,
 			);
@@ -581,6 +606,24 @@
 				CD68D45B24AC58BF000D4BD7 /* en */,
 			);
 			name = "Launch Screen.storyboard";
+			sourceTree = "<group>";
+		};
+		CD68D46024AC5C80000D4BD7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD68D45F24AC5C80000D4BD7 /* de */,
+				CD68D46724AC5E9E000D4BD7 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD68D46424AC5CBB000D4BD7 /* de */,
+				CD68D46624AC5CBD000D4BD7 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -717,7 +760,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Back App";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -736,7 +779,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Back App";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

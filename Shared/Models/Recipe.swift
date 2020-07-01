@@ -103,9 +103,10 @@ struct Recipe: Hashable, Codable, Identifiable{
     var timesText: String{
         get{
             if self.times != nil {
-                return times!.description + " stk"
+                return times!.description + " " +
+                   (times!.description == "1" ? NSLocalizedString("1stk", comment: "") : NSLocalizedString("stk", comment: ""))
             } else {
-                return "1 stk"
+                return "1 " + NSLocalizedString("1stk", comment: "")
             }
         }
         set{
@@ -138,7 +139,7 @@ struct Recipe: Hashable, Codable, Identifiable{
     }
     
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannntes Rezept" : name
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? NSLocalizedString("unbenanntesRezept", comment: "") : name
     }
     
     /// startDate formatted using the dateFormatter
@@ -153,9 +154,9 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     var formattedDate: String {
         if inverted{
-            return "Ende am \(formattedEndDate)"
+            return "\(NSLocalizedString("end", comment: "")) \(formattedEndDate)"
         } else{
-            return "Start am \(formattedStartDate)"
+            return "\(NSLocalizedString("start", comment: "")) \(formattedStartDate)"
         }
     }
     

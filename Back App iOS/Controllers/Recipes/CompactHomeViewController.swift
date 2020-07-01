@@ -35,7 +35,7 @@ class CompactHomeViewController: UITableViewController {
     }
     
     private func configureTitle() {
-        title = "Back App"
+        title = NSLocalizedString("appTitle", comment: "apptitle")
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
@@ -56,7 +56,7 @@ class CompactHomeViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Rezepte"
+            return NSLocalizedString("recipes", comment: "")
         }
         return nil
     }
@@ -82,18 +82,18 @@ class CompactHomeViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Raumtemperatur: \(recipeStore.roomTemperature)ºC"
+                cell.textLabel?.text = "\(NSLocalizedString("raumtemperatur", comment: "")): \(recipeStore.roomTemperature)ºC"
                 cell.accessoryType = .disclosureIndicator
             case 1:
-                cell.textLabel?.text = "Rezepte aus Datei importieren"
+                cell.textLabel?.text = NSLocalizedString("importFile", comment: "")
                 cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
                 cell.accessoryView?.tintColor = .tertiaryLabel
             case 2:
-                cell.textLabel?.text = "alle Rezepte exportieren"
+                cell.textLabel?.text = NSLocalizedString("exportAll", comment: "")
                 cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
                 cell.accessoryView?.tintColor = .tertiaryLabel
             case 3:
-                cell.textLabel?.text = "Über diese App"
+                cell.textLabel?.text = NSLocalizedString("about", comment: "")
             default:
                 cell.textLabel?.text = "\(indexPath.row)"
             }

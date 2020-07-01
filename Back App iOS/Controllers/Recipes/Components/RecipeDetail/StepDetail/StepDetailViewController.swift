@@ -94,11 +94,11 @@ class StepDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return "Name"
-        case 1: return "Notizen"
-        case 2: return "Dauer"
-        case 3: return "Temperatur"
-        case 4: return "Zutaten"
+        case 0: return NSLocalizedString("name", comment: "")
+        case 1: return NSLocalizedString("notes", comment: "")
+        case 2: return NSLocalizedString("duration", comment: "")
+        case 3: return NSLocalizedString("temperature", comment: "")
+        case 4: return NSLocalizedString("Zutaten", comment: "")
         default: return ""
         }
     }
@@ -135,7 +135,7 @@ class StepDetailViewController: UITableViewController {
     private func makeNameCell() -> TextFieldTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "name") as! TextFieldTableViewCell
         cell.textField.text = step.name
-        cell.textField.placeholder = "Name"
+        cell.textField.placeholder = NSLocalizedString("name", comment: "")
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.name = text
@@ -146,7 +146,7 @@ class StepDetailViewController: UITableViewController {
     private func makeNotesCell() -> TextFieldTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "notes") as! TextFieldTableViewCell
         cell.textField.text = step.notes
-        cell.textField.placeholder = "Notizen"
+        cell.textField.placeholder = NSLocalizedString("notes", comment: "")
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.notes = text
@@ -198,7 +198,7 @@ class StepDetailViewController: UITableViewController {
     private func makeAddIngredientCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "addIngredient")!
         
-        cell.textLabel?.text = "Zutat hinzufügen"
+        cell.textLabel?.text = NSLocalizedString("addIngredient", comment: "")
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -251,15 +251,15 @@ class StepDetailViewController: UITableViewController {
             if indexPath.row >= step.ingredients.count + step.subSteps.count {
                 let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
                 if stepsWithIngredients.count > 0 {
-                    let alert = UIAlertController(title: "neue Zutat oder Schritt als Zutat?", message: nil, preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: NSLocalizedString("ingredientOrStep", comment: ""), message: nil, preferredStyle: .actionSheet)
                     
-                    alert.addAction(UIAlertAction(title: "neue Zutat", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("newIngredient", comment: ""), style: .default, handler: { _ in
                         self.navigateToIngredientDetail(creating: true, indexPath: indexPath)
                     }))
-                    alert.addAction(UIAlertAction(title: "Schritt", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("step", comment: ""), style: .default, handler: { _ in
                         self.showSubstepsActionSheet(possibleSubsteps: stepsWithIngredients)
                     }))
-                    alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil))
                     
                     present(alert, animated: true)
                 } else {
@@ -310,7 +310,7 @@ class StepDetailViewController: UITableViewController {
     }
     
     private func showSubstepsActionSheet(possibleSubsteps: [Step]) {
-        let actionSheet = UIAlertController(title: "Schritt auswählen", message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: NSLocalizedString("selectStep", comment: ""), message: nil, preferredStyle: .actionSheet)
         
         for possibleSubstep in possibleSubsteps {
             actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
@@ -319,7 +319,7 @@ class StepDetailViewController: UITableViewController {
             }))
         }
         
-        actionSheet.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil))
         
         present(actionSheet, animated: true)
     }

@@ -95,11 +95,10 @@ class RecipeDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return "Name"
-        case 1: return "Bild"
-        case 2: return creating ? "Kategorie" : nil
-        case 3: return "Schritte"
-        case 4: return "Anzahl"
+        case 0: return NSLocalizedString("name", comment: "")
+        case 1: return NSLocalizedString("bild", comment: "")
+        case 3: return NSLocalizedString("schritte", comment: "")
+        case 4: return NSLocalizedString("anzahl", comment: "")
         default: return nil
         }
     }
@@ -156,7 +155,7 @@ class RecipeDetailViewController: UITableViewController {
     private func makeTextFieldCell() -> TextFieldTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "textField") as! TextFieldTableViewCell
         cell.textField.text = recipe.name
-        cell.textField.placeholder = "Name"
+        cell.textField.placeholder = NSLocalizedString("name", comment: "")
         cell.selectionStyle = .none
         cell.textChanged = { name in
             self.recipe.name = name
@@ -192,7 +191,7 @@ class RecipeDetailViewController: UITableViewController {
     
     private func makeStartRecipeCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "plain")!
-        cell.textLabel?.text = "Rezept starten"
+        cell.textLabel?.text = NSLocalizedString("startRecipe", comment: "")
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -215,7 +214,7 @@ class RecipeDetailViewController: UITableViewController {
     
     private func makeNewStepCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "plain")!
-        cell.textLabel?.text = "Schritt hinzufügen"
+        cell.textLabel?.text = NSLocalizedString("addStep", comment: "")
         cell.accessoryType = .disclosureIndicator
         
         return cell

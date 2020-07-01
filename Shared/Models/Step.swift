@@ -57,7 +57,7 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     }
     
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannter Schritt" : name
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? NSLocalizedString("unbenannterSchritt", comment: "") : name
     }
     
     var totalAmount: Double{

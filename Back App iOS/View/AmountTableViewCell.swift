@@ -39,7 +39,7 @@ class AmountTableViewCell: UITableViewCell {
     
     func setUp(with ingredient: Ingredient, format: @escaping (String) -> String ) {
         textField.text = "\(ingredient.amount)"
-        textField.placeholder = "Menge in gramm"
+        textField.placeholder = NSLocalizedString("amountCellPlaceholder1", comment: "")
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)
@@ -49,7 +49,7 @@ class AmountTableViewCell: UITableViewCell {
     
     func setUp(with recipe: Recipe, format: @escaping (String) -> String ) {
         textField.text = "\(recipe.timesText)"
-        textField.placeholder = "Anzahl an Broten, Brötche, etc"
+        textField.placeholder = NSLocalizedString("amountCellPlaceholder2", comment: "")
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)

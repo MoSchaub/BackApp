@@ -25,7 +25,7 @@ struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     }
     
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? "unbenannte Zutat" : name
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? NSLocalizedString("unnamedIngredient", comment: "") : name
     }
     
     mutating func formatted(rest: String) -> String{

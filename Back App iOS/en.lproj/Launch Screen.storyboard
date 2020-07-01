@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Back App-->
+        <!--Baking App-->
         <scene sceneID="HUb-nZ-uce">
             <objects>
                 <tableViewController id="3zm-gL-Hha" sceneMemberID="viewController">
@@ -19,8 +19,8 @@
                             <outlet property="delegate" destination="3zm-gL-Hha" id="f7J-4b-0VX"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Back App" largeTitleDisplayMode="always" id="gS9-AD-uVA">
-                        <barButtonItem key="leftBarButtonItem" title="Bearbeiten" style="done" id="h7u-Ai-aRa"/>
+                    <navigationItem key="navigationItem" title="Baking App" largeTitleDisplayMode="always" id="gS9-AD-uVA">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="edit" id="h7u-Ai-aRa"/>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="zZ5-fg-hlF"/>
                     </navigationItem>
                 </tableViewController>

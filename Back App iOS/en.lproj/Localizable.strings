@@ -1,0 +1,48 @@
+/* 
+  Main.strings
+  BackApp
+
+  Created by Moritz Schaub on 01.07.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+"appTitle" = "Baking App";
+"recipes" = "recipes";
+"raumtemperatur" = "room temperature";
+"importFile" = "import from file";
+"exportAll" = "export all";
+"about" = "about Baking App";
+
+"name" = "name";
+"bild" = "image";
+"schritte" = "steps";
+"anzahl" = "quantity";
+"startRecipe" = "start Recipe";
+"addStep" = "add Step";
+"Min" = "minutes";
+"Zutaten" = "ingredients";
+"Schritte" = "steps";
+"unbenanntesRezept" = "unnamed recipe";
+"stk" = "pieces";
+"1stk" = "piece";
+
+"unbenannterSchritt" = "unnamed Step";
+"notes" = "notes";
+"duration" = "duration";
+"temperature" = "temperature";
+"addIngredient" = "add Ingredient";
+"ingredientOrStep" = "new ingredient or step as ingredient?";
+"newIngredient" = "new ingredient";
+"step" = "step";
+"selectStep" = "select Step";
+"cancel" = "cancel";
+"dynamicTemp" = "dynamic temperature";
+"start" = "start";
+"end" = "end";
+
+"unnamedIngredient" = "unnamed Ingredient";
+"amount" = "amount";
+"bulkLiquid" = "bulk liquid";
+"amountCellPlaceholder1" = "amount in gramms";
+"amountCellPlaceholder2" = "Number of breads, rolls, etc.";
+"scheduleFormErrorMessage" = "Please enter the amount you wish to make";

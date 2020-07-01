@@ -1,0 +1,47 @@
+/* 
+  Main.strings
+  BackApp
+
+  Created by Moritz Schaub on 01.07.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+"appTitle" = "Back App";
+"recipes" = "Rezepte";
+"raumtemperatur" = "Raumtemperatur";
+"importFile" = "aus Datei importieren";
+"exportAll" = "alle exportieren";
+"about" = "über Back App";
+
+"name" = "Name";
+"bild" = "Bild";
+"schritte" = "Schritte";
+"anzahl" = "Anzahl";
+"startRecipe" = "Rezept starten";
+"addStep" = "Schritt hinzufügen";
+"Min" = "Minuten";
+"Zutaten" = "Zutaten";
+"Schritte" = "Schritte";
+"unbenanntesRezept" = "unbenanntes Rezept";
+"stk" = "Stück";
+"1stk" = "Stück";
+
+"unbenannterSchritt" = "unbenannter Schritt";
+"notes" = "Notizen";
+"duration" = "Dauer";
+"temperature" = "Temperatur";
+"addIngredient" = "Zutat hinzufügen";
+"ingredientOrStep" = "neue Zutat oder Schritt als Zutat?";
+"newIngredient" = "neue Zutat";
+"step" = "Schritt";
+"selectStep" = "Schritt auswählen";
+"cancel" = "Abbrechen";
+"dynamicTemp" = "dynamische Temperatur";
+"start" = "Start";
+"end" = "Ende";
+
+"unnamedIngredient" = "unbenannte Zutat";
+"amount" = "Menge";
+"bulkLiquid" = "Schüttflüssigkeit";
+"amountCellPlaceholder1" = "Menge in gramm";
+"amountCellPlaceholder2" = "Anzahl an Broten, Brötchen, etc.";

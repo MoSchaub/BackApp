@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  BackApp
+
+  Created by Moritz Schaub on 01.07.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "Baking App";

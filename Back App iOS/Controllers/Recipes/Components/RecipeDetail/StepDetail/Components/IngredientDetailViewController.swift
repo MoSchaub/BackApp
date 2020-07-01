@@ -67,9 +67,9 @@ class IngredientDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Name"
+            return NSLocalizedString("name", comment: "")
         } else if section == 1 {
-            return "Menge"
+            return NSLocalizedString("amount", comment: "")
         } else {
             return nil
         }
@@ -96,7 +96,7 @@ class IngredientDetailViewController: UITableViewController {
     private func makeNameCell() -> TextFieldTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "name") as! TextFieldTableViewCell
         cell.textField.text = ingredient.name
-        cell.textField.placeholder = "Name"
+        cell.textField.placeholder = NSLocalizedString("name", comment: "")
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.ingredient.name = text
@@ -127,7 +127,7 @@ class IngredientDetailViewController: UITableViewController {
         cell.selectionStyle = .none
         cell.accessoryView = toggle
         
-        cell.textLabel?.text = "Schüttflüssigkeit"
+        cell.textLabel?.text = NSLocalizedString("bulkLiquid", comment: "")
         
         return cell
     }

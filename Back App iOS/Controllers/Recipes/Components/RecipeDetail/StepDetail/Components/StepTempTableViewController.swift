@@ -27,7 +27,7 @@ class StepTempTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        title = "Temperatur"
+        title = NSLocalizedString("temperature", comment: "")
     }
 
     // MARK: - rows and sections
@@ -72,7 +72,7 @@ class StepTempTableViewController: UITableViewController {
         cell.selectionStyle = .none
         cell.accessoryView = toggle
         
-        cell.textLabel?.text = "dynamische Temperatur"
+        cell.textLabel?.text = NSLocalizedString("dynamicTemp", comment: "")
         
         return cell
     }
@@ -124,9 +124,9 @@ extension StepTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if step.isDynamicTemperature {
             if component == 0 {
-                return "Start: \(row - 10)"
+                return "\(NSLocalizedString("start", comment: "")): \(row - 10)"
             } else {
-                return "Ende: \(row - 10)"
+                return "\(NSLocalizedString("end", comment: "")): \(row - 10)"
             }
         } else {
             return "\(row - 10)"
