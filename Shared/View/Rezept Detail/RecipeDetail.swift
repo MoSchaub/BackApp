@@ -108,12 +108,6 @@ struct RecipeDetail: View {
                 }
             }
             
-            Picker(selection: $recipe.category, label: Text("Kategorie")) {
-                ForEach(recipeStore.categories) { catergory in
-                    Text(catergory.name).tag(catergory)
-                }
-            }.pickerStyle(SegmentedPickerStyle())
-            
             Section(header: Text("Schritte")) {
                 ForEach(recipe.steps){ step in
                     NavigationLink(destination: StepDetail(recipe: self.$recipe, step: self.$recipe.steps[self.recipe.steps.firstIndex(where: {$0.id == step.id}) ?? 0], creating: false)) {

@@ -49,7 +49,7 @@ struct StepRow_Previews: PreviewProvider {
         let b2 = Step(name: "Sub", time: 60, ingredients: [], themperature: 20)
         var b = Step(name: "Schritt1", time: 60, ingredients: [i], themperature: 20)
         b.subSteps.append(b2)
-        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false, category: Category.example)
+        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false)
     }
     
     static var previews: some View {

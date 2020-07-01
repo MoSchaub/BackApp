@@ -210,10 +210,9 @@ class CompactHomeViewController: UITableViewController {
     
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         let vc = RecipeDetailViewController(style: .insetGrouped) // create vc
-        vc.recipe = Recipe(name: "", brotValues: [], category: recipeStore.categories.first!) //create fresh recipe
+        vc.recipe = Recipe(name: "", brotValues: []) //create fresh recipe
         vc.recipeStore = RecipeStore(true)
         vc.recipeStore.roomTemperature = recipeStore.roomTemperature
-        vc.recipeStore.categories = recipeStore.categories
         vc.creating = true
         vc.saveRecipe = { recipe in
             self.recipeStore.save(recipe: recipe)

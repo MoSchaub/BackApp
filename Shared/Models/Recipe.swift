@@ -23,14 +23,17 @@ struct Recipe: Hashable, Codable, Identifiable{
     ///name of the recipe
     var name: String
     
+    ///small text containing some Info about the recipe
+    var info: String
+    
     ///array containing all steps involved in the recipe
     var steps: [Step]
     
     ///property containing wether the recipe is a favourite
     var isFavourite: Bool
     
-    ///property that contains the category of the recipe eg. Bread
-    var category: Category
+    ///how difficult the recipe is
+    var difficulty: Difficulty
     
     //MARK: Date Properties
     
@@ -39,6 +42,9 @@ struct Recipe: Hashable, Codable, Identifiable{
     
     ///for how many items eg breads, rolls, etc the the ingredients are set
     var times: Decimal?
+    
+    ///if the recipe is currently running
+    var running: Bool
     
     ///property used to make the date json compatible and strores the date as an string
     private var dateString: String
@@ -187,27 +193,32 @@ struct Recipe: Hashable, Codable, Identifiable{
         
         let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
         
-        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen], category: Category(name: "Brot"))
+        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen])
     }
     
-    init(name:String, brotValues: [Step], inverted: Bool = false , dateString: String = "", isFavourite: Bool = false, category: Category) {
+    init(name: String, info: String = "" , brotValues: [Step], inverted: Bool = false , running: Bool = false, dateString: String = "", isFavourite: Bool = false, difficulty: Difficulty = .easy) {
         self.id = UUID().uuidString
         self.name = name
+        self.info = info
         self.steps = brotValues
         self.inverted = inverted
         self.dateString = dateString
+        self.running = running
         self.isFavourite = isFavourite
-        self.category = category
+        self.difficulty = difficulty
         self.times = Decimal(integerLiteral: 1)
     }
     
     enum CodingKeys: CodingKey {
         case name
+        case info
         case steps
         case inverted
+        case running
+        case dateString
         case isFavourite
         case imageString
-        case category
+        case difficulty
         case times
         case id
     }
@@ -215,13 +226,15 @@ struct Recipe: Hashable, Codable, Identifiable{
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
-        self.dateString = dateFormatter.string(from: Date())
         self.name = try container.decode(String.self, forKey: .name)
+        self.info = try container.decodeIfPresent(String.self, forKey: .info) ?? ""
         self.steps = try container.decode([Step].self, forKey: .steps)
         self.inverted = try container.decode(Bool.self, forKey: .inverted)
         self.isFavourite = try container.decode(Bool.self, forKey: .isFavourite)
+        self.dateString = try container.decodeIfPresent(String.self, forKey: .dateString) ?? ""
+        self.running = try container.decodeIfPresent(Bool.self, forKey: .running) ?? false
         self.imageString = try container.decodeIfPresent(Data.self, forKey: .imageString)
-        self.category = try container.decode(Category.self, forKey: .category)
+        self.difficulty = try container.decodeIfPresent(Difficulty.self, forKey: .difficulty) ?? Difficulty.easy
         self.times = try container.decode(Decimal.self, forKey: .times)
     }
     
@@ -242,10 +255,11 @@ struct Recipe: Hashable, Codable, Identifiable{
 extension Recipe: Equatable{
     static func == (lhs: Recipe, rhs: Recipe) -> Bool {
         return lhs.name == rhs.name &&
+            lhs.info == rhs.info &&
             lhs.steps == rhs.steps &&
             lhs.inverted == rhs.inverted &&
             lhs.isFavourite == rhs.isFavourite &&
-            lhs.category == rhs.category &&
+            lhs.difficulty == rhs.difficulty &&
             lhs.times == rhs.times 
     }
 }

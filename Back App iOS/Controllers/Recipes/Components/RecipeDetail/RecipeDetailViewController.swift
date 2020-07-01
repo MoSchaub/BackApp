@@ -196,13 +196,7 @@ class RecipeDetailViewController: UITableViewController {
         
         return cell
     }
-    
-    @objc private func selectCategory(_ sender: UISegmentedControl) {
-        let selectedItemIndex = sender.selectedSegmentIndex
-        recipe.category = recipeStore.categories[selectedItemIndex]
-        tableView.reloadData()
-    }
-    
+
     private func makeStepCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = StepTableViewCell(style: .default, reuseIdentifier: "step")
         if recipe.steps.count > indexPath.row {

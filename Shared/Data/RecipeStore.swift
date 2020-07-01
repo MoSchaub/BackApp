@@ -20,11 +20,6 @@ final class RecipeStore: ObservableObject{
     }
     
     @Published var roomTemperature = 20
-    @Published var categories = [
-        Category(name: "Brot", imageData: UIImage(named: "bread")!.jpegData(compressionQuality: 0.8)),
-        Category(name: "Brötchen", imageData: UIImage(named: "roll")!.jpegData(compressionQuality: 0.8)),
-        Category(name: "Sonstiges", imageData: UIImage(named: "cake")!.jpegData(compressionQuality: 0.8))
-    ]
     
     /// selection of RecipeDetail
     ///1: ImagePickerView
@@ -313,7 +308,6 @@ final class RecipeStore: ObservableObject{
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.recipes = try container.decode([Recipe].self, forKey: .recipes)
-        self.categories = try container.decode([Category].self, forKey: .categories)
     }
        
     private func addRecipe(recipe: Recipe){
@@ -457,11 +451,11 @@ final class RecipeStore: ObservableObject{
     static var example : RecipeStore{
         let recipeStore = RecipeStore()
         recipeStore.recipes.append(Recipe.example)
-        let recipe1 = Recipe(name: "Recipe1", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        let recipe1 = Recipe(name: "Recipe1", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false)
         recipeStore.recipes.append(recipe1)
-        let recipe2 = Recipe(name: "Recipe2", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        let recipe2 = Recipe(name: "Recipe2", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false)
         recipeStore.recipes.append(recipe2)
-        let recipe3 = Recipe(name: "Recipe3", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false, category: Category(name: "Brot"))
+        let recipe3 = Recipe(name: "Recipe3", brotValues: [Step(name: "12", time: 600, ingredients: [], themperature: 20)], inverted: false, dateString: "", isFavourite: false)
         recipeStore.recipes.append(recipe3)
         return recipeStore
     }
@@ -472,7 +466,6 @@ extension RecipeStore: Codable{
     
     enum CodingKeys: CodingKey{
         case recipes
-        case categories
         case roomThemperature
     }
     
@@ -480,7 +473,6 @@ extension RecipeStore: Codable{
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(recipes, forKey: .recipes)
-        try container.encode(categories, forKey: .categories)
         try container.encode(roomTemperature, forKey: .roomThemperature)
     }
 }
