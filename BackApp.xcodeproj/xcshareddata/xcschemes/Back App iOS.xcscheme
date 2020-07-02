@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD6A9A0B2340252400748249"
-               BuildableName = "BackApp.app"
-               BlueprintName = "BackApp iOS"
+               BlueprintIdentifier = "CDA7EE2824A67DBD00763E21"
+               BuildableName = "Back App.app"
+               BlueprintName = "Back App iOS"
                ReferencedContainer = "container:BackApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD69EF92248420E100372064"
-               BuildableName = "BackAppUITests.xctest"
-               BlueprintName = "BackAppUITests"
+               BlueprintIdentifier = "CDA7EE3D24A67DC200763E21"
+               BuildableName = "Back App iOSUITests.xctest"
+               BlueprintName = "Back App iOSUITests"
                ReferencedContainer = "container:BackApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -54,9 +54,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BackApp.app"
-            BlueprintName = "BackApp iOS"
+            BlueprintIdentifier = "CDA7EE2824A67DBD00763E21"
+            BuildableName = "Back App.app"
+            BlueprintName = "Back App iOS"
             ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -71,9 +71,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD6A9A0B2340252400748249"
-            BuildableName = "BackApp.app"
-            BlueprintName = "BackApp iOS"
+            BlueprintIdentifier = "CDA7EE2824A67DBD00763E21"
+            BuildableName = "Back App.app"
+            BlueprintName = "Back App iOS"
             ReferencedContainer = "container:BackApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

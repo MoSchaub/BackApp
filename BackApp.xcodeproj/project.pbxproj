@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */; };
+		CD2781CF24ADCE6000A88FCE /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD938F2124AD09E1004C21A5 /* Difficulty.swift */; };
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */; };
@@ -21,7 +22,6 @@
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CD938F2224AD09E1004C21A5 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD938F2124AD09E1004C21A5 /* Difficulty.swift */; };
-		CD938F3E24AD153A004C21A5 /* Atributika.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD938F2F24AD1492004C21A5 /* Atributika.framework */; };
 		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
 		CDA1D80E24A942EC00DDF709 /* BetterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */; };
 		CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */; };
@@ -67,62 +67,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CD938F2E24AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 52D6D97C1BEFF229002C0205;
-			remoteInfo = "Atributika-iOS";
-		};
-		CD938F3024AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 52D6DA0F1BF000BD002C0205;
-			remoteInfo = "Atributika-macOS";
-		};
-		CD938F3224AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 52D6D9E21BEFFF6E002C0205;
-			remoteInfo = "Atributika-watchOS";
-		};
-		CD938F3424AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 52D6D9F01BEFFFBE002C0205;
-			remoteInfo = "Atributika-tvOS";
-		};
-		CD938F3624AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 52D6D9861BEFF229002C0205;
-			remoteInfo = "Atributika-iOS Tests";
-		};
-		CD938F3824AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DD75027A1C68FCFC006590AF;
-			remoteInfo = "Atributika-macOS Tests";
-		};
-		CD938F3A24AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DD75028D1C690C7A006590AF;
-			remoteInfo = "Atributika-tvOS Tests";
-		};
-		CD938F3C24AD1492004C21A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1B2F838D1E5C98A4009AFBCA;
-			remoteInfo = Demo;
-		};
 		CDA7EE3F24A67DC200763E21 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CD6A9A042340252400748249 /* Project object */;
@@ -191,7 +135,6 @@
 		CD76F9DA248BDAD100D11DD3 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		CD76F9DB248BDAD100D11DD3 /* Ingredient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		CD938F2124AD09E1004C21A5 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
-		CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Atributika.xcodeproj; path = ../../GitHub/Atributika/Atributika.xcodeproj; sourceTree = "<group>"; };
 		CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
 		CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetterTableViewCell.swift; sourceTree = "<group>"; };
 		CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
@@ -216,7 +159,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD938F3E24AD153A004C21A5 /* Atributika.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,21 +334,6 @@
 			path = RecipeDetail;
 			sourceTree = "<group>";
 		};
-		CD938F2424AD1492004C21A5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CD938F2F24AD1492004C21A5 /* Atributika.framework */,
-				CD938F3124AD1492004C21A5 /* Atributika.framework */,
-				CD938F3324AD1492004C21A5 /* Atributika.framework */,
-				CD938F3524AD1492004C21A5 /* Atributika.framework */,
-				CD938F3724AD1492004C21A5 /* Atributika-iOS Tests.xctest */,
-				CD938F3924AD1492004C21A5 /* Atributika-macOS Tests.xctest */,
-				CD938F3B24AD1492004C21A5 /* Atributika-tvOS Tests.xctest */,
-				CD938F3D24AD1492004C21A5 /* Demo.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CDA7EE2A24A67DBD00763E21 /* Back App iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -453,7 +380,6 @@
 		CDB5EE1A246B3A9400E35376 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -566,12 +492,6 @@
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = CD938F2424AD1492004C21A5 /* Products */;
-					ProjectRef = CD938F2324AD1492004C21A5 /* Atributika.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				CDA7EE2824A67DBD00763E21 /* Back App iOS */,
@@ -579,65 +499,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		CD938F2F24AD1492004C21A5 /* Atributika.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Atributika.framework;
-			remoteRef = CD938F2E24AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3124AD1492004C21A5 /* Atributika.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Atributika.framework;
-			remoteRef = CD938F3024AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3324AD1492004C21A5 /* Atributika.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Atributika.framework;
-			remoteRef = CD938F3224AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3524AD1492004C21A5 /* Atributika.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Atributika.framework;
-			remoteRef = CD938F3424AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3724AD1492004C21A5 /* Atributika-iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Atributika-iOS Tests.xctest";
-			remoteRef = CD938F3624AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3924AD1492004C21A5 /* Atributika-macOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Atributika-macOS Tests.xctest";
-			remoteRef = CD938F3824AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3B24AD1492004C21A5 /* Atributika-tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Atributika-tvOS Tests.xctest";
-			remoteRef = CD938F3A24AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CD938F3D24AD1492004C21A5 /* Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Demo.app;
-			remoteRef = CD938F3C24AD1492004C21A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CDA7EE2724A67DBD00763E21 /* Resources */ = {
@@ -721,6 +582,7 @@
 			files = (
 				CDA7EE5324A67E4200763E21 /* Ingredient.swift in Sources */,
 				CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */,
+				CD2781CF24ADCE6000A88FCE /* Difficulty.swift in Sources */,
 				CDA7EE5124A67E4200763E21 /* Recipe.swift in Sources */,
 				CDA7EE5224A67E4200763E21 /* Step.swift in Sources */,
 			);
