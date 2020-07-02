@@ -208,15 +208,15 @@ class StepDetailViewController: UITableViewController {
     
     //conditional deletion
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        indexPath.section == 4 && indexPath.row < step.ingredients.count - step.subSteps.count
+        // Return false if you do not want the specified item to be editable
+        indexPath.section == 4 && indexPath.row - step.subSteps.count != step.ingredients.count
     }
 
     //delete cells
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            if indexPath.row < step.subSteps.count - 1 {
+            if indexPath.row < step.subSteps.count {
                 step.subSteps.remove(at: indexPath.row)
             } else {
                 step.ingredients.remove(at: indexPath.row - step.subSteps.count)
@@ -227,8 +227,9 @@ class StepDetailViewController: UITableViewController {
 
     // moving cells
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.section == 4 else { return }
-        guard sourceIndexPath.row < step.ingredients.count else { return }
+        guard destinationIndexPath.section == 4 else { tableView.reloadData(); return }
+        guard destinationIndexPath.row < step.ingredients.count else { tableView.reloadData(); return }
+        guard sourceIndexPath.row < step.ingredients.count else { tableView.reloadData(); return }
         let movedObject = step.ingredients[sourceIndexPath.row]
         step.ingredients.remove(at: sourceIndexPath.row)
         step.ingredients.insert(movedObject, at: destinationIndexPath.row)
@@ -237,7 +238,7 @@ class StepDetailViewController: UITableViewController {
     //conditional moving
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-        indexPath.section == 4 && indexPath.row - step.subSteps.count < step.ingredients.count - step.subSteps.count
+        indexPath.section == 4 && indexPath.row > step.subSteps.count - 1 && indexPath.row != step.ingredients.count + step.subSteps.count
     }
     
     // MARK: - Navigation
@@ -248,7 +249,7 @@ class StepDetailViewController: UITableViewController {
         } else if indexPath.section == 3 {
             navigateToTempPicker()
         } else if indexPath.section == 4 {
-            if indexPath.row >= step.ingredients.count + step.subSteps.count {
+            if indexPath.row - step.subSteps.count == step.ingredients.count {
                 let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
                 if stepsWithIngredients.count > 0 {
                     let alert = UIAlertController(title: NSLocalizedString("ingredientOrStep", comment: ""), message: nil, preferredStyle: .actionSheet)
@@ -265,7 +266,9 @@ class StepDetailViewController: UITableViewController {
                 } else {
                     navigateToIngredientDetail(creating: true, indexPath: indexPath)
                 }
-            } else if indexPath.row > step.ingredients.count - step.subSteps.count {
+            } else if indexPath.row < step.subSteps.count{
+                // do nothing
+            } else {
                 navigateToIngredientDetail(creating: false, indexPath: indexPath)
             }
         }

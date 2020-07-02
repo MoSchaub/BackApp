@@ -132,8 +132,9 @@ class CompactHomeViewController: UITableViewController {
     
     // move recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.section == 0 else { return }
-        guard recipeStore.recipes.count > sourceIndexPath.row else { return }
+        guard destinationIndexPath.row > recipeStore.recipes.count else { tableView.reloadData(); return }
+        guard destinationIndexPath.section == 0 else { tableView.reloadData(); return }
+        guard recipeStore.recipes.count > sourceIndexPath.row else { tableView.reloadData(); return }
         recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     

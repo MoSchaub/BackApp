@@ -253,8 +253,9 @@ class RecipeDetailViewController: UITableViewController {
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard recipe != nil else { return }
-        guard destinationIndexPath.section == 3 else { return }
-        guard recipe!.steps.count > sourceIndexPath.row else { return }
+        guard destinationIndexPath.section == 3 else { tableView.reloadData(); return }
+        guard destinationIndexPath.row > recipe.steps.count else { tableView.reloadData(); return }
+        guard recipe!.steps.count > sourceIndexPath.row else { tableView.reloadData(); return }
         let movedObject = recipe!.steps[sourceIndexPath.row]
         recipe!.steps.remove(at: sourceIndexPath.row)
         recipe!.steps.insert(movedObject, at: destinationIndexPath.row)
