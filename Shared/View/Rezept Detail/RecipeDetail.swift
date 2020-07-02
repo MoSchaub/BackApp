@@ -26,21 +26,21 @@ struct RecipeDetail: View {
         }
     }
     
-    @ViewBuilder
-    private func trailingButton() -> some View {
-        if !creating{
-            Image(systemName: recipe.isFavourite ? "heart.fill" : "heart")
-                .foregroundColor(.accentColor)
-                .onTapGesture {
-                    self.$recipe.isFavourite.wrappedValue.toggle()
-            }
-        } else {
-            Button(action: save) {
-                Text("OK")
-            }.disabled(recipeStore.recipes.first(where: {$0.id == self.recipeStore.selectedRecipe?.id})?.steps.isEmpty ?? false )
-        }
-        
-    }
+//    @ViewBuilder
+//    private func trailingButton() -> some View {
+//        if !creating{
+//            Image(systemName: recipe.isFavourite ? "heart.fill" : "heart")
+//                .foregroundColor(.accentColor)
+//                .onTapGesture {
+//                    self.$recipe.isFavourite.wrappedValue.toggle()
+//            }
+//        } else {
+//            Button(action: save) {
+//                Text("OK")
+//            }.disabled(recipeStore.recipes.first(where: {$0.id == self.recipeStore.selectedRecipe?.id})?.steps.isEmpty ?? false )
+//        }
+//
+//    }
     
     @ViewBuilder private func leadingButton() -> some View {
         if creating {
@@ -124,7 +124,7 @@ struct RecipeDetail: View {
         }
         .listStyle(GroupedListStyle())
         .navigationBarTitle(self.title)
-        .navigationBarItems(leading: leadingButton(), trailing: trailingButton())
+//        .navigationBarItems(leading: leadingButton(), trailing: trailingButton())
     }
     
     func deleteStep(at offsets: IndexSet) {

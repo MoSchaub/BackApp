@@ -193,7 +193,7 @@ struct Recipe: Hashable, Codable, Identifiable{
         
         let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
         
-        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen])
+        return Recipe(name: "Sauerteigcrack", brotValues: [schritt1, backen])
     }
     
     init(name: String, info: String = "" , brotValues: [Step], inverted: Bool = false , running: Bool = false, dateString: String = "", isFavourite: Bool = false, difficulty: Difficulty = .easy) {

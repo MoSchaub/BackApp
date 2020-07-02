@@ -79,7 +79,7 @@ struct ScheduleView: View {
                     Spacer()
                 }
             }.padding([.horizontal,.top])
-        }.neomorphic()
+        }
     }
     
     var body: some View {
@@ -93,7 +93,6 @@ struct ScheduleView: View {
                     Spacer()
                     Text(self.recipe.formattedEndDate)
                 }.padding(.horizontal)
-                    .neomorphic()
             }
         }
         .navigationBarTitle("Zeitplan - " + recipe.name )

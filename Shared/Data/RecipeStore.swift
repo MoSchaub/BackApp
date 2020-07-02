@@ -10,7 +10,7 @@ import SwiftUI
 
 final class RecipeStore: ObservableObject{
 
-    @Published var recipes = [Recipe](){
+    @Published private(set) var recipes = [Recipe](){
         didSet {
             self.write()
             if !updatingSubsteps {
@@ -26,51 +26,7 @@ final class RecipeStore: ObservableObject{
     ///2: CategoryPicker
     ///3: ScheduleForm
     ///4: AddStepView
-   @Published var rDSelection: Int? = nil{
-        didSet{
-            #if os(macOS)
-            if self.rDSelection != nil {
-                self.selectedStep = nil
-            }
-            #endif
-        }
-    }
-
-    var selectedStep: Step? = nil{
-        willSet {
-            #if os(macOS)
-            if newValue != nil {
-                self.rDSelection = nil
-            }
-            self.sDSelection = nil
-            self.selectedIngredient = nil
-            #endif
-            self.objectWillChange.send()
-        }
-    }
-    
-    func selectedStepIndex() -> Int? {
-        if let recipeIndex = selectedRecipeIndex(){
-            return recipes[recipeIndex].steps.firstIndex(where: { $0.id == selectedStep?.id})
-        }
-        return nil
-    }
-    
-    func deleteSelectedStep() {
-        if let index = selectedStepIndex(), index < selectedRecipe!.steps.count {
-            selectedStep = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                self.recipes[self.selectedRecipeIndex()!].steps.remove(at: index)
-            }
-            //select next
-            #if os(macOS)
-            if self.selectedRecipe!.steps.count > 1{
-                guard let lastStep = self.recipes[self.selectedRecipeIndex()!].steps.last else { return }
-                selectedStep = lastStep
-            }
-            #endif
-        }
-    }
+   
     
     func update(recipe: Recipe) {
         if let recipeIndex = recipes.firstIndex(where: {$0.id == recipe.id }), recipes.count > recipeIndex {
@@ -159,157 +115,48 @@ final class RecipeStore: ObservableObject{
             update(recipe: recipe)
         }
     }
-    
-    func delete(step: Step, from recipe: Recipe){
-        if let stepIndex = recipe.steps.firstIndex(of: step), recipe.steps.count > stepIndex{
-            self.selectedStep = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                if let recipeIndex = self.recipes.firstIndex(of: recipe){
-                    self.recipes[recipeIndex].steps.remove(at: stepIndex)
-                }
-            }
-        }
-    }
-    
-    @Published var sDSelection: Int? = nil{
-        didSet{
-            #if os(macOS)
-            if self.sDSelection != nil {
-                if self.sDSelection == 1 {
-                    sDShowingSubstepOrIngredientSheet = true
-                }
-                self.selectedIngredient = nil
-            }
-            #endif
-        }
-    }
-    
-    @Published var sDShowingSubstepOrIngredientSheet = false
-    
-    @Published var selectedIngredient: Ingredient? = nil{
-        didSet{
-            #if os(macOS)
-            if self.selectedIngredient != nil {
-                self.sDSelection = nil
-            }
-            #endif
-        }
-    }
-    
-    func selectedIngredientIndex() -> Int? {
-        if let recipeIndex = selectedRecipeIndex(), let stepIndex = selectedStepIndex(){
-            return recipes[recipeIndex].steps[stepIndex].ingredients.firstIndex(where: { $0.id == selectedIngredient?.id})
-        }
-        return nil
-    }
-    
-    func deleteSelectedIngredient() {
-        if let index = selectedIngredientIndex(), index < selectedStep!.ingredients.count {
-            selectedIngredient = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                self.recipes[self.selectedRecipeIndex()!].steps[self.selectedIngredientIndex()!].ingredients.remove(at: index)
-            }
-            #if os(macOS)
-            //select next
-            if self.selectedStep!.ingredients.count > 1{
-                selectedIngredient = recipes[selectedRecipeIndex()!].steps[selectedStepIndex()!].ingredients.last
-            }
-            #endif
-        }
-    }
-
+   
     func save(step: Step, to recipe: Recipe){
         if !recipe.steps.contains(where: { step.id == $0.id }) {
             if let recipeIndex = self.recipes.firstIndex(where: { $0.id == recipe.id }){
-                self.recipes[recipeIndex].steps.append(step)
+                recipes[recipeIndex].steps.append(step)
             } else {
-                self.recipes.append(recipe)
-                self.recipes[recipes.firstIndex(of: recipes.last!)!].steps.append(step)
-            }
-        }
-        #if os(macOS)
-        self.selectedIngredient = nil
-        self.selectedStep = nil
-        self.sDSelection = nil
-        self.rDSelection = nil
-        #endif
-    }
-
-    func deleteIngredient(of step: Step, in recipe: Recipe) {
-        if let ingredientIndex = step.ingredients.firstIndex(of: self.selectedIngredient!), step.ingredients.count > ingredientIndex {
-            self.sDSelection = nil
-            self.selectedIngredient = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                if let recipeIndex = self.recipes.firstIndex(of: recipe), let stepIndex = recipe.steps.firstIndex(of: step) {
-                    self.recipes[recipeIndex].steps[stepIndex].ingredients.remove(at: ingredientIndex)
-                }
+                save(recipe: recipe)
+                recipes[recipes.firstIndex(of: recipes.last!)!].steps.append(step)
             }
         }
     }
 
+//    func deleteIngredient(of step: Step, in recipe: Recipe) {
+//        if let ingredientIndex = step.ingredients.firstIndex(of: self.selectedIngredient!), step.ingredients.count > ingredientIndex {
+//            self.sDSelection = nil
+//            self.selectedIngredient = nil
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+//                if let recipeIndex = self.recipes.firstIndex(of: recipe), let stepIndex = recipe.steps.firstIndex(of: step) {
+//                    self.recipes[recipeIndex].steps[stepIndex].ingredients.remove(at: ingredientIndex)
+//                }
+//            }
+//        }
+//    }
     
-    var selectedRecipe: Recipe? = nil{
-        willSet{
-            #if os(macOS)
-            if newValue != nil {
-                self.hSelection = nil
-            }
-            self.rDSelection = nil
-            self.selectedStep = nil
-            #endif
-            objectWillChange.send()
-        }
+    func moveRecipe(from source: Int, to destination: Int) {
+        let movedObject = recipes[source]
+        self.deleteRecipe(at: source)
+        recipes.insert(movedObject, at: destination)
     }
-    
-    func selectedRecipeIndex() -> Int? {
-        recipes.firstIndex(where: { $0.id == selectedRecipe?.id})
-    }
-    
-    func deleteSelectedRecipe() {
-        if let index = selectedRecipeIndex(){
-            deleteRecipe(at: index)
-        }
-    }
-    
+
     func deleteRecipe(at index: Int) {
         if index < recipes.count {
-            selectedRecipe = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                self.recipes.remove(at: index)
-            }
-            //select next
-            #if os(macOS)
-            if recipes.count > 1{
-                guard let lastRecipe = recipes.last else { return }
-                selectedRecipe = lastRecipe
-            }
-            #endif
+            recipes.remove(at: index)
         }
     }
     
-    @Published var showingAddRecipeView = false
-    
-    @Published var newRecipePublisher = NotificationCenter.default.publisher(for: .init("addRecipe"))
-    
-    @Published var hSelection: Int? = nil {
-        didSet{
-            if self.hSelection != nil {
-                self.selectedRecipe = nil
-            }
-        }
-    }
-    
-    init(_ creating: Bool = false) {
-        if !creating, let recipes = load() {
+    init() {
+        if let recipes = load() {
             self.recipes = recipes
         }
     }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.recipes = try container.decode([Recipe].self, forKey: .recipes)
-    }
-       
+
     private func addRecipe(recipe: Recipe){
         recipes.append(recipe)
     }
@@ -324,7 +171,6 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    @Published var showingInputAlert = false
     @Published var inputAlertTitle = ""
     @Published var inputAlertMessage = ""
     @Published var isArray = false
@@ -355,7 +201,6 @@ final class RecipeStore: ObservableObject{
             print("Couldn't load \(url) from main bundle:\n\(error)")
             self.inputAlertTitle = "Fehler"
             self.inputAlertMessage = error.localizedDescription
-            self.showingInputAlert = true
             return nil
         }
         
@@ -368,20 +213,17 @@ final class RecipeStore: ObservableObject{
                     if self.recipes.contains(where: {$0 == recipe}){
                         self.inputAlertTitle = "Fehler"
                         self.inputAlertMessage = "Die Datei enhält bereits existierende Rezepte"
-                        self.showingInputAlert = true
                         return nil
                     }
                 }
                 self.inputAlertTitle = "Erfolg"
                 self.inputAlertMessage = "Die Rezepte wurden importiert"
-                self.showingInputAlert = true
             }
             return decoded
         } catch {
             print("Couldn't parse \(url) as \(T.self):\n\(error)")
             self.inputAlertTitle = "Fehler"
             self.inputAlertMessage = "Die Datei enhält keine Rezepte"
-            self.showingInputAlert = true
             return nil
         }
     }
@@ -460,19 +302,4 @@ final class RecipeStore: ObservableObject{
         return recipeStore
     }
     
-}
-
-extension RecipeStore: Codable{
-    
-    enum CodingKeys: CodingKey{
-        case recipes
-        case roomThemperature
-    }
-    
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(recipes, forKey: .recipes)
-        try container.encode(roomTemperature, forKey: .roomThemperature)
-    }
 }

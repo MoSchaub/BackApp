@@ -125,7 +125,7 @@ class CompactHomeViewController: UITableViewController {
     //delete recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete, indexPath.section == 0, recipeStore.recipes.count > indexPath.row {
-            recipeStore.recipes.remove(at: indexPath.row)
+            recipeStore.deleteRecipe(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -134,9 +134,7 @@ class CompactHomeViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard destinationIndexPath.section == 0 else { return }
         guard recipeStore.recipes.count > sourceIndexPath.row else { return }
-        let movedObject = recipeStore.recipes[sourceIndexPath.row]
-        recipeStore.recipes.remove(at: sourceIndexPath.row)
-        recipeStore.recipes.insert(movedObject, at: destinationIndexPath.row)
+        recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
     //wether a row can be deleted or not
@@ -210,9 +208,7 @@ class CompactHomeViewController: UITableViewController {
     
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         let vc = RecipeDetailViewController(style: .insetGrouped) // create vc
-        vc.recipe = Recipe(name: "", brotValues: []) //create fresh recipe
-        vc.recipeStore = RecipeStore(true)
-        vc.recipeStore.roomTemperature = recipeStore.roomTemperature
+        vc.recipeStore = recipeStore
         vc.creating = true
         vc.saveRecipe = { recipe in
             self.recipeStore.save(recipe: recipe)

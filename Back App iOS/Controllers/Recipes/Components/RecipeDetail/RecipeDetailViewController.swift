@@ -25,8 +25,9 @@ class RecipeDetailViewController: UITableViewController {
     }
     var recipeStore = RecipeStore()
     var creating = false
-    var initializing = true
     var saveRecipe: ((Recipe) -> Void)?
+    
+    var cancelling = false
     
     // MARK: - Startup functions
 
@@ -42,16 +43,15 @@ class RecipeDetailViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !initializing {
-            self.recipe = recipeStore.recipes.first(where: { recipe.id == $0.id })
-            tableView.reloadData()
-        }
-        initializing = false
+        self.recipe = recipeStore.recipes.first(where: { recipe?.id == $0.id }) ?? Recipe(name: "", brotValues: [])
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        recipeStore.save(recipe: recipe)
+        if !cancelling {
+            recipeStore.save(recipe: recipe)
+        }
     }
     
     // MARK: - NavigaitonBarItems
@@ -59,13 +59,21 @@ class RecipeDetailViewController: UITableViewController {
     private func addNavigationBarItems() {
         if creating {
             navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))
-            navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .cancel, target: self, action: #selector(dissmiss))
+            navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
         } else {
             navigationItem.rightBarButtonItem = editButtonItem
         }
     }
     
-    @objc private func dissmiss() {
+    @objc private func cancel() {
+        if let index = recipeStore.recipes.firstIndex(of: recipe) {
+            recipeStore.deleteRecipe(at: index)
+        }
+        cancelling = true
+        dissmiss()
+    }
+    
+    private func dissmiss() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
@@ -292,7 +300,7 @@ class RecipeDetailViewController: UITableViewController {
     
     private func navigateToAddStepView() {
         let stepDetailVC = StepDetailViewController()
-        stepDetailVC.recipeStore = RecipeStore(true)
+        stepDetailVC.recipeStore = recipeStore
         stepDetailVC.recipe = recipe
         stepDetailVC.step = Step(name: "", time: 60)
         stepDetailVC.creating = true
