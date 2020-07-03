@@ -216,6 +216,44 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(XCUIApplication().tables.staticTexts["room temperature: 30ºC"].exists)
     }
     
+    func testInfoButton() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.tables.containing(.other, identifier:"RECIPES").element.swipeUp()
+        app.tables/*@START_MENU_TOKEN@*/.staticTexts["about Baking App"]/*[[".cells.staticTexts[\"about Baking App\"]",".staticTexts[\"about Baking App\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+                        
+                
+    }
+    
+    func testModifiingStep() throws {
+        let app = XCUIApplication()
+        app.launch()
+        
+        var tablesQuery: XCUIElementQuery {
+            app.tables
+        }
+        
+        tablesQuery.staticTexts[Recipe.example.name].tap()
+        
+        app.tables.containing(.other, identifier:"NAME").element.swipeUp()
+        
+        let staticText = tablesQuery.cells.staticTexts["2 Minuten"]
+        staticText.tap()
+        staticText.tap()
+    
+        tablesQuery.cells.pickerWheels["2 min"].adjust(toPickerWheelValue: "\(18)")
+        
+        app.navigationBars["duration"].buttons["Mischen"].tap()
+        
+        app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
+        
+        XCTAssertTrue(tablesQuery.cells.staticTexts["18 Minuten"].exists)
+
+        app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
+        XCTAssertTrue(tablesQuery.staticTexts["36 Minuten"].exists)
+    }
+
     
     func testDeletingRecipe() throws {
         let app = XCUIApplication()
