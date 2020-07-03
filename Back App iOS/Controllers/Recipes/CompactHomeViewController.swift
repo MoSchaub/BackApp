@@ -32,6 +32,7 @@ class CompactHomeViewController: UITableViewController {
     private func configureTableView() {
         tableView  = UITableView(frame: tableView.frame, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
+        tableView.register(BetterTableViewCell.self, forCellReuseIdentifier: "recipe")
     }
     
     private func configureTitle() {
@@ -103,7 +104,7 @@ class CompactHomeViewController: UITableViewController {
     }
     
     private func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = BetterTableViewCell(style: .subtitle, reuseIdentifier: "recipe")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recipe") as! BetterTableViewCell
         let recipe = recipeStore.recipes[indexPath.row]
         cell.textLabel?.text = recipe.formattedName
         cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
