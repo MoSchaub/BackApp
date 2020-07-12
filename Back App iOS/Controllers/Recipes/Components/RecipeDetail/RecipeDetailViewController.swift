@@ -118,7 +118,7 @@ class RecipeDetailViewController: UITableViewController {
             if indexPath.row == recipe.steps.count {
                 return 40
             } else {
-                return CGFloat(55 + recipe.steps[indexPath.row].ingredients.count * 18 + recipe.steps[indexPath.row].subSteps.count * 18)
+                return CGFloat(55 + recipe.steps[indexPath.row].ingredients.count * 18 + recipe.steps[indexPath.row].subSteps.count * 18 + (recipe.steps[indexPath.row].notes.isEmpty ? 0 : 36))
             }
         default: return 40
         }
@@ -253,8 +253,9 @@ class RecipeDetailViewController: UITableViewController {
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard recipe != nil else { return }
-        guard destinationIndexPath.section == 3 else { return }
-        guard recipe!.steps.count > sourceIndexPath.row else { return }
+        guard destinationIndexPath.section == 3 else { tableView.reloadData(); return }
+        guard destinationIndexPath.row > recipe.steps.count else { tableView.reloadData(); return }
+        guard recipe!.steps.count > sourceIndexPath.row else { tableView.reloadData(); return }
         let movedObject = recipe!.steps[sourceIndexPath.row]
         recipe!.steps.remove(at: sourceIndexPath.row)
         recipe!.steps.insert(movedObject, at: destinationIndexPath.row)

@@ -29,16 +29,16 @@ class Back_App_iOSUITests: XCTestCase {
         
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
-        let returnButton = app/*@START_MENU_TOKEN@*/.buttons["Return"]/*[[".keyboards",".buttons[\"return\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
+        let returnButton = app.buttons["Return"]
         let tablesQuery = app.tables
         
         app.launch()
         app.navigationBars["Baking App"].buttons["Add"].tap()
         
         // name
-        app.tables/*@START_MENU_TOKEN@*/.textFields["name"]/*[[".cells.textFields[\"name\"]",".textFields[\"name\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.tables.textFields["name"].tap()
         app.tables.textFields["name"].typeText(recipe.name)
-        app/*@START_MENU_TOKEN@*/.keyboards.buttons["Return"]/*[[".keyboards",".buttons[\"return\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[2,0]]@END_MENU_TOKEN@*/.tap()
+        app.keyboards.buttons["Return"].tap()
         
         // quantity
         tablesQuery.staticTexts["quantity"].swipeUp()
@@ -135,15 +135,137 @@ class Back_App_iOSUITests: XCTestCase {
         app.launch()
         
         XCTAssertFalse(tables.staticTexts["test"].exists)
+    }
+    
+    func testAdding() throws {
+        let app = XCUIApplication()
+        let tables = app.tables
         
+        app.launch()
+        
+        app.navigationBars["Baking App"].buttons["Add"].tap()
+        
+        tables.cells.textFields["name"].tap()
+        tables.textFields["name"].typeText("test")
+        app.keyboards.buttons["Return"].tap()
+        
+        app.navigationBars["test"].buttons["Save"].tap()
+        
+        XCTAssertTrue(tables.staticTexts["test"].exists)
+        
+        //relaunch
+        app.terminate()
+        app.launch()
+        
+        XCTAssertTrue(tables.staticTexts["test"].exists)
+        XCTAssertTrue(tables.staticTexts[Recipe.example.name].exists)
+    }
+    
+    func testRecipeDetail() throws {
+        var app: XCUIApplication {
+            XCUIApplication()
+        }
+        app.launch()
+        
+        var tablesQuery: XCUIElementQuery {
+            app.tables
+        }
+    
+        
+        tablesQuery.staticTexts[Recipe.example.name].tap()
+
+        let nameTextField = tablesQuery.textFields[Recipe.example.name]
+        nameTextField.tap()
+        nameTextField.typeText("TEST")
+        app.keyboards.buttons["Return"].tap()
+
+        app.navigationBars[Recipe.example.name + "TEST"].buttons["Baking App"].tap()
+        
+        app.terminate()
+        app.launch()
+        
+        XCTAssertTrue(tablesQuery.staticTexts[Recipe.example.name + "TEST"].exists)
+        
+        
+        tablesQuery.staticTexts[Recipe.example.name + "TEST"].tap()
+        let nameTextField2 = tablesQuery.textFields[Recipe.example.name + "TEST"]
+        nameTextField2.tap()
+        
+        let deleteKey = app.keys["delete"]
+        deleteKey.tap()
+        deleteKey.tap()
+        deleteKey.tap()
+        deleteKey.tap()
+        app.buttons["Return"].tap()
+        app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
+
+        app.terminate()
+        app.launch()
+        
+        XCTAssertTrue(tablesQuery.staticTexts[Recipe.example.name].exists)
+    }
+    
+    func testChangingRoomTemp() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let tablesQuery = app.tables
+        tablesQuery.cells.staticTexts["room temperature: 20ºC"].tap()
+        tablesQuery.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
+        app.navigationBars["room temperature"].buttons["Baking App"].tap()
+        
+
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["room temperature: 30ºC"].exists)
+    }
+    
+    func testInfoButton() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.tables.containing(.other, identifier:"RECIPES").element.swipeUp()
+        app.tables/*@START_MENU_TOKEN@*/.staticTexts["about Baking App"]/*[[".cells.staticTexts[\"about Baking App\"]",".staticTexts[\"about Baking App\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+                        
+                
+    }
+    
+    func testModifiingStep() throws {
+        let app = XCUIApplication()
+        app.launch()
+        
+        var tablesQuery: XCUIElementQuery {
+            app.tables
+        }
+        
+        tablesQuery.staticTexts[Recipe.example.name].tap()
+        
+        app.tables.containing(.other, identifier:"NAME").element.swipeUp()
+        
+        let staticText = tablesQuery.cells.staticTexts["2 Minuten"]
+        staticText.tap()
+        staticText.tap()
+    
+        tablesQuery.cells.pickerWheels["2 min"].adjust(toPickerWheelValue: "\(18)")
+        
+        app.navigationBars["duration"].buttons["Mischen"].tap()
+        
+        app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
+        
+        XCTAssertTrue(tablesQuery.cells.staticTexts["18 Minuten"].exists)
+
+        app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
+        XCTAssertTrue(tablesQuery.staticTexts["36 Minuten"].exists)
     }
 
-//    func testLaunchPerformance() throws {
-//        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-//            // This measures how long it takes to launch your application.
-//            measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-//                XCUIApplication().launch()
-//            }
-//        }
-//    }
+    
+    func testDeletingRecipe() throws {
+        let app = XCUIApplication()
+        app.launch()
+        
+        let appTables = app.tables
+        
+        appTables.staticTexts[Recipe.example.name].swipeLeft()
+        appTables.buttons["Delete"].tap()
+        
+        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[Recipe.example.name].exists)
+    }
 }

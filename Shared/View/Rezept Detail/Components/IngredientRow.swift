@@ -16,15 +16,15 @@ struct IngredientRow: View {
     
     var body: some View {
         HStack {
-            Text(ingredient.name)
+            Text(ingredient.name).lineLimit(1)
             Spacer()
             if ingredient.isBulkLiquid{
-                Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C")
+                Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C").lineLimit(1)
                 Spacer()
             } else{
                 EmptyView()
             }
-            Text(ingredient.formattedAmount)
+            Text(ingredient.formattedAmount).lineLimit(1)
         }
     }
 }

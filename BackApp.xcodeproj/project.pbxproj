@@ -17,6 +17,7 @@
 		CD2781CF24ADCE6000A88FCE /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD938F2124AD09E1004C21A5 /* Difficulty.swift */; };
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
+		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
 		CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */; };
@@ -53,6 +54,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CD2BCE5824AE72CB00B868D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD6A9A042340252400748249 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CDA7EE2824A67DBD00763E21;
+			remoteInfo = "Back App iOS";
+		};
 		CDA7EE3F24A67DC200763E21 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CD6A9A042340252400748249 /* Project object */;
@@ -79,6 +87,9 @@
 		CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTimeTableViewController.swift; sourceTree = "<group>"; };
+		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
+		CD2BCE5724AE72CB00B868D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
 		CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTableViewCell.swift; sourceTree = "<group>"; };
@@ -141,6 +152,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CD2BCE5024AE72CB00B868D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDA7EE2624A67DBD00763E21 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -172,6 +190,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		CD2BCE5424AE72CB00B868D7 /* Back App iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */,
+				CD2BCE5724AE72CB00B868D7 /* Info.plist */,
+			);
+			path = "Back App iOSTests";
+			sourceTree = "<group>";
+		};
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +207,7 @@
 				CDA7EE4C24A67E2200763E21 /* Shared */,
 				CDA7EE2A24A67DBD00763E21 /* Back App iOS */,
 				CDA7EE4124A67DC200763E21 /* Back App iOSUITests */,
+				CD2BCE5424AE72CB00B868D7 /* Back App iOSTests */,
 				CD6A9A0D2340252400748249 /* Products */,
 				CDB5EE1A246B3A9400E35376 /* Frameworks */,
 			);
@@ -190,6 +218,7 @@
 			children = (
 				CDA7EE2924A67DBD00763E21 /* Back App.app */,
 				CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */,
+				CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -410,6 +439,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CD2BCE5224AE72CB00B868D7 /* Back App iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD2BCE5C24AE72CB00B868D7 /* Build configuration list for PBXNativeTarget "Back App iOSTests" */;
+			buildPhases = (
+				CD2BCE4F24AE72CB00B868D7 /* Sources */,
+				CD2BCE5024AE72CB00B868D7 /* Frameworks */,
+				CD2BCE5124AE72CB00B868D7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD2BCE5924AE72CB00B868D7 /* PBXTargetDependency */,
+			);
+			name = "Back App iOSTests";
+			productName = "Back App iOSTests";
+			productReference = CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CDA7EE2824A67DBD00763E21 /* Back App iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CDA7EE4924A67DC200763E21 /* Build configuration list for PBXNativeTarget "Back App iOS" */;
@@ -456,6 +503,10 @@
 				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
+					CD2BCE5224AE72CB00B868D7 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = CDA7EE2824A67DBD00763E21;
+					};
 					CDA7EE2824A67DBD00763E21 = {
 						CreatedOnToolsVersion = 11.5;
 					};
@@ -482,11 +533,19 @@
 			targets = (
 				CDA7EE2824A67DBD00763E21 /* Back App iOS */,
 				CDA7EE3D24A67DC200763E21 /* Back App iOSUITests */,
+				CD2BCE5224AE72CB00B868D7 /* Back App iOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CD2BCE5124AE72CB00B868D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDA7EE2724A67DBD00763E21 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,6 +570,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CD2BCE4F24AE72CB00B868D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDA7EE2524A67DBD00763E21 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -563,6 +630,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CD2BCE5924AE72CB00B868D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CDA7EE2824A67DBD00763E21 /* Back App iOS */;
+			targetProxy = CD2BCE5824AE72CB00B868D7 /* PBXContainerItemProxy */;
+		};
 		CDA7EE4024A67DC200763E21 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDA7EE2824A67DBD00763E21 /* Back App iOS */;
@@ -601,6 +673,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		CD2BCE5A24AE72CB00B868D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Back App.app/Back App";
+			};
+			name = Debug;
+		};
+		CD2BCE5B24AE72CB00B868D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Back App.app/Back App";
+			};
+			name = Release;
+		};
 		CD6A9A1E2340252600748249 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -802,6 +916,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CD2BCE5C24AE72CB00B868D7 /* Build configuration list for PBXNativeTarget "Back App iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD2BCE5A24AE72CB00B868D7 /* Debug */,
+				CD2BCE5B24AE72CB00B868D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CD6A9A072340252400748249 /* Build configuration list for PBXProject "BackApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

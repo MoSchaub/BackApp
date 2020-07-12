@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     let recipeStore = RecipeStore()
-
+    let compactHomeVC = CompactHomeViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let compactHomeVC = CompactHomeViewController()
+        
         compactHomeVC.recipeStore = recipeStore
         window.rootViewController = UINavigationController(rootViewController: compactHomeVC)
         window.makeKeyAndVisible()
@@ -36,6 +36,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
         let _ = URLContexts.map({ self.recipeStore.open($0.url)})
+        compactHomeVC.tableView.reloadData()
+        
+        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        compactHomeVC.present(alert, animated: true)
     }
 
 }

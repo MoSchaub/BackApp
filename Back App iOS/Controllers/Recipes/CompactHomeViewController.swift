@@ -32,6 +32,7 @@ class CompactHomeViewController: UITableViewController {
     private func configureTableView() {
         tableView  = UITableView(frame: tableView.frame, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
+        tableView.register(BetterTableViewCell.self, forCellReuseIdentifier: "recipe")
     }
     
     private func configureTitle() {
@@ -103,7 +104,7 @@ class CompactHomeViewController: UITableViewController {
     }
     
     private func recipeCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = BetterTableViewCell(style: .subtitle, reuseIdentifier: "recipe")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recipe") as! BetterTableViewCell
         let recipe = recipeStore.recipes[indexPath.row]
         cell.textLabel?.text = recipe.formattedName
         cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
@@ -132,8 +133,9 @@ class CompactHomeViewController: UITableViewController {
     
     // move recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.section == 0 else { return }
-        guard recipeStore.recipes.count > sourceIndexPath.row else { return }
+        guard destinationIndexPath.row > recipeStore.recipes.count else { tableView.reloadData(); return }
+        guard destinationIndexPath.section == 0 else { tableView.reloadData(); return }
+        guard recipeStore.recipes.count > sourceIndexPath.row else { tableView.reloadData(); return }
         recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
@@ -231,6 +233,7 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         for url in urls {
             recipeStore.open(url)
         }
+        self.tableView.reloadData()
         
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
