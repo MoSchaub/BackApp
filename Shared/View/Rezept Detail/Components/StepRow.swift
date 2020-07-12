@@ -17,9 +17,9 @@ struct StepRow: View {
     var body: some View {
         VStack{
             HStack {
-                Text(step.formattedName).font(.headline)
+                Text(step.formattedName).font(.headline).lineLimit(1)
                 Spacer()
-                Text(step.formattedTime).secondary()
+                Text(step.formattedTime).secondary().lineLimit(1)
             }
             
             ForEach(step.ingredients){ ingredient in
@@ -28,15 +28,15 @@ struct StepRow: View {
             
             ForEach(step.subSteps){substep in
                 HStack{
-                    Text(substep.name)
+                    Text(substep.formattedName).lineLimit(1)
                     Spacer()
-                    Text(substep.formattedTemp)
+                    Text(substep.formattedTemp).lineLimit(1)
                     Spacer()
-                    Text(substep.totalFormattedAmount)
+                    Text(substep.totalFormattedAmount).lineLimit(1)
                 }
             }
             Text(step.notes)
-                .lineLimit(nil)
+                .lineLimit(2)
         }
     }
 }

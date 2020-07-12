@@ -108,7 +108,7 @@
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>backingAppRecipe</string>
+					<string>bakingAppRecipe</string>
 				</array>
 			</dict>
 		</dict>
@@ -132,7 +132,7 @@
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>backingAppRecipe</string>
+					<string>bakingAppRecipe</string>
 				</array>
 			</dict>
 		</dict>

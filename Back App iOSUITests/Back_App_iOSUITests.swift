@@ -162,7 +162,9 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testRecipeDetail() throws {
-        let app = XCUIApplication()
+        var app: XCUIApplication {
+            XCUIApplication()
+        }
         app.launch()
         
         var tablesQuery: XCUIElementQuery {
@@ -261,7 +263,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         let appTables = app.tables
         
-        appTables.children(matching: .cell).element(boundBy: 0).staticTexts[Recipe.example.name].swipeLeft()
+        appTables.staticTexts[Recipe.example.name].swipeLeft()
         appTables.buttons["Delete"].tap()
         
         XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[Recipe.example.name].exists)

@@ -233,6 +233,7 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         for url in urls {
             recipeStore.open(url)
         }
+        self.tableView.reloadData()
         
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in

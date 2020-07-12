@@ -118,7 +118,7 @@ class RecipeDetailViewController: UITableViewController {
             if indexPath.row == recipe.steps.count {
                 return 40
             } else {
-                return CGFloat(55 + recipe.steps[indexPath.row].ingredients.count * 18 + recipe.steps[indexPath.row].subSteps.count * 18)
+                return CGFloat(55 + recipe.steps[indexPath.row].ingredients.count * 18 + recipe.steps[indexPath.row].subSteps.count * 18 + (recipe.steps[indexPath.row].notes.isEmpty ? 0 : 36))
             }
         default: return 40
         }
