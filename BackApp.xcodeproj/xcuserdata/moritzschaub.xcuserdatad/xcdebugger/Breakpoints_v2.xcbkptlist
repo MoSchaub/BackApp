@@ -3,7 +3,6 @@
    uuid = "230B5DC4-244F-4921-8950-0D842AD14A2C"
    type = "1"
    version = "2.0">
-<<<<<<< HEAD
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
@@ -182,6 +181,4 @@
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
-=======
->>>>>>> master
 </Bucket>
