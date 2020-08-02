@@ -14,6 +14,8 @@
 		CD0A179624ADF0A7001CDF5F /* TextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9AD248BDA3000D11DD3 /* TextViewExtension.swift */; };
 		CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9A7248BDA3000D11DD3 /* MODatePicker.swift */; };
 		CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */; };
+		CD0CB77124BB721A005B7B78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
+		CD0CB77224BB721A005B7B78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
 		CD2781CF24ADCE6000A88FCE /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD938F2124AD09E1004C21A5 /* Difficulty.swift */; };
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
@@ -85,6 +87,7 @@
 
 /* Begin PBXFileReference section */
 		CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
+		CD0CB77024BB6880005B7B78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTimeTableViewController.swift; sourceTree = "<group>"; };
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,7 +99,6 @@
 		CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempTableViewController.swift; sourceTree = "<group>"; };
 		CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoStripTableViewCell.swift; sourceTree = "<group>"; };
 		CD664D5524A699AD00884CAE /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
-		CD68D45924AC58B8000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = de; path = "de.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD68D45B24AC58BF000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD68D45F24AC5C80000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -500,7 +502,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
 					CD2BCE5224AE72CB00B868D7 = {
@@ -523,6 +525,7 @@
 			knownRegions = (
 				de,
 				en,
+				Base,
 			);
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
@@ -543,6 +546,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD0CB77224BB721A005B7B78 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,6 +568,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD0CB77124BB721A005B7B78 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,8 +651,8 @@
 		CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				CD68D45924AC58B8000D4BD7 /* de */,
 				CD68D45B24AC58BF000D4BD7 /* en */,
+				CD0CB77024BB6880005B7B78 /* Base */,
 			);
 			name = "Launch Screen.storyboard";
 			sourceTree = "<group>";
@@ -742,6 +747,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -804,6 +810,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

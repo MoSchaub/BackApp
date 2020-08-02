@@ -191,12 +191,11 @@ final class RecipeStore: ObservableObject{
     private func load<T: Decodable>(url: URL, as type: T.Type = T.self) -> T? {
         let data: Data
         
-        // Make sure you release the security-scoped resource when you are done.
-        do { url.stopAccessingSecurityScopedResource() }
-        
-        // Do something with the file here.
+        // read data from url
         do {
+            let _ = url.startAccessingSecurityScopedResource() // start the security-scoped resource before reading the file
             data = try Data(contentsOf: url)
+            url.stopAccessingSecurityScopedResource() // release the security-scoped resource after the data is read from the file
         } catch {
             print("Couldn't load \(url) from main bundle:\n\(error)")
             self.inputAlertTitle = "Fehler"
@@ -204,13 +203,14 @@ final class RecipeStore: ObservableObject{
             return nil
         }
         
+        // decode the data
         do {
             let decoder = JSONDecoder()
             let decoded =  try decoder.decode(T.self, from: data)
             if let recipes = decoded as? [Recipe] {
                 self.isArray = true
                 for recipe in recipes{
-                    if self.recipes.contains(where: {$0 == recipe}){
+                    if self.recipes.contains(where: {$0 == recipe}) {
                         self.inputAlertTitle = "Fehler"
                         self.inputAlertMessage = "Die Datei enhält bereits existierende Rezepte"
                         return nil
@@ -219,6 +219,7 @@ final class RecipeStore: ObservableObject{
                 self.inputAlertTitle = "Erfolg"
                 self.inputAlertMessage = "Die Rezepte wurden importiert"
             }
+            // return decoded data 
             return decoded
         } catch {
             print("Couldn't parse \(url) as \(T.self):\n\(error)")
