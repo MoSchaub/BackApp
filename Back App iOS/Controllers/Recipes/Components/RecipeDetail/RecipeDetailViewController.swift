@@ -281,7 +281,7 @@ class RecipeDetailViewController: UITableViewController {
             } else {
                 navigateToStepDetail(at: indexPath)
             }
-        default: print("test")
+        default: let _ = "test"
         }
     }
     

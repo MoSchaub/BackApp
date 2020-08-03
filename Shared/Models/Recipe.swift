@@ -246,7 +246,7 @@ struct Recipe: Hashable, Codable, Identifiable{
             text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor)
             h = h.addingTimeInterval(step.time)
         }
-        text += "fertig am \(dateFormatter.string(from: endDate))"
+        text += "Fertig: \(dateFormatter.string(from: endDate))"
         return text
     }
     
