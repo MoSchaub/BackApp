@@ -19,7 +19,7 @@ struct ScheduleView: View {
     var exportButton: some View{
         Toggle(isOn: self.$showingShareSheet){
             Image(systemName: "square.and.arrow.up")
-        }.toggleStyle(NeomorphicToggleStyle())
+        }.toggleStyle(PlainToggleStyle())
             .sheet(isPresented: self.$showingShareSheet) {
                 ShareSheet(activityItems: [self.recipe.text(roomTemp: self.roomTemp, scaleFactor: self.factor)])
         }
