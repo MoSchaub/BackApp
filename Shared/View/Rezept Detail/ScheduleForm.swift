@@ -40,14 +40,27 @@ struct ScheduleForm: View {
         Alert(title: Text("Error"), message: Text("scheduleFormErrorMessage"), dismissButton: .default(Text("Ok")))
     }
     
+    var okButton: some View {
+        Button(action: {
+            if self.times != nil{
+                self.showingSchedule = true
+            } else{
+                self.showingAlert = true
+            }
+        }){
+            Text("OK")
+        }
+        .alert(isPresented: self.$showingAlert) {
+            self.alert
+        }
+    }
+    
     var body: some View {
         ZStack {
             LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all)
             ScrollView {
                 VStack(){
-                    
                     timesSection
-                    
                     VStack {
                         MODatePicker(date: self.$recipe.date)
                             .frame(width: UIScreen.main.bounds.width - 60)
@@ -62,39 +75,9 @@ struct ScheduleForm: View {
                         .clipped()
                     }.background(BackgroundGradient())
                     Text(recipe.formattedDate).font(.title).padding()
-                    Button(action: {
-                        if self.times != nil{
-                            self.showingSchedule = true
-                        } else{
-                            self.showingAlert = true
-                        }
-                    }){
-                        Text("OK")
-                            .foregroundColor(.primary)
-                            .padding()
-                            .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
-                            .clipShape(RoundedRectangle(cornerRadius: 13))
-                            .shadow(color: Color("Color2"), radius: 10, x: 5, y: 5)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .padding()
-                    .alert(isPresented: self.$showingAlert) {
-                        self.alert
-                    }
                     NavigationLink(destination: ScheduleView(recipe: recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
                        EmptyView()
                     }
-                    
-                    Button(action:{
-                       self.presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Text("cancel")
-                            .foregroundColor(.primary)
-                            .padding()
-                            .background(LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all))
-                            .clipShape(RoundedRectangle(cornerRadius: 13))
-                            .shadow(color: Color("Color1"), radius: 10, x: 5, y: 5)
-                    }.padding()
                 }
             }
         }
@@ -103,10 +86,9 @@ struct ScheduleForm: View {
             }
         .navigationBarTitle(
             Text(recipe.formattedName),
-            
             displayMode: NavigationBarItem.TitleDisplayMode.inline
-            
         )
+        .navigationBarItems(trailing: okButton)
     }
 }
 

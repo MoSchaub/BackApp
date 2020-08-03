@@ -100,20 +100,21 @@ struct Step: Equatable, Identifiable, Hashable, Codable {
     
     func text(startDate: Date, roomTemp: Int, scaleFactor: Double) -> String{
         var text = ""
-        text += "\(self.name) am \(dateFormatter.string(from: startDate))"
-        text += "\n"
+        
+        let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
+        text.append(nameString)
         
         for ingredient in self.ingredients{
-            text += ingredient.name + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) + " \(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )"
-            text += "\n"
+            let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
+                " \(ingredient.isBulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )" + "\n"
+            text.append(ingredientString)
         }
         for subStep in self.subSteps{
-            text += subStep.name + ": " + "\(self.totalAmount)" + "\(subStep.temperature)" + "° C"
-            text += "\n"
+            let substepString = subStep.formattedName + ": " + "\(self.totalAmount)" + "\(subStep.temperature)" + "° C\n"
+            text.append(substepString)
         }
         if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
-            text += self.notes
-            text += "\n"
+            text.append(self.notes + "\n")
         }
         return text
     }
