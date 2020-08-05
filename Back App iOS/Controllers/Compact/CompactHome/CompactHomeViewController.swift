@@ -14,6 +14,10 @@ class CompactHomeViewController: UITableViewController {
     
     var recipeStore = RecipeStore()
     
+    lazy private var documentPicker =
+        UIDocumentPickerViewController(documentTypes: [kUTTypeJSON as String],
+                                       in: .open)
+    
     // MARK: - Start functions
     
     override func loadView() {
@@ -27,6 +31,12 @@ class CompactHomeViewController: UITableViewController {
         super.viewWillAppear(animated)
         recipeStore.update()
         tableView.reloadData()
+    }
+    
+    private func deselectSelectedRow() {
+        if let indexPath = self.tableView.indexPathForSelectedRow {
+            self.tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
 
     private func configureTableView() {
@@ -112,12 +122,7 @@ class CompactHomeViewController: UITableViewController {
         cell.detailTextLabel?.font = .preferredFont(forTextStyle: .footnote)
         cell.accessoryType = .disclosureIndicator
         
-        if let imageData = recipe.imageString {
-            cell.imageView?.image = UIImage(data: imageData) ?? Images.photo
-        } else {
-            cell.imageView?.image = Images.photo
-            cell.imageView?.tintColor = .label
-        }
+        cell.setImage(fromData: recipe.imageString, placeholder: Images.photo)
         return cell
     }
     
@@ -179,19 +184,13 @@ class CompactHomeViewController: UITableViewController {
                 
                 navigationController?.pushViewController(vc, animated: true)
             } else if row == 1 {
-                // Create a document picker for directories.
-                let documentPicker =
-                    UIDocumentPickerViewController(documentTypes: [kUTTypeJSON as String],
-                                                   in: .open)
-
-                documentPicker.delegate = self
-
+                self.documentPicker.delegate = self
                 // Present the document picker.
-                present(documentPicker, animated: true, completion: nil)
+                self.present(documentPicker, animated: true, completion: deselectSelectedRow)
             } else if row == 2 {
                 let vc = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
                 
-                present(vc,animated: true)
+                present(vc,animated: true, completion: deselectSelectedRow)
                 
             } else if row == 3 {
                 let urlString = "https://heimbaecker.de/backapp-datenschutzerklaerung"

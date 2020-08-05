@@ -8,8 +8,11 @@
 
 import UIKit
 
+let largeConfiguration = UIImage.SymbolConfiguration(pointSize: 80, weight: .ultraLight)
+
 struct Images {
-    static let photo = UIImage(named: "photo")!
+    static let photo = UIImage(systemName: "photo", withConfiguration: largeConfiguration)!
+    static let largePhoto = #imageLiteral(resourceName: "photo")
     static let bread = UIImage(named:"bread")!
     static let cake = UIImage(named: "cake")!
     static let rolls = UIImage(named: "roll")!

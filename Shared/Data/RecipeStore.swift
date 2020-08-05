@@ -281,9 +281,12 @@ final class RecipeStore: ObservableObject{
     }
     
     func exportToUrl() -> URL{
-        //make sure the file is up to date
-        self.write()
+        DispatchQueue.global(qos: .userInitiated).async {
+            //make sure the file is up to date
+            self.write()
+        }
         return getDocumentsDirectory().appendingPathComponent("recipes.json")
+        
     }
     
     func getDocumentsDirectory() -> URL {

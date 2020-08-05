@@ -20,6 +20,7 @@
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
+		CD2C4C8624DACB33009195A8 /* RecipeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2C4C8524DACB33009195A8 /* RecipeItem.swift */; };
 		CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */; };
@@ -94,6 +95,7 @@
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
 		CD2BCE5724AE72CB00B868D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD2C4C8524DACB33009195A8 /* RecipeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeItem.swift; sourceTree = "<group>"; };
 		CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
 		CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTableViewCell.swift; sourceTree = "<group>"; };
@@ -183,7 +185,7 @@
 		CD0B4B0624A60A8200EA9FC8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
+				CD2C4C8224DAC9A2009195A8 /* Helpers */,
 				CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */,
 				CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */,
 				CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */,
@@ -201,6 +203,24 @@
 				CD2BCE5724AE72CB00B868D7 /* Info.plist */,
 			);
 			path = "Back App iOSTests";
+			sourceTree = "<group>";
+		};
+		CD2C4C8124DAC980009195A8 /* CompactHome */ = {
+			isa = PBXGroup;
+			children = (
+				CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */,
+				CDBDFDD324AA95BE002A6C84 /* Components */,
+			);
+			path = CompactHome;
+			sourceTree = "<group>";
+		};
+		CD2C4C8224DAC9A2009195A8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
+				CD2C4C8524DACB33009195A8 /* RecipeItem.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		CD6A9A032340252400748249 = {
@@ -349,7 +369,6 @@
 			isa = PBXGroup;
 			children = (
 				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
-				CD8101F724A9F357000C0220 /* StepDetail */,
 			);
 			path = RecipeDetail;
 			sourceTree = "<group>";
@@ -392,7 +411,7 @@
 		CDB383E724A61ED80049C2BE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CDBDFDD224AA9593002A6C84 /* Recipes */,
+				CDBDFDD224AA9593002A6C84 /* Compact */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -423,20 +442,20 @@
 			path = "supporting Files";
 			sourceTree = "<group>";
 		};
-		CDBDFDD224AA9593002A6C84 /* Recipes */ = {
+		CDBDFDD224AA9593002A6C84 /* Compact */ = {
 			isa = PBXGroup;
 			children = (
-				CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */,
-				CDBDFDD324AA95BE002A6C84 /* Components */,
+				CD2C4C8124DAC980009195A8 /* CompactHome */,
+				CD8101F924A9F381000C0220 /* RecipeDetail */,
+				CD8101F724A9F357000C0220 /* StepDetail */,
 			);
-			path = Recipes;
+			path = Compact;
 			sourceTree = "<group>";
 		};
 		CDBDFDD324AA95BE002A6C84 /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
-				CD8101F924A9F381000C0220 /* RecipeDetail */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -618,6 +637,7 @@
 				CD0A179124ADF00D001CDF5F /* IngredientRow.swift in Sources */,
 				CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */,
 				CDA7EE4D24A67E3C00763E21 /* Recipe.swift in Sources */,
+				CD2C4C8624DACB33009195A8 /* RecipeItem.swift in Sources */,
 				CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */,
 				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
 				CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */,

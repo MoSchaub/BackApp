@@ -173,13 +173,7 @@ class RecipeDetailViewController: UITableViewController {
     
     private func makeImageViewCell() -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "image") as! ImageTableViewCell
-        if let imageData = recipe.imageString {
-            cell.imageView?.image = UIImage(data: imageData) ?? Images.photo
-        } else {
-            cell.imageView?.image = Images.photo
-            cell.imageView?.tintColor = .label
-        }
-       
+        cell.setImage(fromData: recipe.imageString, placeholder: Images.largePhoto)
         
         let upIconView = UIImageView(image: UIImage(systemName: "chevron.up"))
         upIconView.tintColor = .tertiaryLabel
@@ -358,7 +352,11 @@ class RecipeDetailViewController: UITableViewController {
             self.recipe.imageString = nil
             self.tableView.reloadData()
         }))
-        alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: { (_) in
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                self.tableView.cellForRow(at: indexPath)?.isSelected = false
+            }
+        }))
         
         present(alert, animated: true)
         
