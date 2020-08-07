@@ -36,7 +36,7 @@ class BetterTableViewCell: UITableViewCell {
         imageView?.isHidden = true
         self.imageView?.image = placeholder
         self.tintColor = .label
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global(qos: .utility).async {
             
             if let data = data, let downloadedImage = UIImage(data: data) {
                 DispatchQueue.main.async {

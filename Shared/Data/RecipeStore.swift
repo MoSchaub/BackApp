@@ -289,10 +289,7 @@ final class RecipeStore: ObservableObject{
         
     }
     
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
+    
     
     static var example : RecipeStore{
         let recipeStore = RecipeStore()
@@ -306,4 +303,9 @@ final class RecipeStore: ObservableObject{
         return recipeStore
     }
     
+}
+
+func getDocumentsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
 }

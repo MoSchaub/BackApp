@@ -22,6 +22,11 @@ class RecipeDetailViewController: UITableViewController {
                 title = newValue.formattedName
             }
         }
+        didSet {
+            if recipe != nil {
+                addNavigationBarItems()
+            }
+        }
     }
     var recipeStore = RecipeStore()
     var creating = false
@@ -58,11 +63,37 @@ class RecipeDetailViewController: UITableViewController {
     
     private func addNavigationBarItems() {
         if creating {
-            navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))
-            navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))]
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
         } else {
-            navigationItem.rightBarButtonItem = editButtonItem
+            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star" : "star.fill"), style: .plain, target: self, action: #selector(favouriteRecipe))
+            let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
+            navigationItem.rightBarButtonItems = [favourite,share ]
         }
+    }
+    @objc private func shareRecipeFile() {
+        let vc = UIActivityViewController(activityItems: [self.createRecipeFile()], applicationActivities: nil)
+        
+        present(vc,animated: true)
+    }
+    
+    
+    private func createRecipeFile() -> URL {
+        let url = getDocumentsDirectory().appendingPathComponent("\(recipe.formattedName).bakingAppRecipe")
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let encoded = try? JSONEncoder().encode(self.recipe.neutralizedForExport()) {
+                do {
+                    try encoded.write(to: url)
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        return url
+    }
+    
+    @objc private func favouriteRecipe() {
+        recipe.isFavourite.toggle()
     }
     
     @objc private func cancel() {
@@ -100,12 +131,48 @@ class RecipeDetailViewController: UITableViewController {
         default: return 0
         }
     }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 3 {
+            let frame = tableView.frame
+            
+            let editButton = UIButton(frame: CGRect(x: frame.size.width - 60, y: 10, width: 50, height: 30))
+            editButton.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+            editButton.addTarget(self, action: #selector(toggleEditMode(sender:)), for: .touchDown)
+            
+            let titleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 30))
+            let attributes = [
+                NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .footnote),
+                .foregroundColor : UIColor.secondaryLabel,
+            ]
+            titleLabel.attributedText = NSAttributedString(string: "Schritte".uppercased(), attributes: attributes)
+            
+            let stackView = UIStackView(frame: CGRect(x: 5, y: 0, width: frame.size.width - 10, height: frame.size.height))
+            stackView.addArrangedSubview(titleLabel)
+            stackView.addArrangedSubview(editButton)
+
+            return stackView
+        } else { return nil }
+    }
+    
+    private func attributedTitleForEditButton() -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
+            .foregroundColor : UIColor.link
+        ]
+        let titleString = isEditing ? "Fertig" : "Bearbeiten"
+        return NSAttributedString(string: titleString, attributes: attributes)
+    }
+    
+    @objc private func toggleEditMode(sender: UIButton) {
+        setEditing(!isEditing, animated: true)
+        sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+    }
+    
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return NSLocalizedString("name", comment: "")
         case 1: return NSLocalizedString("bild", comment: "")
-        case 3: return NSLocalizedString("schritte", comment: "")
         case 4: return NSLocalizedString("anzahl", comment: "")
         default: return nil
         }

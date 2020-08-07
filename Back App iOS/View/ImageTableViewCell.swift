@@ -49,7 +49,7 @@ class ImageTableViewCell: UITableViewCell {
         setPlaceholderImage(placeholder)
         imageView?.isHidden = true
         activityIndicator.startAnimating()
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global(qos: .utility).async {
             if let data = data, let downloadedImage = UIImage(data: data) {
                 DispatchQueue.main.async {
                     self.imageView?.image = downloadedImage

@@ -250,6 +250,15 @@ struct Recipe: Hashable, Codable, Identifiable{
         return text
     }
     
+    func neutralizedForExport() -> Recipe {
+        var neutralized = self
+        neutralized.inverted = false
+        neutralized.running = false
+        neutralized.dateString = ""
+        neutralized.isFavourite = false
+        return neutralized
+    }
+    
 }
 
 extension Recipe: Equatable{

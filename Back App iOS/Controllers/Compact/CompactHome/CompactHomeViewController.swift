@@ -8,7 +8,6 @@
 
 import SwiftUI
 import MobileCoreServices
-import SafariServices
 
 class CompactHomeViewController: UITableViewController {
     
@@ -193,15 +192,7 @@ class CompactHomeViewController: UITableViewController {
                 present(vc,animated: true, completion: deselectSelectedRow)
                 
             } else if row == 3 {
-                let urlString = "https://heimbaecker.de/backapp-datenschutzerklaerung"
-
-                if let url = URL(string: urlString) {
-                    let config = SFSafariViewController.Configuration()
-                    config.entersReaderIfAvailable = true
-
-                    let vc = SFSafariViewController(url: url, configuration: config)
-                    present(vc, animated: true)
-                }
+                navigationController?.pushViewController(UIHostingController(rootView: AboutView()), animated: true)
             }
             
         }
@@ -221,10 +212,6 @@ class CompactHomeViewController: UITableViewController {
     }
 
 
-}
-
-extension CompactHomeViewController: SFSafariViewControllerDelegate {
-    
 }
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
