@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import BakingRecipe
 
 struct CellView<C: View>: View{
     var content: C

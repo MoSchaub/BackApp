@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import BakingRecipe
 
 final class RecipeStore: ObservableObject{
 

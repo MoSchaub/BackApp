@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import BakingRecipe
 
 struct IngredientRow: View {
     

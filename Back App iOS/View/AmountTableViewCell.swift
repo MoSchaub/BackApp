@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipe
 
 class AmountTableViewCell: UITableViewCell {
 

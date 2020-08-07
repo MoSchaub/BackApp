@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import BakingRecipe
 
 class RecipeDetailViewController: UITableViewController {
     

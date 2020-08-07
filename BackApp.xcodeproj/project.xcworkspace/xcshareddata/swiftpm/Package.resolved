@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BakingRecipe",
+        "repositoryURL": "https://github.com/MoSchaub/BakingRecipe",
+        "state": {
+          "branch": null,
+          "revision": "8a3df4765b894a6748a2da95858cd7acc20f775e",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
