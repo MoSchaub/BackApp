@@ -45,11 +45,11 @@
 		CDA7EE6A24A67EA200763E21 /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B5248BDA3000D11DD3 /* StepRow.swift */; };
 		CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
-		CDA849E524DD6F8F00E1A220 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDA849E424DD6F8F00E1A220 /* BakingRecipe */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
+		CDFA362A24DD9A72001A5E4C /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDFA362924DD9A72001A5E4C /* BakingRecipe */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,7 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDA849E524DD6F8F00E1A220 /* BakingRecipe in Frameworks */,
+				CDFA362A24DD9A72001A5E4C /* BakingRecipe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,7 +480,7 @@
 			);
 			name = "Back App iOS";
 			packageProductDependencies = (
-				CDA849E424DD6F8F00E1A220 /* BakingRecipe */,
+				CDFA362924DD9A72001A5E4C /* BakingRecipe */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -538,7 +538,7 @@
 			);
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
-				CDA849E324DD6F8F00E1A220 /* XCRemoteSwiftPackageReference "BakingRecipe" */,
+				CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -968,20 +968,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CDA849E324DD6F8F00E1A220 /* XCRemoteSwiftPackageReference "BakingRecipe" */ = {
+		CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MoSchaub/BakingRecipe";
 			requirement = {
-				kind = revision;
-				revision = 8a3df4765b894a6748a2da95858cd7acc20f775e;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CDA849E424DD6F8F00E1A220 /* BakingRecipe */ = {
+		CDFA362924DD9A72001A5E4C /* BakingRecipe */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDA849E324DD6F8F00E1A220 /* XCRemoteSwiftPackageReference "BakingRecipe" */;
+			package = CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */;
 			productName = BakingRecipe;
 		};
 /* End XCSwiftPackageProductDependency section */

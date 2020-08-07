@@ -5,8 +5,8 @@
         "package": "BakingRecipe",
         "repositoryURL": "https://github.com/MoSchaub/BakingRecipe",
         "state": {
-          "branch": null,
-          "revision": "8a3df4765b894a6748a2da95858cd7acc20f775e",
+          "branch": "main",
+          "revision": "7ff648188a007937b7fc23f6b0b0e07b6c6cc571",
           "version": null
         }
       }
