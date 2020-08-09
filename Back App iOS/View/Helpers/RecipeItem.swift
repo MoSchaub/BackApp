@@ -8,36 +8,45 @@
 
 import UIKit
 
-enum HomeSection {
+enum HomeSection: CaseIterable {
     case recipes
     case settings
 }
 
-class Item: Hashable {
-    var name: String!
-    var id = UUID()
+class HomeItem: Hashable {
+    var name: String
+    var id: UUID
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
-    static func == (lhs: Item, rhs: Item) -> Bool {
+    static func == (lhs: HomeItem, rhs: HomeItem) -> Bool {
         lhs.id == rhs.id
     }
     
-    init(name: String) {
+    init(id: UUID = UUID(), name: String) {
+        self.id = id
         self.name = name
     }
 }
 
-class RecipeItem: Item {
-    var image: UIImage!
-    var minuteLabel: String!
+class DetailItem: HomeItem {
+    var detailLabel: String
     
-    init(name: String, image: UIImage, minuteLabel: String) {
-        super.init(name: name)
-        self.image = image
-        self.name = name
+    init(id: UUID = UUID(), name: String, detailLabel: String) {
+        self.detailLabel = detailLabel
+        super.init(id: id, name: name)
+    }
+}
+
+class RecipeItem: HomeItem {
+    var imageData: Data?
+    var minuteLabel: String
+    
+    init(id: UUID = UUID(), name: String, imageData: Data?, minuteLabel: String) {
+        self.imageData = imageData
         self.minuteLabel = minuteLabel
+        super.init(id: id, name: name)
     }
 }

@@ -57,7 +57,7 @@ struct Link: View {
     var body: some View {
         Button(
             action: {
-                UIApplication.shared.open(url)
+                UIApplication.shared.open(self.url)
             }, label: {
                 HStack {
                     Image(systemName: "globe")
