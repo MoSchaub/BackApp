@@ -30,9 +30,10 @@
 		CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = CD859DB524E09A0C00E2ADD1 /* LBTATools */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
-		CDA1D80E24A942EC00DDF709 /* BetterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */; };
+		CDA1D80E24A942EC00DDF709 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */; };
 		CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */; };
 		CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */; };
 		CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */; };
@@ -130,7 +131,7 @@
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
 		CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
-		CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetterTableViewCell.swift; sourceTree = "<group>"; };
+		CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
 		CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		CDA7EE2924A67DBD00763E21 /* Back App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Back App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDFA362A24DD9A72001A5E4C /* BakingRecipe in Frameworks */,
+				CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,7 +186,7 @@
 				CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */,
 				CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */,
 				CD664D5524A699AD00884CAE /* StepTableViewCell.swift */,
-				CDA1D80D24A942EC00DDF709 /* BetterTableViewCell.swift */,
+				CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */,
 				CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */,
 			);
 			path = View;
@@ -481,6 +483,7 @@
 			name = "Back App iOS";
 			packageProductDependencies = (
 				CDFA362924DD9A72001A5E4C /* BakingRecipe */,
+				CD859DB524E09A0C00E2ADD1 /* LBTATools */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -539,6 +542,7 @@
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
 				CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */,
+				CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -611,7 +615,7 @@
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
 				CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */,
-				CDA1D80E24A942EC00DDF709 /* BetterTableViewCell.swift in Sources */,
+				CDA1D80E24A942EC00DDF709 /* RecipeTableViewCell.swift in Sources */,
 				CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */,
 				CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */,
 				CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */,
@@ -968,6 +972,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.17;
+			};
+		};
 		CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MoSchaub/BakingRecipe";
@@ -979,6 +991,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CD859DB524E09A0C00E2ADD1 /* LBTATools */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */;
+			productName = LBTATools;
+		};
 		CDFA362924DD9A72001A5E4C /* BakingRecipe */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDFA362824DD9A72001A5E4C /* XCRemoteSwiftPackageReference "BakingRecipe" */;
