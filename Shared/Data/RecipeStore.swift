@@ -25,10 +25,10 @@ final class RecipeStore: ObservableObject{
         self.recipes.map({ RecipeItem(id: $0.id, name: $0.formattedName, imageData: $0.imageString, minuteLabel: $0.formattedTotalTime)})
     }
     
-    var settingsItems: [HomeItem] { [
+    var settingsItems: [TextItem] { [
         DetailItem(name: NSLocalizedString("raumtemperatur", comment: ""), detailLabel: "\(self.roomTemperature)° C"),
-        HomeItem(name: NSLocalizedString("importFile", comment: "")),
-        HomeItem(name: NSLocalizedString("exportAll", comment: "")),
+        TextItem(text: NSLocalizedString("importFile", comment: "")),
+        TextItem(text: NSLocalizedString("exportAll", comment: "")),
         DetailItem(name: NSLocalizedString("about", comment: ""), detailLabel: "")
     ]}
     

@@ -12,15 +12,16 @@ import BakingRecipe
 struct StepRow: View {
     
     let step: Step
-    let recipe: Recipe
-    let roomTemp: Int
+    let roomTemp = UserDefaults.standard.integer(forKey: "roomTemp")
+    
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         VStack{
             HStack {
-                Text(step.formattedName).font(.headline).lineLimit(1)
+                Text(step.formattedName).font(.headline)
                 Spacer()
-                Text(step.formattedTime).secondary().lineLimit(1)
+                Text(step.formattedTime).secondary()
             }
             
             ForEach(step.ingredients){ ingredient in
@@ -29,16 +30,19 @@ struct StepRow: View {
             
             ForEach(step.subSteps){substep in
                 HStack{
-                    Text(substep.formattedName).lineLimit(1)
+                    Text(substep.formattedName)
                     Spacer()
-                    Text(substep.formattedTemp).lineLimit(1)
+                    Text(substep.formattedTemp)
                     Spacer()
-                    Text(substep.totalFormattedAmount).lineLimit(1)
+                    Text(substep.totalFormattedAmount)
                 }
             }
             Text(step.notes)
                 .lineLimit(2)
         }
+        .padding()
+        .padding(.trailing)
+        .background(Color.cellBackgroundColor(for: colorScheme))
     }
 }
 
@@ -54,6 +58,6 @@ struct StepRow_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        StepRow(step: recipe.steps.first!, recipe: recipe, roomTemp: 20)
+        StepRow(step: recipe.steps.first!)
     }
 }

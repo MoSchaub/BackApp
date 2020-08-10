@@ -9,6 +9,13 @@
 import SwiftUI
 import LBTATools
 
+extension Color {
+    
+    static func cellBackgroundColor(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(UIColor.tertiarySystemFill) : Color.white
+    }
+}
+
 class RecipeTableViewCell: UITableViewCell {
     
     class RecipeCellData: ObservableObject {
@@ -25,6 +32,7 @@ class RecipeTableViewCell: UITableViewCell {
     
     struct RecipeRowView: View {
         
+        @Environment(\.colorScheme) var colorScheme
         @ObservedObject var data: RecipeCellData
         
         var image: some View {
@@ -55,6 +63,7 @@ class RecipeTableViewCell: UITableViewCell {
             }
             .padding()
             .frame(maxHeight: height)
+            .background(Color.cellBackgroundColor(for: colorScheme))
         }
         
         //constants
@@ -71,3 +80,12 @@ class RecipeTableViewCell: UITableViewCell {
 
 }
 
+
+struct RecipeTableViewCell_Previews: PreviewProvider {
+    static var previews: some View {
+        RecipeTableViewCell.RecipeRowView(data: .init(name: "Name", minuteLabel: "10 Minuten"))
+            .background(Color.black.edgesIgnoringSafeArea(.all))
+            .environment(\.colorScheme, .dark)
+            
+    }
+}

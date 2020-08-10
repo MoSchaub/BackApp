@@ -48,8 +48,8 @@ class AmountTableViewCell: UITableViewCell {
         self.textChanged!(textField.text ?? "0g" )
     }
     
-    func setUp(with recipe: Recipe, format: @escaping (String) -> String ) {
-        textField.text = "\(recipe.timesText)"
+    func setUp(with text: String, format: @escaping (String) -> String ) {
+        textField.text = text
         textField.placeholder = NSLocalizedString("amountCellPlaceholder2", comment: "")
         selectionStyle = .none
         textChanged = { text in

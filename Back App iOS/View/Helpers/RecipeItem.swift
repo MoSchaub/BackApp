@@ -13,40 +13,31 @@ enum HomeSection: CaseIterable {
     case settings
 }
 
-class HomeItem: Hashable {
-    var name: String
-    var id: UUID
+class TextItem: Item {
+    var text: String
     
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: HomeItem, rhs: HomeItem) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    init(id: UUID = UUID(), name: String) {
-        self.id = id
-        self.name = name
+    init(id: UUID = UUID(), text: String) {
+        self.text = text
+        super.init(id: id)
     }
 }
 
-class DetailItem: HomeItem {
+class DetailItem: TextItem {
     var detailLabel: String
     
     init(id: UUID = UUID(), name: String, detailLabel: String) {
         self.detailLabel = detailLabel
-        super.init(id: id, name: name)
+        super.init(id: id, text: name)
     }
 }
 
-class RecipeItem: HomeItem {
+class RecipeItem: TextItem {
     var imageData: Data?
     var minuteLabel: String
     
     init(id: UUID = UUID(), name: String, imageData: Data?, minuteLabel: String) {
         self.imageData = imageData
         self.minuteLabel = minuteLabel
-        super.init(id: id, name: name)
+        super.init(id: id, text: name)
     }
 }

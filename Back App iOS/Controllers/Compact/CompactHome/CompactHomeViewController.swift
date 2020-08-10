@@ -9,7 +9,7 @@
 import SwiftUI
 import MobileCoreServices
 
-class HomeDataSource: UITableViewDiffableDataSource<HomeSection,HomeItem> {
+class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     // storage object for recipes
     var recipeStore: RecipeStore
 
@@ -19,20 +19,20 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,HomeItem> {
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
             if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath) as? RecipeTableViewCell { //recipeCell
-                recipeCell.setUp(cellData: .init(name: recipeItem.name, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
+                recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
                 recipeCell.accessoryType = .disclosureIndicator
                 
                 return recipeCell
             } else if let detailItem = homeItem as? DetailItem { // Detail Cell (RoomTemp und About)
                 let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
-                cell.textLabel?.text = detailItem.name
+                cell.textLabel?.text = detailItem.text
                 cell.detailTextLabel?.text = detailItem.detailLabel
                 cell.accessoryType = .disclosureIndicator
 
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath) //plain cells
-                cell.textLabel?.text = homeItem.name
+                cell.textLabel?.text = homeItem.text
                 cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
                 cell.accessoryView?.tintColor = .tertiaryLabel
                 
@@ -44,7 +44,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,HomeItem> {
     
     /// updates and rerenders the tableview
     func update(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, TextItem>()
         snapshot.appendSections(HomeSection.allCases)
         snapshot.appendItems(recipeStore.recipeItems, toSection: .recipes)
         snapshot.appendItems(recipeStore.settingsItems, toSection: .settings)
@@ -85,7 +85,6 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,HomeItem> {
     
     // moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
         guard destinationIndexPath.row > recipeStore.recipes.count else { reset(); return }
         guard destinationIndexPath.section == 0 else { reset(); return}
         guard recipeStore.recipes.count > sourceIndexPath.row else { reset(); return }
@@ -123,7 +122,7 @@ class DetailTableViewCell: UITableViewCell {
 class CompactHomeViewController: UITableViewController {
     
     typealias DataSource = HomeDataSource
-    typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,HomeItem>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
     
     private lazy var dataSource = makeDataSource()
     private var recipeStore: RecipeStore
@@ -141,7 +140,6 @@ class CompactHomeViewController: UITableViewController {
     }
     
     override func viewDidLoad() {
-        tableView.dataSource = dataSource
         registerCells()
         configureNavigationBar()
     }
@@ -152,6 +150,8 @@ class CompactHomeViewController: UITableViewController {
     }
 
 }
+
+import BakingRecipe
 
 private extension CompactHomeViewController {
     private func registerCells() {
@@ -168,15 +168,14 @@ private extension CompactHomeViewController {
     }
     
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
-           let vc = RecipeDetailViewController(style: .insetGrouped) // create vc
-           vc.recipeStore = recipeStore
-           vc.creating = true
-           vc.saveRecipe = { recipe in
-               self.recipeStore.save(recipe: recipe)
-           }
-           let nv = UINavigationController(rootViewController: vc)
-
-           present(nv, animated: true)
+        let recipe = Recipe(name: "", brotValues: [])
+        let vc = RecipeDetailViewController(recipe: recipe, creating: true) { recipe in
+            self.recipeStore.save(recipe: recipe)
+            self.dataSource.reloadRecipes()
+        }
+        let nv = UINavigationController(rootViewController: vc)
+        nv.modalPresentationStyle = .fullScreen
+        present(nv, animated: true)
        }
 }
 
@@ -192,28 +191,28 @@ extension CompactHomeViewController {
         
         if let recipeItem = item as? RecipeItem {
             navigateToRecipe(recipeItem: recipeItem)
-        } else if item.name == NSLocalizedString("raumtemperatur", comment: "") {
+        } else if item.text == NSLocalizedString("raumtemperatur", comment: "") {
             navigateToRoomTempPicker(item: item)
-        } else if item.name == NSLocalizedString("importFile", comment: "") {
+        } else if item.text == NSLocalizedString("importFile", comment: "") {
             openImportFilePopover()
-        } else if item.name == NSLocalizedString("exportAll", comment: "") {
+        } else if item.text == NSLocalizedString("exportAll", comment: "") {
             openExportAllShareSheet()
-        } else if item.name == NSLocalizedString("about", comment: "") {
+        } else if item.text == NSLocalizedString("about", comment: "") {
             navigateToAboutView()
         }
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
         if let recipe = recipeStore.recipes.first(where: { $0.id == recipeItem.id}) {
-            let vc = RecipeDetailViewController(style: .insetGrouped)
-            vc.recipe = recipe
-            vc.recipeStore = recipeStore
-            
+            let vc = RecipeDetailViewController(recipe: recipe, creating: false) { recipe in
+                self.recipeStore.update(recipe: recipe)
+                self.dataSource.update(animated: false)
+            }
             navigationController?.pushViewController(vc, animated: true)
         }
     }
     
-    private func navigateToRoomTempPicker(item: HomeItem) {
+    private func navigateToRoomTempPicker(item: TextItem) {
         let vc = RoomTempTableViewController(style: .insetGrouped)
         
         vc.recipeStore = recipeStore

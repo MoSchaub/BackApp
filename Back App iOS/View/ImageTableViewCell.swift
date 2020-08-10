@@ -6,63 +6,61 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
+import LBTATools
 
 class ImageTableViewCell: UITableViewCell {
     
-    lazy var activityIndicator = UIActivityIndicatorView(frame: .zero)
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setup() {
-        addSubview(activityIndicator)
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = UIColor.blue
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-
-        imageView?.translatesAutoresizingMaskIntoConstraints = false
-        imageView?.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        imageView?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        imageView?.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -40).isActive = true
-        imageView?.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8).isActive = true
-        imageView?.contentMode = .scaleAspectFit
+    struct ImageView: View {
         
-    }
-    
-    func setPlaceholderImage(_ placeholder: UIImage) {
-        imageView?.image = placeholder
-        tintColor = .label
-        self.imageView?.isHidden = false
-    }
-    
-    
-    func setImage(fromData data: Data?, placeholder: UIImage) {
-        setPlaceholderImage(placeholder)
-        imageView?.isHidden = true
-        activityIndicator.startAnimating()
-        DispatchQueue.global(qos: .utility).async {
-            if let data = data, let downloadedImage = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.imageView?.image = downloadedImage
-                    self.activityIndicator.stopAnimating()
-                    self.imageView?.isHidden = false
+        var data: Data?
+        
+        var body: some View {
+            ZStack {
+                Group {
+                    if data != nil {
+                        Image(uiImage: UIImage(data: data!)!)
+                            .resizable()
+                            .scaledToFill()
+                            .cornerRadius(cornerRadius)
+                    } else {
+                        Image(systemName: "photo")
+                            .resizable()
+                            .imageScale(.large)
+                            .scaledToFit()
+                    }
                 }
-            } else {
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.setPlaceholderImage(placeholder)
+                HStack {
+                    Spacer()
+                    Image(systemName: "chevron.up")
+                        .resizable()
+                        .imageScale(.large)
+                        .scaledToFit()
+                        .foregroundColor(.accentColor)
+                        .frame(maxHeight: chevronHeight)
+                    
+                    .padding()
                 }
             }
+            .frame(maxHeight: maxHeight)
         }
+        
+        let cornerRadius: CGFloat = 10
+        let chevronHeight: CGFloat = 10
+        let maxHeight: CGFloat = 250
     }
     
+    func setup(imageData: Data?) {
+        let hostingController = UIHostingController(rootView: ImageView(data: imageData))
+        addSubview(hostingController.view)
+        
+        hostingController.view.fillSuperview()
+    }
+    
+}
+
+struct ImageTableViewCell_Previews: PreviewProvider {
+    static var previews: some View {
+        ImageTableViewCell.ImageView()
+    }
 }

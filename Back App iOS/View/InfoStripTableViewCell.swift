@@ -11,49 +11,43 @@ import BakingRecipe
 
 class InfoStripTableViewCell: UITableViewCell {
     
-    var recipe: Recipe!
-    
-    var view: UIView!
-    
-    let color = UIColor.tertiarySystemFill
-    
-    private var infoStrip: some View {
-        HStack{
-            Spacer()
-            VStack {
-                Text("\(recipe.totalTime)")
-                Text("Min").secondary()
+    struct InfoStrip: View {
+        @Environment(\.colorScheme) var colorScheme
+        
+        var minuteCount: Int
+        var ingredientCount: Int
+        var stepCount: Int
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                VStack {
+                    Text("\(minuteCount)")
+                    Text("Min").secondary()
+                }
+                Spacer()
+                VStack{
+                    Text("\(ingredientCount)")
+                    Text("Zutaten").secondary()
+                }
+                Spacer()
+                VStack{
+                    Text("\(stepCount)")
+                    Text("Schritte").secondary()
+                }
+                Spacer()
             }
-            Spacer()
-            VStack{
-                Text("\(recipe.numberOfIngredients)")
-                Text("Zutaten").secondary()
-            }
-            Spacer()
-            VStack{
-                Text("\(recipe.steps.count)")
-                Text("Schritte").secondary()
-            }
-            Spacer()
+            .padding()
+            .background(Color.cellBackgroundColor(for: colorScheme))
         }
-        .cellView()
     }
     
-    func setUpCell(for recipe: Recipe) {
-        self.recipe = recipe
+    func setUpCell(for item: InfoStripItem) {
         selectionStyle = .none
-        view = UIHostingController(rootView: infoStrip).view
-        view.frame = .zero
-        contentView.addSubview(view)
-        setViewConstraints()
-    }
-    
-    func setViewConstraints() {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        let hostingController = UIHostingController(rootView: InfoStrip(minuteCount: item.minuteCount, ingredientCount: item.ingredientCount, stepCount: item.stepCount))
+
+        addSubview(hostingController.view)
+        hostingController.view.fillSuperview()
     }
 
 }

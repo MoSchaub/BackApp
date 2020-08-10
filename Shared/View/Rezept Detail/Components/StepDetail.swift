@@ -24,7 +24,7 @@ struct StepDetail: View {
     private var nameSection: some View{
          #if os(iOS)
         return Section(header: Text("Name")) {
-            TextField("Name eingeben", text: $step.name)
+            TextField("Name eingeben", text: $step.text)
         }
         #elseif os(macOS)
         return HStack{
@@ -269,7 +269,7 @@ struct StepDetail: View {
     .navigationBarItems(trailing:
             Button(action: save){
                 Text("Speichern")
-            }.disabled(recipe.steps.contains(where: {$0.name == self.step.name}))
+            }.disabled(recipe.steps.contains(where: {$0.text == self.step.text}))
         )
         #elseif os(macOS)
         return Group {
