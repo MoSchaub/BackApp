@@ -18,21 +18,25 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         self._recipe = recipe
         self.creating = creating
         super.init(tableView: tableView) { (_, indexPath, item) -> UITableViewCell? in
+            let color = UIColor(named: "blue")!
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: "textField", for: indexPath) as? TextFieldTableViewCell {
                 cell.textField.text = recipe.wrappedValue.name
                 cell.textField.placeholder = NSLocalizedString("name", comment: "")
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
+                cell.backgroundColor = color
                 return cell
             } else if let imageItem = item as? ImageItem, let imageCell = tableView.dequeueReusableCell(withIdentifier: "image", for: indexPath) as? ImageTableViewCell {
                 imageCell.setup(imageData: imageItem.imageData)
                 return imageCell
             } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: "times", for: indexPath) as? AmountTableViewCell{
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
+                amountCell.backgroundColor = color
                 return amountCell
             } else if let infoItem = item as? InfoItem {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
                 cell.textLabel?.text = infoItem.text
+                cell.backgroundColor = color
                 return cell
             } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: "infoStrip", for: indexPath) as? InfoStripTableViewCell {
                 infoStripCell.setUpCell(for: stripItem)
@@ -42,9 +46,10 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 stepCell.setUpCell(for: stepItem.step)
                 return stepCell
             } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath) as? DetailTableViewCell {
-                let title = NSAttributedString(string: detailItem.text, attributes: [.foregroundColor : UIColor.link])
+                let title = NSAttributedString(string: detailItem.text, attributes: [.foregroundColor : UIColor.label])
                 cell.textLabel?.attributedText = title
                 cell.accessoryType = .disclosureIndicator
+                cell.backgroundColor = color
                 return cell
             }
             return UITableViewCell()

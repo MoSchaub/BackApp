@@ -11,8 +11,8 @@ import LBTATools
 
 extension Color {
     
-    static func cellBackgroundColor(for colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color(UIColor.tertiarySystemFill) : Color.white
+    static func cellBackgroundColor() -> Color {
+        Color("blue")
     }
 }
 
@@ -31,8 +31,6 @@ class RecipeTableViewCell: UITableViewCell {
     }
     
     struct RecipeRowView: View {
-        
-        @Environment(\.colorScheme) var colorScheme
         @ObservedObject var data: RecipeCellData
         
         var image: some View {
@@ -63,7 +61,7 @@ class RecipeTableViewCell: UITableViewCell {
             }
             .padding()
             .frame(maxHeight: height)
-            .background(Color.cellBackgroundColor(for: colorScheme))
+            .background(Color.cellBackgroundColor())
         }
         
         //constants

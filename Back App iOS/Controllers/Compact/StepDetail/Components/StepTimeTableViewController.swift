@@ -69,6 +69,8 @@ class StepTimeTableViewController: UITableViewController {
         DispatchQueue.main.async(execute: {
             self.datePicker.countDownDuration = self.time
         })
+        cell.backgroundColor = UIColor(named: "blue")!
+        
         return cell
     }
     

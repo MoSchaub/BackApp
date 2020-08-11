@@ -42,7 +42,7 @@ struct StepRow: View {
         }
         .padding()
         .padding(.trailing)
-        .background(Color.cellBackgroundColor(for: colorScheme))
+        .background(Color.cellBackgroundColor())
     }
 }
 

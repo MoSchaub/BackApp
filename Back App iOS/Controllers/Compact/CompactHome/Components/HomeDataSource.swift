@@ -17,14 +17,17 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
+            let color = UIColor(named: "blue")!
             if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath) as? RecipeTableViewCell { //recipeCell
                 recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
+                recipeCell.backgroundColor = color
                 recipeCell.accessoryType = .disclosureIndicator
                 
                 return recipeCell
             } else if let detailItem = homeItem as? DetailItem { // Detail Cell (RoomTemp und About)
                 let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
                 cell.textLabel?.text = detailItem.text
+                cell.backgroundColor = color
                 cell.detailTextLabel?.text = detailItem.detailLabel
                 cell.accessoryType = .disclosureIndicator
 
@@ -32,6 +35,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath) //plain cells
                 cell.textLabel?.text = homeItem.text
+                cell.backgroundColor = color
                 cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
                 cell.accessoryView?.tintColor = .tertiaryLabel
                 

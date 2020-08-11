@@ -30,23 +30,12 @@ class ImageTableViewCell: UITableViewCell {
                             .scaledToFit()
                     }
                 }
-                HStack {
-                    Spacer()
-                    Image(systemName: "chevron.up")
-                        .resizable()
-                        .imageScale(.large)
-                        .scaledToFit()
-                        .foregroundColor(.accentColor)
-                        .frame(maxHeight: chevronHeight)
-                    
-                    .padding()
-                }
             }
             .frame(maxHeight: maxHeight)
+            .background(Color.cellBackgroundColor())
         }
         
         let cornerRadius: CGFloat = 10
-        let chevronHeight: CGFloat = 10
         let maxHeight: CGFloat = 250
     }
     

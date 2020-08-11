@@ -2,8 +2,8 @@
 //  SceneDelegate.swift
 //  Back App iOS
 //
-//  Created by Moritz Schaub on 26.06.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
+//  Created by Franka Schaub on 26.06.20.
+//  Copyright © 2020 Franka Schaub. All rights reserved.
 //
 
 import UIKit
@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = UINavigationController(rootViewController: compactHomeVC)
         window.makeKeyAndVisible()
         self.window = window
+        self.window!.tintColor = UIColor(named: "blue")!
     }
     
     func sceneWillResignActive(_ scene: UIScene) {

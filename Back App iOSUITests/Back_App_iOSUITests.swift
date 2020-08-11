@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import BakingRecipe
 
 class Back_App_iOSUITests: XCTestCase {
     

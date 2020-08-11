@@ -119,12 +119,14 @@ class IngredientDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.ingredient.name = text
         }
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
     private func makeAmountCell() -> AmountTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "menge") as! AmountTableViewCell
         cell.setUp(with: ingredient, format: format)
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
@@ -146,6 +148,7 @@ class IngredientDetailViewController: UITableViewController {
         cell.accessoryView = toggle
         
         cell.textLabel?.text = NSLocalizedString("bulkLiquid", comment: "")
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }

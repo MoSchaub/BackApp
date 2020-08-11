@@ -2,8 +2,8 @@
 //  CompactHomeViewController.swift
 //  Back App iOS
 //
-//  Created by Moritz Schaub on 26.06.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
+//  Created by Franka Schaub on 26.06.20.
+//  Copyright © 2020 Franka Schaub. All rights reserved.
 //
 
 import SwiftUI
@@ -13,6 +13,7 @@ class CompactHomeViewController: UITableViewController {
     
     typealias DataSource = HomeDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
+    typealias Franka = String
     
     private lazy var dataSource = makeDataSource()
     private var recipeStore: RecipeStore
@@ -62,7 +63,7 @@ private extension CompactHomeViewController {
         let vc = RecipeDetailViewController(recipe: recipe, creating: true) { recipe in
             self.recipeStore.save(recipe: recipe)
             DispatchQueue.main.async {
-                self.dataSource.reloadRecipes()
+                self.dataSource.update()
             }
         }
         let nv = UINavigationController(rootViewController: vc)

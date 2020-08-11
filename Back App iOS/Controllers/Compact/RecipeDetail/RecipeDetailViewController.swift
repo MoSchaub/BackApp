@@ -70,7 +70,7 @@ private extension RecipeDetailViewController {
         }), creating: creating, tableView: tableView, nameChanged: { name in
             self.recipe.name = name
         }, formatAmount: { timesText in
-            guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return "1 stk" }
+            guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
             self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
             return self.recipe.timesText
         })
@@ -169,8 +169,10 @@ extension RecipeDetailViewController {
     }
     
     @objc private func toggleEditMode(sender: UIButton) {
-        setEditing(!isEditing, animated: true)
-        sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+        if recipe.steps.count > 0 {
+            setEditing(!isEditing, animated: true)
+            sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+        }
     }
     
 }

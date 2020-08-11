@@ -76,6 +76,7 @@ class StepTempTableViewController: UITableViewController {
         cell.accessoryView = toggle
         
         cell.textLabel?.text = NSLocalizedString("dynamicTemp", comment: "")
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }
@@ -91,6 +92,7 @@ class StepTempTableViewController: UITableViewController {
         configurePicker()
         cell.contentView.addSubview(picker)
         addPickerConstraints(cell: cell)
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }

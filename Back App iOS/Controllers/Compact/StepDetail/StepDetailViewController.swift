@@ -140,6 +140,7 @@ class StepDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.step.name = text
         }
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
@@ -151,6 +152,7 @@ class StepDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.step.notes = text
         }
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
@@ -159,7 +161,8 @@ class StepDetailViewController: UITableViewController {
         
         cell.textLabel?.text = step.formattedTime
         cell.accessoryType = .disclosureIndicator
-            
+        
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
@@ -167,6 +170,7 @@ class StepDetailViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "temp")!
         cell.textLabel?.text = step.formattedTemp
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }
@@ -179,6 +183,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = ingredient.name
         cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: "roomTemp")))° C" : "")
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }
@@ -191,6 +196,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = substep.name
         cell.detailTextLabel?.text = substep.totalFormattedAmount + " " + substep.formattedTemp
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }
@@ -200,6 +206,7 @@ class StepDetailViewController: UITableViewController {
         
         cell.textLabel?.text = NSLocalizedString("addIngredient", comment: "")
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }

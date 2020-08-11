@@ -46,6 +46,7 @@ class RoomTempTableViewController: UITableViewController {
         picker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
         picker.trailingAnchor.constraint(lessThanOrEqualTo: cell.trailingAnchor, constant: -10).isActive = true
         picker.heightAnchor.constraint(equalTo: cell.heightAnchor, multiplier: 0.8).isActive = true
+        cell.backgroundColor = UIColor(named: "blue")!
 
         return cell
     }
