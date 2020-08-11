@@ -105,22 +105,18 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
                 cell.textLabel?.text = infoItem.text
                 return cell
-            } else if indexPath.section == 4 {
-                if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: "infoStrip", for: indexPath) as? InfoStripTableViewCell {
-                    infoStripCell.setUpCell(for: stripItem)
-                    return infoStripCell
-                } else {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
-                    cell.textLabel?.text = NSLocalizedString("startRecipe", comment: "")
-                    cell.accessoryType = .disclosureIndicator
-                    cell.isUserInteractionEnabled = !creating
-                    
-                    return cell
-                }
+            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: "infoStrip", for: indexPath) as? InfoStripTableViewCell {
+                infoStripCell.setUpCell(for: stripItem)
+                return infoStripCell
             } else if let stepItem = item as? StepItem {
                 let stepCell = StepTableViewCell(style: .default, reuseIdentifier: "step")
                 stepCell.setUpCell(for: stepItem.step)
                 return stepCell
+            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath) as? DetailTableViewCell {
+                let title = NSAttributedString(string: detailItem.text, attributes: [.foregroundColor : UIColor.link])
+                cell.textLabel?.attributedText = title
+                cell.accessoryType = .disclosureIndicator
+                return cell
             }
             return UITableViewCell()
         }
@@ -155,17 +151,24 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row > recipe.steps.count else { reset(); return }
-        guard destinationIndexPath.section == 0 else { reset(); return}
-        guard recipe.steps.count > sourceIndexPath.row else { reset(); return }
-        recipe.steps.move(fromOffsets: IndexSet(arrayLiteral: sourceIndexPath.row), toOffset: destinationIndexPath.row)
-        reloadSteps()
+        guard destinationIndexPath.row < recipe.steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+        guard destinationIndexPath.section == 5 else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
+        guard recipe.steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+        recipe.moveSteps(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
 }
 
+extension Recipe {
+    mutating func moveSteps(from source: Int, to destination: Int) {
+        let destinationStep = steps[destination]
+        steps[destination] = steps[source]
+        steps[source] = destinationStep
+    }
+}
+
 fileprivate extension Recipe {
-    mutating func nameItem() -> TextFieldItem {
+    func nameItem() -> TextFieldItem {
         TextFieldItem(text: name)
     }
     
@@ -173,7 +176,7 @@ fileprivate extension Recipe {
         ImageItem(imageData: imageString)
     }
     
-    mutating func amountItem() -> AmountItem {
+    func amountItem() -> AmountItem {
         AmountItem(text: timesText)
     }
     
@@ -182,7 +185,7 @@ fileprivate extension Recipe {
     }
     
     func controlStripItems(creating: Bool) -> [Item] {
-        creating ? [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients)] : [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients), Item()]
+        creating ? [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients)] : [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients), DetailItem(name: NSLocalizedString("startRecipe", comment: ""), detailLabel: "")]
     }
     
     var stepItems: [StepItem] {
@@ -193,7 +196,7 @@ fileprivate extension Recipe {
 
 extension RecipeDetailDataSource {
     func update(animated: Bool) {
-        var snapshot = self.snapshot()
+        var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
         snapshot.appendSections(RecipeDetailSection.allCases)
         snapshot.appendItems([recipe.nameItem()], toSection: .name)
         snapshot.appendItems([recipe.imageItem], toSection: .image)
@@ -201,6 +204,7 @@ extension RecipeDetailDataSource {
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .controlStrip)
         snapshot.appendItems(recipe.stepItems, toSection: .steps)
+        snapshot.appendItems([DetailItem(name: "Schritt hinzufügen", detailLabel: "")],toSection: .steps)
         apply(snapshot, animatingDifferences: animated)
     }
     
@@ -210,11 +214,12 @@ extension RecipeDetailDataSource {
         self.apply(snapshot)
     }
     
-    private func reset() {
+    private func reset(tableView: UITableView, indexPath: IndexPath) {
         var snapshot = self.snapshot()
         snapshot.deleteAllItems()
         self.apply(snapshot, animatingDifferences: false)
         self.update(animated: false)
+        tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
     }
     
     private func deleteStep(_ id: UUID) {
@@ -230,18 +235,22 @@ class RecipeDetailViewController: UITableViewController {
     
     private lazy var dataSource = makeDataSource()
     
+    private var imagePickerController: UIImagePickerController?
+    
     private var recipe: Recipe {
         didSet {
             setUpNavigationBar()
-            update()
+            update(oldValue: oldValue)
         }
     }
     private var creating: Bool
     private var saveRecipe: SaveRecipe
     
-    private func update() {
-        if !creating {
-            saveRecipe(self.recipe)
+    private func update(oldValue: Recipe) {
+        DispatchQueue.global(qos: .utility).async {
+            if !self.creating, oldValue != self.recipe {
+                self.saveRecipe(self.recipe)
+            }
         }
     }
     
@@ -268,16 +277,8 @@ extension RecipeDetailViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         dataSource.update(animated: false)
-        
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
-
-}
-
-extension RecipeDetailViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return false
-    }
+    
 }
 
 private extension RecipeDetailViewController {
@@ -302,11 +303,15 @@ private extension RecipeDetailViewController {
             navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))]
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
         } else {
-            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star" : "star.fill"), style: .plain, target: self, action: #selector(favouriteRecipe))
+            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
-            navigationItem.rightBarButtonItems = [favourite,share ]
+            DispatchQueue.main.async {
+                self.navigationItem.rightBarButtonItems = [favourite,share ]
+            }
         }
-        title = recipe.formattedName
+        DispatchQueue.main.async {
+            self.title = self.recipe.formattedName
+        }
     }
     
     private func registerCells() {
@@ -351,23 +356,43 @@ private extension RecipeDetailViewController {
 import LBTATools
 
 extension RecipeDetailViewController {
+    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard section == 5 else { return nil }
-        let hostingController = UIHostingController(rootView: HStack {
-            Text("Schritte")
-            Spacer()
-            Button(action: {
-                self.isEditing.toggle()
-            }) {
-                Text(isEditing ? "Fertig" : "Bearbeiten")
-            }
-        }
-        .padding(.horizontal)
-        )
-//        view.addSubview(hostingController.view)
-//        hostingController.view.fillSuperview()
-        return hostingController.view
+        let frame = tableView.frame
+        
+        let editButton = UIButton(frame: CGRect(x: frame.size.width - 60, y: 10, width: 50, height: 30))
+        editButton.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+        editButton.addTarget(self, action: #selector(toggleEditMode(sender:)), for: .touchDown)
+        
+        let titleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 30))
+        let attributes = [
+            NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .footnote),
+            .foregroundColor : UIColor.secondaryLabel,
+        ]
+        titleLabel.attributedText = NSAttributedString(string: "Schritte".uppercased(), attributes: attributes)
+        
+        let stackView = UIStackView(frame: CGRect(x: 5, y: 0, width: frame.size.width - 10, height: frame.size.height))
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(editButton)
+        
+        return stackView
     }
+    
+    private func attributedTitleForEditButton() -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
+            .foregroundColor : UIColor.link
+        ]
+        let titleString = isEditing ? "Fertig" : "Bearbeiten"
+        return NSAttributedString(string: titleString, attributes: attributes)
+    }
+    
+    @objc private func toggleEditMode(sender: UIButton) {
+        setEditing(!isEditing, animated: true)
+        sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
+    }
+    
 }
 
 private extension Recipe {
@@ -385,6 +410,131 @@ private extension Recipe {
         return url
     }
 }
+
+extension RecipeDetailViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let item = dataSource.itemIdentifier(for: indexPath) {
+            if item is ImageItem {
+                imageTapped()
+            } else if let stepItem = item as? StepItem {
+                showStepDetail(id: stepItem.id)
+            } else if let detailItem = item as? DetailItem {
+                if detailItem.text == NSLocalizedString("startRecipe", comment: "") {
+                    startRecipe()
+                } else if detailItem.text == "Schritt hinzufügen" {
+                    addStep()
+                }
+            }
+        }
+    }
+}
+
+private extension RecipeDetailViewController {
+    private func imageTapped() {
+        if imagePickerController != nil {
+            imagePickerController?.delegate = nil
+            imagePickerController = nil
+        }
+        imagePickerController = UIImagePickerController()
+        
+        let alert = UIAlertController(title: "Bild auswählen, bearbeiten, oder aktuelles Bild entfernen", message: nil, preferredStyle: .actionSheet)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alert.addAction(UIAlertAction(title: "aufnehmen", style: .default, handler: { (_) in
+                self.presentImagePicker(controller: self.imagePickerController!, for: .camera)
+            }))
+        }
+        
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            alert.addAction(UIAlertAction(title: "auswählen", style: .default, handler: { (_) in
+                self.presentImagePicker(controller: self.imagePickerController!, for: .photoLibrary)
+            }))
+        }
+        
+        alert.addAction(UIAlertAction(title: "Bild entfernen", style: .destructive, handler: { (_) in
+            self.recipe.imageString = nil
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: { (_) in
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                self.tableView.cellForRow(at: indexPath)?.isSelected = false
+            }
+        }))
+        
+        present(alert, animated: true)
+        
+    }
+    
+    private func showStepDetail(id: UUID) {
+        if let step = recipe.steps.first(where: { $0.id == id }) {
+            let stepDetailVC = StepDetailViewController(step: step, creating: false, recipe: recipe) { step in
+                if let index = self.recipe.steps.firstIndex(where: { $0.id == step.id }) {
+                    self.recipe.steps[index] = step
+                    self.dataSource.update(animated: false)
+                }
+            }
+            navigationController?.pushViewController(stepDetailVC, animated: true)
+        }
+    }
+    
+    private func startRecipe() {
+        let roomTemp = UserDefaults.standard.integer(forKey: "roomTemp")
+        let recipeBinding = Binding(get: {
+            return self.recipe
+        }) { (newValue) in
+            self.recipe = newValue
+        }
+        let scheduleForm = ScheduleForm(recipe: recipeBinding, roomTemp: roomTemp)
+        let vc = UIHostingController(rootView: scheduleForm)
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func addStep() {
+        let step = Step(name: "", time: 60)
+        let stepDetailVC = StepDetailViewController(step: step, creating: true, recipe: recipe) { step in
+            self.recipe.steps.append(step)
+            DispatchQueue.main.async {
+                self.dataSource.update(animated: false)
+            }
+        }
+        
+        navigationController?.pushViewController(stepDetailVC, animated: true)
+    }
+}
+
+extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {
+        controller.delegate = self
+        controller.sourceType = source
+        
+        present(controller, animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { //cant be private
+        picker.dismiss(animated: true, completion: {
+            self.terminate(picker)
+        })
+    }
+    
+    private func terminate(_ picker: UIImagePickerController) {
+        picker.delegate = nil
+        imagePickerController = nil
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
+        if let uiImage = info[.originalImage] as? UIImage {
+            recipe.imageString = uiImage.jpegData(compressionQuality: 0.3)
+            tableView.reloadData()
+            
+            picker.dismiss(animated: true) {
+                self.terminate(picker)
+            }
+        } else {
+            imagePickerControllerDidCancel(picker)
+        }
+    }
+}
     
 //    // MARK: - Properties
 //
@@ -399,7 +549,7 @@ private extension Recipe {
 //        }
 //        didSet {
 //            if recipe != nil {
-//                addNavigationBarItems()
+//                setupNavigationBar()
 //            }
 //        }
 //    }

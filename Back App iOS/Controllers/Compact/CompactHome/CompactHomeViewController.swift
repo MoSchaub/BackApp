@@ -171,10 +171,11 @@ private extension CompactHomeViewController {
         let recipe = Recipe(name: "", brotValues: [])
         let vc = RecipeDetailViewController(recipe: recipe, creating: true) { recipe in
             self.recipeStore.save(recipe: recipe)
-            self.dataSource.reloadRecipes()
+            DispatchQueue.main.async {
+                self.dataSource.reloadRecipes()
+            }
         }
         let nv = UINavigationController(rootViewController: vc)
-        nv.modalPresentationStyle = .fullScreen
         present(nv, animated: true)
        }
 }
@@ -206,7 +207,9 @@ extension CompactHomeViewController {
         if let recipe = recipeStore.recipes.first(where: { $0.id == recipeItem.id}) {
             let vc = RecipeDetailViewController(recipe: recipe, creating: false) { recipe in
                 self.recipeStore.update(recipe: recipe)
-                self.dataSource.update(animated: false)
+                DispatchQueue.main.async {
+                     self.dataSource.update(animated: false)
+                }
             }
             navigationController?.pushViewController(vc, animated: true)
         }

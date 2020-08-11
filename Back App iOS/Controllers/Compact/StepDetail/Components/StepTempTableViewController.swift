@@ -6,22 +6,24 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 import BakingRecipe
 
 class StepTempTableViewController: UITableViewController {
     // MARK: - Properties
     
-    var step: Step! {
-        willSet {
-            if newValue != nil { if recipe != nil, recipeStore != nil {
-                recipeStore.update(step: newValue, in: recipe)
-                }
-            }
-        }
+    @Binding private var step: Step
+    
+    private var datePicker: UIDatePicker!
+    
+    init(step: Binding<Step>) {
+        self._step = step
+        super.init(style: .insetGrouped)
     }
-    var recipe: Recipe!
-    var recipeStore: RecipeStore!
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var picker: UIPickerView!
 

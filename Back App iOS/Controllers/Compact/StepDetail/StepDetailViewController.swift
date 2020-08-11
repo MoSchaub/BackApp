@@ -12,24 +12,40 @@ import BakingRecipe
 class StepDetailViewController: UITableViewController {
     
     // MARK: - Properties
-    var step: Step! {
-        willSet {
-            if newValue != nil { if recipe != nil, recipeStore != nil {
-                recipeStore.update(step: newValue, in: recipe)
-                }
-                title = newValue.formattedName
+    private var step: Step {
+        didSet {
+            DispatchQueue.main.async {
+                self.setupNavigationBar()
+            }
+            update(oldValue: oldValue)
+        }
+    }
+
+    var creating: Bool
+    var saveStep: ((Step) -> Void)
+    let recipe: Recipe
+    
+    private func update(oldValue: Step) {
+        DispatchQueue.global(qos: .background).async {
+            if !self.creating, oldValue != self.step {
+                self.saveStep(self.step)
             }
         }
     }
-    var recipe: Recipe!
-    
-    var recipeStore: RecipeStore!
-    
-    var initializing = true
-    var creating = false
-    var saveStep: ((Step, Recipe) -> Void)?
     
     var datePicker: UIDatePicker!
+    
+    init(step: Step, creating: Bool, recipe: Recipe, saveStep: @escaping (Step) -> ()) {
+        self.step = step
+        self.creating = creating
+        self.saveStep = saveStep
+        self.recipe = recipe
+        super.init(style: .insetGrouped)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Start functions
     
@@ -41,41 +57,24 @@ class StepDetailViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        addNavigationBarItems()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !initializing {
-            self.step = recipeStore.stepForUpdate(oldStep: step, in: recipe)
-            tableView.reloadData()
-        }
-        initializing = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if creating {
-            recipeStore.save(recipe: recipe)
-            recipeStore.save(step: step, to: recipe)
-        }
+        setupNavigationBar()
     }
     
     // MARK: - navigationBarItems
     
-    private func addNavigationBarItems() {
+    private func setupNavigationBar() {
         if creating {
             navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addStep))
         } else {
             navigationItem.rightBarButtonItem = editButtonItem
         }
+        title = step.formattedName
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     @objc private func addStep(_ sender: UIBarButtonItem) {
-        if creating, let saveStep = saveStep {
-            saveStep(step, recipe)
-            navigationController?.popViewController(animated: true)
-        }
+        saveStep(step)
+        navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Sections and rows
@@ -178,7 +177,7 @@ class StepDetailViewController: UITableViewController {
         
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
-        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: recipeStore.roomTemperature))° C" : "")
+        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: "roomTemp")))° C" : "")
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -246,9 +245,9 @@ class StepDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 2 {
-            navigateToTimePicker()
+            navigateToTimePicker(indexPath: indexPath)
         } else if indexPath.section == 3 {
-            navigateToTempPicker()
+            navigateToTempPicker(indexPath: indexPath)
         } else if indexPath.section == 4 {
             if indexPath.row - step.subSteps.count == step.ingredients.count {
                 let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
@@ -275,42 +274,54 @@ class StepDetailViewController: UITableViewController {
         }
     }
     
-    private func navigateToTimePicker() {
-        let timePickerVC = StepTimeTableViewController(style: .insetGrouped)
-        timePickerVC.recipeStore = recipeStore
-        timePickerVC.recipe = recipe
-        timePickerVC.step = step
-        
+    private func navigateToTimePicker(indexPath: IndexPath) {
+        let timePickerVC = StepTimeTableViewController(time: Binding(get: {
+            return self.step.time
+        }, set: { (newValue) in
+            DispatchQueue.global(qos: .utility).async {
+                if newValue != self.step.time {
+                    self.step.time = newValue
+                    DispatchQueue.main.async {
+                        self.tableView.reloadRows(at: [indexPath], with: .none)
+                    }
+                }
+            }
+        }))
         navigationController?.pushViewController(timePickerVC, animated: true)
     }
     
-    private func navigateToTempPicker() {
-        let tempPickerVC = StepTempTableViewController(style: .insetGrouped)
-        tempPickerVC.recipeStore = recipeStore
-        tempPickerVC.recipe = recipe
-        tempPickerVC.step = step
-        
+    private func navigateToTempPicker(indexPath: IndexPath) {
+        let tempPickerVC = StepTempTableViewController(step: Binding(get: {
+            return self.step
+        }, set: { (newValue) in
+            DispatchQueue.global(qos: .utility).async {
+                self.step = newValue
+                DispatchQueue.main.async {
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                }
+            }
+        }))
         navigationController?.pushViewController(tempPickerVC, animated: true)
     }
     
     private func navigateToIngredientDetail(creating: Bool, indexPath: IndexPath) {
-        let ingredientDetailVC = IngredientDetailViewController()
-        
-        ingredientDetailVC.recipeStore = recipeStore
-        ingredientDetailVC.step = step
-        ingredientDetailVC.ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row - step.subSteps.count]
-        ingredientDetailVC.creating = creating
-        
-        if creating {
-            ingredientDetailVC.saveIngredient = save
+        let ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row - step.subSteps.count]
+        let ingredientDetailVC = IngredientDetailViewController(ingredient: ingredient, creating: creating) { ingredient in
+            if creating {
+                self.step.ingredients.append(ingredient)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            } else {
+                self.step.ingredients[indexPath.row - self.step.subSteps.count] = ingredient
+                DispatchQueue.main.async {
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                }
+            }
+            
         }
-        
+
         navigationController?.pushViewController(ingredientDetailVC, animated: true)
-    }
-    
-    private func save(ingredient: Ingredient, step: Step){
-        recipeStore.add(ingredient: ingredient, step: step)
-        tableView.reloadData()
     }
     
     private func showSubstepsActionSheet(possibleSubsteps: [Step]) {

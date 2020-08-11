@@ -6,25 +6,24 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 import BakingRecipe
 
 class StepTimeTableViewController: UITableViewController {
 
     // MARK: - Properties
     
-    var step: Step! {
-        willSet {
-            if newValue != nil { if recipe != nil, recipeStore != nil {
-                recipeStore.update(step: newValue, in: recipe)
-                }
-            }
-        }
-    }
-    var recipe: Recipe!
-    var recipeStore: RecipeStore!
-    
+    @Binding private var time: TimeInterval
     private var datePicker: UIDatePicker!
+    
+    init(time: Binding<TimeInterval>) {
+        self._time = time
+        super.init(style: .insetGrouped)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Start functions
 
@@ -68,7 +67,7 @@ class StepTimeTableViewController: UITableViewController {
         datePicker.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
         
         DispatchQueue.main.async(execute: {
-            self.datePicker.countDownDuration = self.step.time
+            self.datePicker.countDownDuration = self.time
         })
         return cell
     }
@@ -78,7 +77,7 @@ class StepTimeTableViewController: UITableViewController {
     }
     
     @objc private func datePickerChanged(_ sender: UIDatePicker) {
-        step.time = sender.countDownDuration
+        time = sender.countDownDuration
     }
 
 }
