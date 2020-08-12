@@ -16,7 +16,6 @@ class ImageTableViewCell: UITableViewCell {
         var data: Data?
         
         var body: some View {
-            ZStack {
                 Group {
                     if data != nil {
                         Image(uiImage: UIImage(data: data!)!)
@@ -30,8 +29,7 @@ class ImageTableViewCell: UITableViewCell {
                             .scaledToFit()
                     }
                 }
-            }
-            .frame(maxHeight: maxHeight)
+                .frame(maxWidth: .infinity, maxHeight: maxHeight)
             .background(Color.cellBackgroundColor())
         }
         

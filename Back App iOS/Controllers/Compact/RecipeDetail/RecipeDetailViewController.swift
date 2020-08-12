@@ -138,7 +138,7 @@ import LBTATools
 extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section == 5 else { return nil }
+        guard RecipeDetailSection.allCases[section] == .steps else { return nil }
         let frame = tableView.frame
         
         let editButton = UIButton(frame: CGRect(x: frame.size.width - 60, y: 10, width: 50, height: 30))
@@ -162,7 +162,7 @@ extension RecipeDetailViewController {
     private func attributedTitleForEditButton() -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : UIColor.link
+            .foregroundColor : UIColor(named: "blue")!
         ]
         let titleString = isEditing ? "Fertig" : "Bearbeiten"
         return NSAttributedString(string: titleString, attributes: attributes)
@@ -235,7 +235,7 @@ private extension RecipeDetailViewController {
         
         alert.addAction(UIAlertAction(title: "Bild entfernen", style: .destructive, handler: { (_) in
             self.recipe.imageString = nil
-            self.tableView.reloadData()
+            self.dataSource.update(animated: false)
         }))
         alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
@@ -307,7 +307,7 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
         if let uiImage = info[.originalImage] as? UIImage {
             recipe.imageString = uiImage.jpegData(compressionQuality: 0.3)
-            tableView.reloadData()
+            self.dataSource.update(animated: false)
             
             picker.dismiss(animated: true) {
                 self.terminate(picker)

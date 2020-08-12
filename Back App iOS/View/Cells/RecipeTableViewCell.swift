@@ -52,6 +52,7 @@ class RecipeTableViewCell: UITableViewCell {
         var body: some View {
             HStack {
                 image
+                    .frame(maxHeight: height)
                 VStack(alignment: .leading) {
                     Text(data.name)
                         .font(.headline)
@@ -60,12 +61,11 @@ class RecipeTableViewCell: UITableViewCell {
                 Spacer()
             }
             .padding()
-            .frame(maxHeight: height)
+            
             .background(Color.cellBackgroundColor())
         }
-        
         //constants
-        let height: CGFloat = 65
+        let height: CGFloat = 50
         let cornerRadius: CGFloat = 10
         
     }
@@ -74,6 +74,16 @@ class RecipeTableViewCell: UITableViewCell {
         let hostingController = UIHostingController(rootView: RecipeRowView(data: cellData))
         addSubview(hostingController.view)
         hostingController.view.fillSuperview()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
+            let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            indicatorButton.setBackgroundImage(image, for: .normal)
+            indicatorButton.tintColor = .label
+        }
     }
 
 }

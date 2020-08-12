@@ -59,9 +59,8 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return NSLocalizedString("name", comment: "")
-        case 1: return NSLocalizedString("bild", comment: "")
         case 2: return NSLocalizedString("anzahl", comment: "")
-        case 3: return "info"
+        case 4: return "info"
         default: return nil
         }
     }
@@ -86,7 +85,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard destinationIndexPath.row < recipe.steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-        guard destinationIndexPath.section == 5 else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
+        guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
         guard recipe.steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
         recipe.moveSteps(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
@@ -98,12 +97,12 @@ extension RecipeDetailDataSource {
         var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
         snapshot.appendSections(RecipeDetailSection.allCases)
         snapshot.appendItems([recipe.nameItem()], toSection: .name)
-        snapshot.appendItems([recipe.imageItem], toSection: .image)
+        snapshot.appendItems([recipe.imageItem], toSection: .imageControlStrip)
+        snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
-        snapshot.appendItems([recipe.infoItem], toSection: .info)
-        snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .controlStrip)
         snapshot.appendItems(recipe.stepItems, toSection: .steps)
         snapshot.appendItems([DetailItem(name: "Schritt hinzufügen", detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([recipe.infoItem], toSection: .info)
         apply(snapshot, animatingDifferences: animated)
     }
     

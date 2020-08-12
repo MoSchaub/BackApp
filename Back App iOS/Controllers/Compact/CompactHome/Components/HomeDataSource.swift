@@ -28,7 +28,8 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
                 cell.textLabel?.text = detailItem.text
                 cell.backgroundColor = color
-                cell.detailTextLabel?.text = detailItem.detailLabel
+                cell.detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.label]) 
+                cell.detailTextLabel?.tintColor = .label
                 cell.accessoryType = .disclosureIndicator
 
                 return cell
@@ -36,8 +37,10 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath) //plain cells
                 cell.textLabel?.text = homeItem.text
                 cell.backgroundColor = color
-                cell.accessoryView = UIImageView(image: UIImage(systemName: "chevron.up"))
-                cell.accessoryView?.tintColor = .tertiaryLabel
+                let image = UIImage(systemName: "chevron.up")
+                image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
+                cell.accessoryView = UIImageView(image: image)
+                cell.accessoryView?.tintColor = .label
                 
                 return cell
             }

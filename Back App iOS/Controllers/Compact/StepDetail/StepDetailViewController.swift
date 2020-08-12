@@ -126,10 +126,10 @@ class StepDetailViewController: UITableViewController {
     private func registerCells() {
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "name")
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "notes")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "duration")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "temp")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "addIngredient")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "substep")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "duration")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "temp")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "addIngredient")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "substep")
     }
 
     private func makeNameCell() -> TextFieldTableViewCell {

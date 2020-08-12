@@ -9,5 +9,5 @@
 import Foundation
 
 enum RecipeDetailSection: CaseIterable {
-    case name, image, times, info, controlStrip, steps
+    case name, imageControlStrip, times, steps, info 
 }
