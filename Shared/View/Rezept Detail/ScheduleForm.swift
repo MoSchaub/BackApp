@@ -32,13 +32,14 @@ struct ScheduleForm: View {
                 .padding(.leading, 35)
             DecimalField("amountCellPlaceholder2", value: self.$times, formatter: self.numberFormatter)
                 .padding([.leading, .vertical])
-                .background(BackgroundGradient())
+                .background(Color("blue"))
+                .cornerRadius(10)
                 .padding([.horizontal,.bottom])
         }
     }
     
     var alert: Alert{
-        Alert(title: Text("Error"), message: Text("scheduleFormErrorMessage"), dismissButton: .default(Text("Ok")))
+        Alert(title: Text("Fehler"), message: Text("Bitte gebe eine Anzahl an"), dismissButton: .default(Text("Ok")))
     }
     
     var okButton: some View {
@@ -74,7 +75,8 @@ struct ScheduleForm: View {
                         .frame(width: UIScreen.main.bounds.width - 30)
                         .padding(.bottom)
                         .clipped()
-                    }.background(BackgroundGradient())
+                    }.background(Color("blue"))
+                        .cornerRadius(10)
                     Text(recipe.formattedDate).font(.title).padding()
                     NavigationLink(destination: ScheduleView(recipe: recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
                        EmptyView()

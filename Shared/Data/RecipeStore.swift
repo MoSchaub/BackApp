@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 import BakingRecipe
 
 final class RecipeStore: ObservableObject{
@@ -20,7 +21,31 @@ final class RecipeStore: ObservableObject{
         }
     }
     
-    @Published var roomTemperature = 20
+    var recipeItems: [RecipeItem] {
+        self.recipes.map({ RecipeItem(id: $0.id, name: $0.formattedName, imageData: $0.imageString, minuteLabel: $0.formattedTotalTime)})
+    }
+    
+    var settingsItems: [TextItem] { [
+        DetailItem(name: NSLocalizedString("raumtemperatur", comment: ""), detailLabel: "\(self.roomTemperature)° C"),
+        TextItem(text: NSLocalizedString("importFile", comment: "")),
+        TextItem(text: NSLocalizedString("exportAll", comment: "")),
+        DetailItem(name: NSLocalizedString("about", comment: ""), detailLabel: "")
+    ]}
+    
+    var roomTemperature: Int {
+        get {
+            if let int = UserDefaults.standard.object(forKey: "roomTemp") as? Int {
+                return int
+            } else {
+                UserDefaults.standard.set(20, forKey: "roomTemp")
+                return 20
+            }
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "roomTemp")
+        }
+    }
+    
     
     /// selection of RecipeDetail
     ///1: ImagePickerView

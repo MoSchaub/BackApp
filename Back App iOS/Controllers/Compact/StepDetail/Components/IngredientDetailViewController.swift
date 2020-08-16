@@ -12,21 +12,38 @@ import BakingRecipe
 class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Properties
-    var ingredient: Ingredient! {
-        willSet {
-            if newValue != nil {
-                recipeStore.update(ingredient: newValue, step: step)
-                title = newValue.formattedName
+    private var ingredient: Ingredient {
+        didSet {
+            DispatchQueue.main.async {
+                self.setupNavigationBar()
+            }
+            update(oldValue: oldValue)
+        }
+    }
+
+    var creating: Bool
+    var saveIngredient: ((Ingredient) -> Void)
+    
+    private func update(oldValue: Ingredient) {
+        DispatchQueue.global(qos: .background).async {
+            if !self.creating, oldValue != self.ingredient {
+                self.saveIngredient(self.ingredient)
             }
         }
     }
-    var step: Step!
     
-    var recipeStore: RecipeStore!
+    var datePicker: UIDatePicker!
     
-    var initializing = true
-    var creating = false
-    var saveIngredient: ((Ingredient, Step) -> Void)?
+    init(ingredient: Ingredient, creating: Bool, saveIngredient: @escaping (Ingredient) -> ()) {
+        self.ingredient = ingredient
+        self.saveIngredient = saveIngredient
+        self.creating = creating
+        super.init(style: .insetGrouped)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Start functions
     
@@ -38,22 +55,22 @@ class IngredientDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addNavigationBarItems()
+        setupNavigationBar()
     }
     
-    // MARK: - NavigationBarItems
+    // MARK: - NavigationBar
     
-    private func addNavigationBarItems() {
+    private func setupNavigationBar() {
         if creating {
             navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addIngredient))
         }
+        title = self.ingredient.formattedName
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     @objc private func addIngredient(_ sender: UIBarButtonItem) {
-        if let saveIngredient = saveIngredient {
-            saveIngredient(ingredient, step)
-            navigationController?.popViewController(animated: true)
-        }
+        saveIngredient(ingredient)
+        navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Rows and Sections
@@ -102,12 +119,14 @@ class IngredientDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.ingredient.name = text
         }
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
     private func makeAmountCell() -> AmountTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "menge") as! AmountTableViewCell
         cell.setUp(with: ingredient, format: format)
+        cell.backgroundColor = UIColor(named: "blue")!
         return cell
     }
     
@@ -129,6 +148,7 @@ class IngredientDetailViewController: UITableViewController {
         cell.accessoryView = toggle
         
         cell.textLabel?.text = NSLocalizedString("bulkLiquid", comment: "")
+        cell.backgroundColor = UIColor(named: "blue")!
         
         return cell
     }

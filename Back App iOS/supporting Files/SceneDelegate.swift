@@ -2,8 +2,8 @@
 //  SceneDelegate.swift
 //  Back App iOS
 //
-//  Created by Moritz Schaub on 26.06.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
+//  Created by Franka Schaub on 26.06.20.
+//  Copyright © 2020 Franka Schaub. All rights reserved.
 //
 
 import UIKit
@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     let recipeStore = RecipeStore()
-    let compactHomeVC = CompactHomeViewController()
+    lazy var compactHomeVC = CompactHomeViewController(recipeStore: recipeStore)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -22,11 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        
-        compactHomeVC.recipeStore = recipeStore
         window.rootViewController = UINavigationController(rootViewController: compactHomeVC)
         window.makeKeyAndVisible()
         self.window = window
+        self.window!.tintColor = UIColor(named: "blue")!
     }
     
     func sceneWillResignActive(_ scene: UIScene) {

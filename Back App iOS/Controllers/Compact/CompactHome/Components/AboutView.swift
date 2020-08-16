@@ -13,8 +13,13 @@ struct AboutView: View {
         ScrollView {
             VStack {
                 Image("AppSymbol")
+                    .resizable()
+                    .scaledToFit()
                     .cornerRadius(10)
-                    .padding(.top)
+                    .padding()
+                    .padding(.horizontal)
+                    .padding(.horizontal)
+                    .padding(.horizontal)
                 Text("appTitle")
                     .font(.largeTitle)
                 Text("Version 1.0")
@@ -57,7 +62,7 @@ struct Link: View {
     var body: some View {
         Button(
             action: {
-                UIApplication.shared.open(url)
+                UIApplication.shared.open(self.url)
             }, label: {
                 HStack {
                     Image(systemName: "globe")

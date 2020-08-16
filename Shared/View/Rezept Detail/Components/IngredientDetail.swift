@@ -34,7 +34,7 @@ struct IngredientDetail: View {
         #if os(iOS)
         return List {
             Section(header: Text("Name")) {
-                TextField("Name eingeben", text: $ingredient.name)
+                TextField("Name eingeben", text: $ingredient.text)
             }
             
             Section(header: Text("Menge")) {

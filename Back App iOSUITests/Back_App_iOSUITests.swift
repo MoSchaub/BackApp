@@ -63,11 +63,9 @@ class Back_App_iOSUITests: XCTestCase {
         returnButton.tap()
         
         // quantity
-        appTables.staticTexts["quantity"].swipeUp()
         let textField = appTables.textFields["1 piece"]
         textField.tap()
-        let moreKey = app.keyboards.keys["numbers"]
-        moreKey.tap()
+        app.keys["more"].tap()
         let key2 = app.keys["2"]
         key2.tap()
         let key0 = app.keys["0"]
@@ -106,7 +104,7 @@ class Back_App_iOSUITests: XCTestCase {
                 // amount
                 let amountTextField = appTables.textFields["0.0 g"]
                 amountTextField.tap()
-                moreKey.tap()
+                app.keys["more"].tap()
                 let str = "\(ingredient.amount)"
                 for char in str {
                     let key = app.keys["\(char)"]
@@ -218,18 +216,16 @@ class Back_App_iOSUITests: XCTestCase {
     func testChangingRoomTemp() throws {
         app.launch()
         
-        appTables.cells.staticTexts["room temperature: 20ºC"].tap()
+        appTables.cells.staticTexts["room temperature"].tap()
         appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
         app.navigationBars["room temperature"].buttons["Baking App"].tap()
-        
 
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["room temperature: 30ºC"].exists)
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
     }
     
     func testInfoButton() throws {
         app.launch()
 
-        app.tables.containing(.other, identifier:"RECIPES").element.swipeUp()
         app.tables.staticTexts["about Baking App"].tap()
                         
     }

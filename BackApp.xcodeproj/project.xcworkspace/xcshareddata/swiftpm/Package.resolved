@@ -3,11 +3,20 @@
     "pins": [
       {
         "package": "BakingRecipe",
-        "repositoryURL": "https://github.com/MoSchaub/BakingRecipe",
+        "repositoryURL": "https://github.com/MoSchaub/BakingRecipe.git",
         "state": {
           "branch": "main",
-          "revision": "7ff648188a007937b7fc23f6b0b0e07b6c6cc571",
+          "revision": "4711daf03098d26adba824d1a3467f5b7f35e323",
           "version": null
+        }
+      },
+      {
+        "package": "LBTATools",
+        "repositoryURL": "https://github.com/bhlvoong/LBTATools.git",
+        "state": {
+          "branch": null,
+          "revision": "dce147bfbdc0417a4b430ec220c088629e9dc81d",
+          "version": "1.0.17"
         }
       }
     ]
