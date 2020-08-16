@@ -34,11 +34,3 @@ extension Recipe {
         steps.map({ StepItem(id: $0.id, step: $0)})
     }
 }
-
-extension Recipe {
-    mutating func moveSteps(from source: Int, to destination: Int) {
-        let destinationStep = steps[destination]
-        steps[destination] = steps[source]
-        steps[source] = destinationStep
-    }
-}

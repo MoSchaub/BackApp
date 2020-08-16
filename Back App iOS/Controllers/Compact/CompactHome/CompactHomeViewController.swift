@@ -2,8 +2,8 @@
 //  CompactHomeViewController.swift
 //  Back App iOS
 //
-//  Created by Franka Schaub on 26.06.20.
-//  Copyright © 2020 Franka Schaub. All rights reserved.
+//  Created by Moritz Schaub on 26.06.20.
+//  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
 import SwiftUI
@@ -13,8 +13,7 @@ class CompactHomeViewController: UITableViewController {
     
     typealias DataSource = HomeDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
-    typealias Franka = String
-    
+
     private lazy var dataSource = makeDataSource()
     private var recipeStore: RecipeStore
     private lazy var documentPicker = UIDocumentPickerViewController(
@@ -33,6 +32,7 @@ class CompactHomeViewController: UITableViewController {
     override func viewDidLoad() {
         registerCells()
         configureNavigationBar()
+        self.tableView.separatorStyle = .none
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -41,6 +41,7 @@ class CompactHomeViewController: UITableViewController {
     }
 
 }
+
 
 import BakingRecipe
 

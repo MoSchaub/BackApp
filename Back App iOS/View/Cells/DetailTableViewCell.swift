@@ -11,10 +11,18 @@ import UIKit
 class DetailTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setup() {
+        self.backgroundColor = UIColor(named: "blue")!
+        detailTextLabel?.tintColor = .label
+        accessoryType = .disclosureIndicator
+        selectionStyle = .none
     }
     
     override func layoutSubviews() {
@@ -29,8 +37,3 @@ class DetailTableViewCell: UITableViewCell {
     
 }
 
-extension UIView {
-   var allSubviews: [UIView] {
-      return subviews.flatMap { [$0] + $0.allSubviews }
-   }
-}

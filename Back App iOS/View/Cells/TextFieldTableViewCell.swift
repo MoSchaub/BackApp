@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TextFieldTableViewCell: UITableViewCell {
+class TextFieldTableViewCell: UITableViewCell, TextFieldCellable {
     
     var textField = UITextField(frame: .zero)
     
@@ -24,13 +24,17 @@ class TextFieldTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureTextField() {
+    internal func configureTextField() {
         textField.delegate = self
+        
         textField.addTarget(self, action: #selector(updateText), for: .editingChanged)
+        textField.addDoneButton(title: "Fertig", target: self, selector: #selector(tapDone))
+        textField.tintColor = .red
+        
         setTextFieldConstraints()
     }
     
-    private func setTextFieldConstraints() {
+    internal func setTextFieldConstraints() {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
@@ -45,6 +49,10 @@ extension TextFieldTableViewCell: UITextFieldDelegate {
         if let textChanged = textChanged, let text = textField.text {
             textChanged(text)
         }
+    }
+    
+    @objc private func tapDone(sender: Any) {
+        self.textField.endEditing(true)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

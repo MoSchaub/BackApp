@@ -14,10 +14,10 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     @Binding var recipe: Recipe
     let creating: Bool
     
-    init(recipe: Binding<Recipe>, creating: Bool, tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String)) {
+    init(recipe: Binding<Recipe>, creating: Bool, tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String), updateInfo: @escaping (String) -> () ) {
         self._recipe = recipe
         self.creating = creating
-        super.init(tableView: tableView) { (_, indexPath, item) -> UITableViewCell? in
+        super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             let color = UIColor(named: "blue")!
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: "textField", for: indexPath) as? TextFieldTableViewCell {
                 cell.textField.text = recipe.wrappedValue.name
@@ -33,11 +33,10 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
                 amountCell.backgroundColor = color
                 return amountCell
-            } else if let infoItem = item as? InfoItem {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
-                cell.textLabel?.text = infoItem.text
-                cell.backgroundColor = color
-                return cell
+            } else if item is InfoItem {
+                return InfoTableViewCell(infoText: Binding(get: {
+                    return recipe.wrappedValue.info
+                }, set: updateInfo), reuseIdentifier: "info")
             } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: "infoStrip", for: indexPath) as? InfoStripTableViewCell {
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell
@@ -87,7 +86,9 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         guard destinationIndexPath.row < recipe.steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
         guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
         guard recipe.steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-        recipe.moveSteps(from: sourceIndexPath.row, to: destinationIndexPath.row)
+    
+        let stepToMove = recipe.steps.remove(at: sourceIndexPath.row)
+        recipe.steps.insert(stepToMove, at: destinationIndexPath.row)
     }
     
 }

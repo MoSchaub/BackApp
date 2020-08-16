@@ -7,14 +7,6 @@
 //
 
 import SwiftUI
-import LBTATools
-
-extension Color {
-    
-    static func cellBackgroundColor() -> Color {
-        Color("blue")
-    }
-}
 
 class RecipeTableViewCell: UITableViewCell {
     
@@ -63,6 +55,7 @@ class RecipeTableViewCell: UITableViewCell {
             .padding()
             
             .background(Color.cellBackgroundColor())
+            .frame(maxHeight: .infinity)
         }
         //constants
         let height: CGFloat = 50
@@ -72,8 +65,12 @@ class RecipeTableViewCell: UITableViewCell {
     
     func setUp(cellData: RecipeCellData) {
         let hostingController = UIHostingController(rootView: RecipeRowView(data: cellData))
-        addSubview(hostingController.view)
+        contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
+        backgroundColor = UIColor(named: "blue")!
+        
+        accessoryType = .disclosureIndicator
+        selectionStyle = .none
     }
     
     override func layoutSubviews() {

@@ -51,7 +51,7 @@ extension RecipeDetailViewController {
         super.viewDidLoad()
         registerCells()
         setUpNavigationBar()
-        
+        self.tableView.separatorStyle = .none
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +73,8 @@ private extension RecipeDetailViewController {
             guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
             self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
             return self.recipe.timesText
+        }, updateInfo: { info in
+            self.recipe.info = info
         })
     }
 }
@@ -102,6 +104,7 @@ private extension RecipeDetailViewController {
         tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: "infoStrip")
         tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: "times")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
+        tableView.register(InfoTableViewCell.self, forCellReuseIdentifier: "info")
     }
 }
 

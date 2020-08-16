@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import LBTATools
 
 class ImageTableViewCell: UITableViewCell {
     
@@ -42,6 +41,7 @@ class ImageTableViewCell: UITableViewCell {
         addSubview(hostingController.view)
         
         hostingController.view.fillSuperview()
+        selectionStyle = .none
     }
     
 }

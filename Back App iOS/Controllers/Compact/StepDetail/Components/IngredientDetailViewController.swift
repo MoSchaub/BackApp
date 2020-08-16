@@ -64,7 +64,7 @@ class IngredientDetailViewController: UITableViewController {
         if creating {
             navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addIngredient))
         }
-        title = self.ingredient.name
+        title = self.ingredient.formattedName
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     

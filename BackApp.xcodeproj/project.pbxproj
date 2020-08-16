@@ -16,6 +16,10 @@
 		CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */; };
 		CD0CB77124BB721A005B7B78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
 		CD0CB77224BB721A005B7B78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
+		CD229C0924E93A8F003C3683 /* UITextFieldAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0824E93A8F003C3683 /* UITextFieldAdditions.swift */; };
+		CD229C0B24E93EA2003C3683 /* TextFieldCellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */; };
+		CD229C0D24E93F2F003C3683 /* Color+cellBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0C24E93F2F003C3683 /* Color+cellBackgroundColor.swift */; };
+		CD229C0F24E93F8A003C3683 /* UIVIew+allSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0E24E93F8A003C3683 /* UIVIew+allSubviews.swift */; };
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
@@ -24,6 +28,7 @@
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */; };
 		CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */; };
+		CD4A171424E89F4A00395B48 /* UITextViewAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4A171324E89F4A00395B48 /* UITextViewAdditions.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
@@ -46,7 +51,6 @@
 		CD663F6E24E2A251008F9A09 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6D24E2A251008F9A09 /* DetailTableViewCell.swift */; };
 		CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */; };
 		CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD664D5524A699AD00884CAE /* StepTableViewCell.swift */; };
-		CD68D45824AC58B8000D4BD7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */; };
 		CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -66,6 +70,7 @@
 		CDA7EE6A24A67EA200763E21 /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B5248BDA3000D11DD3 /* StepRow.swift */; };
 		CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
+		CDAE672824E5C32F007A366F /* InfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */; };
 		CDAF36D324E1398F00C6A5D8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDAF36D224E1398F00C6A5D8 /* BakingRecipe */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
@@ -123,8 +128,11 @@
 
 /* Begin PBXFileReference section */
 		CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
-		CD0CB77024BB6880005B7B78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		CD229C0824E93A8F003C3683 /* UITextFieldAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldAdditions.swift; sourceTree = "<group>"; };
+		CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellable.swift; sourceTree = "<group>"; };
+		CD229C0C24E93F2F003C3683 /* Color+cellBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+cellBackgroundColor.swift"; sourceTree = "<group>"; };
+		CD229C0E24E93F8A003C3683 /* UIVIew+allSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+allSubviews.swift"; sourceTree = "<group>"; };
 		CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTimeTableViewController.swift; sourceTree = "<group>"; };
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
@@ -134,6 +142,7 @@
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
 		CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTableViewCell.swift; sourceTree = "<group>"; };
 		CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempTableViewController.swift; sourceTree = "<group>"; };
+		CD4A171324E89F4A00395B48 /* UITextViewAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewAdditions.swift; sourceTree = "<group>"; };
 		CD59040724E2CF4F008A0E6E /* Push Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Push Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD59040824E2CF4F008A0E6E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
@@ -199,6 +208,7 @@
 		CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewCell.swift; sourceTree = "<group>"; };
 		CDB5BD92246C358B00B7A356 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
@@ -249,6 +259,10 @@
 			isa = PBXGroup;
 			children = (
 				CD663F6F24E2A267008F9A09 /* Cells */,
+				CD4A171324E89F4A00395B48 /* UITextViewAdditions.swift */,
+				CD229C0824E93A8F003C3683 /* UITextFieldAdditions.swift */,
+				CD229C0E24E93F8A003C3683 /* UIVIew+allSubviews.swift */,
+				CD229C0C24E93F2F003C3683 /* Color+cellBackgroundColor.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -312,12 +326,14 @@
 			isa = PBXGroup;
 			children = (
 				CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */,
+				CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */,
 				CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */,
 				CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */,
 				CD664D5524A699AD00884CAE /* StepTableViewCell.swift */,
 				CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */,
 				CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */,
 				CD663F6D24E2A251008F9A09 /* DetailTableViewCell.swift */,
+				CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -482,7 +498,6 @@
 				CD0B4B0624A60A8200EA9FC8 /* View */,
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
-				CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */,
 				CD68D46024AC5C80000D4BD7 /* Localizable.strings */,
 				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
 			);
@@ -722,7 +737,6 @@
 				CDA7EE5724A67E7000763E21 /* Colors.xcassets in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
-				CD68D45824AC58B8000D4BD7 /* Launch Screen.storyboard in Resources */,
 				CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
@@ -770,8 +784,10 @@
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
+				CD229C0924E93A8F003C3683 /* UITextFieldAdditions.swift in Sources */,
 				CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */,
 				CD663F6E24E2A251008F9A09 /* DetailTableViewCell.swift in Sources */,
+				CD4A171424E89F4A00395B48 /* UITextViewAdditions.swift in Sources */,
 				CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */,
 				CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */,
 				CD0A179624ADF0A7001CDF5F /* TextViewExtension.swift in Sources */,
@@ -782,13 +798,16 @@
 				CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */,
 				CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */,
 				CDA1D80E24A942EC00DDF709 /* RecipeTableViewCell.swift in Sources */,
+				CDAE672824E5C32F007A366F /* InfoTableViewCell.swift in Sources */,
 				CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */,
 				CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */,
 				CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */,
 				CD663F5C24E2A00E008F9A09 /* ImageItem.swift in Sources */,
 				CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */,
+				CD229C0D24E93F2F003C3683 /* Color+cellBackgroundColor.swift in Sources */,
 				CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */,
 				CD663F5E24E2A03A008F9A09 /* AmountItem.swift in Sources */,
+				CD229C0B24E93EA2003C3683 /* TextFieldCellable.swift in Sources */,
 				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
 				CD663F6A24E2A16F008F9A09 /* Recipe+Items.swift in Sources */,
@@ -804,6 +823,7 @@
 				CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */,
 				CD663F5A24E2A005008F9A09 /* TextFiedItem.swift in Sources */,
 				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
+				CD229C0F24E93F8A003C3683 /* UIVIew+allSubviews.swift in Sources */,
 				CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,14 +863,6 @@
 				CD59041024E2CF4F008A0E6E /* Base */,
 			);
 			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
-		CD68D45A24AC58B8000D4BD7 /* Launch Screen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CD0CB77024BB6880005B7B78 /* Base */,
-			);
-			name = "Launch Screen.storyboard";
 			sourceTree = "<group>";
 		};
 		CD68D46024AC5C80000D4BD7 /* Localizable.strings */ = {

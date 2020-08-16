@@ -8,6 +8,25 @@
 
 import UIKit
 
+extension UITableViewCell {
+    func setupPlainCell(text: String) {
+        let color = UIColor(named: "blue")!
+        let image = UIImage(systemName: "chevron.up")
+        image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
+        
+        textLabel?.text = text
+        backgroundColor = color
+        accessoryView = UIImageView(image: image)
+        accessoryView?.tintColor = .label
+        selectionStyle = .none
+    }
+    
+    func setupDetailCell(detailItem: DetailItem) {
+        textLabel?.text = detailItem.text
+        detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.label])
+    }
+}
+
 class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     // storage object for recipes
     var recipeStore: RecipeStore
@@ -17,35 +36,22 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
-            let color = UIColor(named: "blue")!
-            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath) as? RecipeTableViewCell { //recipeCell
+            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath) as? RecipeTableViewCell {
+                //recipeCell
                 recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
-                recipeCell.backgroundColor = color
-                recipeCell.accessoryType = .disclosureIndicator
-                
                 return recipeCell
-            } else if let detailItem = homeItem as? DetailItem { // Detail Cell (RoomTemp und About)
+            } else if let detailItem = homeItem as? DetailItem {
+                // Detail Cell (RoomTemp und About)
                 let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
-                cell.textLabel?.text = detailItem.text
-                cell.backgroundColor = color
-                cell.detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.label]) 
-                cell.detailTextLabel?.tintColor = .label
-                cell.accessoryType = .disclosureIndicator
-
+                cell.setupDetailCell(detailItem: detailItem)
                 return cell
             } else {
+                // plain cell
                 let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath) //plain cells
-                cell.textLabel?.text = homeItem.text
-                cell.backgroundColor = color
-                let image = UIImage(systemName: "chevron.up")
-                image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
-                cell.accessoryView = UIImageView(image: image)
-                cell.accessoryView?.tintColor = .label
-                
+                cell.setupPlainCell(text: homeItem.text)
                 return cell
             }
         }
-        //update(animated: false)
     }
     
     /// updates and rerenders the tableview

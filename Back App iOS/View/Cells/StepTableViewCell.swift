@@ -10,16 +10,7 @@ import SwiftUI
 import BakingRecipe
 
 class StepTableViewCell: UITableViewCell {
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -33,9 +24,12 @@ class StepTableViewCell: UITableViewCell {
     func setUpCell(for step: Step) {
         let rootView = StepRow(step: step)
         let hostingController = UIHostingController(rootView: rootView)
-        addSubview(hostingController.view)
+        contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
+        
         accessoryType = .disclosureIndicator
+        backgroundColor = UIColor(named: "blue")!
+        selectionStyle = .none
     }
 
 }
