@@ -102,7 +102,7 @@ extension RecipeDetailDataSource {
         snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
         snapshot.appendItems(recipe.stepItems, toSection: .steps)
-        snapshot.appendItems([DetailItem(name: "Schritt hinzufügen", detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([DetailItem(name: NSLocalizedString("addStep", comment: ""), detailLabel: "")],toSection: .steps)
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         apply(snapshot, animatingDifferences: animated)
     }

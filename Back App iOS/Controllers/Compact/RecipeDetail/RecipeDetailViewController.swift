@@ -206,7 +206,7 @@ extension RecipeDetailViewController {
             } else if let detailItem = item as? DetailItem {
                 if detailItem.text == NSLocalizedString("startRecipe", comment: "") {
                     startRecipe()
-                } else if detailItem.text == "Schritt hinzufügen" {
+                } else if detailItem.text == NSLocalizedString("addStep", comment: "") {
                     addStep()
                 }
             }
