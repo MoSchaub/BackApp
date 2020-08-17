@@ -22,7 +22,7 @@ class StepTimeTableViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     // MARK: - Start functions
@@ -30,7 +30,7 @@ class StepTimeTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        title = NSLocalizedString("duration", comment: "")
+        title = Strings.duration
     }
 
     // MARK: - rows and sections
@@ -50,7 +50,7 @@ class StepTimeTableViewController: UITableViewController {
     // MARK: - Cells
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "timePicker")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.timePickerCell)!
 
         cell.selectionStyle = .none
         
@@ -69,13 +69,13 @@ class StepTimeTableViewController: UITableViewController {
         DispatchQueue.main.async(execute: {
             self.datePicker.countDownDuration = self.time
         })
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
     
     private func registerCells() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "timePicker")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.timePickerCell)
     }
     
     @objc private func datePickerChanged(_ sender: UIDatePicker) {

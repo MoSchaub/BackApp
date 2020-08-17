@@ -20,39 +20,30 @@ struct AboutView: View {
                     .padding(.horizontal)
                     .padding(.horizontal)
                     .padding(.horizontal)
-                Text("appTitle")
+                Text(Strings.appTitle)
                     .font(.largeTitle)
-                Text("Version 1.0")
+                Text(Strings.version)
                     .secondary()
                 
                 Spacer()
                 
                 VStack(alignment: .leading) {
                     Divider()
-                    Text(donateText)
+                    Text(Strings.donate_text)
                     Divider()
-                    Link(url: donateURL, title: "Unterstützen")
+                    Link(url: Strings.donateURL, title: Strings.support)
                     Divider()
-                    Link(url: websiteURL, title: "Website")
+                    Link(url: Strings.websiteURL, title: Strings.website)
                     Divider()
-                    Link(url: privacyPolicyURL, title: "Datenschutzerklärung")
+                    Link(url: Strings.privacyPolicyURL, title: Strings.privacy_policy)
                     Divider()
                     
                 }.padding(.horizontal)
             }
             
         }
-        .navigationBarTitle("About", displayMode: .inline)
+        .navigationBarTitle(Text(Strings.about), displayMode: .inline)
     }
-    
-    let donateText = """
-Die Nutzung dieser App mit allen Funktionen ist komplett gratis und ohne jegliche Werbung.
-Jedoch ist die Entwicklung dieser App mit einer Menge an Kosten und Arbeit verbunden und wenn sie mit einem kleinem Beitrag die Entwicklung dieser App unterstützen wollen, würden wir uns als Entwickler sehr freuen.
-"""
-    
-    let websiteURL = URL(string: "https://heimbaecker.de/backapp")!
-    let privacyPolicyURL = URL(string: "https://heimbaecker.de/backapp-datenschutzerklaerung")!
-    let donateURL = URL(string: "https://heimbaecker.de/backapp-donate")!
 }
 
 struct Link: View {

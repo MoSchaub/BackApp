@@ -18,33 +18,33 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         self._recipe = recipe
         self.creating = creating
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            let color = UIColor(named: "blue")!
-            if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: "textField", for: indexPath) as? TextFieldTableViewCell {
+            let color = UIColor(named: Strings.backgroundColorName)!
+            if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldTableViewCell {
                 cell.textField.text = recipe.wrappedValue.name
-                cell.textField.placeholder = NSLocalizedString("name", comment: "")
+                cell.textField.placeholder = Strings.name
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
                 cell.backgroundColor = color
                 return cell
-            } else if let imageItem = item as? ImageItem, let imageCell = tableView.dequeueReusableCell(withIdentifier: "image", for: indexPath) as? ImageTableViewCell {
+            } else if let imageItem = item as? ImageItem, let imageCell = tableView.dequeueReusableCell(withIdentifier: Strings.imageCell, for: indexPath) as? ImageTableViewCell {
                 imageCell.setup(imageData: imageItem.imageData)
                 return imageCell
-            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: "times", for: indexPath) as? AmountTableViewCell{
+            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountTableViewCell{
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
                 amountCell.backgroundColor = color
                 return amountCell
             } else if item is InfoItem {
                 return InfoTableViewCell(infoText: Binding(get: {
                     return recipe.wrappedValue.info
-                }, set: updateInfo), reuseIdentifier: "info")
-            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: "infoStrip", for: indexPath) as? InfoStripTableViewCell {
+                }, set: updateInfo), reuseIdentifier: Strings.infoCell)
+            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripTableViewCell {
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell
             } else if let stepItem = item as? StepItem {
-                let stepCell = StepTableViewCell(style: .default, reuseIdentifier: "step")
+                let stepCell = StepTableViewCell(style: .default, reuseIdentifier: Strings.stepCell)
                 stepCell.setUpCell(for: stepItem.step)
                 return stepCell
-            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath) as? DetailTableViewCell {
+            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailTableViewCell {
                 let title = NSAttributedString(string: detailItem.text, attributes: [.foregroundColor : UIColor.label])
                 cell.textLabel?.attributedText = title
                 cell.accessoryType = .disclosureIndicator
@@ -57,9 +57,9 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return NSLocalizedString("name", comment: "")
-        case 2: return NSLocalizedString("anzahl", comment: "")
-        case 4: return "info"
+        case 0: return Strings.name
+        case 2: return Strings.quantity
+        case 4: return Strings.info
         default: return nil
         }
     }
@@ -102,7 +102,7 @@ extension RecipeDetailDataSource {
         snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
         snapshot.appendItems(recipe.stepItems, toSection: .steps)
-        snapshot.appendItems([DetailItem(name: NSLocalizedString("addStep", comment: ""), detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         apply(snapshot, animatingDifferences: animated)
     }

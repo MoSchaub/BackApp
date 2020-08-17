@@ -10,6 +10,6 @@ import SwiftUI
 
 extension Color {
     static func cellBackgroundColor() -> Color {
-        Color(UIColor(named: "blue")!)
+        Color(UIColor(named: Strings.backgroundColorName)!)
     }
 }

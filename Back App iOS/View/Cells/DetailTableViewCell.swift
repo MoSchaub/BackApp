@@ -15,11 +15,11 @@ class DetailTableViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     private func setup() {
-        self.backgroundColor = UIColor(named: "blue")!
+        self.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         detailTextLabel?.tintColor = .label
         accessoryType = .disclosureIndicator
         selectionStyle = .none

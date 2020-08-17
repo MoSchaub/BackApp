@@ -42,7 +42,7 @@ class RecipeDetailViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
 }
 
@@ -97,14 +97,14 @@ private extension RecipeDetailViewController {
     }
     
     private func registerCells() {
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "detail")
-        tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: "image")
-        tableView.register(StepTableViewCell.self, forCellReuseIdentifier: "step")
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textField")
-        tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: "infoStrip")
-        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: "times")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
-        tableView.register(InfoTableViewCell.self, forCellReuseIdentifier: "info")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: Strings.imageCell)
+        tableView.register(StepTableViewCell.self, forCellReuseIdentifier: Strings.stepCell)
+        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.textFieldCell)
+        tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: Strings.infoStripCell)
+        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
+        tableView.register(InfoTableViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 }
 
@@ -153,7 +153,7 @@ extension RecipeDetailViewController {
             NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .footnote),
             .foregroundColor : UIColor.secondaryLabel,
         ]
-        titleLabel.attributedText = NSAttributedString(string: "Schritte".uppercased(), attributes: attributes)
+        titleLabel.attributedText = NSAttributedString(string: Strings.steps.uppercased(), attributes: attributes)
         
         let stackView = UIStackView(frame: CGRect(x: 5, y: 0, width: frame.size.width - 10, height: frame.size.height))
         stackView.addArrangedSubview(titleLabel)
@@ -165,9 +165,9 @@ extension RecipeDetailViewController {
     private func attributedTitleForEditButton() -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : UIColor(named: "blue")!
+            .foregroundColor : UIColor(named: Strings.backgroundColorName)!
         ]
-        let titleString = isEditing ? "Fertig" : "Bearbeiten"
+        let titleString = isEditing ? Strings.EditButton_Done : Strings.EditButton_Edit
         return NSAttributedString(string: titleString, attributes: attributes)
     }
     
@@ -204,9 +204,9 @@ extension RecipeDetailViewController {
             } else if let stepItem = item as? StepItem {
                 showStepDetail(id: stepItem.id)
             } else if let detailItem = item as? DetailItem {
-                if detailItem.text == NSLocalizedString("startRecipe", comment: "") {
+                if detailItem.text == Strings.startRecipe {
                     startRecipe()
-                } else if detailItem.text == NSLocalizedString("addStep", comment: "") {
+                } else if detailItem.text == Strings.addStep {
                     addStep()
                 }
             }
@@ -222,25 +222,25 @@ private extension RecipeDetailViewController {
         }
         imagePickerController = UIImagePickerController()
         
-        let alert = UIAlertController(title: "Bild auswählen, bearbeiten, oder aktuelles Bild entfernen", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: Strings.image_alert_title, message: nil, preferredStyle: .actionSheet)
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alert.addAction(UIAlertAction(title: "aufnehmen", style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: Strings.take_picture, style: .default, handler: { (_) in
                 self.presentImagePicker(controller: self.imagePickerController!, for: .camera)
             }))
         }
         
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            alert.addAction(UIAlertAction(title: "auswählen", style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: Strings.select_image, style: .default, handler: { (_) in
                 self.presentImagePicker(controller: self.imagePickerController!, for: .photoLibrary)
             }))
         }
         
-        alert.addAction(UIAlertAction(title: "Bild entfernen", style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
             self.recipe.imageString = nil
             self.dataSource.update(animated: false)
         }))
-        alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel, handler: { (_) in
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.cellForRow(at: indexPath)?.isSelected = false
             }
@@ -263,7 +263,7 @@ private extension RecipeDetailViewController {
     }
     
     private func startRecipe() {
-        let roomTemp = UserDefaults.standard.integer(forKey: "roomTemp")
+        let roomTemp = UserDefaults.standard.integer(forKey: Strings.roomTempKey)
         let recipeBinding = Binding(get: {
             return self.recipe
         }) { (newValue) in
@@ -276,7 +276,7 @@ private extension RecipeDetailViewController {
     }
     
     private func addStep() {
-        let step = Step(name: "", time: 60)
+        let step = Step(time: 60)
         let stepDetailVC = StepDetailViewController(step: step, creating: true, recipe: recipe) { step in
             self.recipe.steps.append(step)
             DispatchQueue.main.async {

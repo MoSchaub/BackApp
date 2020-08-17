@@ -16,8 +16,8 @@ class RoomTempTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tempPicker")
-        title = NSLocalizedString("raumtemperatur", comment: "")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.tempPickerCell)
+        title = Strings.roomTemperature
     }
 
     // MARK: rows and sections
@@ -37,7 +37,7 @@ class RoomTempTableViewController: UITableViewController {
     // MARK: - Cell
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tempPicker", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath)
         configurePicker()
         cell.contentView.addSubview(picker)
         
@@ -46,7 +46,7 @@ class RoomTempTableViewController: UITableViewController {
         picker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
         picker.trailingAnchor.constraint(lessThanOrEqualTo: cell.trailingAnchor, constant: -10).isActive = true
         picker.heightAnchor.constraint(equalTo: cell.heightAnchor, multiplier: 0.8).isActive = true
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
 
         return cell
     }
@@ -69,7 +69,7 @@ extension RoomTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        "\(row - 10)"
+        String((row - 10))
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

@@ -48,6 +48,7 @@ class RecipeTableViewCell: UITableViewCell {
                 VStack(alignment: .leading) {
                     Text(data.name)
                         .font(.headline)
+                        .lineLimit(1)
                     Text(data.minuteLabel).secondary()
                 }
                 Spacer()
@@ -67,7 +68,7 @@ class RecipeTableViewCell: UITableViewCell {
         let hostingController = UIHostingController(rootView: RecipeRowView(data: cellData))
         contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
-        backgroundColor = UIColor(named: "blue")!
+        backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         accessoryType = .disclosureIndicator
         selectionStyle = .none

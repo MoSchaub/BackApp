@@ -26,7 +26,7 @@ class CompactHomeViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     override func viewDidLoad() {
@@ -47,13 +47,13 @@ import BakingRecipe
 
 private extension CompactHomeViewController {
     private func registerCells() {
-        tableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: "recipe")
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "detail")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "plain")
+        tableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: Strings.recipeCell)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
     }
     
     private func configureNavigationBar() {
-        title = NSLocalizedString("appTitle", comment: "apptitle")
+        title = Strings.appTitle
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
@@ -84,13 +84,13 @@ extension CompactHomeViewController {
         
         if let recipeItem = item as? RecipeItem {
             navigateToRecipe(recipeItem: recipeItem)
-        } else if item.text == NSLocalizedString("raumtemperatur", comment: "") {
+        } else if item.text == Strings.roomTemperature {
             navigateToRoomTempPicker(item: item)
-        } else if item.text == NSLocalizedString("importFile", comment: "") {
+        } else if item.text == Strings.importFile {
             openImportFilePopover()
-        } else if item.text == NSLocalizedString("exportAll", comment: "") {
+        } else if item.text == Strings.exportAll {
             openExportAllShareSheet()
-        } else if item.text == NSLocalizedString("about", comment: "") {
+        } else if item.text == Strings.about {
             navigateToAboutView()
         }
     }
@@ -160,7 +160,7 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         }
         
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
             alert.dismiss(animated: true)
             if alert.title == "Erfolg" {
                 self.dataSource.update(animated: true)
