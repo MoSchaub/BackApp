@@ -28,7 +28,7 @@ class StepTableViewCell: UITableViewCell {
         hostingController.view.fillSuperview()
         
         accessoryType = .disclosureIndicator
-        backgroundColor = UIColor(named: "blue")!
+        backgroundColor = UIColor(named: Strings.backgroundColorName)!
         selectionStyle = .none
     }
 

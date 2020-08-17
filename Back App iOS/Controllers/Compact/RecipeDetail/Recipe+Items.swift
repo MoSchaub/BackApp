@@ -27,7 +27,7 @@ extension Recipe {
     }
     
     func controlStripItems(creating: Bool) -> [Item] {
-        creating ? [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients)] : [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients), DetailItem(name: NSLocalizedString("startRecipe", comment: ""), detailLabel: "")]
+        creating ? [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients)] : [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients), DetailItem(name: Strings.startRecipe)]
     }
     
     var stepItems: [StepItem] {

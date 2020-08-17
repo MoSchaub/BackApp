@@ -22,18 +22,18 @@ class InfoStripTableViewCell: UITableViewCell {
             HStack{
                 Spacer()
                 VStack {
-                    Text("\(minuteCount)")
-                    Text("Min").secondary()
+                    Text(String(minuteCount))
+                    Text(Strings.minutes).secondary()
                 }
                 Spacer()
                 VStack{
-                    Text("\(ingredientCount)")
-                    Text("Zutaten").secondary()
+                    Text(String(ingredientCount))
+                    Text(Strings.ingredients).secondary()
                 }
                 Spacer()
                 VStack{
-                    Text("\(stepCount)")
-                    Text("Schritte").secondary()
+                    Text(String(stepCount))
+                    Text(Strings.steps).secondary()
                 }
                 Spacer()
             }

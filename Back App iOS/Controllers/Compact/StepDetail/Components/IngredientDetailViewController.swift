@@ -42,7 +42,7 @@ class IngredientDetailViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     // MARK: - Start functions
@@ -85,9 +85,9 @@ class IngredientDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return NSLocalizedString("name", comment: "")
+            return Strings.name
         } else if section == 1 {
-            return NSLocalizedString("amount", comment: "")
+            return Strings.amount
         } else {
             return nil
         }
@@ -106,27 +106,27 @@ class IngredientDetailViewController: UITableViewController {
     }
     
     private func registerCells() {
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "name")
-        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: "menge")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "isBulkLiquid")
+        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.nameCell)
+        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
     }
     
     private func makeNameCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "name") as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldTableViewCell
         cell.textField.text = ingredient.name
-        cell.textField.placeholder = NSLocalizedString("name", comment: "")
+        cell.textField.placeholder = Strings.name
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.ingredient.name = text
         }
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         return cell
     }
     
     private func makeAmountCell() -> AmountTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "menge") as! AmountTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell) as! AmountTableViewCell
         cell.setUp(with: ingredient, format: format)
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         return cell
     }
     
@@ -137,7 +137,7 @@ class IngredientDetailViewController: UITableViewController {
     }
     
     private func makeIsBulkLiquidCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "isBulkLiquid")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell)!
         
         let toggle = UISwitch(frame: .zero)
         
@@ -147,8 +147,8 @@ class IngredientDetailViewController: UITableViewController {
         cell.selectionStyle = .none
         cell.accessoryView = toggle
         
-        cell.textLabel?.text = NSLocalizedString("bulkLiquid", comment: "")
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.textLabel?.text = Strings.bulkLiquid
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }

@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = UINavigationController(rootViewController: compactHomeVC)
         window.makeKeyAndVisible()
         self.window = window
-        self.window!.tintColor = UIColor(named: "blue")!
+        self.window!.tintColor = UIColor(named: Strings.backgroundColorName)!
     }
     
     func sceneWillResignActive(_ scene: UIScene) {

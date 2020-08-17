@@ -44,7 +44,7 @@ class StepDetailViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     // MARK: - Start functions
@@ -94,11 +94,11 @@ class StepDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return NSLocalizedString("name", comment: "")
-        case 1: return NSLocalizedString("notes", comment: "")
-        case 2: return NSLocalizedString("duration", comment: "")
-        case 3: return NSLocalizedString("temperature", comment: "")
-        case 4: return NSLocalizedString("Zutaten", comment: "")
+        case 0: return Strings.name
+        case 1: return Strings.notes
+        case 2: return Strings.duration
+        case 3: return Strings.temperature
+        case 4: return Strings.ingredients
         default: return ""
         }
     }
@@ -124,89 +124,89 @@ class StepDetailViewController: UITableViewController {
     }
 
     private func registerCells() {
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "name")
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "notes")
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "duration")
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "temp")
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "addIngredient")
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "substep")
+        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.nameCell)
+        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.notesCell)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.durationCell)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.tempCell)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.addIngredientCell)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.substepCell)
     }
 
     private func makeNameCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "name") as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldTableViewCell
         cell.textField.text = step.name
-        cell.textField.placeholder = NSLocalizedString("name", comment: "")
+        cell.textField.placeholder = Strings.name
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.name = text
         }
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         return cell
     }
     
     private func makeNotesCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "notes") as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.notesCell) as! TextFieldTableViewCell
         cell.textField.text = step.notes
-        cell.textField.placeholder = NSLocalizedString("notes", comment: "")
+        cell.textField.placeholder = Strings.notes
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.notes = text
         }
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         return cell
     }
     
     private func makeDurationCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "duration")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.durationCell)!
         
         cell.textLabel?.text = step.formattedTime
         cell.accessoryType = .disclosureIndicator
         
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         return cell
     }
     
     private func makeTempCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "temp")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempCell)!
         cell.textLabel?.text = step.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
     
     private func makeIngredientCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ingredient")
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: Strings.ingredientCell)
         cell.prepareForReuse()
         
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
-        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: "roomTemp")))° C" : "")
+        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: Strings.roomTempKey)))° C" : "")
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
     
     private func makeSubstepCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "substep")
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: Strings.substepCell)
         cell.prepareForReuse()
         
         let substep = step.subSteps[indexPath.row]
         cell.textLabel?.text = substep.name
         cell.detailTextLabel?.text = substep.totalFormattedAmount + " " + substep.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
     
     private func makeAddIngredientCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "addIngredient")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.addIngredientCell)!
         
-        cell.textLabel?.text = NSLocalizedString("addIngredient", comment: "")
+        cell.textLabel?.text = Strings.addIngredient
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
@@ -259,15 +259,15 @@ class StepDetailViewController: UITableViewController {
             if indexPath.row - step.subSteps.count == step.ingredients.count {
                 let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
                 if stepsWithIngredients.count > 0 {
-                    let alert = UIAlertController(title: NSLocalizedString("ingredientOrStep", comment: ""), message: nil, preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: Strings.ingredientOrStep, message: nil, preferredStyle: .actionSheet)
                     
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("newIngredient", comment: ""), style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: Strings.newIngredient, style: .default, handler: { _ in
                         self.navigateToIngredientDetail(creating: true, indexPath: indexPath)
                     }))
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("step", comment: ""), style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: Strings.step, style: .default, handler: { _ in
                         self.showSubstepsActionSheet(possibleSubsteps: stepsWithIngredients)
                     }))
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
                     
                     present(alert, animated: true)
                 } else {
@@ -332,7 +332,7 @@ class StepDetailViewController: UITableViewController {
     }
     
     private func showSubstepsActionSheet(possibleSubsteps: [Step]) {
-        let actionSheet = UIAlertController(title: NSLocalizedString("selectStep", comment: ""), message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: Strings.selectStep, message: nil, preferredStyle: .actionSheet)
         
         for possibleSubstep in possibleSubsteps {
             actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
@@ -341,7 +341,7 @@ class StepDetailViewController: UITableViewController {
             }))
         }
         
-        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
         
         present(actionSheet, animated: true)
     }

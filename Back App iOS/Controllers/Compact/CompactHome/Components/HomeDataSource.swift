@@ -10,7 +10,7 @@ import UIKit
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {
-        let color = UIColor(named: "blue")!
+        let color = UIColor(named: Strings.backgroundColorName)!
         let image = UIImage(systemName: "chevron.up")
         image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
         
@@ -36,18 +36,18 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
-            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: "recipe", for: indexPath) as? RecipeTableViewCell {
+            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: Strings.recipeCell, for: indexPath) as? RecipeTableViewCell {
                 //recipeCell
                 recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
                 return recipeCell
             } else if let detailItem = homeItem as? DetailItem {
                 // Detail Cell (RoomTemp und About)
-                let cell = tableView.dequeueReusableCell(withIdentifier: "detail", for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath)
                 cell.setupDetailCell(detailItem: detailItem)
                 return cell
             } else {
                 // plain cell
-                let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath) //plain cells
+                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) //plain cells
                 cell.setupPlainCell(text: homeItem.text)
                 return cell
             }

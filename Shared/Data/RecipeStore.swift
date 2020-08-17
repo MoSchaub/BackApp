@@ -26,23 +26,23 @@ final class RecipeStore: ObservableObject{
     }
     
     var settingsItems: [TextItem] { [
-        DetailItem(name: NSLocalizedString("raumtemperatur", comment: ""), detailLabel: "\(self.roomTemperature)° C"),
-        TextItem(text: NSLocalizedString("importFile", comment: "")),
-        TextItem(text: NSLocalizedString("exportAll", comment: "")),
-        DetailItem(name: NSLocalizedString("about", comment: ""), detailLabel: "")
+        DetailItem(name: Strings.roomTemperature, detailLabel: "\(self.roomTemperature)° C"),
+        TextItem(text: Strings.importFile),
+        TextItem(text: Strings.exportAll),
+        DetailItem(name: Strings.about)
     ]}
     
     var roomTemperature: Int {
         get {
-            if let int = UserDefaults.standard.object(forKey: "roomTemp") as? Int {
+            if let int = UserDefaults.standard.object(forKey: Strings.roomTempKey) as? Int {
                 return int
             } else {
-                UserDefaults.standard.set(20, forKey: "roomTemp")
+                UserDefaults.standard.set(20, forKey: Strings.roomTempKey)
                 return 20
             }
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: "roomTemp")
+            UserDefaults.standard.setValue(newValue, forKey: Strings.roomTempKey)
         }
     }
     
@@ -224,7 +224,7 @@ final class RecipeStore: ObservableObject{
             url.stopAccessingSecurityScopedResource() // release the security-scoped resource after the data is read from the file
         } catch {
             print("Couldn't load \(url) from main bundle:\n\(error)")
-            self.inputAlertTitle = "Fehler"
+            self.inputAlertTitle = Strings.Alert_Error
             self.inputAlertMessage = error.localizedDescription
             return nil
         }
@@ -237,8 +237,8 @@ final class RecipeStore: ObservableObject{
                 self.isArray = true
                 for recipe in recipes{
                     if self.recipes.contains(where: {$0 == recipe}) {
-                        self.inputAlertTitle = "Fehler"
-                        self.inputAlertMessage = "Die Datei enhält bereits existierende Rezepte"
+                        self.inputAlertTitle = Strings.Alert_Error
+                        self.inputAlertMessage = Strings.recipe_already_exist_error
                         return nil
                     }
                 }
@@ -262,7 +262,6 @@ final class RecipeStore: ObservableObject{
 
         do {
             try data.write(to: file, options: .atomic)
-            print("sucessfully wrote to \(file)")
         } catch {
             print("failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding")
         }

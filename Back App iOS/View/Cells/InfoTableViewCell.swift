@@ -20,19 +20,19 @@ class InfoTableViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     private func setup() {
         self.addSubview(textView)
         textView.fillSuperview()
         
-        self.textView.addDoneButton(title: "Fertig", target: self, selector: #selector(tapDone))
+        self.textView.addDoneButton(target: self, selector: #selector(tapDone))
         
         textView.text = infoText
         textView.delegate = self
         
-        textView.backgroundColor = UIColor(named: "blue")!
+        textView.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         textView.tintColor = .red
         textView.font = UIFont.preferredFont(forTextStyle: .body)
     }

@@ -84,6 +84,7 @@
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
+		CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -229,6 +230,7 @@
 		CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTempTableViewController.swift; sourceTree = "<group>"; };
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
+		CDF223F724E9A8DF007515C6 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -511,6 +513,7 @@
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
 				CD68D46024AC5C80000D4BD7 /* Localizable.strings */,
+				CDF223F724E9A8DF007515C6 /* Strings.swift */,
 				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
 			);
 			path = "Back App iOS";
@@ -841,6 +844,7 @@
 				CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */,
 				CD2C4C8624DACB33009195A8 /* RecipeItem.swift in Sources */,
 				CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */,
+				CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */,
 				CD663F5A24E2A005008F9A09 /* TextFiedItem.swift in Sources */,
 				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
 				CD229C0F24E93F8A003C3683 /* UIVIew+allSubviews.swift in Sources */,

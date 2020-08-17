@@ -22,7 +22,7 @@ class StepTempTableViewController: UITableViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     var picker: UIPickerView!
@@ -30,7 +30,7 @@ class StepTempTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        title = NSLocalizedString("temperature", comment: "")
+        title = Strings.temperature
     }
 
     // MARK: - rows and sections
@@ -61,12 +61,12 @@ class StepTempTableViewController: UITableViewController {
     }
     
     private func registerCells() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "toggle")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "picker")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.toggleCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.pickerCell)
     }
     
     private func makeToggleCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "toggle")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.toggleCell)!
         let toggle = UISwitch(frame: .zero)
         
         toggle.setOn(step.isDynamicTemperature, animated: false)
@@ -75,8 +75,8 @@ class StepTempTableViewController: UITableViewController {
         cell.selectionStyle = .none
         cell.accessoryView = toggle
         
-        cell.textLabel?.text = NSLocalizedString("dynamicTemp", comment: "")
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.textLabel?.text = Strings.dynamicTemp
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
@@ -87,12 +87,12 @@ class StepTempTableViewController: UITableViewController {
     }
     
     private func pickerCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "picker")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.pickerCell)!
         
         configurePicker()
         cell.contentView.addSubview(picker)
         addPickerConstraints(cell: cell)
-        cell.backgroundColor = UIColor(named: "blue")!
+        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
@@ -129,9 +129,9 @@ extension StepTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if step.isDynamicTemperature {
             if component == 0 {
-                return "\(NSLocalizedString("start", comment: "")): \(row - 10)"
+                return "\(Strings.start): \(row - 10)"
             } else {
-                return "\(NSLocalizedString("end", comment: "")): \(row - 10)"
+                return "\(Strings.end): \(row - 10)"
             }
         } else {
             return "\(row - 10)"

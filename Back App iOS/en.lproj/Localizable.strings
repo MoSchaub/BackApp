@@ -1,48 +1,159 @@
-/* 
-  Main.strings
-  BackApp
 
-  Created by Moritz Schaub on 01.07.20.
-  Copyright © 2020 Moritz Schaub. All rights reserved.
-*/
 
-"appTitle" = "Baking App";
-"recipes" = "recipes";
-"raumtemperatur" = "room temperature";
-"importFile" = "import from file";
-"exportAll" = "export all";
+"Alert_ActionCancel" = "Cancel";
+
+
+"Alert_ActionOk" = "OK";
+
+
+"Alert_ActionRemove" = "Remove";
+
+
+"Alert_ActionRetry" = "Repeat";
+
+
+"Alert_Error" = "Error";
+
+
+"EditButton_Done" = "Done";
+
+
+"EditButton_Edit" = "Edit";
+
+
+"General_BackButtonTitle" = "Back";
+
+
 "about" = "about Baking App";
 
-"name" = "name";
-"bild" = "image";
-"schritte" = "steps";
-"anzahl" = "quantity";
-"startRecipe" = "start Recipe";
-"addStep" = "add Step";
-"Min" = "minutes";
-"Zutaten" = "ingredients";
-"Schritte" = "steps";
-"unbenanntesRezept" = "unnamed recipe";
-"stk" = "pieces";
-"1stk" = "piece";
 
-"unbenannterSchritt" = "unnamed Step";
-"notes" = "notes";
-"duration" = "duration";
-"temperature" = "temperature";
 "addIngredient" = "add Ingredient";
-"ingredientOrStep" = "new ingredient or step as ingredient?";
-"newIngredient" = "new ingredient";
-"step" = "step";
-"selectStep" = "select Step";
-"cancel" = "cancel";
+
+
+"addStep" = "add Step";
+
+
+"amount" = "amount";
+
+
+"amountCellPlaceholder1" = "amount in gramms";
+
+
+"amountCellPlaceholder2" = "Number of breads, rolls, etc.";
+
+
+"appTitle" = "Baking App";
+
+
+"bulkLiquid" = "bulk liquid";
+
+
+"donate_text" = "The use of this app with all its functions is completely free and without any advertising.\nHowever, the development of this app is connected with a lot of costs and work and if you want to support the development of this app with a small contribution, we as developers would be very happy.";
+
+
+"duration" = "duration";
+
+
 "dynamicTemp" = "dynamic temperature";
-"start" = "start";
+
+
 "end" = "end";
 
-"unnamedIngredient" = "unnamed Ingredient";
-"amount" = "amount";
-"bulkLiquid" = "bulk liquid";
-"amountCellPlaceholder1" = "amount in gramms";
-"amountCellPlaceholder2" = "Number of breads, rolls, etc.";
+
+"exportAll" = "export all";
+
+
+"image" = "image";
+
+
+"image_alert_title" = "Select image, edit image, or remove current image";
+
+
+"importFile" = "import from file";
+
+
+"ingredientOrStep" = "new ingredient or step as ingredient?";
+
+
+"ingredients" = "ingredients";
+
+
+"minute" = "minute";
+
+
+"minutes" = "minutes";
+
+
+"name" = "name";
+
+
+"newIngredient" = "new ingredient";
+
+
+"notes" = "notes";
+
+
+"piece" = "piece";
+
+
+"pieces" = "pieces";
+
+
+"privacy_policy" = "privacy policy";
+
+
+"quantity" = "quantity";
+
+
+"recipe_already_exist_error" = "The file contains already existing recipes";
+
+
+"recipes" = "recipes";
+
+
+"roomTemperature" = "room temperature";
+
+
 "scheduleFormErrorMessage" = "Please enter the amount you wish to make";
+
+
+"selectStep" = "select Step";
+
+
+"select_image" = "pick image";
+
+
+"start" = "start";
+
+
+"startRecipe" = "start Recipe";
+
+
+"step" = "step";
+
+
+"steps" = "steps";
+
+
+"support" = "support";
+
+
+"take_picture" = "take picture";
+
+
+"temperature" = "temperature";
+
+
+"unnamedIngredient" = "unnamed Ingredient";
+
+
+"unnamedRecipe" = "unnamed recipe";
+
+
+"unnamedStep" = "unnamed Step";
+
+
+"version" = "version 1.0";
+
+
+"website" = "website";

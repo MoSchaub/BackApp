@@ -47,7 +47,7 @@ class Back_App_iOSUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testAddingRecipe() throws {
+    func testa() throws {
         
         let recipe = Recipe.example
         
@@ -88,7 +88,7 @@ class Back_App_iOSUITests: XCTestCase {
             returnButton.tap()
             
             // duration
-            appTables.cells.staticTexts["1 Minute"].tap()
+            appTables.cells.staticTexts["1 minute"].tap()
             appTables.cells.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
             app.navigationBars["duration"].buttons[step.name].tap()
             
@@ -131,9 +131,15 @@ class Back_App_iOSUITests: XCTestCase {
         app.navigationBars[recipe.name].buttons["Save"].tap()
         
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
+        
+        app.terminate()
+
+        app.launch()
+        
+        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
     }
     
-    func testCancelling() throws {
+    func testb() throws {
         
         app.launch()
         
@@ -154,7 +160,7 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertFalse(appTables.staticTexts["test"].exists)
     }
     
-    func testAdding() throws {
+    func testc() throws {
         
         app.launch()
         
@@ -176,7 +182,7 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
     }
     
-    func testRecipeDetail() throws {
+    func testd() throws {
         
         app.launch()
 
@@ -213,7 +219,7 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
     }
     
-    func testChangingRoomTemp() throws {
+    func teste() throws {
         app.launch()
         
         appTables.cells.staticTexts["room temperature"].tap()
@@ -223,22 +229,20 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
     }
     
-    func testInfoButton() throws {
+    func testf() throws {
         app.launch()
 
         app.tables.staticTexts["about Baking App"].tap()
                         
     }
     
-    func testModifiingStep() throws {
+    func testg() throws {
 
         app.launch()
 
         appTables.staticTexts[Recipe.example.name].tap()
         
-        appTables.containing(.other, identifier:"NAME").element.swipeUp()
-        
-        let staticText = appTables.cells.staticTexts["2 Minuten"]
+        let staticText = appTables.cells.staticTexts["2 minutes"]
         staticText.tap()
         staticText.tap()
     
@@ -248,14 +252,14 @@ class Back_App_iOSUITests: XCTestCase {
         
         app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
         
-        XCTAssertTrue(appTables.cells.staticTexts["18 Minuten"].exists)
+        XCTAssertTrue(appTables.cells.staticTexts["18 minutes"].exists)
 
         app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
-        XCTAssertTrue(appTables.staticTexts["36 Minuten"].exists)
+        
+        XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }
-
     
-    func testDeletingRecipe() throws {
+    func testh() throws {
         app.launch()
         
         appTables.staticTexts[Recipe.example.name].swipeLeft()

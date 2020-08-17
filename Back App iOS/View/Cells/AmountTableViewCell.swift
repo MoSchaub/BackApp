@@ -22,14 +22,14 @@ class AmountTableViewCell: UITableViewCell, TextFieldCellable {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     internal func configureTextField() {
         textField.delegate = self
         
         textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
-        textField.addDoneButton(title: "Fertig", target: self, selector: #selector(tapDone))
+        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         textField.tintColor = .red
         
         setTextFieldConstraints()
@@ -43,8 +43,8 @@ class AmountTableViewCell: UITableViewCell, TextFieldCellable {
     }
     
     func setUp(with ingredient: Ingredient, format: @escaping (String) -> String ) {
-        textField.text = "\(ingredient.amount)"
-        textField.placeholder = NSLocalizedString("amountCellPlaceholder1", comment: "")
+        textField.text = String(ingredient.formattedAmount)
+        textField.placeholder = Strings.amountCellPlaceholder1
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)
@@ -54,7 +54,7 @@ class AmountTableViewCell: UITableViewCell, TextFieldCellable {
     
     func setUp(with text: String, format: @escaping (String) -> String ) {
         textField.text = text
-        textField.placeholder = NSLocalizedString("amountCellPlaceholder2", comment: "")
+        textField.placeholder = Strings.amountCellPlaceholder2
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)

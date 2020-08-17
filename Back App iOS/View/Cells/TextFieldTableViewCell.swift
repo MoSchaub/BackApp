@@ -21,14 +21,14 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellable {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
     
     internal func configureTextField() {
         textField.delegate = self
         
         textField.addTarget(self, action: #selector(updateText), for: .editingChanged)
-        textField.addDoneButton(title: "Fertig", target: self, selector: #selector(tapDone))
+        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         textField.tintColor = .red
         
         setTextFieldConstraints()
