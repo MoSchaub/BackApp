@@ -20,14 +20,6 @@
 		CD229C0B24E93EA2003C3683 /* TextFieldCellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */; };
 		CD229C0D24E93F2F003C3683 /* Color+cellBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0C24E93F2F003C3683 /* Color+cellBackgroundColor.swift */; };
 		CD229C0F24E93F8A003C3683 /* UIVIew+allSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C0E24E93F8A003C3683 /* UIVIew+allSubviews.swift */; };
-		CD229C2C24E94467003C3683 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2824E94467003C3683 /* Difficulty.swift */; };
-		CD229C2D24E94467003C3683 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2824E94467003C3683 /* Difficulty.swift */; };
-		CD229C2E24E94467003C3683 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2924E94467003C3683 /* Recipe.swift */; };
-		CD229C2F24E94467003C3683 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2924E94467003C3683 /* Recipe.swift */; };
-		CD229C3024E94467003C3683 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2A24E94467003C3683 /* Ingredient.swift */; };
-		CD229C3124E94467003C3683 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2A24E94467003C3683 /* Ingredient.swift */; };
-		CD229C3224E94467003C3683 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2B24E94467003C3683 /* Step.swift */; };
-		CD229C3324E94467003C3683 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD229C2B24E94467003C3683 /* Step.swift */; };
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
@@ -64,6 +56,14 @@
 		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = CD859DB524E09A0C00E2ADD1 /* LBTATools */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
+		CDA0CC9724EC7046003B7000 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9324EC7046003B7000 /* Recipe.swift */; };
+		CDA0CC9824EC7046003B7000 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9324EC7046003B7000 /* Recipe.swift */; };
+		CDA0CC9924EC7046003B7000 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9424EC7046003B7000 /* Difficulty.swift */; };
+		CDA0CC9A24EC7046003B7000 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9424EC7046003B7000 /* Difficulty.swift */; };
+		CDA0CC9B24EC7046003B7000 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9524EC7046003B7000 /* Step.swift */; };
+		CDA0CC9C24EC7046003B7000 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9524EC7046003B7000 /* Step.swift */; };
+		CDA0CC9D24EC7046003B7000 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9624EC7046003B7000 /* Ingredient.swift */; };
+		CDA0CC9E24EC7046003B7000 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9624EC7046003B7000 /* Ingredient.swift */; };
 		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
 		CDA1D80E24A942EC00DDF709 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */; };
 		CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */; };
@@ -142,10 +142,6 @@
 		CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellable.swift; sourceTree = "<group>"; };
 		CD229C0C24E93F2F003C3683 /* Color+cellBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+cellBackgroundColor.swift"; sourceTree = "<group>"; };
 		CD229C0E24E93F8A003C3683 /* UIVIew+allSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+allSubviews.swift"; sourceTree = "<group>"; };
-		CD229C2824E94467003C3683 /* Difficulty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Difficulty.swift; path = ../../BakingRecipe/Sources/BakingRecipe/Difficulty.swift; sourceTree = "<group>"; };
-		CD229C2924E94467003C3683 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Recipe.swift; path = ../../BakingRecipe/Sources/BakingRecipe/Recipe.swift; sourceTree = "<group>"; };
-		CD229C2A24E94467003C3683 /* Ingredient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Ingredient.swift; path = ../../BakingRecipe/Sources/BakingRecipe/Ingredient.swift; sourceTree = "<group>"; };
-		CD229C2B24E94467003C3683 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Step.swift; path = ../../BakingRecipe/Sources/BakingRecipe/Step.swift; sourceTree = "<group>"; };
 		CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTimeTableViewController.swift; sourceTree = "<group>"; };
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
@@ -210,6 +206,10 @@
 		CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
+		CDA0CC9324EC7046003B7000 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		CDA0CC9424EC7046003B7000 /* Difficulty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
+		CDA0CC9524EC7046003B7000 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
+		CDA0CC9624EC7046003B7000 /* Ingredient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
 		CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
 		CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
@@ -523,10 +523,10 @@
 			isa = PBXGroup;
 			children = (
 				CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */,
-				CD229C2824E94467003C3683 /* Difficulty.swift */,
-				CD229C2A24E94467003C3683 /* Ingredient.swift */,
-				CD229C2924E94467003C3683 /* Recipe.swift */,
-				CD229C2B24E94467003C3683 /* Step.swift */,
+				CDA0CC9424EC7046003B7000 /* Difficulty.swift */,
+				CDA0CC9624EC7046003B7000 /* Ingredient.swift */,
+				CDA0CC9324EC7046003B7000 /* Recipe.swift */,
+				CDA0CC9524EC7046003B7000 /* Step.swift */,
 				CDA7EE4424A67DC200763E21 /* Info.plist */,
 			);
 			path = "Back App iOSUITests";
@@ -778,11 +778,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD229C3124E94467003C3683 /* Ingredient.swift in Sources */,
-				CD229C2F24E94467003C3683 /* Recipe.swift in Sources */,
-				CD229C3324E94467003C3683 /* Step.swift in Sources */,
-				CD229C2D24E94467003C3683 /* Difficulty.swift in Sources */,
 				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
+				CDA0CC9C24EC7046003B7000 /* Step.swift in Sources */,
+				CDA0CC9E24EC7046003B7000 /* Ingredient.swift in Sources */,
+				CDA0CC9824EC7046003B7000 /* Recipe.swift in Sources */,
+				CDA0CC9A24EC7046003B7000 /* Difficulty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -856,11 +856,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD229C3024E94467003C3683 /* Ingredient.swift in Sources */,
-				CD229C2E24E94467003C3683 /* Recipe.swift in Sources */,
-				CD229C3224E94467003C3683 /* Step.swift in Sources */,
-				CD229C2C24E94467003C3683 /* Difficulty.swift in Sources */,
 				CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */,
+				CDA0CC9B24EC7046003B7000 /* Step.swift in Sources */,
+				CDA0CC9D24EC7046003B7000 /* Ingredient.swift in Sources */,
+				CDA0CC9724EC7046003B7000 /* Recipe.swift in Sources */,
+				CDA0CC9924EC7046003B7000 /* Difficulty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
