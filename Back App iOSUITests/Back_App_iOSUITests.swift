@@ -162,24 +162,31 @@ class Back_App_iOSUITests: XCTestCase {
     
     func testc() throws {
         
+        let recipe = Recipe(name: "test", brotValues: [])
+        
         app.launch()
         
         addButton.tap()
         
         nameTextField.tap()
-        nameTextField.typeText("test")
+        nameTextField.typeText(recipe.name)
         returnButton.tap()
         
-        app.navigationBars["test"].buttons["Save"].tap()
+        app.navigationBars[recipe.name].buttons["Save"].tap()
         
-        XCTAssertTrue(appTables.staticTexts["test"].exists)
+        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
         
         //relaunch
         app.terminate()
         app.launch()
         
-        XCTAssertTrue(appTables.staticTexts["test"].exists)
+        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
+
+        app.navigationBars["Baking App"].buttons["Edit"].tap()
+
+        appTables.cells.containing(.staticText, identifier: recipe.name).buttons["Delete "].tap()
+        appTables.buttons["trailing0"].tap()
     }
     
     func testd() throws {
@@ -259,12 +266,14 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }
     
+    func delete(recipe: Recipe) throws {
+        appTables.staticTexts[recipe.name].swipeLeft()
+        appTables.buttons["Delete"].tap()
+        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipe.name].exists)
+    }
+    
     func testh() throws {
         app.launch()
-        
-        appTables.staticTexts[Recipe.example.name].swipeLeft()
-        appTables.buttons["Delete"].tap()
-        
-        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[Recipe.example.name].exists)
+        try! delete(recipe: Recipe.example)
     }
 }
