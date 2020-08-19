@@ -84,6 +84,7 @@
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
+		CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED1AF424ED0920005278E9 /* SubtitleCell.swift */; };
 		CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
@@ -230,6 +231,7 @@
 		CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTempTableViewController.swift; sourceTree = "<group>"; };
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
+		CDED1AF424ED0920005278E9 /* SubtitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleCell.swift; sourceTree = "<group>"; };
 		CDF223F724E9A8DF007515C6 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -303,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
+				CDF223F724E9A8DF007515C6 /* Strings.swift */,
 				CD663F7024E2A272008F9A09 /* Sections */,
 				CD663F5624E29FB0008F9A09 /* Items */,
 			);
@@ -348,6 +351,7 @@
 				CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */,
 				CD663F6D24E2A251008F9A09 /* DetailTableViewCell.swift */,
 				CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */,
+				CDED1AF424ED0920005278E9 /* SubtitleCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -513,7 +517,6 @@
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
 				CD68D46024AC5C80000D4BD7 /* Localizable.strings */,
-				CDF223F724E9A8DF007515C6 /* Strings.swift */,
 				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
 			);
 			path = "Back App iOS";
@@ -839,6 +842,7 @@
 				CD663F6224E2A072008F9A09 /* InfoStripItem.swift in Sources */,
 				CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */,
 				CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */,
+				CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */,
 				CD0A179124ADF00D001CDF5F /* IngredientRow.swift in Sources */,
 				CD663F5324E29F44008F9A09 /* TextItem.swift in Sources */,
 				CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */,
