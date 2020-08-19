@@ -36,7 +36,7 @@ class StepTempTableViewController: UITableViewController {
     // MARK: - rows and sections
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,18 +44,19 @@ class StepTempTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 1 {
-            return 200
-        } else {
-            return 40
-        }
+//        if indexPath.section == 1 {
+//            return 200
+//        } else {
+//            return 40
+//        }
+        return 200
     }
 
     // MARK: - Cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
-        case 0: return makeToggleCell()
-        case 1: return pickerCell()
+        //case 0: return makeToggleCell()
+        case 0: return pickerCell()
         default: return UITableViewCell()
         }
     }

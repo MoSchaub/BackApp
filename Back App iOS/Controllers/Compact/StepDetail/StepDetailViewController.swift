@@ -130,6 +130,7 @@ class StepDetailViewController: UITableViewController {
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.tempCell)
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.addIngredientCell)
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.substepCell)
+        tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell)
     }
 
     private func makeNameCell() -> TextFieldTableViewCell {
@@ -176,15 +177,11 @@ class StepDetailViewController: UITableViewController {
     }
     
     private func makeIngredientCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: Strings.ingredientCell)
-        cell.prepareForReuse()
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.ingredientCell, for: indexPath)
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
         cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: Strings.roomTempKey)))° C" : "")
-        cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
-        
+
         return cell
     }
     
