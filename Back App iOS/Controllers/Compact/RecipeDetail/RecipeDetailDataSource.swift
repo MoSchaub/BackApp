@@ -34,9 +34,9 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 amountCell.backgroundColor = color
                 return amountCell
             } else if item is InfoItem {
-                return InfoTableViewCell(infoText: Binding(get: {
+                return TextViewTableViewCell(textContent: Binding(get: {
                     return recipe.wrappedValue.info
-                }, set: updateInfo), reuseIdentifier: Strings.infoCell)
+                }, set: updateInfo), placeholder: Strings.info, reuseIdentifier: Strings.infoCell)
             } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripTableViewCell {
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell

@@ -82,10 +82,12 @@ class Back_App_iOSUITests: XCTestCase {
             returnButton.tap()
             
             // notes
-            let notesField = appTables.textFields["notes"]
+            let notesField = appTables.textViews[Strings.notes]
             notesField.tap()
             notesField.typeText(step.notes)
-            returnButton.tap()
+            
+            let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+            doneButton.tap()
             
             // duration
             appTables.cells.staticTexts["1 minute"].tap()
