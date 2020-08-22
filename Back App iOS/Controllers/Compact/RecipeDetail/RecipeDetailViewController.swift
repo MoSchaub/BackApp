@@ -57,6 +57,9 @@ extension RecipeDetailViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         dataSource.update(animated: false)
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 600
     }
     
 }
@@ -104,7 +107,7 @@ private extension RecipeDetailViewController {
         tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: Strings.infoStripCell)
         tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
-        tableView.register(InfoTableViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+        tableView.register(TextViewTableViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 }
 
@@ -200,7 +203,7 @@ extension RecipeDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = dataSource.itemIdentifier(for: indexPath) {
             if item is ImageItem {
-                imageTapped()
+                imageTapped(sender: indexPath)
             } else if let stepItem = item as? StepItem {
                 showStepDetail(id: stepItem.id)
             } else if let detailItem = item as? DetailItem {
@@ -215,7 +218,7 @@ extension RecipeDetailViewController {
 }
 
 private extension RecipeDetailViewController {
-    private func imageTapped() {
+    private func imageTapped(sender: IndexPath) {
         if imagePickerController != nil {
             imagePickerController?.delegate = nil
             imagePickerController = nil
@@ -245,6 +248,8 @@ private extension RecipeDetailViewController {
                 self.tableView.cellForRow(at: indexPath)?.isSelected = false
             }
         }))
+        
+        alert.popoverPresentationController?.sourceView = tableView.cellForRow(at: sender)
         
         present(alert, animated: true)
         
@@ -285,6 +290,15 @@ private extension RecipeDetailViewController {
         }
         
         navigationController?.pushViewController(stepDetailVC, animated: true)
+    }
+}
+
+extension RecipeDetailViewController {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let _ = dataSource.itemIdentifier(for: indexPath) as? InfoItem {
+            return 80
+        }
+        return UITableView.automaticDimension
     }
 }
 

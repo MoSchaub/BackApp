@@ -103,7 +103,7 @@ extension CompactHomeViewController {
                      self.dataSource.update(animated: false)
                 }
             }
-            navigationController?.pushViewController(vc, animated: true)
+            splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }
     }
     
@@ -115,8 +115,7 @@ extension CompactHomeViewController {
             self.recipeStore.roomTemperature = temp
             self.updateSettings()
         }
-        
-        navigationController?.pushViewController(vc, animated: true)
+        splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
     }
     
     private func updateSettings() {
@@ -126,7 +125,7 @@ extension CompactHomeViewController {
             snapshot.appendSections([.settings])
             snapshot.appendItems(self.recipeStore.settingsItems, toSection: .settings)
             DispatchQueue.main.async {
-                self.dataSource.apply(snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: false)
             }
         }
     }
@@ -142,7 +141,8 @@ extension CompactHomeViewController {
     }
     
     private func navigateToAboutView() {
-        navigationController?.pushViewController(UIHostingController(rootView: AboutView()), animated: true)
+        let hostingController = UIHostingController(rootView: AboutView())
+        splitViewController?.showDetailViewController(UINavigationController(rootViewController: hostingController), sender: self)
     }
     
     private func deselectRow() {

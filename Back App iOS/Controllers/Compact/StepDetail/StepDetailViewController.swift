@@ -102,6 +102,13 @@ class StepDetailViewController: UITableViewController {
         default: return ""
         }
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 70
+        }
+        return UITableView.automaticDimension
+    }
 
     // MARK: - Cells
     
@@ -125,7 +132,7 @@ class StepDetailViewController: UITableViewController {
 
     private func registerCells() {
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.nameCell)
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.notesCell)
+        tableView.register(TextViewTableViewCell.self, forCellReuseIdentifier: Strings.notesCell)
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.durationCell)
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.tempCell)
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.addIngredientCell)
@@ -145,15 +152,12 @@ class StepDetailViewController: UITableViewController {
         return cell
     }
     
-    private func makeNotesCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.notesCell) as! TextFieldTableViewCell
-        cell.textField.text = step.notes
-        cell.textField.placeholder = Strings.notes
-        cell.selectionStyle = .none
-        cell.textChanged = { text in
-            self.step.notes = text
-        }
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+    private func makeNotesCell() -> TextViewTableViewCell {
+        let cell = TextViewTableViewCell(textContent: Binding(get: {
+            return self.step.notes
+        }, set: { newValue in
+            self.step.notes = newValue
+        }), placeholder: Strings.notes, reuseIdentifier: Strings.notesCell)
         return cell
     }
     

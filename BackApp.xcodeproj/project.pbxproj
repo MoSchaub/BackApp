@@ -33,7 +33,7 @@
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
-		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F5124E29F1D008F9A09 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5024E29F1D008F9A09 /* Item.swift */; };
 		CD663F5324E29F44008F9A09 /* TextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5224E29F44008F9A09 /* TextItem.swift */; };
 		CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5424E29F8A008F9A09 /* DetailItem.swift */; };
@@ -78,7 +78,8 @@
 		CDA7EE6A24A67EA200763E21 /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B5248BDA3000D11DD3 /* StepRow.swift */; };
 		CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
-		CDAE672824E5C32F007A366F /* InfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */; };
+		CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
+		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
 		CDAF36D324E1398F00C6A5D8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDAF36D224E1398F00C6A5D8 /* BakingRecipe */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
@@ -182,6 +183,7 @@
 		CD68D46724AC5E9E000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CD6A9A152340252600748249 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
+		CD7691BB24EEAB6600BAB383 /* Back App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Back App.entitlements"; sourceTree = "<group>"; };
 		CD76F999248BDA3000D11DD3 /* DecimalField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalField.swift; sourceTree = "<group>"; };
 		CD76F99A248BDA3000D11DD3 /* AddStepView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStepView.swift; sourceTree = "<group>"; };
 		CD76F99B248BDA3000D11DD3 /* AddIngredientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddIngredientView.swift; sourceTree = "<group>"; };
@@ -222,7 +224,7 @@
 		CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewCell.swift; sourceTree = "<group>"; };
+		CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewTableViewCell.swift; sourceTree = "<group>"; };
 		CDB5BD92246C358B00B7A356 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
@@ -350,7 +352,7 @@
 				CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */,
 				CD33899024A9E90000C7E568 /* ImageTableViewCell.swift */,
 				CD663F6D24E2A251008F9A09 /* DetailTableViewCell.swift */,
-				CDAE672724E5C32F007A366F /* InfoTableViewCell.swift */,
+				CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */,
 				CDED1AF424ED0920005278E9 /* SubtitleCell.swift */,
 			);
 			path = Cells;
@@ -511,6 +513,7 @@
 		CDA7EE2A24A67DBD00763E21 /* Back App iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CD7691BB24EEAB6600BAB383 /* Back App.entitlements */,
 				CDBDCF9C24A553BF00121F98 /* supporting Files */,
 				CD2C4C8224DAC9A2009195A8 /* Helpers */,
 				CD0B4B0624A60A8200EA9FC8 /* View */,
@@ -824,7 +827,7 @@
 				CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */,
 				CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */,
 				CDA1D80E24A942EC00DDF709 /* RecipeTableViewCell.swift in Sources */,
-				CDAE672824E5C32F007A366F /* InfoTableViewCell.swift in Sources */,
+				CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */,
 				CD664D5624A699AD00884CAE /* StepTableViewCell.swift in Sources */,
 				CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */,
 				CD0B4B0824A60B9B00EA9FC8 /* ImageUtils.swift in Sources */,
@@ -864,6 +867,7 @@
 				CDA0CC9B24EC7046003B7000 /* Step.swift in Sources */,
 				CDA0CC9D24EC7046003B7000 /* Ingredient.swift in Sources */,
 				CDA0CC9724EC7046003B7000 /* Recipe.swift in Sources */,
+				CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */,
 				CDA0CC9924EC7046003B7000 /* Difficulty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -878,6 +882,7 @@
 		};
 		CD59041424E2CF4F008A0E6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = CD59040624E2CF4F008A0E6E /* Push Notification */;
 			targetProxy = CD59041324E2CF4F008A0E6E /* PBXContainerItemProxy */;
 		};
@@ -975,6 +980,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -995,6 +1001,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1125,6 +1132,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
@@ -1135,6 +1143,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1145,6 +1154,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
@@ -1155,6 +1165,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
