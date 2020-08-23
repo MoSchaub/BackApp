@@ -14,7 +14,7 @@ class CompactHomeViewController: UITableViewController {
     typealias DataSource = HomeDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
 
-    private lazy var dataSource = makeDataSource()
+    private(set) lazy var dataSource = makeDataSource()
     private var recipeStore: RecipeStore
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
@@ -61,12 +61,12 @@ private extension CompactHomeViewController {
     
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         let recipe = Recipe(name: "", brotValues: [])
-        let vc = RecipeDetailViewController(recipe: recipe, creating: true) { recipe in
+        let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
             self.recipeStore.save(recipe: recipe)
             DispatchQueue.main.async {
-                self.dataSource.update()
+                self.dataSource.update(animated: false)
             }
-        }
+        }, deleteRecipe: { _ in return false })
         let nv = UINavigationController(rootViewController: vc)
         present(nv, animated: true)
        }
@@ -97,11 +97,22 @@ extension CompactHomeViewController {
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
         if let recipe = recipeStore.recipes.first(where: { $0.id == recipeItem.id}) {
-            let vc = RecipeDetailViewController(recipe: recipe, creating: false) { recipe in
+            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
                 self.recipeStore.update(recipe: recipe)
                 DispatchQueue.main.async {
-                     self.dataSource.update(animated: false)
+                    self.dataSource.update(animated: false)
                 }
+            }) { recipe in
+                let result: Bool
+                if self.splitViewController?.isCollapsed ?? false {
+                    result = self.dataSource.deleteRecipe(recipe.id)
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    let _ = self.splitViewController?.viewControllers.popLast()
+                    result = self.dataSource.deleteRecipe(recipe.id)
+                    self.dataSource.update()
+                }
+                return result
             }
             splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }

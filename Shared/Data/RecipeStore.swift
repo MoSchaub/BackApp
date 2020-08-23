@@ -167,14 +167,19 @@ final class RecipeStore: ObservableObject{
     
     func moveRecipe(from source: Int, to destination: Int) {
         let movedObject = recipes[source]
-        self.deleteRecipe(at: source)
-        recipes.insert(movedObject, at: destination)
+        if self.deleteRecipe(at: source) {
+            recipes.insert(movedObject, at: destination)
+        } else {
+            recipes.insert(movedObject, at: source)
+        }
     }
 
-    func deleteRecipe(at index: Int) {
+    func deleteRecipe(at index: Int) -> Bool {
         if index < recipes.count {
             recipes.remove(at: index)
+            return true
         }
+        return false
     }
     
     init() {

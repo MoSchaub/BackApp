@@ -194,8 +194,9 @@ public struct Recipe: Hashable, Codable, Identifiable{
         let schritt1 = Step(name: "Mischen", time: 2, ingredients: [anstellgut,vollkornMehl,olivenöl,saaten,salz], themperature: 20)
         
         let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
-        
-        return Recipe(name: "Sauerteigcrack", brotValues: [schritt1, backen])
+        var recipe = Recipe(name: "Sauerteigcrack", brotValues: [schritt1, backen])
+        recipe.timesText = "20"
+        return recipe
     }
     
     public init(name: String, info: String = "" , brotValues: [Step], inverted: Bool = false , running: Bool = false, dateString: String = "", isFavourite: Bool = false, difficulty: Difficulty = .easy) {

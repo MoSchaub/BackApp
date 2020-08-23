@@ -12,6 +12,7 @@ import BakingRecipe
 class RecipeDetailViewController: UITableViewController {
     
     typealias SaveRecipe = ((Recipe) -> ())
+    typealias DeleteRecipe = ((Recipe) -> Bool)
     
     private lazy var dataSource = makeDataSource()
     
@@ -25,6 +26,7 @@ class RecipeDetailViewController: UITableViewController {
     }
     private var creating: Bool
     private var saveRecipe: SaveRecipe
+    private var deleteRecipe: DeleteRecipe
     
     private func update(oldValue: Recipe) {
         DispatchQueue.global(qos: .utility).async {
@@ -34,10 +36,11 @@ class RecipeDetailViewController: UITableViewController {
         }
     }
     
-    init(recipe: Recipe, creating: Bool, saveRecipe: @escaping SaveRecipe) {
+    init(recipe: Recipe, creating: Bool, saveRecipe: @escaping SaveRecipe, deleteRecipe: @escaping DeleteRecipe) {
         self.recipe = recipe
         self.creating = creating
         self.saveRecipe = saveRecipe
+        self.deleteRecipe = deleteRecipe
         super.init(style: .insetGrouped)
     }
     
@@ -90,8 +93,9 @@ private extension RecipeDetailViewController {
         } else {
             let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
+            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteRecipeWrapper))
             DispatchQueue.main.async {
-                self.navigationItem.rightBarButtonItems = [favourite,share ]
+                self.navigationItem.rightBarButtonItems = [favourite, share, delete]
             }
         }
         DispatchQueue.main.async {
@@ -132,6 +136,13 @@ private extension RecipeDetailViewController {
     
     @objc private func cancel() {
         dissmiss()
+    }
+    
+    @objc private func deleteRecipeWrapper() {
+        navigationController?.popToRootViewController(animated: true)
+        if !creating, self.deleteRecipe(recipe) {
+            navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     private func dissmiss() {
