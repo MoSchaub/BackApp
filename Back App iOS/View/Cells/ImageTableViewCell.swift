@@ -22,7 +22,7 @@ class ImageTableViewCell: UITableViewCell {
                             .scaledToFill()
                             .cornerRadius(cornerRadius)
                     } else {
-                        Image(systemName: "photo")
+                        Image(uiImage: Images.largePhoto)
                             .resizable()
                             .imageScale(.large)
                             .scaledToFit()
@@ -36,12 +36,25 @@ class ImageTableViewCell: UITableViewCell {
         let maxHeight: CGFloat = 250
     }
     
-    func setup(imageData: Data?) {
-        let hostingController = UIHostingController(rootView: ImageView(data: imageData))
-        addSubview(hostingController.view)
+    init(reuseIdentifier: String?, data: Data?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        if let data = data {
+            let image = UIImage(data: data) ?? Images.largePhoto
+            imageView?.image = image
+            imageView?.contentMode = .scaleAspectFill
+        } else {
+            imageView?.image = Images.largePhoto
+            imageView?.tintColor = .label
+            imageView?.contentMode = .scaleAspectFit
+        }
         
-        hostingController.view.fillSuperview()
+        imageView?.fillSuperview()
+        backgroundColor = UIColor(named: Strings.backgroundColorName)
         selectionStyle = .none
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

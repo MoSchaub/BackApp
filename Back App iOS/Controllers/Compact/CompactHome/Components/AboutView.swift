@@ -29,8 +29,6 @@ struct AboutView: View {
                 
                 VStack(alignment: .leading) {
                     Divider()
-                    Text(Strings.donate_text)
-                    Divider()
                     Link(url: Strings.donateURL, title: Strings.support)
                     Divider()
                     Link(url: Strings.websiteURL, title: Strings.website)

@@ -84,24 +84,29 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
-                self.deleteRecipe(item.id)
+                let _ = self.deleteRecipe(item.id)
             }
         }
     }
     
-    private func deleteRecipe(_ id: UUID) {
+    func deleteRecipe(_ id: UUID) -> Bool {
         if let index = recipeStore.recipes.firstIndex(where: { $0.id == id }) {
-            self.recipeStore.deleteRecipe(at: index)
-        }
+            return self.recipeStore.deleteRecipe(at: index)
+        } else { return false }
     }
     
     // moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row > recipeStore.recipes.count else { reset(); return }
+        guard destinationIndexPath.row < recipeStore.recipes.count else { reset(); return }
         guard destinationIndexPath.section == 0 else { reset(); return}
         guard recipeStore.recipes.count > sourceIndexPath.row else { reset(); return }
-        recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
-        reloadRecipes()
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            DispatchQueue.main.async {
+                self.update(animated: false)
+            }
+        }
+
     }
     
     //wether a row can be deleted or not

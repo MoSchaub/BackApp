@@ -63,13 +63,9 @@ class Back_App_iOSUITests: XCTestCase {
         returnButton.tap()
         
         // quantity
-        let textField = appTables.textFields["1 piece"]
+        let textField = appTables.textFields["Number of breads, rolls, etc."]
         textField.tap()
-        app.keys["more"].tap()
-        let key2 = app.keys["2"]
-        key2.tap()
-        let key0 = app.keys["0"]
-        key0.tap()
+        textField.typeText(recipe.timesText)
         returnButton.tap()
         
         // steps
@@ -104,14 +100,9 @@ class Back_App_iOSUITests: XCTestCase {
                 returnButton.tap()
                 
                 // amount
-                let amountTextField = appTables.textFields["0.0 g"]
+                let amountTextField = appTables.textFields["amount in gramms"]
                 amountTextField.tap()
-                app.keys["more"].tap()
-                let str = "\(ingredient.amount)"
-                for char in str {
-                    let key = app.keys["\(char)"]
-                    key.tap()
-                }
+                amountTextField.typeText("\(ingredient.amount)")
                 returnButton.tap()
                 
                 // bulk liquid

@@ -45,6 +45,7 @@ class AmountTableViewCell: UITableViewCell, TextFieldCellable {
     func setUp(with ingredient: Ingredient, format: @escaping (String) -> String ) {
         textField.text = String(ingredient.formattedAmount)
         textField.placeholder = Strings.amountCellPlaceholder1
+        textField.accessibilityIdentifier = Strings.amountCellPlaceholder1
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)
@@ -55,6 +56,7 @@ class AmountTableViewCell: UITableViewCell, TextFieldCellable {
     func setUp(with text: String, format: @escaping (String) -> String ) {
         textField.text = text
         textField.placeholder = Strings.amountCellPlaceholder2
+        textField.accessibilityIdentifier = Strings.amountCellPlaceholder2
         selectionStyle = .none
         textChanged = { text in
             self.textField.text = format(text)
