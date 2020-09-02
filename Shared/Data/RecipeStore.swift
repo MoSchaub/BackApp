@@ -238,6 +238,7 @@ final class RecipeStore: ObservableObject{
         do {
             let decoder = JSONDecoder()
             let decoded =  try decoder.decode(T.self, from: data)
+            //print(decoded)
             if let recipes = decoded as? [Recipe] {
                 self.isArray = true
                 for recipe in recipes{
@@ -247,10 +248,10 @@ final class RecipeStore: ObservableObject{
                         return nil
                     }
                 }
-                self.inputAlertTitle = "Erfolg"
-                self.inputAlertMessage = "Die Rezepte wurden importiert"
             }
-            // return decoded data 
+            self.inputAlertTitle = "Erfolg"
+            self.inputAlertMessage = "Die Rezepte wurden importiert"
+            // return decoded data
             return decoded
         } catch {
             print("Couldn't parse \(url) as \(T.self):\n\(error)")
@@ -263,7 +264,7 @@ final class RecipeStore: ObservableObject{
     private func write(){
         let data = encodedRecipes()
         
-        let file = getDocumentsDirectory().appendingPathComponent("recipes.json")
+        let file = getDocumentsDirectory().appendingPathComponent("recipes.bakingAppRecipe")
 
         do {
             try data.write(to: file, options: .atomic)
@@ -277,7 +278,7 @@ final class RecipeStore: ObservableObject{
         
         if UserDefaults.standard.bool(forKey: "fileC"){
             // Do something with the file here.
-            let url = getDocumentsDirectory().appendingPathComponent("recipes.json")
+            let url = getDocumentsDirectory().appendingPathComponent("recipes.bakingAppRecipe")
             do {
                 data = try Data(contentsOf: url)
             } catch {
@@ -297,7 +298,7 @@ final class RecipeStore: ObservableObject{
             
         } else {
             //create file
-            let filename = getDocumentsDirectory().appendingPathComponent("recipes.json")
+            let filename = getDocumentsDirectory().appendingPathComponent("recipes.bakingAppRecipe")
             do {
                 try "".write(to: filename, atomically: true, encoding: .utf8)
                 print("created file at \(filename)")
@@ -315,7 +316,7 @@ final class RecipeStore: ObservableObject{
             //make sure the file is up to date
             self.write()
         }
-        return getDocumentsDirectory().appendingPathComponent("recipes.json")
+        return getDocumentsDirectory().appendingPathComponent("recipes.bakingAppRecipe")
         
     }
     

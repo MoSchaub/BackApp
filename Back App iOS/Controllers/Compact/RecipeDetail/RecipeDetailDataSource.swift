@@ -26,8 +26,8 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 cell.textChanged = nameChanged
                 cell.backgroundColor = color
                 return cell
-            } else if let imageItem = item as? ImageItem, let imageCell = tableView.dequeueReusableCell(withIdentifier: Strings.imageCell, for: indexPath) as? ImageTableViewCell {
-                imageCell.setup(imageData: imageItem.imageData)
+            } else if let imageItem = item as? ImageItem{
+                let imageCell = ImageTableViewCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
                 return imageCell
             } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountTableViewCell{
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)

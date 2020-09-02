@@ -50,10 +50,13 @@ class RecipeDetailViewController: UITableViewController {
 }
 
 extension RecipeDetailViewController {
+    override func loadView() {
+        super.loadView()
+        setUpNavigationBar()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        setUpNavigationBar()
         self.tableView.separatorStyle = .none
     }
     
@@ -62,7 +65,7 @@ extension RecipeDetailViewController {
         dataSource.update(animated: false)
         
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 600
+        tableView.estimatedRowHeight = 250
     }
     
 }
@@ -308,6 +311,8 @@ extension RecipeDetailViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let _ = dataSource.itemIdentifier(for: indexPath) as? InfoItem {
             return 80
+        } else if let _ = dataSource.itemIdentifier(for: indexPath) as? ImageItem {
+            return 250
         }
         return UITableView.automaticDimension
     }

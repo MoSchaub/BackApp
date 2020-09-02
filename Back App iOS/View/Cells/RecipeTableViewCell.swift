@@ -67,6 +67,7 @@ class RecipeTableViewCell: UITableViewCell {
     func setUp(cellData: RecipeCellData) {
         let hostingController = UIHostingController(rootView: RecipeRowView(data: cellData))
         contentView.addSubview(hostingController.view)
+        contentView.contentMode = .redraw
         hostingController.view.fillSuperview()
         backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
