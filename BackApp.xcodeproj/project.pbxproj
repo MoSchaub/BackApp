@@ -78,6 +78,9 @@
 		CDA7EE6A24A67EA200763E21 /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B5248BDA3000D11DD3 /* StepRow.swift */; };
 		CDA7EE7324A67EED00763E21 /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB5EE4F246BDF6900E35376 /* RecipeStore.swift */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
+		CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */; };
+		CDA806FE250409A6008E0EC0 /* DecimalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FD250409A6008E0EC0 /* DecimalCell.swift */; };
+		CDA8070025040F1A008E0EC0 /* DatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FF25040F1A008E0EC0 /* DatePickerCell.swift */; };
 		CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
 		CDAF36D324E1398F00C6A5D8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDAF36D224E1398F00C6A5D8 /* BakingRecipe */; };
@@ -224,6 +227,9 @@
 		CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFormViewController.swift; sourceTree = "<group>"; };
+		CDA806FD250409A6008E0EC0 /* DecimalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalCell.swift; sourceTree = "<group>"; };
+		CDA806FF25040F1A008E0EC0 /* DatePickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCell.swift; sourceTree = "<group>"; };
 		CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewTableViewCell.swift; sourceTree = "<group>"; };
 		CDB5BD92246C358B00B7A356 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
@@ -345,8 +351,10 @@
 			isa = PBXGroup;
 			children = (
 				CDA2B58B24A5D4E5008D39AF /* TextFieldTableViewCell.swift */,
+				CDA806FF25040F1A008E0EC0 /* DatePickerCell.swift */,
 				CD229C0A24E93EA2003C3683 /* TextFieldCellable.swift */,
 				CD399AD124AA5AD400232F90 /* AmountTableViewCell.swift */,
+				CDA806FD250409A6008E0EC0 /* DecimalCell.swift */,
 				CD664D5324A6916400884CAE /* InfoStripTableViewCell.swift */,
 				CD664D5524A699AD00884CAE /* StepTableViewCell.swift */,
 				CDA1D80D24A942EC00DDF709 /* RecipeTableViewCell.swift */,
@@ -506,6 +514,7 @@
 				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
 				CD663F6924E2A16F008F9A09 /* Recipe+Items.swift */,
 				CD663F6724E2A0FE008F9A09 /* RecipeDetailDataSource.swift */,
+				CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */,
 			);
 			path = RecipeDetail;
 			sourceTree = "<group>";
@@ -812,16 +821,19 @@
 				CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */,
+				CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
 				CD229C0924E93A8F003C3683 /* UITextFieldAdditions.swift in Sources */,
 				CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */,
 				CD663F6E24E2A251008F9A09 /* DetailTableViewCell.swift in Sources */,
 				CD4A171424E89F4A00395B48 /* UITextViewAdditions.swift in Sources */,
+				CDA8070025040F1A008E0EC0 /* DatePickerCell.swift in Sources */,
 				CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */,
 				CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */,
 				CD0A179624ADF0A7001CDF5F /* TextViewExtension.swift in Sources */,
 				CD663F5124E29F1D008F9A09 /* Item.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
+				CDA806FE250409A6008E0EC0 /* DecimalCell.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
 				CD663F6424E2A098008F9A09 /* InfoItem.swift in Sources */,
 				CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */,

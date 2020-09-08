@@ -51,6 +51,7 @@ struct ScheduleForm: View {
             }
         }){
             Text("OK")
+            .padding()
         }
         .alert(isPresented: self.$showingAlert) {
             self.alert
@@ -58,40 +59,39 @@ struct ScheduleForm: View {
     }
     
     var body: some View {
-        ZStack {
-            LinearGradient(Color("Color1"),Color("Color2")).edgesIgnoringSafeArea(.all)
+        GeometryReader { geo in
             ScrollView {
-                VStack(){
-                    timesSection
-                    VStack {
+                VStack{
+                    self.timesSection
+                    VStack(alignment: .center) {
                         MODatePicker(date: self.$recipe.date)
-                            .frame(width: UIScreen.main.bounds.width - 60)
+                            .frame(width: geo.size.width * 0.75)
                             .clipped()
                         Picker("s", selection: self.$recipe.inverted){
                             Text("start").tag(false)
                             Text("end").tag(true)
                         }
                         .pickerStyle(SegmentedPickerStyle())
-                        .frame(width: UIScreen.main.bounds.width - 30)
                         .padding(.bottom)
                         .clipped()
-                    }.background(Color("blue"))
-                        .cornerRadius(10)
-                    Text(recipe.formattedDate).font(.title).padding()
-                    NavigationLink(destination: ScheduleView(recipe: recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
-                       EmptyView()
                     }
+                    .background(Color("blue"))
+                    .cornerRadius(10)
+                    .padding()
+                }
+                NavigationLink(destination: ScheduleView(recipe: self.recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
+                    EmptyView()
                 }
             }
         }
-            .onAppear{
-                self.times = self.recipe.times
-            }
+        .onAppear{
+            self.times = self.recipe.times
+        }
         .navigationBarTitle(
             Text(recipe.formattedName),
             displayMode: NavigationBarItem.TitleDisplayMode.inline
         )
-        .navigationBarItems(trailing: okButton)
+            .navigationBarItems(trailing: okButton)
     }
 }
 
