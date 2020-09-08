@@ -124,9 +124,9 @@ private extension RecipeDetailViewController {
         recipe.isFavourite.toggle()
     }
     
-    @objc private func shareRecipeFile() {
+    @objc private func shareRecipeFile(sender: UIBarButtonItem) {
         let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
-        
+        vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
     }
     
@@ -288,10 +288,9 @@ private extension RecipeDetailViewController {
         }) { (newValue) in
             self.recipe = newValue
         }
-        let scheduleForm = ScheduleForm(recipe: recipeBinding, roomTemp: roomTemp)
-        let vc = UIHostingController(rootView: scheduleForm)
+        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
         
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(scheduleForm, animated: true)
     }
     
     private func addStep() {

@@ -89,7 +89,7 @@ extension CompactHomeViewController {
         } else if item.text == Strings.importFile {
             openImportFilePopover()
         } else if item.text == Strings.exportAll {
-            openExportAllShareSheet()
+            openExportAllShareSheet(sender: tableView.cellForRow(at: indexPath)!)
         } else if item.text == Strings.about {
             navigateToAboutView()
         }
@@ -147,8 +147,10 @@ extension CompactHomeViewController {
         self.present(documentPicker, animated: true, completion: deselectRow)
     }
     
-    private func openExportAllShareSheet() {
-        present(UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil),animated: true, completion: deselectRow)
+    private func openExportAllShareSheet(sender: UIView) {
+        let ac = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
+        ac.popoverPresentationController?.sourceView = sender
+        present(ac,animated: true, completion: deselectRow)
     }
     
     private func navigateToAboutView() {
