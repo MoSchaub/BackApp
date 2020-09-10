@@ -86,7 +86,7 @@ class Back_App_iOSUITests: XCTestCase {
             doneButton.tap()
             
             // duration
-            appTables.cells.staticTexts["1 minute"].tap()
+            appTables.cells.staticTexts["one minute"].tap()
             appTables.cells.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
             app.navigationBars["duration"].buttons[step.name].tap()
             
@@ -178,7 +178,7 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars["Baking App"].buttons["Edit"].tap()
 
-        appTables.cells.containing(.staticText, identifier: recipe.name).buttons["Delete "].tap()
+        appTables.cells.containing(.staticText, identifier: recipe.name).buttons["Delete"].tap()
         appTables.buttons["trailing0"].tap()
     }
     

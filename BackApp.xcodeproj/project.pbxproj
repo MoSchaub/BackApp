@@ -83,9 +83,9 @@
 		CDA8070025040F1A008E0EC0 /* DatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FF25040F1A008E0EC0 /* DatePickerCell.swift */; };
 		CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
-		CDAF36D324E1398F00C6A5D8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDAF36D224E1398F00C6A5D8 /* BakingRecipe */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
+		CDD381B5250BB82A00BEE4B8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDD381B4250BB82A00BEE4B8 /* BakingRecipe */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED1AF424ED0920005278E9 /* SubtitleCell.swift */; };
@@ -264,7 +264,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDAF36D324E1398F00C6A5D8 /* BakingRecipe in Frameworks */,
+				CDD381B5250BB82A00BEE4B8 /* BakingRecipe in Frameworks */,
 				CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -671,7 +671,7 @@
 			name = "Back App iOS";
 			packageProductDependencies = (
 				CD859DB524E09A0C00E2ADD1 /* LBTATools */,
-				CDAF36D224E1398F00C6A5D8 /* BakingRecipe */,
+				CDD381B4250BB82A00BEE4B8 /* BakingRecipe */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -733,7 +733,7 @@
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
 				CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */,
-				CDAF36D124E1398F00C6A5D8 /* XCRemoteSwiftPackageReference "BakingRecipe" */,
+				CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -1284,9 +1284,9 @@
 				minimumVersion = 1.0.17;
 			};
 		};
-		CDAF36D124E1398F00C6A5D8 /* XCRemoteSwiftPackageReference "BakingRecipe" */ = {
+		CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MoSchaub/BakingRecipe.git";
+			repositoryURL = "file:///Users/moritzschaub/Developer/Swift/ios/BakingRecipe/.git";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1300,9 +1300,9 @@
 			package = CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */;
 			productName = LBTATools;
 		};
-		CDAF36D224E1398F00C6A5D8 /* BakingRecipe */ = {
+		CDD381B4250BB82A00BEE4B8 /* BakingRecipe */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDAF36D124E1398F00C6A5D8 /* XCRemoteSwiftPackageReference "BakingRecipe" */;
+			package = CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */;
 			productName = BakingRecipe;
 		};
 /* End XCSwiftPackageProductDependency section */

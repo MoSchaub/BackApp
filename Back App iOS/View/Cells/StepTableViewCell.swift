@@ -26,6 +26,7 @@ class StepTableViewCell: UITableViewCell {
         let hostingController = UIHostingController(rootView: rootView)
         contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
+        hostingController.view.backgroundColor = UIColor(named: Strings.backgroundColorName)
         
         accessoryType = .disclosureIndicator
         backgroundColor = UIColor(named: Strings.backgroundColorName)!

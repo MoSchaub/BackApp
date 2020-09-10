@@ -120,7 +120,7 @@ class StepTempTableViewController: UITableViewController {
 
 extension StepTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        step.isDynamicTemperature ? 2 : 1
+        1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -128,23 +128,23 @@ extension StepTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if step.isDynamicTemperature {
-            if component == 0 {
-                return "\(Strings.start): \(row - 10)"
-            } else {
-                return "\(Strings.end): \(row - 10)"
-            }
-        } else {
-            return "\(row - 10)"
-        }
+//        if step.isDynamicTemperature {
+//            if component == 0 {
+//                return "\(Strings.start): \(row - 10)"
+//            } else {
+//                return "\(Strings.end): \(row - 10)"
+//            }
+//        } else {
+        return "\(row - 10)"
+//        }
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if component == 0 {
+//        if component == 0 {
             step.temperature = row - 10
-        } else if component == 1 {
-            step.secondTemp = row - 10
-        }
+//        } else if component == 1 {
+//            step.secondTemp = row - 10
+//        }
     }
 
 }

@@ -282,7 +282,7 @@ private extension RecipeDetailViewController {
     }
     
     private func startRecipe() {
-        let roomTemp = UserDefaults.standard.integer(forKey: Strings.roomTempKey)
+//        let roomTemp = UserDefaults.standard.integer(forKey: Strings.roomTempKey)
         let recipeBinding = Binding(get: {
             return self.recipe
         }) { (newValue) in

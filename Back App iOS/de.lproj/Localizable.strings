@@ -63,6 +63,12 @@
 "exportAll" = "alle exportieren";
 
 
+"hour" = "Stunde";
+
+
+"hours" = "Stunden";
+
+
 "image" = "Bild";
 
 
@@ -91,6 +97,9 @@
 
 
 "notes" = "Notizen";
+
+/* one for one minute  */
+"one" = "eine";
 
 
 "piece" = "Stück";

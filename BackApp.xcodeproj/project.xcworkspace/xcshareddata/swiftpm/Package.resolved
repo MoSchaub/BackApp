@@ -3,10 +3,10 @@
     "pins": [
       {
         "package": "BakingRecipe",
-        "repositoryURL": "https://github.com/MoSchaub/BakingRecipe.git",
+        "repositoryURL": "/Users/moritzschaub/Developer/Swift/ios/BakingRecipe/.git",
         "state": {
           "branch": "main",
-          "revision": "58c5317064383a0b23d0f5f180c966437140b9e2",
+          "revision": "91397f1865e9bf78dd14a39c367e880424605812",
           "version": null
         }
       },

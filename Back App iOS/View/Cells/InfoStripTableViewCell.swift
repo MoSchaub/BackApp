@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BakingRecipe
+   
 
 class InfoStripTableViewCell: UITableViewCell {
     
