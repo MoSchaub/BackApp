@@ -70,7 +70,7 @@ struct ScheduleView: View {
                 HStack{
                     Text(substep.name)
                     Spacer()
-                    Text("\(substep.totalAmount)")
+                    Text("\(substep.totalFormattedAmount)")
                 }.padding(.horizontal)
             }
             
