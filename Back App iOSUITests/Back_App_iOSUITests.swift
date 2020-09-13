@@ -55,6 +55,7 @@ class Back_App_iOSUITests: XCTestCase {
         sub3.subSteps.append(sub2)
         
         let subs = [sub1, sub2, sub3]
+        let recipe = Recipe(name: "unnamed recipe", brotValues: subs)
         
         app.launch()
         
@@ -231,8 +232,11 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars["Baking App"].buttons["Edit"].tap()
 
-        appTables.cells.containing(.staticText, identifier: recipe.name).buttons["Delete"].tap()
-        appTables.buttons["trailing0"].tap()
+        let app = XCUIApplication()
+        let tablesQuery = app.tables
+        tablesQuery.children(matching: .cell).element(boundBy: 2).buttons["Delete "].tap()
+        tablesQuery.buttons["trailing0"].tap()
+        app.navigationBars["Baking App"].buttons["Done"].tap()
     }
     
     func testd() throws {
