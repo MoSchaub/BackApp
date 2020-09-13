@@ -46,6 +46,60 @@ class Back_App_iOSUITests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+    
+    func testAddingSubstep() throws {
+        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000)])
+        var sub2 = Step(name: "Sub2")
+        sub2.subSteps.append(sub1)
+        var sub3 = Step(name: "Sub3")
+        sub3.subSteps.append(sub2)
+        
+        let subs = [sub1, sub2, sub3]
+        let recipe = Recipe(name: "unnamed recipe", brotValues: subs)
+        
+        app.launch()
+        
+        addButton.tap()
+
+        for sub in subs {
+            
+            let addStepButton = appTables.staticTexts["add Step"]
+            let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+            
+            addStepButton.tap()
+
+            nameTextField.tap()
+            nameTextField.typeText(sub.name)
+            doneButton.tap()
+            for ingredient in sub.ingredients {
+                let addIngredientButton = appTables.staticTexts["add Ingredient"]
+                addIngredientButton.tap()
+                nameTextField.tap()
+                nameTextField.typeText(ingredient.name)
+                doneButton.tap()
+                
+                let amountTextField = appTables.textFields["amount in gramms"]
+                amountTextField.tap()
+                amountTextField.typeText("\(ingredient.amount)")
+                doneButton.tap()
+                
+                app.navigationBars[ingredient.name].buttons["Save"].tap()
+            }
+            
+            for substep in sub.subSteps {
+                let addIngredientButton = appTables.staticTexts["add Ingredient"]
+                addIngredientButton.tap()
+                app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
+                app.sheets["select Step"].scrollViews.otherElements.buttons[substep.name].tap()
+            }
+            
+            app.navigationBars[sub.name].buttons["Save"].tap()
+        }
+        
+        app.navigationBars["unnamed recipe"].buttons["Save"].tap()
+
+        
+    }
 
     func testa() throws {
         
@@ -178,8 +232,11 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars["Baking App"].buttons["Edit"].tap()
 
-        appTables.cells.containing(.staticText, identifier: recipe.name).buttons["Delete"].tap()
-        appTables.buttons["trailing0"].tap()
+        let app = XCUIApplication()
+        let tablesQuery = app.tables
+        tablesQuery.children(matching: .cell).element(boundBy: 2).buttons["Delete "].tap()
+        tablesQuery.buttons["trailing0"].tap()
+        app.navigationBars["Baking App"].buttons["Done"].tap()
     }
     
     func testd() throws {
