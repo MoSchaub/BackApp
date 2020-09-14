@@ -51,43 +51,40 @@ struct ScheduleView: View {
     func customStepRow(step: Step) -> some View {
         VStack{
             HStack {
-                VStack {
-                    Text(step.name).font(.headline)
-                    Text(step.formattedTime).secondary()
-                }
+                Text(step.formattedName).lineLimit(1)
                 Spacer()
-                Text(recipe.formattedStartDate(for: step))
-            }.padding(.horizontal)
-            
+                Text(step.formattedTime).secondary()
+            }
             
             ForEach(step.ingredients){ ingredient in
-                HStack{
-                    self.customIngredientRow(ingredient: ingredient, step: step)
-                }.padding([.top, .leading, .trailing])
+                self.customIngredientRow(ingredient: ingredient, step: step)
+                    .padding(.vertical, 5)
             }
             
             ForEach(step.subSteps){substep in
                 HStack{
-                    Text(substep.name)
+                    Text(substep.formattedName)
                     Spacer()
-                    Text("\(substep.totalFormattedAmount)")
-                }.padding(.horizontal)
-            }
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(step.notes)
-                        .lineLimit(nil)
+                    Text(substep.formattedTemp)
                     Spacer()
+                    Text(substep.totalFormattedAmount)
                 }
-            }.padding([.horizontal,.top])
+            }
+            Text(step.notes)
+                .lineLimit(2)
         }
+        .padding()
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+       .background(RoundedRectangle(cornerRadius: 10).fill(Color.cellBackgroundColor()))
+        
+        .padding(.horizontal)
+        .padding(.vertical, 10)
     }
     
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(recipe.steps){ step in
+                ForEach(recipe.reorderedSteps){ step in
                     self.customStepRow(step: step)
                 }
                 HStack {
@@ -105,7 +102,8 @@ struct ScheduleView: View {
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScheduleView(recipe: Recipe.example, roomTemp: 20, times: 20)
+            ScheduleView(recipe: Recipe.complexExample, roomTemp: 20, times: 20)
+                .environment(\.locale, .init(identifier: "DE"))
         }
     }
 }

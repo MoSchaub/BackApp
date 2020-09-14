@@ -9,29 +9,6 @@
 import SwiftUI
 import BakingRecipe
 
-enum ScheduleFormSection: String, CaseIterable {
-    case times
-    case datepicker
-}
-
-class TimesItem: Item {
-    var decimal: Decimal?
-    
-    init(id: UUID = UUID(), decimal: Decimal?) {
-        self.decimal = decimal
-        super.init(id: id)
-    }
-}
-
-class DateItem: Item {
-    var date: Date
-    
-    init(id: UUID = UUID(), date: Date) {
-        self.date = date
-        super.init(id: id)
-    }
-}
-
 class ScheduleFormViewController: UITableViewController {
     
     @Binding private var recipe: Recipe
@@ -79,7 +56,7 @@ private extension ScheduleFormViewController {
     }
     
     @objc private func proceedToScheduleView() {
-        navigationController?.pushViewController(UIHostingController(rootView: ScheduleView(recipe: recipe, roomTemp: UserDefaults.standard.integer(forKey: Strings.roomTempKey), times: self.times)), animated: true)
+        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: UserDefaults.standard.integer(forKey: Strings.roomTempKey), times: self.times), animated: true)
     }
     
     private func registerCells() {

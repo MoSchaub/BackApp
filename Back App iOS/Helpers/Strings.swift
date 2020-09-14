@@ -92,4 +92,5 @@ struct Strings {
     static let infoStripCell = "infoStrip"
     static let infoCell = "info"
     static let textFieldCell = "textField"
+    static let scheduleCell = "schedule"
 }
