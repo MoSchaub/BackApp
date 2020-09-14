@@ -33,7 +33,7 @@
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
-		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F5124E29F1D008F9A09 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5024E29F1D008F9A09 /* Item.swift */; };
 		CD663F5324E29F44008F9A09 /* TextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5224E29F44008F9A09 /* TextItem.swift */; };
 		CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F5424E29F8A008F9A09 /* DetailItem.swift */; };
@@ -54,7 +54,11 @@
 		CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD68D46924AC64EF000D4BD7 /* Localizable.strings in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD68D46024AC5C80000D4BD7 /* Localizable.strings */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = CD859DB524E09A0C00E2ADD1 /* LBTATools */; };
+		CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */; };
+		CD78EAB0250FFDD400E17DB0 /* ScheduleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAAF250FFDD400E17DB0 /* ScheduleItem.swift */; };
+		CD78EAB2250FFE0400E17DB0 /* TimesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAB1250FFE0400E17DB0 /* TimesItem.swift */; };
+		CD78EAB4250FFE3100E17DB0 /* DateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAB3250FFE3100E17DB0 /* DateItem.swift */; };
+		CD78EAB6250FFE7E00E17DB0 /* ScheduleFormSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAB5250FFE7E00E17DB0 /* ScheduleFormSection.swift */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CDA0CC9724EC7046003B7000 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9324EC7046003B7000 /* Recipe.swift */; };
 		CDA0CC9824EC7046003B7000 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0CC9324EC7046003B7000 /* Recipe.swift */; };
@@ -85,10 +89,11 @@
 		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
-		CDD381B5250BB82A00BEE4B8 /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDD381B4250BB82A00BEE4B8 /* BakingRecipe */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED1AF424ED0920005278E9 /* SubtitleCell.swift */; };
+		CDED61262510045F008763FF /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED61252510045F008763FF /* UIView+Additions.swift */; };
+		CDED612825100528008763FF /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDED612725100528008763FF /* BakingRecipe */; };
 		CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
@@ -211,6 +216,11 @@
 		CD76F9B7248BDA3000D11DD3 /* StepDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepDetail.swift; sourceTree = "<group>"; };
 		CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
+		CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		CD78EAAF250FFDD400E17DB0 /* ScheduleItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleItem.swift; sourceTree = "<group>"; };
+		CD78EAB1250FFE0400E17DB0 /* TimesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesItem.swift; sourceTree = "<group>"; };
+		CD78EAB3250FFE3100E17DB0 /* DateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateItem.swift; sourceTree = "<group>"; };
+		CD78EAB5250FFE7E00E17DB0 /* ScheduleFormSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFormSection.swift; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
 		CDA0CC9324EC7046003B7000 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		CDA0CC9424EC7046003B7000 /* Difficulty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
@@ -240,6 +250,7 @@
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 		CDED1AF424ED0920005278E9 /* SubtitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleCell.swift; sourceTree = "<group>"; };
+		CDED61252510045F008763FF /* UIView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
 		CDF223F724E9A8DF007515C6 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -264,8 +275,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDD381B5250BB82A00BEE4B8 /* BakingRecipe in Frameworks */,
-				CD859DB624E09A0C00E2ADD1 /* LBTATools in Frameworks */,
+				CDED612825100528008763FF /* BakingRecipe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +323,7 @@
 			isa = PBXGroup;
 			children = (
 				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
+				CDED61252510045F008763FF /* UIView+Additions.swift */,
 				CDF223F724E9A8DF007515C6 /* Strings.swift */,
 				CD663F7024E2A272008F9A09 /* Sections */,
 				CD663F5624E29FB0008F9A09 /* Items */,
@@ -343,6 +354,9 @@
 				CD663F5224E29F44008F9A09 /* TextItem.swift */,
 				CD663F5424E29F8A008F9A09 /* DetailItem.swift */,
 				CD2C4C8524DACB33009195A8 /* RecipeItem.swift */,
+				CD78EAAF250FFDD400E17DB0 /* ScheduleItem.swift */,
+				CD78EAB1250FFE0400E17DB0 /* TimesItem.swift */,
+				CD78EAB3250FFE3100E17DB0 /* DateItem.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -371,6 +385,7 @@
 			children = (
 				CD663F5724E29FCC008F9A09 /* HomeSection.swift */,
 				CD663F6524E2A0CD008F9A09 /* RecipeDetailSection.swift */,
+				CD78EAB5250FFE7E00E17DB0 /* ScheduleFormSection.swift */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -515,6 +530,7 @@
 				CD663F6924E2A16F008F9A09 /* Recipe+Items.swift */,
 				CD663F6724E2A0FE008F9A09 /* RecipeDetailDataSource.swift */,
 				CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */,
+				CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */,
 			);
 			path = RecipeDetail;
 			sourceTree = "<group>";
@@ -670,8 +686,7 @@
 			);
 			name = "Back App iOS";
 			packageProductDependencies = (
-				CD859DB524E09A0C00E2ADD1 /* LBTATools */,
-				CDD381B4250BB82A00BEE4B8 /* BakingRecipe */,
+				CDED612725100528008763FF /* BakingRecipe */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -732,8 +747,6 @@
 			);
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
-				CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */,
-				CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -828,13 +841,19 @@
 				CD663F6E24E2A251008F9A09 /* DetailTableViewCell.swift in Sources */,
 				CD4A171424E89F4A00395B48 /* UITextViewAdditions.swift in Sources */,
 				CDA8070025040F1A008E0EC0 /* DatePickerCell.swift in Sources */,
+				CD78EAB2250FFE0400E17DB0 /* TimesItem.swift in Sources */,
+				CDED61262510045F008763FF /* UIView+Additions.swift in Sources */,
 				CD399AD224AA5AD400232F90 /* AmountTableViewCell.swift in Sources */,
 				CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */,
+				CD78EAB6250FFE7E00E17DB0 /* ScheduleFormSection.swift in Sources */,
 				CD0A179624ADF0A7001CDF5F /* TextViewExtension.swift in Sources */,
+				CD78EAB0250FFDD400E17DB0 /* ScheduleItem.swift in Sources */,
 				CD663F5124E29F1D008F9A09 /* Item.swift in Sources */,
+				CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
 				CDA806FE250409A6008E0EC0 /* DecimalCell.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
+				CD78EAB4250FFE3100E17DB0 /* DateItem.swift in Sources */,
 				CD663F6424E2A098008F9A09 /* InfoItem.swift in Sources */,
 				CD663F5524E29F8A008F9A09 /* DetailItem.swift in Sources */,
 				CDA2B58C24A5D4E5008D39AF /* TextFieldTableViewCell.swift in Sources */,
@@ -894,7 +913,6 @@
 		};
 		CD59041424E2CF4F008A0E6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = CD59040624E2CF4F008A0E6E /* Push Notification */;
 			targetProxy = CD59041324E2CF4F008A0E6E /* PBXContainerItemProxy */;
 		};
@@ -1275,34 +1293,9 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.17;
-			};
-		};
-		CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "file:///Users/moritzschaub/Developer/Swift/ios/BakingRecipe/.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		CD859DB524E09A0C00E2ADD1 /* LBTATools */ = {
+		CDED612725100528008763FF /* BakingRecipe */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD859DB424E09A0C00E2ADD1 /* XCRemoteSwiftPackageReference "LBTATools" */;
-			productName = LBTATools;
-		};
-		CDD381B4250BB82A00BEE4B8 /* BakingRecipe */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDD381B3250BB82A00BEE4B8 /* XCRemoteSwiftPackageReference "" */;
 			productName = BakingRecipe;
 		};
 /* End XCSwiftPackageProductDependency section */

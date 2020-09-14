@@ -37,8 +37,10 @@ struct StepRow: View {
                     Text(substep.totalFormattedAmount)
                 }
             }
-            Text(step.notes)
-                .lineLimit(2)
+            HStack {
+                Text(step.notes)
+                Spacer()
+            }
         }
         .padding()
         .padding(.trailing)
