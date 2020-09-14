@@ -132,10 +132,10 @@ private extension ScheduleViewControllor {
     private func customStepRow(step: Step) -> some View {
         VStack{
             HStack {
-                Text(step.formattedName).font(.headline)
-                    .lineLimit(1)
-                Spacer()
-                Text(step.formattedTime).secondary()
+                VStack(alignment: .leading) {
+                    Text(step.formattedName).font(.headline)
+                    Text("\(step.formattedTime), \(step.formattedTemp)").secondary()
+                }
                 Spacer()
                 Text(recipe.formattedStartDate(for: step))
             }
