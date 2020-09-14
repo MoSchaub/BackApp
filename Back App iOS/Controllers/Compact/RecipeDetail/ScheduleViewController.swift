@@ -67,7 +67,7 @@ private extension ScheduleViewControllor {
     private func makeDataSource() -> UITableViewDiffableDataSource<Int, StepItem> {
         UITableViewDiffableDataSource<Int, StepItem>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             if let step = self.recipe.reorderedSteps.first(where: { $0.id == item.id }) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.scheduleCell, for: indexPath)
+                let cell = UITableViewCell()
                 cell.selectionStyle = .none
                 
                 let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
@@ -136,6 +136,8 @@ private extension ScheduleViewControllor {
                     .lineLimit(1)
                 Spacer()
                 Text(step.formattedTime).secondary()
+                Spacer()
+                Text(recipe.formattedStartDate(for: step))
             }
             
             ForEach(step.ingredients){ ingredient in
