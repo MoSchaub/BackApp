@@ -29,6 +29,9 @@ class DatePickerCell: UITableViewCell {
     
     private func setUpDatePicker() {
         datePicker.datePickerMode = .dateAndTime
+        #if canImport(WidgetKit)
+        datePicker.preferredDatePickerStyle = .inline
+        #endif
         datePicker.date = date
         datePicker.addTarget(self, action: #selector(updateDate), for: .valueChanged)
         setUpDatePickerConstraints()
@@ -37,10 +40,6 @@ class DatePickerCell: UITableViewCell {
     private func setUpDatePickerConstraints() {
         addSubview(datePicker)
         datePicker.fillSuperview()
-//        datePicker.translatesAutoresizingMaskIntoConstraints = false
-//        datePicker.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-//        datePicker.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
-//        datePicker.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
     }
     
     @objc private func updateDate(sender: UIDatePicker) {
