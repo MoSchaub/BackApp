@@ -29,9 +29,13 @@ class DatePickerCell: UITableViewCell {
     
     private func setUpDatePicker() {
         datePicker.datePickerMode = .dateAndTime
-        #if canImport(WidgetKit)
-        datePicker.preferredDatePickerStyle = .inline
-        #endif
+        if #available(iOS 14.0, *) {
+            #if canImport(WidgetKit)
+            datePicker.tintColor = .red
+            #endif
+        } else {
+            // Fallback on earlier versions
+        }
         datePicker.date = date
         datePicker.addTarget(self, action: #selector(updateDate), for: .valueChanged)
         setUpDatePickerConstraints()

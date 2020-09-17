@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TextFieldTableViewCell: UITableViewCell, TextFieldCellable {
+class TextFieldTableViewCell: UITableViewCell{
     
     var textField = UITextField(frame: .zero)
     
