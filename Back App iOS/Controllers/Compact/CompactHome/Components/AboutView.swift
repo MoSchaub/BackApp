@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import BakingRecipeCore
 
 struct AboutView: View {
     var body: some View {

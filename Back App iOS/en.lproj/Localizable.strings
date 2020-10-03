@@ -98,7 +98,7 @@
 
 "notes" = "notes";
 
-/* one for one minute  */
+/* one for one minute */
 "one" = "one";
 
 
@@ -114,10 +114,16 @@
 "quantity" = "quantity";
 
 
+"recipeImported" = "recipe has been imported";
+
+
 "recipe_already_exist_error" = "The file contains already existing recipes";
 
 
 "recipes" = "recipes";
+
+
+"recipesImported" = "recipes have been imported";
 
 
 "roomTemperature" = "room temperature";
@@ -142,6 +148,9 @@
 
 
 "steps" = "steps";
+
+
+"success" = "success";
 
 
 "support" = "learn more";

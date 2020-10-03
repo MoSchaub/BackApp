@@ -97,7 +97,7 @@ extension CompactHomeViewController {
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
-        if let recipe = recipeStore.recipes.first(where: { $0.id == recipeItem.id}) {
+        if let recipe = recipeStore.allRecipes.first(where: { $0.id == recipeItem.id}) {
             let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
                 self.recipeStore.update(recipe: recipe)
                 DispatchQueue.main.async {
@@ -149,7 +149,7 @@ extension CompactHomeViewController {
     }
     
     private func openExportAllShareSheet(sender: UIView) {
-        let ac = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
+        let ac = UIActivityViewController(activityItems: [recipeStore.exportToURL()], applicationActivities: nil)
         ac.popoverPresentationController?.sourceView = sender
         present(ac,animated: true, completion: deselectRow)
     }
@@ -170,7 +170,8 @@ extension CompactHomeViewController {
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         for url in urls {
-            recipeStore.open(url)
+            recipeStore.open(url, isArray: true)
+            recipeStore.open(url, isArray: false)
         }
         
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)

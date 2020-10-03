@@ -59,7 +59,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     func update(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<HomeSection, TextItem>()
         snapshot.appendSections(HomeSection.allCases)
-        snapshot.appendItems(recipeStore.recipeItems, toSection: .recipes)
+        snapshot.appendItems(recipeStore.allRecipesItems, toSection: .recipes)
         snapshot.appendItems(recipeStore.settingsItems, toSection: .settings)
         self.apply(snapshot, animatingDifferences: animated)
     }
@@ -91,16 +91,16 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     }
     
     func deleteRecipe(_ id: UUID) -> Bool {
-        if let index = recipeStore.recipes.firstIndex(where: { $0.id == id }) {
+        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
             return self.recipeStore.deleteRecipe(at: index)
         } else { return false }
     }
     
     // moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row < recipeStore.recipes.count else { reset(); return }
+        guard destinationIndexPath.row < recipeStore.allRecipes.count else { reset(); return }
         guard destinationIndexPath.section == 0 else { reset(); return}
-        guard recipeStore.recipes.count > sourceIndexPath.row else { reset(); return }
+        guard recipeStore.allRecipes.count > sourceIndexPath.row else { reset(); return }
         DispatchQueue.global(qos: .userInteractive).async {
             self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
             DispatchQueue.main.async {

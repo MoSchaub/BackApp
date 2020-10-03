@@ -69,7 +69,6 @@
 		CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */; };
 		CDA806FE250409A6008E0EC0 /* DecimalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FD250409A6008E0EC0 /* DecimalCell.swift */; };
 		CDA8070025040F1A008E0EC0 /* DatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FF25040F1A008E0EC0 /* DatePickerCell.swift */; };
-		CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
@@ -78,7 +77,6 @@
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED1AF424ED0920005278E9 /* SubtitleCell.swift */; };
 		CDED61262510045F008763FF /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED61252510045F008763FF /* UIView+Additions.swift */; };
-		CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,7 +216,6 @@
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 		CDED1AF424ED0920005278E9 /* SubtitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleCell.swift; sourceTree = "<group>"; };
 		CDED61252510045F008763FF /* UIView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
-		CDF223F724E9A8DF007515C6 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -292,7 +289,6 @@
 			children = (
 				CD0B4B0724A60B9B00EA9FC8 /* ImageUtils.swift */,
 				CDED61252510045F008763FF /* UIView+Additions.swift */,
-				CDF223F724E9A8DF007515C6 /* Strings.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -802,7 +798,6 @@
 				CD0A179124ADF00D001CDF5F /* IngredientRow.swift in Sources */,
 				CD33899124A9E90000C7E568 /* ImageTableViewCell.swift in Sources */,
 				CD664D5424A6916400884CAE /* InfoStripTableViewCell.swift in Sources */,
-				CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */,
 				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
 				CD229C0F24E93F8A003C3683 /* UIVIew+allSubviews.swift in Sources */,
 				CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */,
@@ -817,7 +812,6 @@
 				CDA0CC9B24EC7046003B7000 /* Step.swift in Sources */,
 				CDA0CC9D24EC7046003B7000 /* Ingredient.swift in Sources */,
 				CDA0CC9724EC7046003B7000 /* Recipe.swift in Sources */,
-				CDAAE18424F130FD00A74FB3 /* Strings.swift in Sources */,
 				CDA0CC9924EC7046003B7000 /* Difficulty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

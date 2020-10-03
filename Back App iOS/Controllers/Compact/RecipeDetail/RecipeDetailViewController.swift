@@ -197,22 +197,6 @@ extension RecipeDetailViewController {
     
 }
 
-private extension Recipe {
-    func createFile() -> URL {
-        let url = getDocumentsDirectory().appendingPathComponent("\(self.formattedName).bakingAppRecipe")
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let encoded = try? JSONEncoder().encode(self.neutralizedForExport()) {
-                do {
-                    try encoded.write(to: url)
-                } catch {
-                    print(error)
-                }
-            }
-        }
-        return url
-    }
-}
-
 extension RecipeDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = dataSource.itemIdentifier(for: indexPath) {

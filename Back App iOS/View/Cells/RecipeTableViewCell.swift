@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import BakingRecipeCore
 
 class RecipeTableViewCell: UITableViewCell {
     
