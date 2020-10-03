@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeCore
 
 class StepTableViewCell: UITableViewCell {
 

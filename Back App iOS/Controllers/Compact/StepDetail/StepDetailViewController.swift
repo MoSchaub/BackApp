@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeCore
 
 class StepDetailViewController: UITableViewController {
     
@@ -184,7 +185,7 @@ class StepDetailViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.ingredientCell, for: indexPath)
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
-        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: UserDefaults.standard.integer(forKey: Strings.roomTempKey)))° C" : "")
+        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: Settings.standardRoomTemperature))° C" : "")
 
         return cell
     }

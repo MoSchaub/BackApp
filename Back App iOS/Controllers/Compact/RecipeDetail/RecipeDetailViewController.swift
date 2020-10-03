@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeCore
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -194,22 +195,6 @@ extension RecipeDetailViewController {
         }
     }
     
-}
-
-private extension Recipe {
-    func createFile() -> URL {
-        let url = getDocumentsDirectory().appendingPathComponent("\(self.formattedName).bakingAppRecipe")
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let encoded = try? JSONEncoder().encode(self.neutralizedForExport()) {
-                do {
-                    try encoded.write(to: url)
-                } catch {
-                    print(error)
-                }
-            }
-        }
-        return url
-    }
 }
 
 extension RecipeDetailViewController {

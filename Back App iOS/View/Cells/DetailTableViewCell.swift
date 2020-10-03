@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipeCore
 
 class DetailTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

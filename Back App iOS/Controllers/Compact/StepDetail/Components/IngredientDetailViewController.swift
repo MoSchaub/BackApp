@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeCore
 
 class IngredientDetailViewController: UITableViewController {
     

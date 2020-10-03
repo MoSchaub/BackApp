@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../BakingRecipeCore">
+   </FileRef>
+   <FileRef
       location = "group:../BakingRecipe">
    </FileRef>
    <FileRef

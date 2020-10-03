@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipeCore
 
 class SubtitleCell: UITableViewCell {
 

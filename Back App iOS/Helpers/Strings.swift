@@ -66,8 +66,7 @@ struct Strings {
     static let websiteURL = URL(string: "https://heimbaecker.de/backapp")!
     static let privacyPolicyURL = URL(string: "https://heimbaecker.de/backapp-datenschutzerklaerung")!
     static let donateURL = URL(string: "https://heimbaecker.de/backapp-donate")!
-
-    static let roomTempKey = "roomTemp"
+    
     static let backgroundColorName = "blue"
     static let init_coder_not_implemented = "init(coder:) has not been implemented"
     
