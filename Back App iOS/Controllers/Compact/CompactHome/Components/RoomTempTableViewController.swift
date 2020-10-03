@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipeCore
 
 class RoomTempTableViewController: UITableViewController {
     
@@ -55,7 +56,7 @@ class RoomTempTableViewController: UITableViewController {
         picker = UIPickerView(frame: .zero)
         picker.dataSource = self
         picker.delegate = self
-        picker.selectRow(recipeStore.roomTemperature + 10, inComponent: 0, animated: false)
+        picker.selectRow(Settings.standardRoomTemperature + 10, inComponent: 0, animated: false)
     }
 }
 

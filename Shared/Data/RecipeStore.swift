@@ -27,25 +27,11 @@ final class RecipeStore: ObservableObject{
     }
     
     var settingsItems: [TextItem] { [
-        DetailItem(name: Strings.roomTemperature, detailLabel: "\(self.roomTemperature)° C"),
+        DetailItem(name: Strings.roomTemperature, detailLabel: "\(Settings.standardRoomTemperature)° C"),
         TextItem(text: Strings.importFile),
         TextItem(text: Strings.exportAll),
         DetailItem(name: Strings.about)
     ]}
-    
-    var roomTemperature: Int {
-        get {
-            if let int = UserDefaults.standard.object(forKey: Strings.roomTempKey) as? Int {
-                return int
-            } else {
-                UserDefaults.standard.set(20, forKey: Strings.roomTempKey)
-                return 20
-            }
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: Strings.roomTempKey)
-        }
-    }
     
     
     /// selection of RecipeDetail

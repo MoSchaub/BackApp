@@ -124,7 +124,7 @@ extension CompactHomeViewController {
         
         vc.recipeStore = recipeStore
         vc.updateTemp = { [self] temp in
-            self.recipeStore.roomTemperature = temp
+            Settings.standardRoomTemperature = temp
             self.updateSettings()
         }
         splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)

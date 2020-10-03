@@ -57,7 +57,7 @@ private extension ScheduleFormViewController {
     }
     
     @objc private func proceedToScheduleView() {
-        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: UserDefaults.standard.integer(forKey: Strings.roomTempKey), times: self.times), animated: true)
+        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: Settings.standardRoomTemperature, times: self.times), animated: true)
     }
     
     private func registerCells() {
