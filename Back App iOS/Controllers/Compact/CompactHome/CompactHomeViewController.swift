@@ -169,17 +169,19 @@ extension CompactHomeViewController {
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        
+        //load recipes
         for url in urls {
-            recipeStore.open(url, isArray: true)
-            recipeStore.open(url, isArray: false)
+            recipeStore.open(url)
         }
         
+        //update cells
+        self.dataSource.update(animated: true)
+        
+        //alert
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
             alert.dismiss(animated: true)
-            if alert.title == "Erfolg" {
-                self.dataSource.update(animated: true)
-            }
         }))
         
         present(alert, animated: true)

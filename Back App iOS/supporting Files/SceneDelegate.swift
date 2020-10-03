@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
-        let _ = URLContexts.map({ self.recipeStore.open($0.url, isArray: true); self.recipeStore.open($0.url, isArray: false) })
+        let _ = URLContexts.map({ self.recipeStore.open($0.url)})
         compactHomeVC.dataSource.update(animated: true)
         
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)

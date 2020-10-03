@@ -132,7 +132,7 @@ class Back_App_iOSUITests: XCTestCase {
             returnButton.tap()
             
             // notes
-            let notesField = appTables.textViews[Strings.notes]
+            let notesField = appTables.textViews["notes"]
             notesField.tap()
             notesField.typeText(step.notes)
             
