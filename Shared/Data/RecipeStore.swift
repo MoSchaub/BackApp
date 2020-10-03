@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 import BakingRecipeFoundation
+import BakingRecipeCore
 
 final class RecipeStore: ObservableObject{
 

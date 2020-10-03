@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MobileCoreServices
+import BakingRecipeCore
 
 class CompactHomeViewController: UITableViewController {
     
