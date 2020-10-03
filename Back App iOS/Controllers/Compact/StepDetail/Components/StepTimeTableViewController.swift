@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BakingRecipeCore
+import BakingRecipeStrings
 
 class StepTimeTableViewController: UITableViewController {
 

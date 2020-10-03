@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BakingRecipeCore
+import BakingRecipeStrings
 
 class DatePickerCell: UITableViewCell {
 

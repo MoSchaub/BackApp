@@ -55,7 +55,6 @@ class Back_App_iOSUITests: XCTestCase {
         sub3.subSteps.append(sub2)
         
         let subs = [sub1, sub2, sub3]
-        let recipe = Recipe(name: "unnamed recipe", brotValues: subs)
         
         app.launch()
         

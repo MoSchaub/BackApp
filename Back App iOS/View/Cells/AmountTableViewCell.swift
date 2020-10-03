@@ -8,7 +8,7 @@
 
 import UIKit
 import BakingRecipeFoundation
-import BakingRecipeCore
+import BakingRecipeStrings
 
 class AmountTableViewCell: UITableViewCell, TextFieldCellable {
 

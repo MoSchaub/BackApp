@@ -8,6 +8,7 @@
 
 import UIKit
 import BakingRecipeCore
+import BakingRecipeStrings
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
