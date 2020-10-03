@@ -8,6 +8,7 @@
 
 import SwiftUI
 import BakingRecipeFoundation
+import BakingRecipeStrings
 import BakingRecipeCore
 
 class ScheduleFormViewController: UITableViewController {

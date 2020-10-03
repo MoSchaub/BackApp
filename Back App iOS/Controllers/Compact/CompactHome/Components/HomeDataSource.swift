@@ -8,6 +8,7 @@
 
 import UIKit
 import BakingRecipeCore
+import BakingRecipeStrings
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {

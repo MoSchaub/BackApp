@@ -8,7 +8,7 @@
 
 import SwiftUI
 import BakingRecipeFoundation
-import BakingRecipeCore
+import BakingRecipeStrings
 
 class StepTempTableViewController: UITableViewController {
     // MARK: - Properties

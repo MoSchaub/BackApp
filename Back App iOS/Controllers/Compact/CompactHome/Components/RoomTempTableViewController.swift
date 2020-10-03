@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipeStrings
 import BakingRecipeCore
 
 class RoomTempTableViewController: UITableViewController {

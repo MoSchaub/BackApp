@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BakingRecipeCore
+import BakingRecipeStrings
 
 class TextViewTableViewCell: UITableViewCell {
     @Binding private var textContent: String
