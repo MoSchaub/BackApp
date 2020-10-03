@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
 
 struct ScheduleForm: View {
     @Environment(\.presentationMode) var presentationMode

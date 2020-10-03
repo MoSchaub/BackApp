@@ -89,11 +89,11 @@
 		CDAE672824E5C32F007A366F /* TextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE672724E5C32F007A366F /* TextViewTableViewCell.swift */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
+		CDC68C4C25286C1E00B29334 /* BakingRecipeFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = CDC68C4B25286C1E00B29334 /* BakingRecipeFoundation */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDED1AF524ED0920005278E9 /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED1AF424ED0920005278E9 /* SubtitleCell.swift */; };
 		CDED61262510045F008763FF /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDED61252510045F008763FF /* UIView+Additions.swift */; };
-		CDED612825100528008763FF /* BakingRecipe in Frameworks */ = {isa = PBXBuildFile; productRef = CDED612725100528008763FF /* BakingRecipe */; };
 		CDF223F824E9A8DF007515C6 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF223F724E9A8DF007515C6 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
@@ -275,7 +275,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDED612825100528008763FF /* BakingRecipe in Frameworks */,
+				CDC68C4C25286C1E00B29334 /* BakingRecipeFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,7 +686,7 @@
 			);
 			name = "Back App iOS";
 			packageProductDependencies = (
-				CDED612725100528008763FF /* BakingRecipe */,
+				CDC68C4B25286C1E00B29334 /* BakingRecipeFoundation */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -1294,9 +1294,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CDED612725100528008763FF /* BakingRecipe */ = {
+		CDC68C4B25286C1E00B29334 /* BakingRecipeFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = BakingRecipe;
+			productName = BakingRecipeFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BakingRecipe
+import BakingRecipeFoundation
 
 class StepItem: Item {
     var step: Step

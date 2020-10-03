@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BakingRecipe
+import BakingRecipeFoundation
 
 class AmountTableViewCell: UITableViewCell, TextFieldCellable {
 

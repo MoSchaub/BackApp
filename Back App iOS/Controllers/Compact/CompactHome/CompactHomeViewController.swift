@@ -43,7 +43,7 @@ class CompactHomeViewController: UITableViewController {
 }
 
 
-import BakingRecipe
+import BakingRecipeFoundation
 
 private extension CompactHomeViewController {
     private func registerCells() {
