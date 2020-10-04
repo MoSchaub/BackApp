@@ -8,6 +8,7 @@
 
 import UIKit
 import BakingRecipeStrings
+import BakingRecipeUIFoundation
 
 class SubtitleCell: UITableViewCell {
 

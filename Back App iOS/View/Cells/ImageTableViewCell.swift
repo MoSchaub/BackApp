@@ -8,6 +8,7 @@
 
 import SwiftUI
 import BakingRecipeStrings
+import BakingRecipeUIFoundation
 
 class ImageTableViewCell: UITableViewCell {
     
