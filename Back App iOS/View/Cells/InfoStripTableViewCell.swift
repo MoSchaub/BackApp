@@ -39,6 +39,7 @@ class InfoStripTableViewCell: UITableViewCell {
                 }
                 Spacer()
             }
+            .foregroundColor(Color(.cellTextColor))
             .padding()
             .background(Color.cellBackgroundColor())
         }

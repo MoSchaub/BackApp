@@ -9,6 +9,7 @@
 import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
+import BakingRecipeCells
 
 class StepTableViewCell: UITableViewCell {
 
