@@ -150,7 +150,7 @@ class StepDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.step.name = text
         }
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
@@ -169,7 +169,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = step.formattedTime
         cell.accessoryType = .disclosureIndicator
         
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
@@ -177,7 +177,7 @@ class StepDetailViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempCell)!
         cell.textLabel?.text = step.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }
@@ -199,7 +199,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = substep.name
         cell.detailTextLabel?.text = substep.totalFormattedAmount + " " + substep.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }
@@ -209,7 +209,7 @@ class StepDetailViewController: UITableViewController {
         
         cell.textLabel?.text = Strings.addIngredient
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }

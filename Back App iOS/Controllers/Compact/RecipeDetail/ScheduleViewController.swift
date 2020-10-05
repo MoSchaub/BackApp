@@ -10,6 +10,7 @@ import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BakingRecipeCore
+import BakingRecipeItems
 
 class ScheduleViewControllor: UITableViewController {
     // - MARK: - Properties
@@ -75,7 +76,7 @@ private extension ScheduleViewControllor {
                 let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
                 cell.addSubview(hostingController.view)
                 hostingController.view?.fillSuperview()
-                hostingController.view?.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                hostingController.view?.backgroundColor = UIColor.backgroundColor
                 
                 return cell
             }

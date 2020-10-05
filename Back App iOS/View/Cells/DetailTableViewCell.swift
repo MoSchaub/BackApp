@@ -20,8 +20,8 @@ class DetailTableViewCell: UITableViewCell {
     }
     
     private func setup() {
-        self.backgroundColor = UIColor(named: Strings.backgroundColorName)!
-        detailTextLabel?.tintColor = .label
+        self.backgroundColor = UIColor.backgroundColor
+        detailTextLabel?.tintColor = .cellTextColor
         accessoryType = .disclosureIndicator
         selectionStyle = .none
     }

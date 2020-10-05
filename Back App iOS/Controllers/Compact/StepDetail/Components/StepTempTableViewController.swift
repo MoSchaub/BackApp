@@ -67,7 +67,7 @@ class StepTempTableViewController: UITableViewController {
         configurePicker()
         cell.contentView.addSubview(picker)
         addPickerConstraints(cell: cell)
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }

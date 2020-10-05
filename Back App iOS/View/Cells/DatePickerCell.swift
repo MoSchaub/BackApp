@@ -12,7 +12,7 @@ import BakingRecipeStrings
 class DatePickerCell: UITableViewCell {
 
     @Binding private var date: Date
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor(named: Strings.backgroundColorName)!)
+    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
     
     init(date: Binding<Date>, reuseIdentifier: String?) {
         self._date = date

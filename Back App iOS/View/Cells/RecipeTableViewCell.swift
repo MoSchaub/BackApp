@@ -50,8 +50,10 @@ class RecipeTableViewCell: UITableViewCell {
                     Text(data.name)
                         .font(.headline)
                         .lineLimit(1)
-                    Text(data.minuteLabel).secondary()
+                    Text(data.minuteLabel)
+                        .font(.subheadline)
                 }
+                .foregroundColor(Color(.cellTextColor))
                 Spacer()
             }
             .padding()
@@ -66,9 +68,9 @@ class RecipeTableViewCell: UITableViewCell {
     func setUp(cellData: RecipeCellData) {
         let hostingController = UIHostingController(rootView: RecipeRowView(data: cellData))
         contentView.addSubview(hostingController.view)
-        hostingController.view.backgroundColor = UIColor(named: Strings.backgroundColorName)
+        hostingController.view.backgroundColor = UIColor.backgroundColor
         hostingController.view.fillSuperview()
-        backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        backgroundColor = UIColor.backgroundColor
         
         accessoryType = .disclosureIndicator
         selectionStyle = .none
@@ -80,7 +82,7 @@ class RecipeTableViewCell: UITableViewCell {
         if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
             let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
             indicatorButton.setBackgroundImage(image, for: .normal)
-            indicatorButton.tintColor = .label
+            indicatorButton.tintColor = .cellTextColor
         }
     }
 

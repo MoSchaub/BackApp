@@ -8,8 +8,9 @@
 
 import SwiftUI
 import BakingRecipeFoundation
-import BakingRecipeCore
+import BakingRecipeItems
 import BakingRecipeStrings
+import BakingRecipeSections
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -183,7 +184,7 @@ extension RecipeDetailViewController {
     private func attributedTitleForEditButton() -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : UIColor(named: Strings.backgroundColorName)!
+            .foregroundColor : UIColor.backgroundColor
         ]
         let titleString = isEditing ? Strings.EditButton_Done : Strings.EditButton_Edit
         return NSAttributedString(string: titleString, attributes: attributes)

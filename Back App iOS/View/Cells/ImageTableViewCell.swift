@@ -51,7 +51,7 @@ class ImageTableViewCell: UITableViewCell {
         }
         
         imageView?.fillSuperview()
-        backgroundColor = UIColor(named: Strings.backgroundColorName)
+        backgroundColor = UIColor.backgroundColor
         selectionStyle = .none
     }
     

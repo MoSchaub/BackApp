@@ -71,7 +71,7 @@ class TextViewTableViewCell: UITableViewCell {
     }
     
     private func setUpCellDesign() {
-        textView.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        textView.backgroundColor = UIColor.backgroundColor
         textView.tintColor = .red
         textView.font = UIFont.preferredFont(forTextStyle: .body)
     }

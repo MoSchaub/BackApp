@@ -120,14 +120,14 @@ class IngredientDetailViewController: UITableViewController {
         cell.textChanged = { text in
             self.ingredient.name = text
         }
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
     private func makeAmountCell() -> AmountTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell) as! AmountTableViewCell
         cell.setUp(with: ingredient, format: format)
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
@@ -149,7 +149,7 @@ class IngredientDetailViewController: UITableViewController {
         cell.accessoryView = toggle
         
         cell.textLabel?.text = Strings.bulkLiquid
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }

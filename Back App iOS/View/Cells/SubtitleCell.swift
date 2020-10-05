@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BakingRecipeStrings
 import BakingRecipeUIFoundation
 
 class SubtitleCell: UITableViewCell {
@@ -22,7 +21,7 @@ class SubtitleCell: UITableViewCell {
     }
     
     private func setup() {
-        self.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        self.backgroundColor = UIColor.backgroundColor
         detailTextLabel?.tintColor = .label
         accessoryType = .disclosureIndicator
         selectionStyle = .none
@@ -34,7 +33,7 @@ class SubtitleCell: UITableViewCell {
         if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
             let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
             indicatorButton.setBackgroundImage(image, for: .normal)
-            indicatorButton.tintColor = .label
+            indicatorButton.tintColor = .cellTextColor
         }
     }
     

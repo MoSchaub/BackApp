@@ -8,8 +8,9 @@
 
 import SwiftUI
 import BakingRecipeFoundation
-import BakingRecipeCore
+import BakingRecipeItems
 import BakingRecipeStrings
+import BakingRecipeSections
 
 class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
     
@@ -20,7 +21,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         self._recipe = recipe
         self.creating = creating
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            let color = UIColor(named: Strings.backgroundColorName)!
+            let color = UIColor.backgroundColor
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldTableViewCell {
                 cell.textField.text = recipe.wrappedValue.name
                 cell.textField.placeholder = Strings.name

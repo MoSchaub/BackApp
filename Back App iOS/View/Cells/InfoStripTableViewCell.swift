@@ -9,6 +9,7 @@
 import SwiftUI
 import BakingRecipeStrings
 import BakingRecipeCore
+import BakingRecipeItems
 
 class InfoStripTableViewCell: UITableViewCell {
     

@@ -9,10 +9,12 @@
 import UIKit
 import BakingRecipeCore
 import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeItems
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {
-        let color = UIColor(named: Strings.backgroundColorName)!
+        let color = UIColor.backgroundColor
         let image = UIImage(systemName: "chevron.up")
         image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
         
@@ -25,7 +27,7 @@ extension UITableViewCell {
     
     func setupDetailCell(detailItem: DetailItem) {
         textLabel?.text = detailItem.text
-        detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.label])
+        detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.cellTextColor])
     }
 }
 

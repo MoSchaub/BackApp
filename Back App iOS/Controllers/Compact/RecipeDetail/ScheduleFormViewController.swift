@@ -10,6 +10,8 @@ import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BakingRecipeCore
+import BakingRecipeSections
+import BakingRecipeItems
 
 class ScheduleFormViewController: UITableViewController {
     
@@ -77,7 +79,7 @@ private extension ScheduleFormViewController {
                     item.decimal = newValue
                     self.times = newValue!
                 }), reuseIdentifier: "times", standartValue: self.recipe.times!)
-                cell.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                cell.backgroundColor = UIColor.backgroundColor
                 return cell
             } else if let item = item as? DateItem {
                 return DatePickerCell(date: Binding(get: {
@@ -88,7 +90,7 @@ private extension ScheduleFormViewController {
                 }), reuseIdentifier: "datePicker")
             } else  {
                 let cell = UITableViewCell()
-                cell.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                cell.backgroundColor = UIColor.backgroundColor
                 let picker = self.makePicker()
                 cell.addSubview(picker)
                 picker.fillSuperview()
@@ -99,7 +101,7 @@ private extension ScheduleFormViewController {
     
     private func makePicker() -> UISegmentedControl{
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
-        picker.backgroundColor = UIColor(named: Strings.backgroundColorName)
+        picker.backgroundColor = UIColor.backgroundColor
         picker.selectedSegmentIndex = recipe.inverted ? 1 : 0
         picker.addTarget(self, action: #selector(didSelectOption), for: .valueChanged)
         return picker

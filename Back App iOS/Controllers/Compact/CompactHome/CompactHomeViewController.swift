@@ -10,6 +10,8 @@ import SwiftUI
 import MobileCoreServices
 import BakingRecipeCore
 import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeItems
 
 class CompactHomeViewController: UITableViewController {
     
