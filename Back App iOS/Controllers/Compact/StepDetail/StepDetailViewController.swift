@@ -10,6 +10,7 @@ import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BakingRecipeCore
+import BakingRecipeCells
 
 class StepDetailViewController: UITableViewController {
     
@@ -53,7 +54,7 @@ class StepDetailViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
-        self.tableView = UITableView(frame: tableView.frame, style: .insetGrouped)
+        tableView.separatorStyle = .none
         registerCells()
     }
 
@@ -133,29 +134,29 @@ class StepDetailViewController: UITableViewController {
     }
 
     private func registerCells() {
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.nameCell)
-        tableView.register(TextViewTableViewCell.self, forCellReuseIdentifier: Strings.notesCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.durationCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.tempCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.addIngredientCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.substepCell)
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.notesCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.durationCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.tempCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.addIngredientCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.substepCell)
         tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell)
     }
 
-    private func makeNameCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldTableViewCell
+    private func makeNameCell() -> TextFieldCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldCell
         cell.textField.text = step.name
         cell.textField.placeholder = Strings.name
         cell.selectionStyle = .none
         cell.textChanged = { text in
             self.step.name = text
         }
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
-    private func makeNotesCell() -> TextViewTableViewCell {
-        let cell = TextViewTableViewCell(textContent: Binding(get: {
+    private func makeNotesCell() -> TextViewCell {
+        let cell = TextViewCell(textContent: Binding(get: {
             return self.step.notes
         }, set: { newValue in
             self.step.notes = newValue
@@ -169,7 +170,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = step.formattedTime
         cell.accessoryType = .disclosureIndicator
         
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
@@ -177,13 +178,13 @@ class StepDetailViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempCell)!
         cell.textLabel?.text = step.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }
     
-    private func makeIngredientCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.ingredientCell, for: indexPath)
+    private func makeIngredientCell(at indexPath: IndexPath) -> SubtitleCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.ingredientCell, for: indexPath) as! SubtitleCell
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
         cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: Settings.standardRoomTemperature))° C" : "")
@@ -199,7 +200,7 @@ class StepDetailViewController: UITableViewController {
         cell.textLabel?.text = substep.name
         cell.detailTextLabel?.text = substep.totalFormattedAmount + " " + substep.formattedTemp
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }
@@ -209,7 +210,7 @@ class StepDetailViewController: UITableViewController {
         
         cell.textLabel?.text = Strings.addIngredient
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
+        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }

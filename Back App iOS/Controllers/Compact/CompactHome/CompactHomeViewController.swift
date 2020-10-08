@@ -10,6 +10,9 @@ import SwiftUI
 import MobileCoreServices
 import BakingRecipeCore
 import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeItems
+import BakingRecipeCells
 
 class CompactHomeViewController: UITableViewController {
     
@@ -36,7 +39,7 @@ class CompactHomeViewController: UITableViewController {
         configureNavigationBar()
         self.tableView.separatorStyle = .none
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dataSource.update(animated: false)
@@ -49,9 +52,9 @@ import BakingRecipeFoundation
 
 private extension CompactHomeViewController {
     private func registerCells() {
-        tableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: Strings.recipeCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
+        tableView.register(RecipeCell.self, forCellReuseIdentifier: Strings.recipeCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell)
     }
     
     private func configureNavigationBar() {

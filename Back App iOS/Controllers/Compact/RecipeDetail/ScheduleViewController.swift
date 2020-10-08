@@ -10,6 +10,7 @@ import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BakingRecipeCore
+import BakingRecipeItems
 
 class ScheduleViewControllor: UITableViewController {
     // - MARK: - Properties
@@ -75,7 +76,7 @@ private extension ScheduleViewControllor {
                 let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
                 cell.addSubview(hostingController.view)
                 hostingController.view?.fillSuperview()
-                hostingController.view?.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                hostingController.view?.backgroundColor = UIColor.backgroundColor
                 
                 return cell
             }
@@ -129,13 +130,15 @@ private extension ScheduleViewControllor {
             }
             Text(ingredient.scaledFormattedAmount(with: self.factor))
         }
+        .foregroundColor(Color(.cellTextColor))
     }
     
     private func customStepRow(step: Step) -> some View {
         VStack{
             VStack(alignment: .leading) {
                 HStack {
-                    Text(step.formattedName).font(.headline)
+                    Text(step.formattedName)
+                        .font(.headline)
                     Spacer()
                     Text(recipe.formattedStartDate(for: step))
                 }
@@ -162,6 +165,7 @@ private extension ScheduleViewControllor {
             }
             Spacer()
         }
+        .foregroundColor(Color(.cellTextColor))
         .padding()
         .clipped()
     }

@@ -9,6 +9,7 @@
 import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
+import BakingRecipeCells
 
 class StepTempTableViewController: UITableViewController {
     // MARK: - Properties
@@ -53,21 +54,20 @@ class StepTempTableViewController: UITableViewController {
         switch indexPath.section {
         //case 0: return makeToggleCell()
         case 0: return pickerCell()
-        default: return UITableViewCell()
+        default: return CustomCell()
         }
     }
     
     private func registerCells() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.pickerCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.pickerCell)
     }
     
-    private func pickerCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.pickerCell)!
+    private func pickerCell() -> CustomCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.pickerCell)! as! CustomCell
         
         configurePicker()
         cell.contentView.addSubview(picker)
         addPickerConstraints(cell: cell)
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
         
         return cell
     }
@@ -76,6 +76,10 @@ class StepTempTableViewController: UITableViewController {
         picker = UIPickerView(frame: .zero)
         picker.dataSource = self
         picker.delegate = self
+        
+        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
+        pickerLabelProxy.textColorWorkaround = .cellTextColor
+        
         picker.selectRow(step.temperature + 10, inComponent: 0, animated: false)
     }
     

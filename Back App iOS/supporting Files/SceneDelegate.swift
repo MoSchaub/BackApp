@@ -31,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
         self.window = window
-        self.window!.tintColor = UIColor(named: Strings.backgroundColorName)!
+        self.window!.tintColor = UIColor.backgroundColor
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
