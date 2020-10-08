@@ -52,7 +52,6 @@ class StepTimeTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.timePickerCell)!
 
-        cell.selectionStyle = .none
         
         datePicker = UIDatePicker(frame: .zero)
         cell.addSubview(datePicker)
@@ -70,6 +69,9 @@ class StepTimeTableViewController: UITableViewController {
             self.datePicker.countDownDuration = self.time
         })
         cell.backgroundColor = UIColor.backgroundColor
+        
+        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self])
+        pickerLabelProxy.textColorWorkaround = .cellTextColor
         
         return cell
     }

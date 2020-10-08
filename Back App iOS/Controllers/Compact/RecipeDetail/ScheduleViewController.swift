@@ -130,13 +130,15 @@ private extension ScheduleViewControllor {
             }
             Text(ingredient.scaledFormattedAmount(with: self.factor))
         }
+        .foregroundColor(Color(.cellTextColor))
     }
     
     private func customStepRow(step: Step) -> some View {
         VStack{
             VStack(alignment: .leading) {
                 HStack {
-                    Text(step.formattedName).font(.headline)
+                    Text(step.formattedName)
+                        .font(.headline)
                     Spacer()
                     Text(recipe.formattedStartDate(for: step))
                 }
@@ -163,6 +165,7 @@ private extension ScheduleViewControllor {
             }
             Spacer()
         }
+        .foregroundColor(Color(.cellTextColor))
         .padding()
         .clipped()
     }

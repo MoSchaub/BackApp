@@ -12,6 +12,7 @@ import BakingRecipeStrings
 import BakingRecipeCore
 import BakingRecipeSections
 import BakingRecipeItems
+import BakingRecipeCells
 
 class ScheduleFormViewController: UITableViewController {
     
@@ -89,8 +90,7 @@ private extension ScheduleFormViewController {
                     self.recipe.date = newDate
                 }), reuseIdentifier: "datePicker")
             } else  {
-                let cell = UITableViewCell()
-                cell.backgroundColor = UIColor.backgroundColor
+                let cell = CustomCell()
                 let picker = self.makePicker()
                 cell.addSubview(picker)
                 picker.fillSuperview()
@@ -102,6 +102,13 @@ private extension ScheduleFormViewController {
     private func makePicker() -> UISegmentedControl{
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
         picker.backgroundColor = UIColor.backgroundColor
+        
+        ///textColor
+        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self])
+        pickerLabelProxy.textColorWorkaround = UIColor.cellTextColor
+        
+        picker.selectedSegmentTintColor = .secondaryColor
+        
         picker.selectedSegmentIndex = recipe.inverted ? 1 : 0
         picker.addTarget(self, action: #selector(didSelectOption), for: .valueChanged)
         return picker

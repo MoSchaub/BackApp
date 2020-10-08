@@ -9,6 +9,7 @@
 import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
+import BakingRecipeCells
 
 class IngredientDetailViewController: UITableViewController {
     
@@ -107,13 +108,13 @@ class IngredientDetailViewController: UITableViewController {
     }
     
     private func registerCells() {
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.nameCell)
-        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
     }
     
-    private func makeNameCell() -> TextFieldTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldTableViewCell
+    private func makeNameCell() -> TextFieldCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldCell
         cell.textField.text = ingredient.name
         cell.textField.placeholder = Strings.name
         cell.selectionStyle = .none
@@ -124,10 +125,9 @@ class IngredientDetailViewController: UITableViewController {
         return cell
     }
     
-    private func makeAmountCell() -> AmountTableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell) as! AmountTableViewCell
+    private func makeAmountCell() -> AmountCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell) as! AmountCell
         cell.setUp(with: ingredient, format: format)
-        cell.backgroundColor = UIColor.backgroundColor
         return cell
     }
     
@@ -137,19 +137,17 @@ class IngredientDetailViewController: UITableViewController {
         return ingredient.formatted(rest: amountText)
     }
     
-    private func makeIsBulkLiquidCell() -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell)!
+    private func makeIsBulkLiquidCell() -> CustomCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell) as! CustomCell
         
         let toggle = UISwitch(frame: .zero)
         
         toggle.setOn(ingredient.isBulkLiquid, animated: false)
         toggle.addTarget(self, action: #selector(toggleTapped), for: .touchUpInside)
         
-        cell.selectionStyle = .none
         cell.accessoryView = toggle
         
         cell.textLabel?.text = Strings.bulkLiquid
-        cell.backgroundColor = UIColor.backgroundColor
         
         return cell
     }

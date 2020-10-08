@@ -131,7 +131,11 @@ class Back_App_iOSUITests: XCTestCase {
             returnButton.tap()
             
             // notes
-            let notesField = appTables.textViews["notes"]
+            let notesField = appTables.textViews["notes"].firstMatch
+            
+    //appTables.textViews["notes"].firstMatch.tap()
+        
+            
             notesField.tap()
             notesField.typeText(step.notes)
             
@@ -298,7 +302,7 @@ class Back_App_iOSUITests: XCTestCase {
 
         appTables.staticTexts[Recipe.example.name].tap()
         
-        let staticText = appTables.cells.staticTexts["2 minutes"]
+        let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
         staticText.tap()
         staticText.tap()
     

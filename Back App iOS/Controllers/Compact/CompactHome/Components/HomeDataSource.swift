@@ -11,6 +11,7 @@ import BakingRecipeCore
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
+import BakingRecipeCells
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {
@@ -21,13 +22,8 @@ extension UITableViewCell {
         textLabel?.text = text
         backgroundColor = color
         accessoryView = UIImageView(image: image)
-        accessoryView?.tintColor = .label
+        accessoryView?.tintColor = .cellTextColor
         selectionStyle = .none
-    }
-    
-    func setupDetailCell(detailItem: DetailItem) {
-        textLabel?.text = detailItem.text
-        detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.cellTextColor])
     }
 }
 
@@ -40,14 +36,14 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
-            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: Strings.recipeCell, for: indexPath) as? RecipeTableViewCell {
+            if let recipeItem = homeItem as? RecipeItem{
                 //recipeCell
-                recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
+                let recipeCell = RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, reuseIdentifier: Strings.recipeCell)
                 return recipeCell
-            } else if let detailItem = homeItem as? DetailItem {
+            } else if let detailItem = homeItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
                 // Detail Cell (RoomTemp und About)
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath)
-                cell.setupDetailCell(detailItem: detailItem)
+                cell.textLabel?.text = detailItem.text
+                cell.detailTextLabel?.text = detailItem.detailLabel
                 return cell
             } else {
                 // plain cell

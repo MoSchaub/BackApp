@@ -11,6 +11,7 @@ import BakingRecipeFoundation
 import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
+import BakingRecipeCells
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -110,14 +111,14 @@ private extension RecipeDetailViewController {
     }
     
     private func registerCells() {
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: Strings.imageCell)
-        tableView.register(StepTableViewCell.self, forCellReuseIdentifier: Strings.stepCell)
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.textFieldCell)
-        tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: Strings.infoStripCell)
-        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
+        tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.textFieldCell)
+        tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
-        tableView.register(TextViewTableViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 }
 
