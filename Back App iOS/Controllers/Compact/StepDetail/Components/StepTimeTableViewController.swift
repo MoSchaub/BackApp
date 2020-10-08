@@ -73,6 +73,8 @@ class StepTimeTableViewController: UITableViewController {
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self])
         pickerLabelProxy.textColorWorkaround = .cellTextColor
         
+        datePicker.setValue(UIColor.cellTextColor, forKeyPath: "textColor")
+        
         return cell
     }
     

@@ -54,7 +54,7 @@ class StepDetailViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
-        self.tableView = UITableView(frame: tableView.frame, style: .insetGrouped)
+        tableView.separatorStyle = .none
         registerCells()
     }
 
