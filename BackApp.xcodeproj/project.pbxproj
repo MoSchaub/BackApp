@@ -45,7 +45,6 @@
 		CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */; };
 		CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */; };
 		CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */; };
-		CDA7EE5724A67E7000763E21 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDB5BD92246C358B00B7A356 /* Colors.xcassets */; };
 		CDA7EE5824A67E7000763E21 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A152340252600748249 /* Images.xcassets */; };
 		CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B1248BDA3000D11DD3 /* ScheduleView.swift */; };
 		CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */; };
@@ -168,7 +167,6 @@
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFormViewController.swift; sourceTree = "<group>"; };
-		CDB5BD92246C358B00B7A356 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
 		CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
@@ -434,7 +432,6 @@
 			children = (
 				CDB5EE4D246BDF6900E35376 /* Data */,
 				CD76F994248BDA3000D11DD3 /* View */,
-				CDB5BD92246C358B00B7A356 /* Colors.xcassets */,
 				CD6A9A152340252600748249 /* Images.xcassets */,
 				CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */,
 			);
@@ -650,7 +647,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDA7EE5724A67E7000763E21 /* Colors.xcassets in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD68D45E24AC5C80000D4BD7 /* Localizable.strings in Resources */,

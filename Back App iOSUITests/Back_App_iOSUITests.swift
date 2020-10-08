@@ -234,12 +234,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
 
         app.navigationBars["Baking App"].buttons["Edit"].tap()
-
-        let app = XCUIApplication()
-        let tablesQuery = app.tables
-        tablesQuery.children(matching: .cell).element(boundBy: 2).buttons["Delete "].tap()
-        tablesQuery.buttons["trailing0"].tap()
-        app.navigationBars["Baking App"].buttons["Done"].tap()
     }
     
     func testd() throws {
