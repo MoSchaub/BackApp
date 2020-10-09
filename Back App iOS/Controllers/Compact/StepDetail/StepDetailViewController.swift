@@ -260,6 +260,11 @@ class StepDetailViewController: UITableViewController {
         } else if indexPath.section == 3 {
             navigateToTempPicker(indexPath: indexPath)
         } else if indexPath.section == 4 {
+            navigateToIngredientStepOrSubstep(indexPath: indexPath)
+        }
+    }
+    
+    private func navigateToIngredientStepOrSubstep(indexPath: IndexPath) {
             if indexPath.row - step.subSteps.count == step.ingredients.count {
                 let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
                 let stepsWithSubsteps = recipe.steps.filter({ step1 in step1.subSteps.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: { step1.id == $0.id})}).filter({ !stepsWithIngredients.contains($0)})
@@ -283,7 +288,6 @@ class StepDetailViewController: UITableViewController {
             } else {
                 navigateToIngredientDetail(creating: false, indexPath: indexPath)
             }
-        }
     }
     
     private func navigateToTimePicker(indexPath: IndexPath) {
@@ -299,6 +303,7 @@ class StepDetailViewController: UITableViewController {
                 }
             }
         }))
+        
         navigationController?.pushViewController(timePickerVC, animated: true)
     }
     
