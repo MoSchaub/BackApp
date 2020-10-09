@@ -56,10 +56,7 @@ class StepTimeTableViewController: UITableViewController {
         datePicker = UIDatePicker(frame: .zero)
         cell.addSubview(datePicker)
         
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
-        datePicker.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-        datePicker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-        datePicker.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
+        datePicker.fillSuperview()
         
         datePicker.datePickerMode = .countDownTimer
         
