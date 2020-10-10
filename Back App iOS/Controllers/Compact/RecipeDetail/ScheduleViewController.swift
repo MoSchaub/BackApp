@@ -122,7 +122,7 @@ private extension ScheduleViewControllor {
         HStack {
             Text(ingredient.name)
             Spacer()
-            if ingredient.isBulkLiquid{
+            if ingredient.type == .bulkLiquid{
                 Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C")
                 Spacer()
             } else{

@@ -103,14 +103,14 @@ class IngredientDetailViewController: UITableViewController {
         } else if indexPath.section == 1 {
             return makeAmountCell()
         } else {
-            return makeIsBulkLiquidCell()
+            return makeTypeCell()
         }
     }
     
     private func registerCells() {
         tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)
         tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
-        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
     }
     
     private func makeNameCell() -> TextFieldCell {
@@ -137,22 +137,19 @@ class IngredientDetailViewController: UITableViewController {
         return ingredient.formatted(rest: amountText)
     }
     
-    private func makeIsBulkLiquidCell() -> CustomCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell) as! CustomCell
+    private func makeTypeCell() -> DetailCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell) as! DetailCell
         
-        let toggle = UISwitch(frame: .zero)
-        
-        toggle.setOn(ingredient.isBulkLiquid, animated: false)
-        toggle.addTarget(self, action: #selector(toggleTapped), for: .touchUpInside)
-        
-        cell.accessoryView = toggle
-        
-        cell.textLabel?.text = Strings.bulkLiquid
+        cell.textLabel?.text = Strings.type
+        cell.detailTextLabel?.text = ingredient.type.name
         
         return cell
     }
     
-    @objc private func toggleTapped(_ sender: UISwitch) {
-        ingredient.isBulkLiquid = sender.isOn
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 { // make sure its in the type section
+            // - TODO: navigate to List for Picking type
+        }
     }
+
 }
