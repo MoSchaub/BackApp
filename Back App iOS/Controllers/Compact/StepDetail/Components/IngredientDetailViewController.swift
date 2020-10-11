@@ -33,6 +33,11 @@ class IngredientDetailViewController: UITableViewController {
     /// - Note: true means is creating a new one
     private var creating: Bool
     
+    ///wether the typeSection is expanded
+    private var typeSectionExpanded: Bool {
+        self.dataSource.itemIdentifier(for: IndexPath(row: 1, section: 2)) != nil
+    }
+    
     /// method to update the recipe when it changes
     private var saveIngredient: ((Ingredient) -> Void)
     
@@ -62,7 +67,11 @@ extension IngredientDetailViewController {
         super.loadView()
         registerCells()
         setupNavigationBar()
-        updateList()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateList(animated: false)
     }
     
 }
@@ -137,6 +146,14 @@ private extension IngredientDetailViewController {
             } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
                 cell.textLabel?.text = detailItem.text
                 cell.detailTextLabel?.text = detailItem.detailLabel
+                if self.typeSectionExpanded {
+                    cell.detailTextLabel?.textColor = .red
+                } else {
+                    cell.detailTextLabel?.textColor = .secondaryColor
+                }
+                return cell
+            } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as? CustomCell {
+                cell.textLabel?.text = textItem.text
                 return cell
             } else {
                 return CustomCell()
@@ -146,6 +163,10 @@ private extension IngredientDetailViewController {
     
     /// updates the whole list
     private func updateList(animated: Bool = true) {
+        self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
+    }
+    
+    private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem> {
         
         /// textfieldItem
         let nameItem = TextFieldItem(text: ingredient.name)
@@ -154,7 +175,7 @@ private extension IngredientDetailViewController {
         let amountItem = AmountItem(text: ingredient.formattedAmount)
         
         /// detailitem for type cell
-        let typeItem = DetailItem(name: Strings.type, detailLabel: ingredient.type.name)
+        let typeItem = typeSectionHeader()
         
         /// create the snapshot
         var snapshot = NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem>() // create the snapshot
@@ -170,11 +191,78 @@ private extension IngredientDetailViewController {
         // - TODO: append additional Items when cell is expanded
         snapshot.appendItems([typeItem], toSection: .type)
         
-        self.dataSource.apply(snapshot, animatingDifferences: animated)
+        return snapshot
     }
     
-
+    private func typeSectionHeader() -> DetailItem {
+        return DetailItem(name: Strings.type, detailLabel: ingredient.type.name)
+    }
     
+}
+
+
+
+// MARK: - Type Selection
+extension IngredientDetailViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if dataSource.itemIdentifier(for: indexPath) is DetailItem {
+            typeSectionExpanded ? collapseTypeSection() : expandTypeSection()
+        } else if let textItem = dataSource.itemIdentifier(for: indexPath), typeSectionExpanded,
+                  let index = Ingredient.Style.allCases.map({ $0.name}).firstIndex(of: textItem.text),
+                  Ingredient.Style.allCases.count > index{
+            let newType = Ingredient.Style.allCases[index]
+            self.ingredient.type = newType
+            
+            self.reloadTypeHeader()
+        }
+    }
+    
+    private func typeSectionItems() -> [TextItem] {
+        return Ingredient.Style.allCases.map { TextItem(text: $0.name)}
+    }
+    
+    private func expandTypeSection() {
+        if !typeSectionExpanded {
+
+            var snapshot = dataSource.snapshot()
+            
+            let items = typeSectionItems()
+            snapshot.appendItems(items, toSection: .type)
+            
+            self.dataSource.apply(snapshot)
+            
+            self.reloadTypeSection()
+        }
+    }
+    
+    private func collapseTypeSection() {
+        if typeSectionExpanded {
+            
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .type).filter { $0.text != Strings.type})
+            self.dataSource.apply(snapshot)
+            
+            self.reloadTypeSection()
+
+        }
+    }
+    
+    /// reload type section
+    private func reloadTypeSection() {
+        
+        DispatchQueue.main.async {
+            var snapshot = self.dataSource.snapshot()
+            
+            snapshot.reloadSections([.name])
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+        }
+    }
+    
+    /// reload first cell in typeSection
+    private func reloadTypeHeader() {
+        updateList(animated: false)
+        self.expandTypeSection()
+    }
 }
 
 //import UIKit
