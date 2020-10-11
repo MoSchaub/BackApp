@@ -127,7 +127,7 @@ private extension IngredientDetailViewController {
     
         /// format func for amountCell
         func format(amountText: String) -> String {
-            guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return "" }
+            guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.ingredient.formattedAmount }
             ingredient.amount = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
             return ingredient.formatted(rest: amountText)
         }
