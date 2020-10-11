@@ -63,6 +63,9 @@
 "exportAll" = "alle exportieren";
 
 
+"flour" = "Mehl";
+
+
 "hour" = "Stunde";
 
 
@@ -100,6 +103,9 @@
 
 /* one for one minute */
 "one" = "eine";
+
+
+"other" = "sonstiges";
 
 
 "piece" = "Stück";
@@ -154,6 +160,12 @@
 
 
 "support" = "mehr erfahren";
+
+
+"ta150" = "Anstellgut TA 150";
+
+
+"ta200" = "Anstellgut TA 200";
 
 
 "take_picture" = "Bild aufnehmen";

@@ -219,7 +219,7 @@ extension IngredientDetailViewController {
         return Ingredient.Style.allCases.map { TextItem(text: $0.name)}
     }
     
-    private func expandTypeSection() {
+    private func expandTypeSection(animated: Bool = true) {
         if !typeSectionExpanded {
 
             var snapshot = dataSource.snapshot()
@@ -227,7 +227,7 @@ extension IngredientDetailViewController {
             let items = typeSectionItems()
             snapshot.appendItems(items, toSection: .type)
             
-            self.dataSource.apply(snapshot)
+            self.dataSource.apply(snapshot, animatingDifferences: animated)
             
             self.reloadTypeSection()
         }
@@ -259,7 +259,7 @@ extension IngredientDetailViewController {
     /// reload first cell in typeSection
     private func reloadTypeHeader() {
         updateList(animated: false)
-        self.expandTypeSection()
+        self.expandTypeSection(animated: false)
     }
 }
 
