@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import BakingRecipeFoundation
 
 class Back_App_iOSUITests: XCTestCase {
     
@@ -48,7 +49,7 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testAddingSubstep() throws {
-        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000)])
+        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000, type: .flour)])
         var sub2 = Step(name: "Sub2")
         sub2.subSteps.append(sub1)
         var sub3 = Step(name: "Sub3")
@@ -133,9 +134,6 @@ class Back_App_iOSUITests: XCTestCase {
             // notes
             let notesField = appTables.textViews["notes"].firstMatch
             
-    //appTables.textViews["notes"].firstMatch.tap()
-        
-            
             notesField.tap()
             notesField.typeText(step.notes)
             
@@ -162,11 +160,23 @@ class Back_App_iOSUITests: XCTestCase {
                 amountTextField.typeText("\(ingredient.amount)")
                 returnButton.tap()
                 
-                // bulk liquid
-                if ingredient.isBulkLiquid {
-                    let toggle = appTables.switches.firstMatch
-                    toggle.tap()
+                
+                let tablesQuery = XCUIApplication().tables
+                tablesQuery.staticTexts["other"].tap()
+                switch ingredient.type {
+                case .bulkLiquid:
+                    tablesQuery.staticTexts["bulk liquid"].tap()
+
+                case .flour:
+                    tablesQuery.staticTexts["flour"].tap()
+                case .ta150:
+                    tablesQuery.staticTexts["starter 50% hydration"].tap()
+                case .ta200:
+                    tablesQuery.staticTexts["starter 100% hydration"].tap()
+                case .other:
+                    tablesQuery.staticTexts["other"].tap()
                 }
+                
                 XCUIApplication().navigationBars[ingredient.name].buttons["Save"].tap()
                 
                 XCTAssertTrue(appTables.staticTexts[ingredient.name].exists)
