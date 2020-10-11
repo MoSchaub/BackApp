@@ -62,6 +62,7 @@ extension IngredientDetailViewController {
         super.loadView()
         registerCells()
         setupNavigationBar()
+        updateList()
     }
     
 }
@@ -104,7 +105,7 @@ private extension IngredientDetailViewController {
     
 }
 
-enum IngredientDetailSection {
+enum IngredientDetailSection: CaseIterable {
     case name, amount, type
 }
 
@@ -113,8 +114,9 @@ private extension IngredientDetailViewController {
     
     typealias DataSource = UITableViewDiffableDataSource<IngredientDetailSection, TextItem>
     
+    ///create the diffableDataSource
     func makeDiffableDataSource() -> DataSource {
-        
+    
         /// format func for amountCell
         func format(amountText: String) -> String {
             guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return "" }
@@ -132,9 +134,43 @@ private extension IngredientDetailViewController {
             } else if textItem is AmountItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell {
                 cell.setUp(with: self.ingredient, format: format)
                 return cell
-            } // - TODO:  type und typeoptionen
-            return UITableViewCell()
+            } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
+                cell.textLabel?.text = detailItem.text
+                cell.detailTextLabel?.text = detailItem.detailLabel
+                return cell
+            } else {
+                return CustomCell()
+            }
         }
+    }
+    
+    /// updates the whole list
+    private func updateList(animated: Bool = true) {
+        
+        /// textfieldItem
+        let nameItem = TextFieldItem(text: ingredient.name)
+        
+        /// amountTextFieldItem
+        let amountItem = AmountItem(text: ingredient.formattedAmount)
+        
+        /// detailitem for type cell
+        let typeItem = DetailItem(name: Strings.type, detailLabel: ingredient.type.name)
+        
+        /// create the snapshot
+        var snapshot = NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem>() // create the snapshot
+        snapshot.appendSections(IngredientDetailSection.allCases) //append sections
+        
+        /// name Section
+        snapshot.appendItems([nameItem], toSection: .name)
+        
+        /// amount Seciton
+        snapshot.appendItems([amountItem], toSection: .amount)
+        
+        /// type Seciton
+        // - TODO: append additional Items when cell is expanded
+        snapshot.appendItems([typeItem], toSection: .type)
+        
+        self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
 
