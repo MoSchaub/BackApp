@@ -63,6 +63,9 @@
 "exportAll" = "export all";
 
 
+"flour" = "flour";
+
+
 "hour" = "hour";
 
 
@@ -100,6 +103,9 @@
 
 /* one for one minute */
 "one" = "one";
+
+
+"other" = "other";
 
 
 "piece" = "piece";
@@ -156,10 +162,19 @@
 "support" = "learn more";
 
 
+"ta150" = "starter 50% hydration";
+
+
+"ta200" = "starter 100% hydration";
+
+
 "take_picture" = "take picture";
 
 
 "temperature" = "temperature";
+
+
+"type" = "type";
 
 
 "unnamedIngredient" = "unnamed Ingredient";

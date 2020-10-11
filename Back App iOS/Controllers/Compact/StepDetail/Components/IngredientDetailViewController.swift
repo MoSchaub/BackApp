@@ -8,151 +8,271 @@
 
 import UIKit
 import BakingRecipeFoundation
-import BakingRecipeStrings
 import BakingRecipeCells
+import BakingRecipeStrings
+import BakingRecipeItems
+import BakingRecipeSections
+
+typealias DataSource = UITableViewDiffableDataSource<IngredientDetailSection, TextItem>
 
 class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Properties
+    
+    /// the details are of this ingredient
     private var ingredient: Ingredient {
         didSet {
-            DispatchQueue.main.async {
+            if oldValue != ingredient {
                 self.setupNavigationBar()
+                if !self.creating {
+                    self.saveIngredient(self.ingredient)
+                }
             }
-            update(oldValue: oldValue)
-        }
-    }
-
-    var creating: Bool
-    var saveIngredient: ((Ingredient) -> Void)
-    
-    private func update(oldValue: Ingredient) {
-        DispatchQueue.global(qos: .background).async {
-            if !self.creating, oldValue != self.ingredient {
-                self.saveIngredient(self.ingredient)
-            }
+            
         }
     }
     
-    var datePicker: UIDatePicker!
+    /// wether the user is creating a new ingredient or editing an existing one
+    /// - Note: true means is creating a new one
+    private var creating: Bool
     
-    init(ingredient: Ingredient, creating: Bool, saveIngredient: @escaping (Ingredient) -> ()) {
+    ///wether the typeSection is expanded
+    private var typeSectionExpanded: Bool {
+        self.dataSource.itemIdentifier(for: IndexPath(row: 1, section: 2)) != nil
+    }
+    
+    /// method to update the recipe when it changes
+    private var saveIngredient: ((Ingredient) -> Void)
+    
+    
+    /// table view dataSource
+    private lazy var dataSource = makeDiffableDataSource()
+    
+    
+    // MARK: - Initializers
+    
+    init(ingredient: Ingredient, creating: Bool, saveIngredient: @escaping (Ingredient) -> () ) {
         self.ingredient = ingredient
-        self.saveIngredient = saveIngredient
         self.creating = creating
+        self.saveIngredient = saveIngredient
         super.init(style: .insetGrouped)
     }
     
     required init?(coder: NSCoder) {
-        fatalError(Strings.init_coder_not_implemented)
+        fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Start functions
+}
+
+// MARK: - Startup methods
+extension IngredientDetailViewController {
     
     override func loadView() {
         super.loadView()
-        self.tableView = UITableView(frame: tableView.frame, style: .insetGrouped)
         registerCells()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         setupNavigationBar()
+        tableView.separatorStyle = .none
     }
     
-    // MARK: - NavigationBar
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateList(animated: false)
+    }
     
+}
+
+// MARK: - NavigationBar
+private extension IngredientDetailViewController {
+    
+    /// sets up navigation bar title and items
     private func setupNavigationBar() {
+        //title
+        self.title = ingredient.formattedName
+        
+        //large Title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        //items
         if creating {
             navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addIngredient))
         }
-        title = self.ingredient.formattedName
-        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    /// adds the ingredient and pops the top view controller on the navigation stack
     @objc private func addIngredient(_ sender: UIBarButtonItem) {
         saveIngredient(ingredient)
         navigationController?.popViewController(animated: true)
     }
+    
+}
 
-    // MARK: - Rows and Sections
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+// MARK: - Cell Registraiton
+private extension IngredientDetailViewController {
+    
+    /// registers the different Cell Types for later reuse
+    private func registerCells() {
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)  //name textField
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell) //amount Cell
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.IngredientTypeCell) // typeCell wich type
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell) // for options for type
     }
+    
+}
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+
+// MARK: - DataSource and Snapshot
+private extension IngredientDetailViewController {
+    
+    ///create the diffableDataSource
+    func makeDiffableDataSource() -> DataSource {
+    
+        /// format func for amountCell
+        func format(amountText: String) -> String {
+            guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.ingredient.formattedAmount }
+            ingredient.amount = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+            return ingredient.formatted(rest: amountText)
+        }
+        return IngredientDetailDataSource(tableView: tableView) { (tableView, indexPath, textItem) -> UITableViewCell? in
+            if let textFieldItem = textItem as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell {
+                cell.textField.text = textFieldItem.text
+                cell.textField.placeholder = Strings.name
+                cell.textChanged = { text in
+                    self.ingredient.name = text
+                }
+                return cell
+            } else if textItem is AmountItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell {
+                cell.setUp(with: self.ingredient, format: format)
+                return cell
+            } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
+                cell.textLabel?.text = detailItem.text
+                cell.detailTextLabel?.text = detailItem.detailLabel
+                if self.typeSectionExpanded {
+                    cell.detailTextLabel?.textColor = .red
+                } else {
+                    cell.detailTextLabel?.textColor = .secondaryColor
+                }
+                return cell
+            } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as? CustomCell {
+                cell.textLabel?.text = textItem.text
+                return cell
+            } else {
+                return CustomCell()
+            }
+        }
     }
+    
+    /// updates the whole list
+    private func updateList(animated: Bool = true) {
+        self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
+    }
+    
+    private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem> {
+        
+        /// textfieldItem
+        let nameItem = TextFieldItem(text: ingredient.name)
+        
+        /// amountTextFieldItem
+        let amountItem = AmountItem(text: ingredient.formattedAmount)
+        
+        /// detailitem for type cell
+        let typeItem = typeSectionHeader()
+        
+        /// create the snapshot
+        var snapshot = NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem>() // create the snapshot
+        snapshot.appendSections(IngredientDetailSection.allCases) //append sections
+        
+        /// name Section
+        snapshot.appendItems([nameItem], toSection: .name)
+        
+        /// amount Seciton
+        snapshot.appendItems([amountItem], toSection: .amount)
+        
+        /// type Seciton
+        // - TODO: append additional Items when cell is expanded
+        snapshot.appendItems([typeItem], toSection: .type)
+        
+        return snapshot
+    }
+    
+    private func typeSectionHeader() -> DetailItem {
+        return DetailItem(name: Strings.type, detailLabel: ingredient.type.name)
+    }
+    
+}
+
+
+// MARK: - Type Selection
+extension IngredientDetailViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if dataSource.itemIdentifier(for: indexPath) is DetailItem {
+            typeSectionExpanded ? collapseTypeSection() : expandTypeSection()
+        } else if let textItem = dataSource.itemIdentifier(for: indexPath), typeSectionExpanded,
+                  let index = Ingredient.Style.allCases.map({ $0.name}).firstIndex(of: textItem.text),
+                  Ingredient.Style.allCases.count > index{
+            let newType = Ingredient.Style.allCases[index]
+            self.ingredient.type = newType
+            
+            self.reloadTypeHeader()
+        }
+    }
+    
+    private func typeSectionItems() -> [TextItem] {
+        return Ingredient.Style.allCases.map { TextItem(text: $0.name)}
+    }
+    
+    private func expandTypeSection(animated: Bool = true) {
+        if !typeSectionExpanded {
+
+            var snapshot = dataSource.snapshot()
+            
+            let items = typeSectionItems()
+            snapshot.appendItems(items, toSection: .type)
+            
+            self.dataSource.apply(snapshot, animatingDifferences: animated)
+            
+            self.reloadTypeSection()
+        }
+    }
+    
+    private func collapseTypeSection() {
+        if typeSectionExpanded {
+            
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .type).filter { $0.text != Strings.type})
+            self.dataSource.apply(snapshot)
+            
+            self.reloadTypeSection()
+
+        }
+    }
+    
+    /// reload type section
+    private func reloadTypeSection() {
+        
+        DispatchQueue.main.async {
+            var snapshot = self.dataSource.snapshot()
+            
+            snapshot.reloadSections([.name])
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+        }
+    }
+    
+    /// reload first cell in typeSection
+    private func reloadTypeHeader() {
+        updateList(animated: false)
+        self.expandTypeSection(animated: false)
+    }
+}
+
+
+// MARK: - Section headers
+class IngredientDetailDataSource: DataSource {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return Strings.name
-        } else if section == 1 {
-            return Strings.amount
-        } else {
-            return nil
+        switch section {
+        case 0: return Strings.name
+        case 1: return Strings.amount
+        default:
+            return ""
         }
-    }
-    
-    // MARK: - Cells
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            return makeNameCell()
-        } else if indexPath.section == 1 {
-            return makeAmountCell()
-        } else {
-            return makeIsBulkLiquidCell()
-        }
-    }
-    
-    private func registerCells() {
-        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)
-        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
-        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.bulkLiquidCell)
-    }
-    
-    private func makeNameCell() -> TextFieldCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell) as! TextFieldCell
-        cell.textField.text = ingredient.name
-        cell.textField.placeholder = Strings.name
-        cell.selectionStyle = .none
-        cell.textChanged = { text in
-            self.ingredient.name = text
-        }
-        cell.backgroundColor = UIColor.backgroundColor
-        return cell
-    }
-    
-    private func makeAmountCell() -> AmountCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell) as! AmountCell
-        cell.setUp(with: ingredient, format: format)
-        return cell
-    }
-    
-    private func format(amountText: String) -> String {
-        guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return "" }
-        ingredient.amount = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
-        return ingredient.formatted(rest: amountText)
-    }
-    
-    private func makeIsBulkLiquidCell() -> CustomCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.bulkLiquidCell) as! CustomCell
-        
-        let toggle = UISwitch(frame: .zero)
-        
-        toggle.setOn(ingredient.isBulkLiquid, animated: false)
-        toggle.addTarget(self, action: #selector(toggleTapped), for: .touchUpInside)
-        
-        cell.accessoryView = toggle
-        
-        cell.textLabel?.text = Strings.bulkLiquid
-        
-        return cell
-    }
-    
-    @objc private func toggleTapped(_ sender: UISwitch) {
-        ingredient.isBulkLiquid = sender.isOn
     }
 }

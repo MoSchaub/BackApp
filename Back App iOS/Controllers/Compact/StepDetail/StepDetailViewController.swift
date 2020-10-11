@@ -187,7 +187,7 @@ class StepDetailViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Strings.ingredientCell, for: indexPath) as! SubtitleCell
         let ingredient = step.ingredients[indexPath.row - step.subSteps.count]
         cell.textLabel?.text = ingredient.name
-        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.isBulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: Settings.standardRoomTemperature))° C" : "")
+        cell.detailTextLabel?.text = ingredient.formattedAmount + (ingredient.type == .bulkLiquid ? " \(step.themperature(for: ingredient, roomThemperature: Settings.standardRoomTemperature))° C" : "")
 
         return cell
     }
@@ -322,7 +322,7 @@ class StepDetailViewController: UITableViewController {
     }
     
     private func navigateToIngredientDetail(creating: Bool, indexPath: IndexPath) {
-        let ingredient = creating ? Ingredient(name: "", amount: 0) : step.ingredients[indexPath.row - step.subSteps.count]
+        let ingredient = creating ? Ingredient(name: "", amount: 0, type: .other) : step.ingredients[indexPath.row - step.subSteps.count]
         let ingredientDetailVC = IngredientDetailViewController(ingredient: ingredient, creating: creating) { ingredient in
             if creating {
                 self.step.ingredients.append(ingredient)
