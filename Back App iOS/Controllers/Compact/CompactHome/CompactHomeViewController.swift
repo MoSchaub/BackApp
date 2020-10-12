@@ -128,13 +128,13 @@ extension CompactHomeViewController {
         
         vc.recipeStore = recipeStore
         vc.updateTemp = { [self] temp in
-            Settings.standardRoomTemperature = temp
-            self.updateSettings()
+            Standarts.standardRoomTemperature = temp
+            self.updateStandarts()
         }
         splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
     }
     
-    private func updateSettings() {
+    private func updateStandarts() {
         DispatchQueue.global(qos: .background).async {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteSections([.settings])

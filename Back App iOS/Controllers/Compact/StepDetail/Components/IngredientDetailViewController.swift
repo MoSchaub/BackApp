@@ -13,8 +13,6 @@ import BakingRecipeStrings
 import BakingRecipeItems
 import BakingRecipeSections
 
-typealias DataSource = UITableViewDiffableDataSource<IngredientDetailSection, TextItem>
-
 class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Properties
@@ -123,7 +121,7 @@ private extension IngredientDetailViewController {
 private extension IngredientDetailViewController {
     
     ///create the diffableDataSource
-    func makeDiffableDataSource() -> DataSource {
+    func makeDiffableDataSource() -> IngredientDetailDataSource {
     
         /// format func for amountCell
         func format(amountText: String) -> String {
@@ -265,7 +263,7 @@ extension IngredientDetailViewController {
 
 
 // MARK: - Section headers
-class IngredientDetailDataSource: DataSource {
+fileprivate class IngredientDetailDataSource: UITableViewDiffableDataSource< IngredientDetailSection, TextItem> {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {

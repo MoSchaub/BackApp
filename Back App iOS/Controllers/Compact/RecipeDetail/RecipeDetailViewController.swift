@@ -162,41 +162,9 @@ extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
-        let frame = tableView.frame
-        
-        let editButton = UIButton(frame: CGRect(x: frame.size.width - 60, y: 10, width: 50, height: 30))
-        editButton.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
-        editButton.addTarget(self, action: #selector(toggleEditMode(sender:)), for: .touchDown)
-        
-        let titleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 30))
-        let attributes = [
-            NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .footnote),
-            .foregroundColor : UIColor.secondaryLabel,
-        ]
-        titleLabel.attributedText = NSAttributedString(string: Strings.steps.uppercased(), attributes: attributes)
-        
-        let stackView = UIStackView(frame: CGRect(x: 5, y: 0, width: frame.size.width - 10, height: frame.size.height))
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(editButton)
-        
-        return stackView
+        return customHeader(enabled: !self.recipe.steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
-    
-    private func attributedTitleForEditButton() -> NSAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : UIColor.backgroundColor
-        ]
-        let titleString = isEditing ? Strings.EditButton_Done : Strings.EditButton_Edit
-        return NSAttributedString(string: titleString, attributes: attributes)
-    }
-    
-    @objc private func toggleEditMode(sender: UIButton) {
-        if recipe.steps.count > 0 {
-            setEditing(!isEditing, animated: true)
-            sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
-        }
-    }
+
     
 }
 
