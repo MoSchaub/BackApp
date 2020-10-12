@@ -48,6 +48,9 @@
 "bulkLiquid" = "Schüttflüssigkeit";
 
 
+"date" = "Datum";
+
+
 "donate_text" = "Die Nutzung dieser App mit allen Funktionen ist komplett gratis und ohne jegliche Werbung.\nJedoch ist die Entwicklung dieser App mit einer Menge an Kosten und Arbeit verbunden und wenn sie mit einem kleinem Beitrag die Entwicklung dieser App unterstützen wollen, würden wir uns als Entwickler sehr freuen.";
 
 
@@ -58,6 +61,9 @@
 
 
 "end" = "Ende";
+
+
+"endDate" = "Enddatum";
 
 
 "exportAll" = "alle exportieren";
@@ -145,6 +151,12 @@
 
 
 "start" = "Start";
+
+
+"startDate" = "Startdatum";
+
+
+"startEndDate" = "Start/End datum";
 
 
 "startRecipe" = "Rezept starten";

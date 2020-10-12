@@ -72,7 +72,10 @@ private extension ScheduleFormViewController {
 
 private extension ScheduleFormViewController {
     private func makeDataSource() -> UITableViewDiffableDataSource<ScheduleFormSection, Item> {
-        UITableViewDiffableDataSource<ScheduleFormSection, Item>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
+        ScheduleFormDataSource(
+            inverted: Binding(get: {self.recipe.inverted}, set: { _ in}),
+            tableView: tableView
+        ) { (tableView, indexPath, item) -> UITableViewCell? in
             if let item = item as? TimesItem {
                 let cell = DecimalCell(decimal: Binding(get: {
                     return item.decimal
@@ -116,6 +119,11 @@ private extension ScheduleFormViewController {
     
     @objc private func didSelectOption(sender: UISegmentedControl) {
         recipe.inverted = sender.selectedSegmentIndex == 0 ? false : true
+        
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadSections([.datepicker])
+        
+        self.dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     private func updateTableView() {
@@ -128,5 +136,24 @@ private extension ScheduleFormViewController {
         snapshot.appendItems([dateItem, pickerItem], toSection: .datepicker)
         
         self.dataSource.apply(snapshot)
+    }
+}
+
+class ScheduleFormDataSource: UITableViewDiffableDataSource<ScheduleFormSection, Item> {
+    
+    @Binding private var inverted: Bool
+    
+    init(inverted: Binding<Bool>, tableView: UITableView, cellProvider: @escaping UITableViewDiffableDataSource<ScheduleFormSection, Item>.CellProvider) {
+        self._inverted = inverted
+        super.init(tableView: tableView, cellProvider: cellProvider)
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return Strings.quantity
+        } else if section == 1 {
+            return self.inverted ? Strings.endDate : Strings.startDate
+        }
+        return nil
     }
 }

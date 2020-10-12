@@ -60,6 +60,9 @@
 "end" = "end";
 
 
+"endDate" = "end date";
+
+
 "exportAll" = "export all";
 
 
@@ -145,6 +148,9 @@
 
 
 "start" = "start";
+
+
+"startDate" = "start date";
 
 
 "startRecipe" = "start Recipe";
