@@ -49,6 +49,17 @@ class StepDetailViewController: UITableViewController {
     /// table view dataSource
     private lazy var dataSource = makeDiffableDataSource()
     
+    
+    ///wether the datePickerCell is shown
+    private var datePickerShown: Bool {
+        !(self.dataSource.itemIdentifier(for: IndexPath(row: 1, section: StepDetailSection.durationTemp.rawValue)) is DetailItem)
+    }
+    
+    ///wether the tempPicker is shown
+    private var tempPickerShown: Bool {
+        self.dataSource.itemIdentifier(for: IndexPath(row: self.datePickerShown ? 3 : 2, section: StepDetailSection.durationTemp.rawValue)) != nil
+    }
+    
     // MARK: - Initalizers
     
     init(step: Step, creating: Bool, recipe: Recipe, saveStep: @escaping SaveStep) {
@@ -76,7 +87,7 @@ extension StepDetailViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        applyInitialSnapshot(animated: false) //update the tableView
+        updateList(animated: false) //update the tableView
     }
     
     override func viewDidLoad() {
@@ -171,9 +182,22 @@ extension StepDetailViewController {
         guard let item = dataSource.itemIdentifier(for: indexPath) as? DetailItem else { return }
         
         if item is IngredientItem {
+            
             navigateToIngredientDetail(id: item.id)
         } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) {
+            
             navigateToIngredientDetail(id: nil)
+        } else if StepDetailSection.allCases[indexPath.section] == .durationTemp {
+            
+            if item.text == Strings.duration {
+                
+                //duration cell tapped now expand the datePickerCell
+                self.datePickerShown ? collapseDatePicker() : expandDatePicker(animated: false)
+            } else if item.text == Strings.temperature {
+                
+                // temp cell tapped expand tempPicker Cell
+                self.tempPickerShown ? collapseTempPicker() : expandTempPicker(animated: false)
+            }
         }
     }
 }
@@ -186,17 +210,75 @@ private extension StepDetailViewController {
         let vc = IngredientDetailViewController(ingredient: ingredient, creating: id == nil) { newValue in
             if id == nil {
                 self.step.ingredients.append(newValue)
-                DispatchQueue.main.async {
-                    self.applyInitialSnapshot()
-                }
             } else {
                 self.step.ingredients[self.step.ingredients.firstIndex(matching: newValue)!] = newValue
-                DispatchQueue.main.async {
-                    self.applyInitialSnapshot()
-                }
+            }
+            DispatchQueue.main.async {
+                self.updateList(animated: false)
             }
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}
+
+// MARK: - Expanding Cells
+private extension StepDetailViewController {
+    
+    // MARK: DatePicker
+    
+    private func collapseDatePicker() {
+        if datePickerShown {
+            
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).first(where: { !($0 is DetailItem) })!])
+            self.dataSource.apply(snapshot)
+            
+            reloadDurationTempSection()
+
+        }
+    }
+    
+    private func expandDatePicker(animated: Bool) {
+        if !datePickerShown {
+            
+            dataSource.apply(createUpdatedSnapshot(shouldShowDatePicker: true), animatingDifferences: animated)
+            
+            reloadDurationTempSection()
+        }
+    }
+    
+    
+    // MARK: TempPicker
+    
+    private func collapseTempPicker() {
+        if tempPickerShown {
+            
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).last(where: { !($0 is DetailItem) })!])
+            self.dataSource.apply(snapshot)
+            
+            reloadDurationTempSection()
+
+        }
+    }
+    
+    private func expandTempPicker(animated: Bool) {
+        if !tempPickerShown {
+            
+            dataSource.apply(createUpdatedSnapshot(shouldShowTempPicker: true), animatingDifferences: animated)
+            
+            reloadDurationTempSection()
+        }
+    }
+    
+    private func reloadDurationTempSection() {
+        DispatchQueue.main.async {
+            var snapshot = self.dataSource.snapshot()
+            
+            snapshot.reloadSections([.durationTemp])
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+        }
     }
     
 }
@@ -265,25 +347,25 @@ private extension StepDetailViewController {
         }
     }
     
-    /// updates the whole list
+    // MARK: Snapshot
+    
+    /// creates the initial list
     private func applyInitialSnapshot(animated: Bool = true) {
         self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
     }
     
-    private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
+    private func updateList(animated: Bool = true) {
+        self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated)
+    }
+    
+    private func snapshotBase() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
         
         // textfieldItem
         let nameItem = TextFieldItem(text: step.name)
         
         // notesTextFieldItem
         let notesItem = TextFieldItem(text: step.notes)
-        
-        // detailitem for duration
-        let durationItem = DetailItem(name: Strings.duration, detailLabel: step.formattedTime)
-        
-        // detailItem for temp
-        let tempItem = DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp)
-        
+
         let ingredientItems = step.ingredients.map { IngredientItem(id: UUID(uuidString: $0.id)!, name: $0.formattedName, detailLabel: $0.detailLabel(for: step))}
         let substepItems = step.subSteps.map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: $0.totalFormattedAmount + " " + $0.formattedTemp)}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
@@ -298,16 +380,51 @@ private extension StepDetailViewController {
         // notes Seciton
         snapshot.appendItems([notesItem], toSection: .notes)
         
-        // duration
-        snapshot.appendItems([durationItem], toSection: .durationTemp)
-        
-        // temp
-        snapshot.appendItems([tempItem], toSection: .durationTemp)
-        
         // ingredients
         snapshot.appendItems(substepItems, toSection: .ingredients)
         snapshot.appendItems(ingredientItems, toSection: .ingredients)
         snapshot.appendItems([addIngredientItem], toSection: .ingredients)
+
+        return snapshot
+    }
+    
+    private func createUpdatedSnapshot(shouldShowDatePicker: Bool = false, shouldShowTempPicker: Bool = false) -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
+        var snapshot = snapshotBase()
+        
+        // durationTemp
+        var items: [Item] = [durationItem]
+        if datePickerShown || shouldShowDatePicker {
+            items.append(Item())
+        }
+        
+        items.append(tempItem)
+        if tempPickerShown || shouldShowTempPicker {
+            items.append(Item())
+        }
+        
+        snapshot.appendItems(items, toSection: .durationTemp)
+        
+
+        
+        return snapshot
+    }
+    
+    /// detailItem for duration
+    private var durationItem: DetailItem {
+        DetailItem(name: Strings.duration, detailLabel: step.formattedTime)
+    }
+    
+    /// detailItem for temp
+    private var tempItem: DetailItem {
+        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp)
+    }
+    
+    private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
+        
+        var snapshot = snapshotBase()
+        
+        // durationTemp
+        snapshot.appendItems([durationItem, tempItem], toSection: .durationTemp)
         
         return snapshot
     }
