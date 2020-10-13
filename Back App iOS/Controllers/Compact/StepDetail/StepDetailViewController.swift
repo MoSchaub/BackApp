@@ -27,6 +27,7 @@ class StepDetailViewController: UITableViewController {
                 self.setupNavigationBar()
                 if !creating {
                     self.saveStep(self.step)
+                    self.updateList(animated: false)
                 }
             }
         }
@@ -149,7 +150,7 @@ private extension StepDetailViewController {
         tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.notesCell) // notes
         
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.durationCell) //durationCell
-        tableView.register(DatePickerCell.self, forCellReuseIdentifier: Strings.timePickerCell) //expanded duration
+        tableView.register(TimePickerCell.self, forCellReuseIdentifier: Strings.timePickerCell) //expanded duration
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.tempCell) //tempCell
         tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.tempPickerCell) //tempPicker
         
@@ -232,7 +233,7 @@ private extension StepDetailViewController {
             
             var snapshot = dataSource.snapshot()
             snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).first(where: { !($0 is DetailItem) })!])
-            self.dataSource.apply(snapshot)
+            self.dataSource.apply(snapshot, animatingDifferences: false)
             
             reloadDurationTempSection()
 
@@ -256,7 +257,7 @@ private extension StepDetailViewController {
             
             var snapshot = dataSource.snapshot()
             snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).last(where: { !($0 is DetailItem) })!])
-            self.dataSource.apply(snapshot)
+            self.dataSource.apply(snapshot, animatingDifferences: false)
             
             reloadDurationTempSection()
 
@@ -322,12 +323,12 @@ private extension StepDetailViewController {
                     if detailItem.text == Strings.duration {
                         //duration
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
-                        
+                        cell.detailTextLabel?.textColor = self.datePickerShown ? .systemRed : .secondaryColor
                         return cell
                     } else {
                         //temp
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
-                        
+                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .systemRed : .secondaryColor
                         return cell
                     }
                 } else if indexPath.section == StepDetailSection.ingredients.rawValue {
@@ -342,6 +343,10 @@ private extension StepDetailViewController {
                         return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
                     }
                 }
+            } else if self.datePickerShown, indexPath.row == 1{
+                return TimePickerCell(time: Binding(get: { self.step.time}, set: { self.step.time = $0 }), reuseIdentifier: Strings.timePickerCell)
+            } else if self.tempPickerShown, indexPath.row > 1 {
+                return TempPickerCell(temp: Binding(get: { self.step.temperature }, set: { self.step.temperature = $0 }), reuseIdentifier: Strings.tempPickerCell)
             }
             return CustomCell()
         }
