@@ -1,0 +1,23 @@
+/*
+  Localizable.strings
+  BackApp
+
+  Created by Moritz Schaub on 18.10.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+
+
+"bulkLiquid" = "bulk liquid";
+
+
+"flour" = "flour";
+
+
+"other" = "other";
+
+
+"ta150" = "starter 50% hydration";
+
+
+"ta200" = "starter 100% hydration";

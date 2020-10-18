@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BakingRecipeStrings
 
 extension UITextView {
     func addDoneButton(target: Any, selector: Selector) {

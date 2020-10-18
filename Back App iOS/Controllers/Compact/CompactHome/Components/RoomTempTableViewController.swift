@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import BakingRecipeStrings
+import BakingRecipeCore
+import BakingRecipeCells
 
 class RoomTempTableViewController: UITableViewController {
     
@@ -16,7 +19,7 @@ class RoomTempTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.tempPickerCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.tempPickerCell)
         title = Strings.roomTemperature
     }
 
@@ -36,8 +39,8 @@ class RoomTempTableViewController: UITableViewController {
     
     // MARK: - Cell
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as! CustomCell
         configurePicker()
         cell.contentView.addSubview(picker)
         
@@ -46,7 +49,6 @@ class RoomTempTableViewController: UITableViewController {
         picker.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
         picker.trailingAnchor.constraint(lessThanOrEqualTo: cell.trailingAnchor, constant: -10).isActive = true
         picker.heightAnchor.constraint(equalTo: cell.heightAnchor, multiplier: 0.8).isActive = true
-        cell.backgroundColor = UIColor(named: Strings.backgroundColorName)!
 
         return cell
     }
@@ -55,7 +57,11 @@ class RoomTempTableViewController: UITableViewController {
         picker = UIPickerView(frame: .zero)
         picker.dataSource = self
         picker.delegate = self
-        picker.selectRow(recipeStore.roomTemperature + 10, inComponent: 0, animated: false)
+        
+        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
+        pickerLabelProxy.textColorWorkaround = .cellTextColor
+        
+        picker.selectRow(Standarts.standardRoomTemperature + 10, inComponent: 0, animated: false)
     }
 }
 

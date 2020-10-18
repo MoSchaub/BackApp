@@ -2,6 +2,24 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../BakingRecipeCells">
+   </FileRef>
+   <FileRef
+      location = "group:../BakingRecipeItems">
+   </FileRef>
+   <FileRef
+      location = "group:../BakingRecipeSections">
+   </FileRef>
+   <FileRef
+      location = "group:../BakingRecipeUIFoundation">
+   </FileRef>
+   <FileRef
+      location = "group:../BakingRecipeStrings">
+   </FileRef>
+   <FileRef
+      location = "group:../BakingRecipeCore">
+   </FileRef>
+   <FileRef
       location = "group:../BakingRecipe">
    </FileRef>
    <FileRef

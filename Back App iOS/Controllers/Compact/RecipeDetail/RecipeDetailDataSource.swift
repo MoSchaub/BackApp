@@ -7,7 +7,11 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeItems
+import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeCells
 
 class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
     
@@ -18,37 +22,33 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         self._recipe = recipe
         self.creating = creating
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            let color = UIColor(named: Strings.backgroundColorName)!
-            if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldTableViewCell {
+            let color = UIColor.backgroundColor
+            if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldCell {
                 cell.textField.text = recipe.wrappedValue.name
-                cell.textField.placeholder = Strings.name
+                cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryColor])
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
-                cell.backgroundColor = color
                 return cell
             } else if let imageItem = item as? ImageItem{
-                let imageCell = ImageTableViewCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
+                let imageCell = ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
                 return imageCell
-            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountTableViewCell{
-                amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
+            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell{
+                amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)//.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
                 amountCell.backgroundColor = color
                 return amountCell
             } else if item is InfoItem {
-                return TextViewTableViewCell(textContent: Binding(get: {
+                return TextViewCell(textContent: Binding(get: {
                     return recipe.wrappedValue.info
                 }, set: updateInfo), placeholder: Strings.info, reuseIdentifier: Strings.infoCell)
-            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripTableViewCell {
+            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripCell {
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell
             } else if let stepItem = item as? StepItem {
-                let stepCell = StepTableViewCell(style: .default, reuseIdentifier: Strings.stepCell)
-                stepCell.setUpCell(for: stepItem.step)
+                let stepCell = StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell)
                 return stepCell
-            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailTableViewCell {
-                let title = NSAttributedString(string: detailItem.text, attributes: [.foregroundColor : UIColor.label])
-                cell.textLabel?.attributedText = title
+            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
+                cell.textLabel?.text = detailItem.text
                 cell.accessoryType = .disclosureIndicator
-                cell.backgroundColor = color
                 return cell
             }
             return UITableViewCell()

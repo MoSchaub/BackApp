@@ -7,7 +7,11 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeItems
+import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeCells
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -107,14 +111,14 @@ private extension RecipeDetailViewController {
     }
     
     private func registerCells() {
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: Strings.imageCell)
-        tableView.register(StepTableViewCell.self, forCellReuseIdentifier: Strings.stepCell)
-        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: Strings.textFieldCell)
-        tableView.register(InfoStripTableViewCell.self, forCellReuseIdentifier: Strings.infoStripCell)
-        tableView.register(AmountTableViewCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
+        tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.textFieldCell)
+        tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
-        tableView.register(TextViewTableViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 }
 
@@ -158,58 +162,10 @@ extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
-        let frame = tableView.frame
-        
-        let editButton = UIButton(frame: CGRect(x: frame.size.width - 60, y: 10, width: 50, height: 30))
-        editButton.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
-        editButton.addTarget(self, action: #selector(toggleEditMode(sender:)), for: .touchDown)
-        
-        let titleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 30))
-        let attributes = [
-            NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .footnote),
-            .foregroundColor : UIColor.secondaryLabel,
-        ]
-        titleLabel.attributedText = NSAttributedString(string: Strings.steps.uppercased(), attributes: attributes)
-        
-        let stackView = UIStackView(frame: CGRect(x: 5, y: 0, width: frame.size.width - 10, height: frame.size.height))
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(editButton)
-        
-        return stackView
+        return customHeader(enabled: !self.recipe.steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
-    
-    private func attributedTitleForEditButton() -> NSAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : UIColor(named: Strings.backgroundColorName)!
-        ]
-        let titleString = isEditing ? Strings.EditButton_Done : Strings.EditButton_Edit
-        return NSAttributedString(string: titleString, attributes: attributes)
-    }
-    
-    @objc private func toggleEditMode(sender: UIButton) {
-        if recipe.steps.count > 0 {
-            setEditing(!isEditing, animated: true)
-            sender.setAttributedTitle(attributedTitleForEditButton(), for: .normal)
-        }
-    }
-    
-}
 
-private extension Recipe {
-    func createFile() -> URL {
-        let url = getDocumentsDirectory().appendingPathComponent("\(self.formattedName).bakingAppRecipe")
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let encoded = try? JSONEncoder().encode(self.neutralizedForExport()) {
-                do {
-                    try encoded.write(to: url)
-                } catch {
-                    print(error)
-                }
-            }
-        }
-        return url
-    }
+    
 }
 
 extension RecipeDetailViewController {

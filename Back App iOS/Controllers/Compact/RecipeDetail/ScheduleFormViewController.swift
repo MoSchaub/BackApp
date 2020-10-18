@@ -7,7 +7,12 @@
 //
 
 import SwiftUI
-import BakingRecipe
+import BakingRecipeFoundation
+import BakingRecipeStrings
+import BakingRecipeCore
+import BakingRecipeSections
+import BakingRecipeItems
+import BakingRecipeCells
 
 class ScheduleFormViewController: UITableViewController {
     
@@ -56,7 +61,7 @@ private extension ScheduleFormViewController {
     }
     
     @objc private func proceedToScheduleView() {
-        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: UserDefaults.standard.integer(forKey: Strings.roomTempKey), times: self.times), animated: true)
+        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: Standarts.standardRoomTemperature, times: self.times), animated: true)
     }
     
     private func registerCells() {
@@ -67,7 +72,10 @@ private extension ScheduleFormViewController {
 
 private extension ScheduleFormViewController {
     private func makeDataSource() -> UITableViewDiffableDataSource<ScheduleFormSection, Item> {
-        UITableViewDiffableDataSource<ScheduleFormSection, Item>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
+        ScheduleFormDataSource(
+            inverted: Binding(get: {self.recipe.inverted}, set: { _ in}),
+            tableView: tableView
+        ) { (tableView, indexPath, item) -> UITableViewCell? in
             if let item = item as? TimesItem {
                 let cell = DecimalCell(decimal: Binding(get: {
                     return item.decimal
@@ -75,7 +83,7 @@ private extension ScheduleFormViewController {
                     item.decimal = newValue
                     self.times = newValue!
                 }), reuseIdentifier: "times", standartValue: self.recipe.times!)
-                cell.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                cell.backgroundColor = UIColor.backgroundColor
                 return cell
             } else if let item = item as? DateItem {
                 return DatePickerCell(date: Binding(get: {
@@ -85,8 +93,7 @@ private extension ScheduleFormViewController {
                     self.recipe.date = newDate
                 }), reuseIdentifier: "datePicker")
             } else  {
-                let cell = UITableViewCell()
-                cell.backgroundColor = UIColor(named: Strings.backgroundColorName)
+                let cell = CustomCell()
                 let picker = self.makePicker()
                 cell.addSubview(picker)
                 picker.fillSuperview()
@@ -97,7 +104,14 @@ private extension ScheduleFormViewController {
     
     private func makePicker() -> UISegmentedControl{
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
-        picker.backgroundColor = UIColor(named: Strings.backgroundColorName)
+        picker.backgroundColor = UIColor.backgroundColor
+        
+        ///textColor
+        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self])
+        pickerLabelProxy.textColorWorkaround = UIColor.cellTextColor
+        
+        picker.selectedSegmentTintColor = .secondaryColor
+        
         picker.selectedSegmentIndex = recipe.inverted ? 1 : 0
         picker.addTarget(self, action: #selector(didSelectOption), for: .valueChanged)
         return picker
@@ -105,6 +119,11 @@ private extension ScheduleFormViewController {
     
     @objc private func didSelectOption(sender: UISegmentedControl) {
         recipe.inverted = sender.selectedSegmentIndex == 0 ? false : true
+        
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadSections([.datepicker])
+        
+        self.dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     private func updateTableView() {
@@ -117,5 +136,24 @@ private extension ScheduleFormViewController {
         snapshot.appendItems([dateItem, pickerItem], toSection: .datepicker)
         
         self.dataSource.apply(snapshot)
+    }
+}
+
+class ScheduleFormDataSource: UITableViewDiffableDataSource<ScheduleFormSection, Item> {
+    
+    @Binding private var inverted: Bool
+    
+    init(inverted: Binding<Bool>, tableView: UITableView, cellProvider: @escaping UITableViewDiffableDataSource<ScheduleFormSection, Item>.CellProvider) {
+        self._inverted = inverted
+        super.init(tableView: tableView, cellProvider: cellProvider)
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return Strings.quantity
+        } else if section == 1 {
+            return self.inverted ? Strings.endDate : Strings.startDate
+        }
+        return nil
     }
 }

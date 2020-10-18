@@ -48,14 +48,13 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testAddingSubstep() throws {
-        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000)])
+        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000, type: .flour)])
         var sub2 = Step(name: "Sub2")
         sub2.subSteps.append(sub1)
         var sub3 = Step(name: "Sub3")
         sub3.subSteps.append(sub2)
         
         let subs = [sub1, sub2, sub3]
-        let recipe = Recipe(name: "unnamed recipe", brotValues: subs)
         
         app.launch()
         
@@ -132,7 +131,8 @@ class Back_App_iOSUITests: XCTestCase {
             returnButton.tap()
             
             // notes
-            let notesField = appTables.textViews[Strings.notes]
+            let notesField = appTables.textViews["notes"].firstMatch
+            
             notesField.tap()
             notesField.typeText(step.notes)
             
@@ -140,9 +140,9 @@ class Back_App_iOSUITests: XCTestCase {
             doneButton.tap()
             
             // duration
-            appTables.cells.staticTexts["one minute"].tap()
+            
+            appTables.staticTexts["one minute"].tap()
             appTables.cells.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
-            app.navigationBars["duration"].buttons[step.name].tap()
             
             // ingredients
             for ingredient in step.ingredients {
@@ -159,11 +159,23 @@ class Back_App_iOSUITests: XCTestCase {
                 amountTextField.typeText("\(ingredient.amount)")
                 returnButton.tap()
                 
-                // bulk liquid
-                if ingredient.isBulkLiquid {
-                    let toggle = appTables.switches.firstMatch
-                    toggle.tap()
+                
+                let tablesQuery = XCUIApplication().tables
+                tablesQuery.staticTexts["other"].tap()
+                switch ingredient.type {
+                case .bulkLiquid:
+                    tablesQuery.staticTexts["bulk liquid"].tap()
+
+                case .flour:
+                    tablesQuery.staticTexts["flour"].tap()
+                case .ta150:
+                    tablesQuery.staticTexts["starter 50% hydration"].tap()
+                case .ta200:
+                    tablesQuery.staticTexts["starter 100% hydration"].tap()
+                case .other:
+                    tablesQuery.staticTexts["other"].firstMatch.tap()
                 }
+                
                 XCUIApplication().navigationBars[ingredient.name].buttons["Save"].tap()
                 
                 XCTAssertTrue(appTables.staticTexts[ingredient.name].exists)
@@ -231,12 +243,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
 
         app.navigationBars["Baking App"].buttons["Edit"].tap()
-
-        let app = XCUIApplication()
-        let tablesQuery = app.tables
-        tablesQuery.children(matching: .cell).element(boundBy: 2).buttons["Delete "].tap()
-        tablesQuery.buttons["trailing0"].tap()
-        app.navigationBars["Baking App"].buttons["Done"].tap()
     }
     
     func testd() throws {
@@ -299,13 +305,12 @@ class Back_App_iOSUITests: XCTestCase {
 
         appTables.staticTexts[Recipe.example.name].tap()
         
-        let staticText = appTables.cells.staticTexts["2 minutes"]
+        let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
         staticText.tap()
         staticText.tap()
     
         appTables.cells.pickerWheels["2 min"].adjust(toPickerWheelValue: "\(18)")
         
-        app.navigationBars["duration"].buttons["Mischen"].tap()
         
         app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
         

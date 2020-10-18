@@ -6,7 +6,7 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import BakingRecipe
+import BakingRecipeFoundation
 import Foundation
 
 extension Recipe {

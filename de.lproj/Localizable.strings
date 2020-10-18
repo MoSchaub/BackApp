@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  BackApp
+
+  Created by Moritz Schaub on 18.10.20.
+  Copyright © 2020 Moritz Schaub. All rights reserved.
+*/
+
+
+
+"bulkLiquid" = "Schüttflüssigkeit";
+
+
+"flour" = "Mehl";
+
+
+"ta150" = "Anstellgut TA 150";
+
+
+"ta200" = "Anstellgut TA 200";
+
+
+"other" = "sonstiges";

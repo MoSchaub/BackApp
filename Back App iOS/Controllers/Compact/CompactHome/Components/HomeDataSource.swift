@@ -7,23 +7,23 @@
 //
 
 import UIKit
+import BakingRecipeCore
+import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeItems
+import BakingRecipeCells
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {
-        let color = UIColor(named: Strings.backgroundColorName)!
+        let color = UIColor.backgroundColor
         let image = UIImage(systemName: "chevron.up")
         image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
         
         textLabel?.text = text
         backgroundColor = color
         accessoryView = UIImageView(image: image)
-        accessoryView?.tintColor = .label
+        accessoryView?.tintColor = .cellTextColor
         selectionStyle = .none
-    }
-    
-    func setupDetailCell(detailItem: DetailItem) {
-        textLabel?.text = detailItem.text
-        detailTextLabel?.attributedText = NSAttributedString(string: detailItem.detailLabel, attributes: [.foregroundColor : UIColor.label])
     }
 }
 
@@ -36,14 +36,14 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
-            if let recipeItem = homeItem as? RecipeItem, let recipeCell = tableView.dequeueReusableCell(withIdentifier: Strings.recipeCell, for: indexPath) as? RecipeTableViewCell {
+            if let recipeItem = homeItem as? RecipeItem{
                 //recipeCell
-                recipeCell.setUp(cellData: .init(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData))
+                let recipeCell = RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, reuseIdentifier: Strings.recipeCell)
                 return recipeCell
-            } else if let detailItem = homeItem as? DetailItem {
+            } else if let detailItem = homeItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
                 // Detail Cell (RoomTemp und About)
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath)
-                cell.setupDetailCell(detailItem: detailItem)
+                cell.textLabel?.text = detailItem.text
+                cell.detailTextLabel?.text = detailItem.detailLabel
                 return cell
             } else {
                 // plain cell
@@ -58,7 +58,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     func update(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<HomeSection, TextItem>()
         snapshot.appendSections(HomeSection.allCases)
-        snapshot.appendItems(recipeStore.recipeItems, toSection: .recipes)
+        snapshot.appendItems(recipeStore.allRecipesItems, toSection: .recipes)
         snapshot.appendItems(recipeStore.settingsItems, toSection: .settings)
         self.apply(snapshot, animatingDifferences: animated)
     }
@@ -90,16 +90,16 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     }
     
     func deleteRecipe(_ id: UUID) -> Bool {
-        if let index = recipeStore.recipes.firstIndex(where: { $0.id == id }) {
+        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
             return self.recipeStore.deleteRecipe(at: index)
         } else { return false }
     }
     
     // moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row < recipeStore.recipes.count else { reset(); return }
+        guard destinationIndexPath.row < recipeStore.allRecipes.count else { reset(); return }
         guard destinationIndexPath.section == 0 else { reset(); return}
-        guard recipeStore.recipes.count > sourceIndexPath.row else { reset(); return }
+        guard recipeStore.allRecipes.count > sourceIndexPath.row else { reset(); return }
         DispatchQueue.global(qos: .userInteractive).async {
             self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
             DispatchQueue.main.async {

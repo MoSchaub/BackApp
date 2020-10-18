@@ -8,6 +8,11 @@
 
 import SwiftUI
 import MobileCoreServices
+import BakingRecipeCore
+import BakingRecipeStrings
+import BakingRecipeSections
+import BakingRecipeItems
+import BakingRecipeCells
 
 class CompactHomeViewController: UITableViewController {
     
@@ -34,7 +39,7 @@ class CompactHomeViewController: UITableViewController {
         configureNavigationBar()
         self.tableView.separatorStyle = .none
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dataSource.update(animated: false)
@@ -43,13 +48,13 @@ class CompactHomeViewController: UITableViewController {
 }
 
 
-import BakingRecipe
+import BakingRecipeFoundation
 
 private extension CompactHomeViewController {
     private func registerCells() {
-        tableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: Strings.recipeCell)
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
+        tableView.register(RecipeCell.self, forCellReuseIdentifier: Strings.recipeCell)
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell)
     }
     
     private func configureNavigationBar() {
@@ -96,7 +101,7 @@ extension CompactHomeViewController {
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
-        if let recipe = recipeStore.recipes.first(where: { $0.id == recipeItem.id}) {
+        if let recipe = recipeStore.allRecipes.first(where: { $0.id == recipeItem.id}) {
             let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
                 self.recipeStore.update(recipe: recipe)
                 DispatchQueue.main.async {
@@ -123,13 +128,13 @@ extension CompactHomeViewController {
         
         vc.recipeStore = recipeStore
         vc.updateTemp = { [self] temp in
-            self.recipeStore.roomTemperature = temp
-            self.updateSettings()
+            Standarts.standardRoomTemperature = temp
+            self.updateStandarts()
         }
         splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
     }
     
-    private func updateSettings() {
+    private func updateStandarts() {
         DispatchQueue.global(qos: .background).async {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteSections([.settings])
@@ -148,7 +153,7 @@ extension CompactHomeViewController {
     }
     
     private func openExportAllShareSheet(sender: UIView) {
-        let ac = UIActivityViewController(activityItems: [recipeStore.exportToUrl()], applicationActivities: nil)
+        let ac = UIActivityViewController(activityItems: [recipeStore.exportToURL()], applicationActivities: nil)
         ac.popoverPresentationController?.sourceView = sender
         present(ac,animated: true, completion: deselectRow)
     }
@@ -168,16 +173,19 @@ extension CompactHomeViewController {
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        
+        //load recipes
         for url in urls {
             recipeStore.open(url)
         }
         
+        //update cells
+        self.dataSource.update(animated: true)
+        
+        //alert
         let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
             alert.dismiss(animated: true)
-            if alert.title == "Erfolg" {
-                self.dataSource.update(animated: true)
-            }
         }))
         
         present(alert, animated: true)
