@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import BakingRecipeFoundation
 
 class Back_App_iOSUITests: XCTestCase {
     
@@ -141,9 +140,9 @@ class Back_App_iOSUITests: XCTestCase {
             doneButton.tap()
             
             // duration
-            appTables.cells.staticTexts["one minute"].tap()
+            
+            appTables.staticTexts["one minute"].tap()
             appTables.cells.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
-            app.navigationBars["duration"].buttons[step.name].tap()
             
             // ingredients
             for ingredient in step.ingredients {
@@ -174,7 +173,7 @@ class Back_App_iOSUITests: XCTestCase {
                 case .ta200:
                     tablesQuery.staticTexts["starter 100% hydration"].tap()
                 case .other:
-                    tablesQuery.staticTexts["other"].tap()
+                    tablesQuery.staticTexts["other"].firstMatch.tap()
                 }
                 
                 XCUIApplication().navigationBars[ingredient.name].buttons["Save"].tap()
@@ -312,7 +311,6 @@ class Back_App_iOSUITests: XCTestCase {
     
         appTables.cells.pickerWheels["2 min"].adjust(toPickerWheelValue: "\(18)")
         
-        app.navigationBars["duration"].buttons["Mischen"].tap()
         
         app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
         
