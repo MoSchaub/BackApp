@@ -184,10 +184,27 @@ extension StepDetailViewController {
         
         if item is IngredientItem {
             
+            // navigate to existing ingredient
             navigateToIngredientDetail(id: item.id)
         } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) {
             
-            navigateToIngredientDetail(id: nil)
+            //add ingredient or substep
+            let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
+            let stepsWithSubsteps = recipe.steps.filter({ step1 in step1.subSteps.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: { step1.id == $0.id})}).filter({ !stepsWithIngredients.contains($0)})
+            if stepsWithIngredients.count > 0 || stepsWithSubsteps.count > 0{
+                let alert = UIAlertController(title: Strings.ingredientOrStep, message: nil, preferredStyle: .actionSheet)
+                
+                alert.addAction(UIAlertAction(title: Strings.newIngredient, style: .default, handler: { _ in self.navigateToIngredientDetail(id: nil) }))
+                alert.addAction(UIAlertAction(title: Strings.step, style: .default, handler: { _ in
+                    self.showSubstepsActionSheet(possibleSubsteps: stepsWithIngredients + stepsWithSubsteps)
+                }))
+                alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
+                    
+                present(alert, animated: true)
+            } else {
+                navigateToIngredientDetail(id: nil)
+            }
+            
         } else if StepDetailSection.allCases[indexPath.section] == .durationTemp {
             
             if item.text == Strings.duration {
@@ -201,10 +218,28 @@ extension StepDetailViewController {
             }
         }
     }
+    
+    /// shows a selection for different substeps
+    private func showSubstepsActionSheet(possibleSubsteps: [Step]) {
+        let actionSheet = UIAlertController(title: Strings.selectStep, message: nil, preferredStyle: .actionSheet)
+        
+        for possibleSubstep in possibleSubsteps {
+            actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
+                self.step.subSteps.append(possibleSubstep)
+                self.updateList(animated: false)
+            }))
+        }
+        
+        actionSheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
+        
+        present(actionSheet, animated: true)
+    }
 }
 
 private extension StepDetailViewController {
     
+    /// navigate to an ingredient with a given id
+    /// - Note: if id is nil it creates a new one
     private func navigateToIngredientDetail(id: UUID?) {
         let ingredient = id == nil ? Ingredient(name: "", amount: 0, type: .other) : step.ingredients.first(where: { $0.id == id!.uuidString })!
         
