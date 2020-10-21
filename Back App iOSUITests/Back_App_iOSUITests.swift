@@ -140,9 +140,8 @@ class Back_App_iOSUITests: XCTestCase {
             doneButton.tap()
             
             // duration
-            
-            appTables.staticTexts["one minute"].tap()
-            appTables.cells.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
+            XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
+            XCUIApplication().tables.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
             
             // ingredients
             for ingredient in step.ingredients {
