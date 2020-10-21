@@ -23,11 +23,14 @@ class StepDetailViewController: UITableViewController {
     /// the step whose details are shown
     private var step: Step {
         didSet {
-            if oldValue != self.step {
-                self.setupNavigationBar()
-                if !creating {
-                    self.saveStep(self.step)
-                    self.updateList(animated: false)
+            DispatchQueue.global(qos: .utility).async {
+                if oldValue != self.step {
+                    if oldValue.formattedName != self.step.formattedName {
+                        self.setupNavigationBar()
+                    }
+                    if !self.creating {
+                        self.saveStep(self.step)
+                    }
                 }
             }
         }
@@ -120,15 +123,17 @@ private extension StepDetailViewController {
     
     /// sets up navigation bar title and items
     private func setupNavigationBar() {
-        //title
-        self.title = step.formattedName
-        
-        //large Title
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        //items
-        if creating {
-            navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addStep))
+        DispatchQueue.main.async {
+            //title
+            self.title = self.step.formattedName
+            
+            //large Title
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            
+            //items
+            if self.creating {
+                self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(self.addStep))
+            }
         }
     }
     
@@ -331,6 +336,8 @@ private extension StepDetailViewController {
             cell.detailTextLabel?.text = detailItem.detailLabel
             return cell
         }
+        
+        // MARK: Creating Cells
 
         return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step}, set: { newStep in  self.step = newStep })) { (tableView, indexPath, item) -> UITableViewCell? in
             if let textFieldItem = item as? TextFieldItem {
@@ -379,9 +386,9 @@ private extension StepDetailViewController {
                     }
                 }
             } else if self.datePickerShown, indexPath.row == 1{
-                return TimePickerCell(time: Binding(get: { self.step.time}, set: { self.step.time = $0 }), reuseIdentifier: Strings.timePickerCell)
+                return TimePickerCell(time: Binding(get: { self.step.time}, set: { self.step.time = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
             } else if self.tempPickerShown, indexPath.row > 1 {
-                return TempPickerCell(temp: Binding(get: { self.step.temperature }, set: { self.step.temperature = $0 }), reuseIdentifier: Strings.tempPickerCell)
+                return TempPickerCell(temp: Binding(get: { self.step.temperature }, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
             }
             return CustomCell()
         }
