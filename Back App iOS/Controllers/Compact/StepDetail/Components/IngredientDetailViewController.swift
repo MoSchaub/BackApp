@@ -210,6 +210,10 @@ extension IngredientDetailViewController {
             self.ingredient.type = newType
             
             self.reloadTypeHeader()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                self.collapseTypeSection()
+            }
         }
     }
     

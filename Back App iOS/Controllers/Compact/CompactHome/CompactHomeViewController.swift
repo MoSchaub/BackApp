@@ -65,14 +65,22 @@ private extension CompactHomeViewController {
     }
     
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
+        
+        // the new fresh recipe
         let recipe = Recipe(name: "", brotValues: [])
+        
+        //the vc
         let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
             self.recipeStore.save(recipe: recipe)
             DispatchQueue.main.async {
                 self.dataSource.update(animated: false)
             }
         }, deleteRecipe: { _ in return false })
+        
+        // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
+        nv.modalPresentationStyle = .fullScreen //to prevent data loss
+        
         present(nv, animated: true)
        }
 }

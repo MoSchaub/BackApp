@@ -24,21 +24,24 @@ class RecipeDetailViewController: UITableViewController {
     
     private var recipe: Recipe {
         didSet {
-            setUpNavigationBar()
-            update(oldValue: oldValue)
-        }
-    }
-    private var creating: Bool
-    private var saveRecipe: SaveRecipe
-    private var deleteRecipe: DeleteRecipe
-    
-    private func update(oldValue: Recipe) {
-        DispatchQueue.global(qos: .utility).async {
-            if !self.creating, oldValue != self.recipe {
-                self.saveRecipe(self.recipe)
+            DispatchQueue.global(qos: .utility).async {
+                if oldValue != self.recipe {
+                    if oldValue.formattedName != self.recipe.formattedName {
+                        self.setUpNavigationBar()
+                    }
+                    if !self.creating, oldValue != self.recipe {
+                        self.saveRecipe(self.recipe)
+                    } else if !self.recipeChanged, self.creating{
+                        self.recipeChanged = true
+                    }
+                }
             }
         }
     }
+    private var creating: Bool
+    private var recipeChanged: Bool = false
+    private var saveRecipe: SaveRecipe
+    private var deleteRecipe: DeleteRecipe
     
     init(recipe: Recipe, creating: Bool, saveRecipe: @escaping SaveRecipe, deleteRecipe: @escaping DeleteRecipe) {
         self.recipe = recipe
@@ -62,6 +65,9 @@ extension RecipeDetailViewController {
         super.viewDidLoad()
         registerCells()
         self.tableView.separatorStyle = .none
+        
+        //because a the controller is presented in a nav controller
+        self.navigationController?.presentationController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +79,48 @@ extension RecipeDetailViewController {
     }
     
 }
+
+// MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
+
+extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        handleCancelButtonPress()
+    }
+    
+    ///Presents an alert if the user is creating a new recipe and presses cancel if he really wants to cancel to prevent data loss else just dissmisses
+    private func handleCancelButtonPress() {
+        if creating, recipeChanged {
+            //show alert
+            showAlert()
+        } else {
+            dissmiss()
+        }
+    }
+    
+    private func showAlert() {
+        let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
+            alertVC.dismiss(animated: false)
+            self.dissmiss()
+        })
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
+            alertVC.dismiss(animated: false)
+            self.saveRecipeWrapper()
+        })
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel) { _ in
+            alertVC.dismiss(animated: true)
+        })
+        
+        self.navigationController?.present(alertVC, animated: true )
+    }
+    
+}
+
+
 
 private extension RecipeDetailViewController {
     private func makeDataSource() -> RecipeDetailDataSource {
@@ -94,9 +142,12 @@ private extension RecipeDetailViewController {
 
 private extension RecipeDetailViewController {
     private func setUpNavigationBar() {
+        
         if creating {
-            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))]
-            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+            DispatchQueue.main.async {
+                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.saveRecipeWrapper))]
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+            }
         } else {
             let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
@@ -108,6 +159,7 @@ private extension RecipeDetailViewController {
         DispatchQueue.main.async {
             self.title = self.recipe.formattedName
         }
+            
     }
     
     private func registerCells() {
@@ -142,7 +194,8 @@ private extension RecipeDetailViewController {
     }
     
     @objc private func cancel() {
-        dissmiss()
+        //dissmiss()
+        handleCancelButtonPress()
     }
     
     @objc private func deleteRecipeWrapper() {
