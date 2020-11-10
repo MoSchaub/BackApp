@@ -8,31 +8,33 @@
 
 import XCTest
 
+
+var app: XCUIApplication {
+    XCUIApplication()
+}
+
+var appTables: XCUIElementQuery {
+    app.tables
+}
+
+var navigationBar: XCUIElement {
+    app.navigationBars.firstMatch
+}
+
+var addButton: XCUIElement {
+    navigationBar.buttons["Add"]
+}
+
+var nameTextField: XCUIElement {
+    appTables.textFields["name"]
+}
+
+var returnButton: XCUIElement {
+    app.keyboards.buttons["Return"]
+}
+
 class Back_App_iOSUITests: XCTestCase {
     
-    private var app: XCUIApplication {
-        XCUIApplication()
-    }
-    
-    private var appTables: XCUIElementQuery {
-        app.tables
-    }
-    
-    private var navigationBar: XCUIElement {
-        app.navigationBars.firstMatch
-    }
-    
-    private var addButton: XCUIElement {
-        navigationBar.buttons["Add"]
-    }
-    
-    private var nameTextField: XCUIElement {
-        appTables.textFields["name"]
-    }
-    
-    private var returnButton: XCUIElement {
-        app.keyboards.buttons["Return"]
-    }
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -208,7 +210,8 @@ class Back_App_iOSUITests: XCTestCase {
         returnButton.tap()
         
         app.navigationBars["test"].buttons["Cancel"].tap()
-        
+        XCUIApplication().alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
+                
         XCTAssertFalse(appTables.staticTexts["test"].exists)
         
         //relaunch
@@ -241,7 +244,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
 
-        app.navigationBars["Baking App"].buttons["Edit"].tap()
     }
     
     func testd() throws {
@@ -281,23 +283,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
     }
     
-    func teste() throws {
-        app.launch()
-        
-        appTables.cells.staticTexts["room temperature"].tap()
-        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
-        app.navigationBars["room temperature"].buttons["Baking App"].tap()
-
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
-    }
-    
-    func testf() throws {
-        app.launch()
-
-        app.tables.staticTexts["about Baking App"].tap()
-                        
-    }
-    
     func testg() throws {
 
         app.launch()
@@ -318,16 +303,5 @@ class Back_App_iOSUITests: XCTestCase {
         app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
         
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
-    }
-    
-    func delete(recipe: Recipe) throws {
-        appTables.staticTexts[recipe.name].swipeLeft()
-        appTables.buttons["Delete"].tap()
-        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipe.name].exists)
-    }
-    
-    func testh() throws {
-        app.launch()
-        try! delete(recipe: Recipe.example)
     }
 }

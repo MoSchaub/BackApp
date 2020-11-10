@@ -8,6 +8,7 @@
 
 import SwiftUI
 import BakingRecipeFoundation
+import BakingRecipeUIFoundation
 import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
@@ -27,6 +28,9 @@ class RecipeDetailViewController: UITableViewController {
             DispatchQueue.global(qos: .utility).async {
                 if oldValue != self.recipe {
                     if oldValue.formattedName != self.recipe.formattedName {
+                        self.setUpNavigationBar()
+                    }
+                    if oldValue.isFavourite != self.recipe.isFavourite {
                         self.setUpNavigationBar()
                     }
                     if !self.creating, oldValue != self.recipe {
@@ -68,6 +72,7 @@ extension RecipeDetailViewController {
         
         //because a the controller is presented in a nav controller
         self.navigationController?.presentationController?.delegate = self
+        self.splitViewController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,6 +83,16 @@ extension RecipeDetailViewController {
         tableView.estimatedRowHeight = 250
     }
     
+}
+
+extension RecipeDetailViewController: UISplitViewControllerDelegate {
+    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
+        self.setUpNavigationBar()
+    }
+    
+    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
+        self.setUpNavigationBar()
+    }
 }
 
 // MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
@@ -145,15 +160,37 @@ private extension RecipeDetailViewController {
         
         if creating {
             DispatchQueue.main.async {
+                //set the items
                 self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.saveRecipeWrapper))]
                 self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+                
             }
         } else {
+            
+            //create the items
             let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
-            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteRecipeWrapper))
+            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
+            
             DispatchQueue.main.async {
-                self.navigationItem.rightBarButtonItems = [favourite, share, delete]
+                if UITraitCollection.current.horizontalSizeClass == .regular {
+                    //navbar f
+                    self.navigationItem.rightBarButtonItems = [favourite, delete]
+                    self.navigationItem.leftBarButtonItem = share
+                    
+                    self.navigationController?.setToolbarHidden(true, animated: true)
+                } else {
+                    
+                    self.navigationItem.rightBarButtonItems = []
+                    self.navigationItem.leftBarButtonItems = []
+                    
+                    // flexible space item
+                    let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+                    
+                    //create the toolbar
+                    self.navigationController?.setToolbarHidden(false, animated: true)
+                    self.setToolbarItems([share, flexible, favourite, flexible, delete], animated: true)
+                }
             }
         }
         DispatchQueue.main.async {
@@ -203,6 +240,24 @@ private extension RecipeDetailViewController {
         if !creating, self.deleteRecipe(recipe) {
             navigationController?.popToRootViewController(animated: true)
         }
+    }
+    
+    @objc private func deletePressed(sender: UIBarButtonItem) {
+        let sheet = UIAlertController(preferredStyle: .actionSheet)
+        
+        sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
+            sheet.dismiss(animated: true) {
+                self.deleteRecipeWrapper()
+            }
+        }))
+        
+        sheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
+            sheet.dismiss(animated: true)
+        }))
+        
+        sheet.popoverPresentationController?.barButtonItem = sender
+        
+        present(sheet, animated: true)
     }
     
     private func dissmiss() {
