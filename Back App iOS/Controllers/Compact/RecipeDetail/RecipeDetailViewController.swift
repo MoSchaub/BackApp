@@ -287,7 +287,7 @@ extension RecipeDetailViewController {
                 if detailItem.text == Strings.startRecipe {
                     startRecipe()
                 } else if detailItem.text == Strings.addStep {
-                    addStep()
+                    showStepDetail(id: nil)
                 }
             }
         }
@@ -332,20 +332,23 @@ private extension RecipeDetailViewController {
         
     }
     
-    private func showStepDetail(id: UUID) {
-        if let step = recipe.steps.first(where: { $0.id == id }) {
-            let stepDetailVC = StepDetailViewController(step: step, creating: false, recipe: recipe) { step in
+    private func showStepDetail(id: UUID?) {
+        let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
+        
+        if id == nil {
+            self.recipe.steps.append(step)
+        }
+        
+            let stepDetailVC = StepDetailViewController(step: step, recipe: recipe) { step in
                 if let index = self.recipe.steps.firstIndex(where: { $0.id == step.id }) {
                     self.recipe.steps[index] = step
                     self.dataSource.update(animated: false)
                 }
             }
             navigationController?.pushViewController(stepDetailVC, animated: true)
-        }
     }
     
     private func startRecipe() {
-//        let roomTemp = UserDefaults.standard.integer(forKey: Strings.roomTempKey)
         let recipeBinding = Binding(get: {
             return self.recipe
         }) { (newValue) in
@@ -354,18 +357,6 @@ private extension RecipeDetailViewController {
         let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
         
         navigationController?.pushViewController(scheduleForm, animated: true)
-    }
-    
-    private func addStep() {
-        let step = Step(time: 60)
-        let stepDetailVC = StepDetailViewController(step: step, creating: true, recipe: recipe) { step in
-            self.recipe.steps.append(step)
-            DispatchQueue.main.async {
-                self.dataSource.update(animated: false)
-            }
-        }
-        
-        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
 }
 

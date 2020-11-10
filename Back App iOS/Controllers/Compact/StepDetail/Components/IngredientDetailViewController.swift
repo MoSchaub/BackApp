@@ -22,17 +22,11 @@ class IngredientDetailViewController: UITableViewController {
         didSet {
             if oldValue != ingredient {
                 self.setupNavigationBar()
-                if !self.creating {
-                    self.saveIngredient(self.ingredient)
-                }
+                self.saveIngredient(self.ingredient)
             }
             
         }
     }
-    
-    /// wether the user is creating a new ingredient or editing an existing one
-    /// - Note: true means is creating a new one
-    private var creating: Bool
     
     ///wether the typeSection is expanded
     private var typeSectionExpanded: Bool {
@@ -49,9 +43,8 @@ class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Initializers
     
-    init(ingredient: Ingredient, creating: Bool, saveIngredient: @escaping (Ingredient) -> () ) {
+    init(ingredient: Ingredient, saveIngredient: @escaping (Ingredient) -> () ) {
         self.ingredient = ingredient
-        self.creating = creating
         self.saveIngredient = saveIngredient
         super.init(style: .insetGrouped)
     }
@@ -88,11 +81,6 @@ private extension IngredientDetailViewController {
         
         //large Title
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        //items
-        if creating {
-            navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .save, target: self, action: #selector(addIngredient))
-        }
     }
     
     /// adds the ingredient and pops the top view controller on the navigation stack

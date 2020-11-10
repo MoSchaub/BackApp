@@ -28,9 +28,7 @@ class StepDetailViewController: UITableViewController {
                     if oldValue.formattedName != self.step.formattedName {
                         self.setupNavigationBar()
                     }
-                    if !self.creating {
-                        self.saveStep(self.step)
-                    }
+                    self.saveStep(self.step)
                 }
             }
         }
@@ -38,10 +36,6 @@ class StepDetailViewController: UITableViewController {
     
     /// the recipe the step is in
     private let recipe: Recipe
-    
-    ///wether the user is currently creating a new step or editing an existing one
-    private var creating: Bool
-    
     
     /// typealias for the method
     typealias SaveStep = ((Step) -> ())
@@ -66,9 +60,8 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Initalizers
     
-    init(step: Step, creating: Bool, recipe: Recipe, saveStep: @escaping SaveStep) {
+    init(step: Step, recipe: Recipe, saveStep: @escaping SaveStep) {
         self.step = step
-        self.creating = creating
         self.saveStep = saveStep
         self.recipe = recipe
         super.init(style: .insetGrouped)
@@ -110,10 +103,14 @@ extension StepDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == StepDetailSection.ingredients.rawValue {
-            return super.customHeader(enabled: !self.step.ingredients.isEmpty, title: Strings.ingredients, frame: tableView.frame)
+            return super.customHeader(enabled: self.editButtonEnabled(), title: Strings.ingredients, frame: tableView.frame)
         } else {
             return nil
         }
+    }
+    
+    private func editButtonEnabled() -> Bool {
+        !self.step.ingredients.isEmpty || !self.step.subSteps.isEmpty
     }
 
 }
@@ -130,11 +127,6 @@ private extension StepDetailViewController {
             //large Title
             self.navigationController?.navigationBar.prefersLargeTitles = true
             
-            //items
-            if self.creating {
-                let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.addStep))
-                self.navigationItem.rightBarButtonItem = saveButton
-            }
         }
     }
     
@@ -249,12 +241,11 @@ private extension StepDetailViewController {
     private func navigateToIngredientDetail(id: UUID?) {
         let ingredient = id == nil ? Ingredient(name: "", amount: 0, type: .other) : step.ingredients.first(where: { $0.id == id!.uuidString })!
         
-        let vc = IngredientDetailViewController(ingredient: ingredient, creating: id == nil) { newValue in
-            if id == nil {
-                self.step.ingredients.append(newValue)
-            } else {
-                self.step.ingredients[self.step.ingredients.firstIndex(matching: newValue)!] = newValue
-            }
+        if id == nil {
+            self.step.ingredients.append(ingredient)
+        }
+        let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
+            self.step.ingredients[self.step.ingredients.firstIndex(matching: newValue)!] = newValue
             DispatchQueue.main.async {
                 self.updateList(animated: false)
             }
@@ -531,7 +522,7 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        self.itemIdentifier(for: indexPath) is IngredientItem
+        self.itemIdentifier(for: indexPath) is IngredientItem || self.itemIdentifier(for: indexPath) is SubstepItem
     }
 
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
