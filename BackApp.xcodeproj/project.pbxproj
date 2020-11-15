@@ -42,6 +42,7 @@
 		CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
 		CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */; };
+		CDB20D5E2544E6FD00311A06 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
 		CDBDFDD624AA96A4002A6C84 /* StepTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */; };
 		CDC68C72252878A700B29334 /* BakingRecipeCore in Frameworks */ = {isa = PBXBuildFile; productRef = CDC68C71252878A700B29334 /* BakingRecipeCore */; };
@@ -153,6 +154,7 @@
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFormViewController.swift; sourceTree = "<group>"; };
+		CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactHomeTests.swift; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
 		CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
 				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
+				CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */,
+				CDB20D5E2544E6FD00311A06 /* CompactHomeTests.swift in Sources */,
 				CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,31 +8,33 @@
 
 import XCTest
 
+
+var app: XCUIApplication {
+    XCUIApplication()
+}
+
+var appTables: XCUIElementQuery {
+    app.tables
+}
+
+var navigationBar: XCUIElement {
+    app.navigationBars.firstMatch
+}
+
+var addButton: XCUIElement {
+    navigationBar.buttons["Add"]
+}
+
+var nameTextField: XCUIElement {
+    appTables.textFields["name"]
+}
+
+var returnButton: XCUIElement {
+    app.keyboards.buttons["Return"]
+}
+
 class Back_App_iOSUITests: XCTestCase {
     
-    private var app: XCUIApplication {
-        XCUIApplication()
-    }
-    
-    private var appTables: XCUIElementQuery {
-        app.tables
-    }
-    
-    private var navigationBar: XCUIElement {
-        app.navigationBars.firstMatch
-    }
-    
-    private var addButton: XCUIElement {
-        navigationBar.buttons["Add"]
-    }
-    
-    private var nameTextField: XCUIElement {
-        appTables.textFields["name"]
-    }
-    
-    private var returnButton: XCUIElement {
-        app.keyboards.buttons["Return"]
-    }
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -61,44 +63,29 @@ class Back_App_iOSUITests: XCTestCase {
         addButton.tap()
 
         for sub in subs {
-            
-            let addStepButton = appTables.staticTexts["add Step"]
-            let doneButton = app.toolbars["Toolbar"].buttons["Done"]
-            
-            addStepButton.tap()
-
-            nameTextField.tap()
-            nameTextField.typeText(sub.name)
-            doneButton.tap()
-            for ingredient in sub.ingredients {
-                let addIngredientButton = appTables.staticTexts["add Ingredient"]
-                addIngredientButton.tap()
-                nameTextField.tap()
-                nameTextField.typeText(ingredient.name)
-                doneButton.tap()
-                
-                let amountTextField = appTables.textFields["amount in gramms"]
-                amountTextField.tap()
-                amountTextField.typeText("\(ingredient.amount)")
-                doneButton.tap()
-                
-                app.navigationBars[ingredient.name].buttons["Save"].tap()
-            }
-            
-            for substep in sub.subSteps {
-                let addIngredientButton = appTables.staticTexts["add Ingredient"]
-                addIngredientButton.tap()
-                app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
-                app.sheets["select Step"].scrollViews.otherElements.buttons[substep.name].tap()
-            }
-            
-            app.navigationBars[sub.name].buttons["Save"].tap()
+            try addStep(step: sub, recipeName: "unnamed recipe")
         }
+        
+        removeSubstep()
         
         app.navigationBars["unnamed recipe"].buttons["Save"].tap()
 
         
     }
+    
+    func removeSubstep() {
+        
+        appTables.staticTexts["Sub3"].firstMatch.tap()
+        
+        appTables.children(matching: .button)["Edit"].tap()
+        
+        appTables.buttons["Delete Sub2, 1.0 Kg 20 °C"].tap()
+        appTables.buttons["Delete"].tap()
+        appTables.children(matching: .button)["Done"].tap()
+        app.navigationBars["Sub3"].buttons["unnamed recipe"].tap()
+        
+    }
+    
 
     func testa() throws {
         
@@ -123,67 +110,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         // steps
         for step in recipe.steps {
-            appTables.staticTexts["add Step"].tap()
-            
-            // name
-            nameTextField.tap()
-            nameTextField.typeText(step.name)
-            returnButton.tap()
-            
-            // notes
-            let notesField = appTables.textViews["notes"].firstMatch
-            
-            notesField.tap()
-            notesField.typeText(step.notes)
-            
-            let doneButton = app.toolbars["Toolbar"].buttons["Done"]
-            doneButton.tap()
-            
-            // duration
-            XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
-            XCUIApplication().tables.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time))")
-            
-            // ingredients
-            for ingredient in step.ingredients {
-                appTables.staticTexts["add Ingredient"].tap()
-                
-                // name
-                nameTextField.tap()
-                nameTextField.typeText(ingredient.name)
-                returnButton.tap()
-                
-                // amount
-                let amountTextField = appTables.textFields["amount in gramms"]
-                amountTextField.tap()
-                amountTextField.typeText("\(ingredient.amount)")
-                returnButton.tap()
-                
-                
-                let tablesQuery = XCUIApplication().tables
-                tablesQuery.staticTexts["other"].tap()
-                switch ingredient.type {
-                case .bulkLiquid:
-                    tablesQuery.staticTexts["bulk liquid"].tap()
-
-                case .flour:
-                    tablesQuery.staticTexts["flour"].tap()
-                case .ta150:
-                    tablesQuery.staticTexts["starter 50% hydration"].tap()
-                case .ta200:
-                    tablesQuery.staticTexts["starter 100% hydration"].tap()
-                case .other:
-                    tablesQuery.staticTexts["other"].firstMatch.tap()
-                }
-                
-                XCUIApplication().navigationBars[ingredient.name].buttons["Save"].tap()
-                
-                XCTAssertTrue(appTables.staticTexts[ingredient.name].exists)
-                
-            }
-            
-            app.navigationBars[step.name].buttons["Save"].tap()
-            
-            XCTAssertTrue(appTables.staticTexts[step.name].exists)
+            try addStep(step: step, recipeName: recipe.formattedName)
         }
         
         app.navigationBars[recipe.name].buttons["Save"].tap()
@@ -197,6 +124,86 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
     }
     
+    func addIngredient(ingredient: Ingredient, stepName: String) {
+        appTables.staticTexts["add Ingredient"].tap()
+        
+        // name
+        nameTextField.tap()
+        nameTextField.typeText(ingredient.name)
+        returnButton.tap()
+        
+        // amount
+        let amountTextField = appTables.textFields["amount in gramms"]
+        amountTextField.tap()
+        amountTextField.typeText("\(ingredient.amount)")
+        returnButton.tap()
+        
+        
+        let tablesQuery = XCUIApplication().tables
+        tablesQuery.staticTexts["other"].tap()
+        switch ingredient.type {
+        case .bulkLiquid:
+            tablesQuery.staticTexts["bulk liquid"].tap()
+
+        case .flour:
+            tablesQuery.staticTexts["flour"].tap()
+        case .ta150:
+            tablesQuery.staticTexts["starter 50% hydration"].tap()
+        case .ta200:
+            tablesQuery.staticTexts["starter 100% hydration"].tap()
+        case .other:
+            tablesQuery.staticTexts["other"].firstMatch.tap()
+        }
+        
+        XCUIApplication().navigationBars[ingredient.name].buttons[stepName].tap()
+        
+        XCTAssertTrue(appTables.staticTexts[ingredient.name].exists)
+        
+    }
+    
+    func addStep(step: Step, recipeName: String) throws {
+        appTables.staticTexts["add Step"].tap()
+        
+        // name
+        nameTextField.tap()
+        nameTextField.typeText(step.name)
+        returnButton.tap()
+        
+        // notes
+        let notesField = appTables.textViews["notes"].firstMatch
+        
+        notesField.tap()
+        notesField.typeText(step.notes)
+        
+        let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+        doneButton.tap()
+        
+        // duration
+        XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
+        XCUIApplication().tables.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time/60))")
+        
+        // ingredients
+        for ingredient in step.ingredients {
+            addIngredient(ingredient: ingredient, stepName: step.formattedName)
+        }
+        
+        for substep in step.subSteps {
+            appTables.staticTexts["add Ingredient"].tap()
+            app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
+            app.sheets["select Step"].scrollViews.otherElements.buttons[substep.formattedName].tap()
+            
+            appTables.cells.staticTexts[substep.name].firstMatch.tap()
+            
+            
+            navigationBar.buttons[step.name].tap()
+            //TODO test the tapping all the substeps
+        }
+        
+        app.navigationBars[step.formattedName].buttons[recipeName].tap()
+        
+        XCTAssertTrue(appTables.staticTexts[step.name].exists)
+    }
+    
     func testb() throws {
         
         app.launch()
@@ -208,7 +215,8 @@ class Back_App_iOSUITests: XCTestCase {
         returnButton.tap()
         
         app.navigationBars["test"].buttons["Cancel"].tap()
-        
+        XCUIApplication().alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
+                
         XCTAssertFalse(appTables.staticTexts["test"].exists)
         
         //relaunch
@@ -241,7 +249,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
 
-        app.navigationBars["Baking App"].buttons["Edit"].tap()
     }
     
     func testd() throws {
@@ -281,23 +288,6 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
     }
     
-    func teste() throws {
-        app.launch()
-        
-        appTables.cells.staticTexts["room temperature"].tap()
-        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
-        app.navigationBars["room temperature"].buttons["Baking App"].tap()
-
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
-    }
-    
-    func testf() throws {
-        app.launch()
-
-        app.tables.staticTexts["about Baking App"].tap()
-                        
-    }
-    
     func testg() throws {
 
         app.launch()
@@ -318,16 +308,5 @@ class Back_App_iOSUITests: XCTestCase {
         app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
         
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
-    }
-    
-    func delete(recipe: Recipe) throws {
-        appTables.staticTexts[recipe.name].swipeLeft()
-        appTables.buttons["Delete"].tap()
-        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipe.name].exists)
-    }
-    
-    func testh() throws {
-        app.launch()
-        try! delete(recipe: Recipe.example)
     }
 }

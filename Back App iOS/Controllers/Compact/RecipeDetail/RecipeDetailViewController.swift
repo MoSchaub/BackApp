@@ -8,6 +8,7 @@
 
 import SwiftUI
 import BakingRecipeFoundation
+import BakingRecipeUIFoundation
 import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
@@ -24,21 +25,27 @@ class RecipeDetailViewController: UITableViewController {
     
     private var recipe: Recipe {
         didSet {
-            setUpNavigationBar()
-            update(oldValue: oldValue)
-        }
-    }
-    private var creating: Bool
-    private var saveRecipe: SaveRecipe
-    private var deleteRecipe: DeleteRecipe
-    
-    private func update(oldValue: Recipe) {
-        DispatchQueue.global(qos: .utility).async {
-            if !self.creating, oldValue != self.recipe {
-                self.saveRecipe(self.recipe)
+            DispatchQueue.global(qos: .utility).async {
+                if oldValue != self.recipe {
+                    if oldValue.formattedName != self.recipe.formattedName {
+                        self.setUpNavigationBar()
+                    }
+                    if oldValue.isFavourite != self.recipe.isFavourite {
+                        self.setUpNavigationBar()
+                    }
+                    if !self.creating, oldValue != self.recipe {
+                        self.saveRecipe(self.recipe)
+                    } else if !self.recipeChanged, self.creating{
+                        self.recipeChanged = true
+                    }
+                }
             }
         }
     }
+    private var creating: Bool
+    private var recipeChanged: Bool = false
+    private var saveRecipe: SaveRecipe
+    private var deleteRecipe: DeleteRecipe
     
     init(recipe: Recipe, creating: Bool, saveRecipe: @escaping SaveRecipe, deleteRecipe: @escaping DeleteRecipe) {
         self.recipe = recipe
@@ -62,6 +69,10 @@ extension RecipeDetailViewController {
         super.viewDidLoad()
         registerCells()
         self.tableView.separatorStyle = .none
+        
+        //because a the controller is presented in a nav controller
+        self.navigationController?.presentationController?.delegate = self
+        self.splitViewController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +84,58 @@ extension RecipeDetailViewController {
     }
     
 }
+
+extension RecipeDetailViewController: UISplitViewControllerDelegate {
+    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
+        self.setUpNavigationBar()
+    }
+    
+    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
+        self.setUpNavigationBar()
+    }
+}
+
+// MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
+
+extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        handleCancelButtonPress()
+    }
+    
+    ///Presents an alert if the user is creating a new recipe and presses cancel if he really wants to cancel to prevent data loss else just dissmisses
+    private func handleCancelButtonPress() {
+        if creating, recipeChanged {
+            //show alert
+            showAlert()
+        } else {
+            dissmiss()
+        }
+    }
+    
+    private func showAlert() {
+        let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
+            alertVC.dismiss(animated: false)
+            self.dissmiss()
+        })
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
+            alertVC.dismiss(animated: false)
+            self.saveRecipeWrapper()
+        })
+        
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel) { _ in
+            alertVC.dismiss(animated: true)
+        })
+        
+        self.navigationController?.present(alertVC, animated: true )
+    }
+    
+}
+
+
 
 private extension RecipeDetailViewController {
     private func makeDataSource() -> RecipeDetailDataSource {
@@ -94,20 +157,46 @@ private extension RecipeDetailViewController {
 
 private extension RecipeDetailViewController {
     private func setUpNavigationBar() {
+        
         if creating {
-            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveRecipeWrapper))]
-            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+            DispatchQueue.main.async {
+                //set the items
+                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.saveRecipeWrapper))]
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+                
+            }
         } else {
+            
+            //create the items
             let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
-            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteRecipeWrapper))
+            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
+            
             DispatchQueue.main.async {
-                self.navigationItem.rightBarButtonItems = [favourite, share, delete]
+                if UITraitCollection.current.horizontalSizeClass == .regular {
+                    //navbar f
+                    self.navigationItem.rightBarButtonItems = [favourite, delete]
+                    self.navigationItem.leftBarButtonItem = share
+                    
+                    self.navigationController?.setToolbarHidden(true, animated: true)
+                } else {
+                    
+                    self.navigationItem.rightBarButtonItems = []
+                    self.navigationItem.leftBarButtonItems = []
+                    
+                    // flexible space item
+                    let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+                    
+                    //create the toolbar
+                    self.navigationController?.setToolbarHidden(false, animated: true)
+                    self.setToolbarItems([share, flexible, favourite, flexible, delete], animated: true)
+                }
             }
         }
         DispatchQueue.main.async {
             self.title = self.recipe.formattedName
         }
+            
     }
     
     private func registerCells() {
@@ -142,7 +231,8 @@ private extension RecipeDetailViewController {
     }
     
     @objc private func cancel() {
-        dissmiss()
+        //dissmiss()
+        handleCancelButtonPress()
     }
     
     @objc private func deleteRecipeWrapper() {
@@ -150,6 +240,24 @@ private extension RecipeDetailViewController {
         if !creating, self.deleteRecipe(recipe) {
             navigationController?.popToRootViewController(animated: true)
         }
+    }
+    
+    @objc private func deletePressed(sender: UIBarButtonItem) {
+        let sheet = UIAlertController(preferredStyle: .actionSheet)
+        
+        sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
+            sheet.dismiss(animated: true) {
+                self.deleteRecipeWrapper()
+            }
+        }))
+        
+        sheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
+            sheet.dismiss(animated: true)
+        }))
+        
+        sheet.popoverPresentationController?.barButtonItem = sender
+        
+        present(sheet, animated: true)
     }
     
     private func dissmiss() {
@@ -179,7 +287,7 @@ extension RecipeDetailViewController {
                 if detailItem.text == Strings.startRecipe {
                     startRecipe()
                 } else if detailItem.text == Strings.addStep {
-                    addStep()
+                    showStepDetail(id: nil)
                 }
             }
         }
@@ -224,20 +332,31 @@ private extension RecipeDetailViewController {
         
     }
     
-    private func showStepDetail(id: UUID) {
-        if let step = recipe.steps.first(where: { $0.id == id }) {
-            let stepDetailVC = StepDetailViewController(step: step, creating: false, recipe: recipe) { step in
-                if let index = self.recipe.steps.firstIndex(where: { $0.id == step.id }) {
-                    self.recipe.steps[index] = step
-                    self.dataSource.update(animated: false)
-                }
-            }
-            navigationController?.pushViewController(stepDetailVC, animated: true)
+    private func showStepDetail(id: UUID?) {
+        let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
+        
+        // create new step
+        if id == nil {
+            self.recipe.steps.append(step)
         }
+        
+        let stepDetailVC = StepDetailViewController(step: Binding(get: { self.recipe.steps.first(where: { $0.id == step.id })! }, set: { newStep in
+            if let index = self.recipe.steps.firstIndex(where: { $0.id == newStep.id }) {
+                self.recipe.steps[index] = newStep
+                self.dataSource.update(animated: false)
+            }
+        }), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in
+            if newRecipe != self.recipe {
+                self.recipe = newRecipe
+                self.dataSource.update(animated: false)
+            }
+        }))
+        
+        //navigate to the controller
+        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
     private func startRecipe() {
-//        let roomTemp = UserDefaults.standard.integer(forKey: Strings.roomTempKey)
         let recipeBinding = Binding(get: {
             return self.recipe
         }) { (newValue) in
@@ -246,18 +365,6 @@ private extension RecipeDetailViewController {
         let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
         
         navigationController?.pushViewController(scheduleForm, animated: true)
-    }
-    
-    private func addStep() {
-        let step = Step(time: 60)
-        let stepDetailVC = StepDetailViewController(step: step, creating: true, recipe: recipe) { step in
-            self.recipe.steps.append(step)
-            DispatchQueue.main.async {
-                self.dataSource.update(animated: false)
-            }
-        }
-        
-        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
 }
 

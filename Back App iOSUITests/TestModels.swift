@@ -501,9 +501,9 @@ public struct Recipe: Hashable, Codable, Identifiable{
         let saaten = Ingredient(name: "Saaten", amount: 30, type: .other)
         let salz = Ingredient(name: "Salz", amount: 5, type: .other)
         
-        let schritt1 = Step(name: "Mischen", time: 2, ingredients: [anstellgut,vollkornMehl,olivenöl,saaten,salz], themperature: 20)
+        let schritt1 = Step(name: "Mischen", time: 2*60, ingredients: [anstellgut,vollkornMehl,olivenöl,saaten,salz], themperature: 20)
         
-        let backen = Step(name: "Backen", time: 18,notes: "170˚ C")
+        let backen = Step(name: "Backen", time: 18*60,notes: "170˚ C")
         
         return Recipe(name: "Sauerteigcrack", brotValues: [schritt1, backen])
     }
