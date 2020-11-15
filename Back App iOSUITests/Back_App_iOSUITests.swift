@@ -63,8 +63,9 @@ class Back_App_iOSUITests: XCTestCase {
         addButton.tap()
 
         for sub in subs {
-            addStep(step: sub, recipeName: "unnamed recipe")
+            try addStep(step: sub, recipeName: "unnamed recipe")
         }
+        
         removeSubstep()
         
         app.navigationBars["unnamed recipe"].buttons["Save"].tap()
@@ -109,7 +110,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         // steps
         for step in recipe.steps {
-            addStep(step: step, recipeName: recipe.formattedName)
+            try addStep(step: step, recipeName: recipe.formattedName)
         }
         
         app.navigationBars[recipe.name].buttons["Save"].tap()
@@ -160,7 +161,7 @@ class Back_App_iOSUITests: XCTestCase {
         
     }
     
-    func addStep(step: Step, recipeName: String) {
+    func addStep(step: Step, recipeName: String) throws {
         appTables.staticTexts["add Step"].tap()
         
         // name
@@ -190,6 +191,12 @@ class Back_App_iOSUITests: XCTestCase {
             appTables.staticTexts["add Ingredient"].tap()
             app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
             app.sheets["select Step"].scrollViews.otherElements.buttons[substep.formattedName].tap()
+            
+            appTables.cells.staticTexts[substep.name].firstMatch.tap()
+            
+            
+            navigationBar.buttons[step.name].tap()
+            //TODO test the tapping all the substeps
         }
         
         app.navigationBars[step.formattedName].buttons[recipeName].tap()

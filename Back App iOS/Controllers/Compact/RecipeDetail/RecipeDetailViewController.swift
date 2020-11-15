@@ -335,17 +335,25 @@ private extension RecipeDetailViewController {
     private func showStepDetail(id: UUID?) {
         let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
         
+        // create new step
         if id == nil {
             self.recipe.steps.append(step)
         }
         
-            let stepDetailVC = StepDetailViewController(step: step, recipe: recipe) { step in
-                if let index = self.recipe.steps.firstIndex(where: { $0.id == step.id }) {
-                    self.recipe.steps[index] = step
-                    self.dataSource.update(animated: false)
-                }
+        let stepDetailVC = StepDetailViewController(step: Binding(get: { self.recipe.steps.first(where: { $0.id == step.id })! }, set: { newStep in
+            if let index = self.recipe.steps.firstIndex(where: { $0.id == newStep.id }) {
+                self.recipe.steps[index] = newStep
+                self.dataSource.update(animated: false)
             }
-            navigationController?.pushViewController(stepDetailVC, animated: true)
+        }), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in
+            if newRecipe != self.recipe {
+                self.recipe = newRecipe
+                self.dataSource.update(animated: false)
+            }
+        }))
+        
+        //navigate to the controller
+        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
     private func startRecipe() {

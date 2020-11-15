@@ -14,36 +14,17 @@ import BakingRecipeCells
 import BakingRecipeItems
 import BakingRecipeUIFoundation
 
-
 class StepDetailViewController: UITableViewController {
     
     
     // MARK: - Properties
     
     /// the step whose details are shown
-    private var step: Step {
-        didSet {
-            DispatchQueue.global(qos: .utility).async {
-                if oldValue != self.step {
-                    if oldValue.formattedName != self.step.formattedName {
-                        self.setupNavigationBar()
-                    }
-                    self.saveStep(self.step)
-                }
-            }
-        }
-    }
+    @Binding private var step: Step
     
     /// the recipe the step is in
-    private let recipe: Recipe
-    
-    /// typealias for the method
-    typealias SaveStep = ((Step) -> ())
-    
-    /// method to save or update the step
-    private var saveStep: SaveStep
-    
-    
+    @Binding private var recipe: Recipe
+
     /// table view dataSource
     private lazy var dataSource = makeDiffableDataSource()
     
@@ -60,11 +41,17 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Initalizers
     
-    init(step: Step, recipe: Recipe, saveStep: @escaping SaveStep) {
-        self.step = step
-        self.saveStep = saveStep
-        self.recipe = recipe
+    init(step: Binding<Step>, recipe: Binding<Recipe>) {
+        self._step = step
+        self._recipe = recipe
         super.init(style: .insetGrouped)
+        
+        self._step = step.onUpdate{
+            DispatchQueue.global(qos: .utility).async {
+                self.setupNavigationBar()
+            }
+        }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -132,7 +119,6 @@ private extension StepDetailViewController {
     
     /// adds the step and pops the top view controller on the navigation stack
     @objc private func addStep(_ sender: UIBarButtonItem) {
-        saveStep(step)
         navigationController?.popViewController(animated: true)
     }
     
@@ -184,22 +170,19 @@ extension StepDetailViewController {
             
             // navigate to existing ingredient
             navigateToIngredientDetail(id: item.id)
-        } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) {
+        } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) { //add ingredient pressed
             
             //add ingredient or substep
             let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
             let stepsWithSubsteps = recipe.steps.filter({ step1 in step1.subSteps.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: { step1.id == $0.id})}).filter({ !stepsWithIngredients.contains($0)})
             if stepsWithIngredients.count > 0 || stepsWithSubsteps.count > 0{
-                let alert = UIAlertController(title: Strings.ingredientOrStep, message: nil, preferredStyle: .actionSheet)
                 
-                alert.addAction(UIAlertAction(title: Strings.newIngredient, style: .default, handler: { _ in self.navigateToIngredientDetail(id: nil) }))
-                alert.addAction(UIAlertAction(title: Strings.step, style: .default, handler: { _ in
-                    self.showSubstepsActionSheet(possibleSubsteps: stepsWithIngredients + stepsWithSubsteps)
-                }))
-                alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
-                    
-                present(alert, animated: true)
+                //action sheet let the user pick
+                presentSubstepIngredientDecisionSheet(possibleSubsteps: stepsWithIngredients + stepsWithSubsteps)
+                
             } else {
+                
+                //no possible substeps so create new ingredient
                 navigateToIngredientDetail(id: nil)
             }
             
@@ -214,17 +197,62 @@ extension StepDetailViewController {
                 // temp cell tapped expand tempPicker Cell
                 self.tempPickerShown ? collapseTempPicker() : expandTempPicker(animated: false)
             }
+        } else if item is SubstepItem {
+            
+            //substep has been selected navigate to step detail
+            let substep = self.step.subSteps.first(where: { $0.id == item.id })!
+            
+            let stepDetailVC = StepDetailViewController(
+                step: Binding<Step>(
+                    get: { self.step.subSteps.first(where: { $0.id == substep.id })! },
+                    set: { newStep in if let index = self.step.subSteps.firstIndex(where: { $0.id == newStep.id }) {
+                        self.step.subSteps[index] = newStep
+                        self.updateList(animated: false)
+                    } }
+                ), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in if newRecipe != self.recipe {
+                    self.recipe = newRecipe
+                    self.updateList(animated: false)
+                } }
+                )
+            )
+            
+            //navigate to the controller
+            navigationController?.pushViewController(stepDetailVC, animated: true)
         }
     }
     
-    /// shows a selection for different substeps
+    /// presents an actionsheet asking the user if he wants to add a substep or a new ingredient
+    private func presentSubstepIngredientDecisionSheet(possibleSubsteps: [Step]) {
+        let alert = UIAlertController(title: Strings.ingredientOrStep, message: nil, preferredStyle: .actionSheet)
+        
+        //option 1 create new ingredient
+        alert.addAction(UIAlertAction(title: Strings.newIngredient, style: .default, handler: { _ in
+            self.navigateToIngredientDetail(id: nil)
+        }))
+        
+        //option 2 add substep
+        alert.addAction(UIAlertAction(title: Strings.step, style: .default, handler: { _ in
+            self.showSubstepsActionSheet(possibleSubsteps: possibleSubsteps)
+        }))
+        
+        //cancel
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
+            
+        present(alert, animated: true)
+    }
+    
+    /// shows a selection for different substeps and adds it to the current step
     private func showSubstepsActionSheet(possibleSubsteps: [Step]) {
         let actionSheet = UIAlertController(title: Strings.selectStep, message: nil, preferredStyle: .actionSheet)
         
         for possibleSubstep in possibleSubsteps {
             actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
-                self.step.subSteps.append(possibleSubstep)
-                self.updateList(animated: false)
+                //self.step.subSteps.append(possibleSubstep)
+                if self.recipe.add(substep: possibleSubstep, to: self.step).success {
+                    self.updateList(animated: false)
+                } else {
+                    //TODO: Present error
+                }
             }))
         }
         
@@ -331,7 +359,9 @@ private extension StepDetailViewController {
         
         // MARK: Creating Cells
 
-        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step}, set: { newStep in  self.step = newStep })) { (tableView, indexPath, item) -> UITableViewCell? in
+        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep }),
+                                    recipe: Binding<Recipe>(get: { return self.recipe }, set: { newRecipe in  self.recipe = newRecipe })
+        ){ (tableView, indexPath, item) -> UITableViewCell? in
             if let textFieldItem = item as? TextFieldItem {
                 // notes or name
                 
@@ -479,9 +509,11 @@ fileprivate extension Ingredient {
 fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetailSection, Item> {
     
     @Binding var step: Step
+    @Binding var recipe: Recipe
     
-    init(tableView: UITableView, step: Binding<Step>, cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
+    init(tableView: UITableView, step: Binding<Step>, recipe: Binding<Recipe>, cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
         self._step = step
+        self._recipe = recipe
         super.init(tableView: tableView, cellProvider: cellProvider)
     }
     
@@ -493,6 +525,8 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
         guard editingStyle == .delete else { return }
         guard let item = itemIdentifier(for: indexPath) else { return }
         if item is IngredientItem {
+            
+            //delete ingredient
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             
@@ -500,6 +534,8 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
                 self.deleteIngredient(id: item.id)
             }
         } else if item is SubstepItem {
+            
+            //delete substep
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             
@@ -517,7 +553,8 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     
     private func removeSubstep(id: UUID) {
         if let index = step.subSteps.firstIndex(where: { $0.id == id }), index < step.subSteps.count {
-            _ = step.subSteps.remove(at: index)
+            let substep = step.subSteps.remove(at: index)
+            self.recipe.steps.append(substep)
         }
     }
     

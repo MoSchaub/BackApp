@@ -87,13 +87,13 @@ private extension ScheduleViewControllor {
     // - MARK: - Snapshot
     private func updateList(animated: Bool = true) {
         var sections = [Int]()
-        let _ = recipe.steps.enumerated().map { sections.append($0.offset)} //get a section for each step
+        let _ = recipe.reorderedSteps.enumerated().map { sections.append($0.offset)} //get a section for each step
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, StepItem>() // create the snapshot
         
         snapshot.appendSections(sections) //append sections
         for section in sections {
-            snapshot.appendItems([recipe.stepItems[section]], toSection: section)
+            snapshot.appendItems([recipe.allReoderedStepItems[section]], toSection: section)
         }
         self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
