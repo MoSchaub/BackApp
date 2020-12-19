@@ -60,6 +60,9 @@ public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     ///speciphic temperature capacity of the ingredient
     private var c: Double
     
+    /// the id of the step the ingredient is used for
+    private var stepId: Int
+    
 }
 
 public extension Ingredient {
@@ -119,11 +122,12 @@ public extension Ingredient {
     }
     
     //initializer
-    init(id: Int, name: String, amount: Double, type: Style ) {
+    init(stepId: Int, id: Int, name: String, amount: Double, type: Style ) {
         self.id = id
         self.name = name
         self.amount = amount
         self.c = type.rawValue
+        self.stepId = stepId
     }
     
 }
@@ -136,6 +140,7 @@ extension Ingredient: SqlableProtocol {
     static let temperature = Column("temperature", .integer)
     static let amount = Column("amount", .real)
     static let c = Column("c", .real)
+    static let stepId = Column("stepId", .integer, ForeignKey<Step>())
     public static var tableLayout: [Column] = [id, name, temperature, amount, c]
     
     
@@ -152,6 +157,8 @@ extension Ingredient: SqlableProtocol {
             return self.amount
         case Ingredient.c:
             return self.c
+        case Ingredient.stepId:
+            return self.stepId
         default:
             return nil
         }
@@ -159,6 +166,7 @@ extension Ingredient: SqlableProtocol {
     
     // init ingredient from database
     public init(row: ReadRow) throws {
+        stepId = try row.get(Ingredient.stepId)
         id = try row.get(Ingredient.id)
         name = try row.get(Ingredient.name)
         temperature = try? row.get(Ingredient.temperature)
