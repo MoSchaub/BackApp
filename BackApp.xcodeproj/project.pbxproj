@@ -140,6 +140,7 @@
 		CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeFoundation; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
 		CD9B3CE8253CE6D000132CA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CD9B3CF2253CE6D600132CA9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -233,6 +234,7 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */,
 				CD1B6A182483F7FF00597931 /* Default-568h@2x.png */,
 				CD75BFC824629961005C902A /* bread.png */,
 				CDA7EE4C24A67E2200763E21 /* Shared */,
