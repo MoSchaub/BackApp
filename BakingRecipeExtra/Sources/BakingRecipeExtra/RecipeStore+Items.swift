@@ -7,6 +7,7 @@
 
 import BakingRecipeItems
 import BakingRecipeCore
+import BakingRecipeFoundation
 
 @available(iOS 13, *)
 public extension RecipeStore {
