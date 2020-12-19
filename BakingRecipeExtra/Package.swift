@@ -13,15 +13,15 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(name: "BakingRecipeStrings", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeStrings"),
-        .package(name: "BakingRecipeItems", path: "/Users/moritzschaub/Developer/Swift/ios/BakingRecipeItems")
+        .package(name: "BakingRecipeItems", path: "/Users/moritzschaub/Developer/Swift/ios/BakingRecipeItems"),
+        .package(name: "BakingRecipeCore", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeCore")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "BakingRecipeExtra",
-            dependencies: ["BakingRecipeStrings", "BakingRecipeItems"]),
+            dependencies: ["BakingRecipeItems", "BakingRecipeCore"]),
         .testTarget(
             name: "BakingRecipeExtraTests",
             dependencies: ["BakingRecipeExtra"]),
