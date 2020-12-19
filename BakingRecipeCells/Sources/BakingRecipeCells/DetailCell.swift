@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DetailCell.swift
 //  
 //
 //  Created by Moritz Schaub on 05.10.20.
@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 13, *)
 public class DetailCell: CustomCell {
     
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

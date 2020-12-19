@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AmountCell.swift
 //  
 //
 //  Created by Moritz Schaub on 05.10.20.

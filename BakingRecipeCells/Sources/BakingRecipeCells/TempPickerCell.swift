@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 13, *)
 public class TempPickerCell: CustomCell {
     
     ///currently selected Date
@@ -34,7 +33,6 @@ public class TempPickerCell: CustomCell {
     }
 }
 
-@available(iOS 13, *)
 private extension TempPickerCell {
     
     func configureTempPicker() {
@@ -57,8 +55,6 @@ private extension TempPickerCell {
     
 }
 
-
-@available(iOS 13, *)
 extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1

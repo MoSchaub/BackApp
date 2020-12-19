@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ImageCell.swift
 //  
 //
 //  Created by Moritz Schaub on 06.10.20.
@@ -8,7 +8,6 @@
 import UIKit
 import BakingRecipeUIFoundation
 
-@available(iOS 13, *)
 public class ImageCell: CustomCell {
     
      public init(reuseIdentifier: String?, data: Data?) {

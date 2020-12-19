@@ -10,7 +10,6 @@ import BakingRecipeUIFoundation
 import BakingRecipeStrings
 import BakingRecipeItems
 
-@available(iOS 13, *)
 public class InfoStripCell: CustomCell {
     
     struct InfoStrip: View {

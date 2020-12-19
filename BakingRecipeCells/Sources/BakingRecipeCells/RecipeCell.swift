@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  RecipeCell.swift
 //  
 //
 //  Created by Moritz Schaub on 05.10.20.
@@ -8,7 +8,6 @@
 import UIKit
 import BakingRecipeUIFoundation
 
-@available(iOS 13, *)
 public class RecipeCell: CustomCell {
     
     public var name: String
@@ -45,7 +44,6 @@ public class RecipeCell: CustomCell {
 
 }
 
-@available(iOS 13, *)
 private extension RecipeCell {
     func makeImageAccesory() -> UIImageView? {
         guard let imageData = imageData else {

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TextViewCell.swift
 //  
 //
 //  Created by Moritz Schaub on 06.10.20.
@@ -8,7 +8,6 @@
 import SwiftUI
 import BakingRecipeStrings
 
-@available(iOS 13, *)
 public class TextViewCell: CustomCell {
     
     /// text of the textView
@@ -39,7 +38,6 @@ public class TextViewCell: CustomCell {
     
 }
 
-@available(iOS 13, *)
 private extension TextViewCell {
     
     func configureTextView() {
@@ -110,7 +108,6 @@ private extension TextViewCell {
 }
 
 
-@available(iOS 13, *)
 extension TextViewCell: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {

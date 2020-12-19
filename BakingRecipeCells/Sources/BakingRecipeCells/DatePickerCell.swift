@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DatePickerCell.swift
 //  
 //
 //  Created by Moritz Schaub on 05.10.20.
@@ -19,7 +19,6 @@ public extension UILabel {
     }
 }
 
-@available(iOS 13, *)
 public class DatePickerCell: CustomCell {
     
     ///currently selected Date
@@ -46,7 +45,6 @@ public class DatePickerCell: CustomCell {
     }
 }
 
-@available(iOS 13, *)
 private extension DatePickerCell {
     
     /// sets the date picker up
@@ -66,7 +64,7 @@ private extension DatePickerCell {
         setUpDatePickerConstraints()
     }
     
-    //sets constraints for picker 
+    //sets constraints for picker
     private func setUpDatePickerConstraints() {
         datePicker.fillSuperview()
     }
@@ -103,7 +101,6 @@ public class TimePickerCell: CustomCell {
     }
 }
 
-@available(iOS 13, *)
 private extension TimePickerCell {
     
     /// sets the date picker up

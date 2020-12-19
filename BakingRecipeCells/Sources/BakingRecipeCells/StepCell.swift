@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  StepCell.swift
 //  
 //
 //  Created by Moritz Schaub on 05.10.20.
@@ -8,8 +8,6 @@
 import SwiftUI
 import BakingRecipeFoundation
 
-
-@available(iOS 13, *)
 public class StepCell: DetailCell {
     
     private var step: Step

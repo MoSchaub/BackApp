@@ -1,6 +1,6 @@
 //
 //  StepRow.swift
-//  BrotApp2
+//
 //
 //  Created by Moritz Schaub on 13.04.20.
 //  Copyright © 2020 Moritz Schaub. All rights reserved.

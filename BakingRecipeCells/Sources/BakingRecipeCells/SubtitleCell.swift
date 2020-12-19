@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SubtitleCell.swift
 //  
 //
 //  Created by Moritz Schaub on 06.10.20.
@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 13, *)
 public class SubtitleCell: CustomCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
