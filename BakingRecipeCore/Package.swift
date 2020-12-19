@@ -25,7 +25,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(name: Strings.bakingRecipeFoundationName, path: Strings.bakingRecipeFoundationUrl),
-        .package(name: "BakingRecipeStrings", path: "/Users/moritzschaub/Developer/Swift/ios/BakingRecipeStrings"),
+        .package(name: "BakingRecipeStrings", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeStrings"),
         .package(name: "BakingRecipeItems", path: "/Users/moritzschaub/Developer/Swift/ios/BakingRecipeItems")
     ],
     targets: [
