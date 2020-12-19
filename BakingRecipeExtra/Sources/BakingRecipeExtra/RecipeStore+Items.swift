@@ -8,6 +8,7 @@
 import BakingRecipeItems
 import BakingRecipeCore
 import BakingRecipeFoundation
+import BakingRecipeStrings
 
 @available(iOS 13, *)
 public extension RecipeStore {

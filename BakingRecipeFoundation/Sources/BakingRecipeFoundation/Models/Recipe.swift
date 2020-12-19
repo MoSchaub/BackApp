@@ -15,6 +15,7 @@ public var dateFormatter: DateFormatter{
     return formatter
 }
 
+@available(OSX 10.12, *)
 @available(iOS 10.0, *)
 var isoFormatter = ISO8601DateFormatter()
 
