@@ -248,11 +248,8 @@ extension StepDetailViewController {
         for possibleSubstep in possibleSubsteps {
             actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
                 //self.step.subSteps.append(possibleSubstep)
-                if self.recipe.add(substep: possibleSubstep, to: self.step).success {
-                    self.updateList(animated: false)
-                } else {
-                    //TODO: Present error
-                }
+                self.step.subSteps.append(possibleSubstep)
+                self.updateList(animated: false)
             }))
         }
         

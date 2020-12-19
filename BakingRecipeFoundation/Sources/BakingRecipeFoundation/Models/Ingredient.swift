@@ -8,17 +8,30 @@
 
 import Foundation
 import BakingRecipeStrings
+import Sqlable
 
+///Ingredient in the Recipe
 public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     
+    /// diffrent styles of ingredients
+    /// - NOTE: raw value is their c
     public enum Style: Double, CaseIterable, Codable {
         
+        /// water or something similar
         case bulkLiquid = 4.187
+        
+        /// some kind of flour
         case flour = 1.465
+        
+        /// starter around 50% hydration
         case ta150 = 1.5
+        
+        /// starter with around 100% hydration
         case ta200 = 2.0
+        
+        /// other ingredients
         case other = 1.0 //to be changed
-
+        
         public var name: String {
             switch self {
             case .bulkLiquid: return Strings.bulkLiquid
@@ -30,85 +43,126 @@ public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
         }
     }
     
-    public var id: String
+    ///id of the ingredient, is counted up incrementally
+    public var id: Int
     
+    /// name of the ingredient
+    ///- NOTE: Should only be used when the name is modified. Use formattedNameInstead
     public var name: String
     
-    public var themperature: Int?
+    /// temp the ingredient should have
+    /// - NOTE: The temperature only has a value if the ingredient is a bulkLiquid
+    public var temperature: Int?
     
+    /// amount of the ingredient
     public var amount: Double
     
-    public var type: Style
+    ///speciphic temperature capacity of the ingredient
+    private var c: Double
     
-    public var formattedAmount: String{
-        Self.formattedAmount(for: self.amount)
+}
+
+public extension Ingredient {
+    
+    private struct Formatter {
+        static public func formattedAmount(for amount: Double) -> String{
+            if amount >= 1000{
+                return "\(amount/1000)" + " Kg"
+            } else if amount < 0.1, amount != 0 {
+                return "\(amount * 1000)" + " mg"
+            } else {
+                return "\(amount)" + " g"
+            }
+        }
+        
+        static public func amountFactor(from rest: String) -> Double{
+            let str = rest.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            switch str {
+            case "kg": return 1000
+            case "mg": return 0.001
+            default: return 1
+            }
+        }
     }
     
-    public var formattedName: String {
+    /// the name of the ingredient
+    ///- NOTE: This name should be used whenever you need to only show the name
+    var formattedName: String {
         name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedIngredient : name
     }
     
-    public var c: Double {
-        type.rawValue
+    /// type of the recipe
+    var type: Style {
+        get{
+            return Style.allCases.first(where: {$0.rawValue == self.c} ) ?? Style.other
+        }
+        set {
+            self.c = newValue.rawValue
+        }
     }
     
-    mutating public func formatted(rest: String) -> String{
-        let previousFactor = amountFactor(from: rest)
+    ///amount of the ingredient formatted with the right unit
+    var formattedAmount: String{
+        Formatter.formattedAmount(for: self.amount)
+    }
+    
+    /// updates the amount
+    mutating func formatted(rest: String) -> String{
+        let previousFactor = Formatter.amountFactor(from: rest)
         self.amount *= previousFactor
         return self.formattedAmount
     }
     
-    static public func formattedAmount(for amount: Double) -> String{
-        if amount >= 1000{
-            return "\(amount/1000)" + " Kg"
-        } else if amount < 0.1, amount != 0 {
-            return "\(amount * 1000)" + " mg"
-        } else {
-            return "\(amount)" + " g"
-        }
+    ///amount of the ingredient formatted with the right unit and scaled with the scale Factor provided by the recipe
+    func scaledFormattedAmount(with factor: Double) -> String{
+        Formatter.formattedAmount(for: self.amount * factor)
     }
     
-    private func amountFactor(from rest: String) -> Double{
-        let str = rest.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .whitespacesAndNewlines)
-        switch str {
-        case "Kg": return 1000
-        case "kg": return 1000
-        case "mg": return 0.001
-        default: return 1
-        }
-    }
-    
-    public func scaledFormattedAmount(with factor: Double) -> String{
-        Self.formattedAmount(for: self.amount * factor)
-    }
-    
-    public init(name: String, amount: Double, type: Style ) {
-        self.id = UUID().uuidString
+    //initializer
+    init(id: Int, name: String, amount: Double, type: Style ) {
+        self.id = id
         self.name = name
         self.amount = amount
-        self.type = type
+        self.c = type.rawValue
     }
     
-    enum CodingKeys: CodingKey{
-        case name
-        case amount
-        case type
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = UUID().uuidString
-        self.name = try container.decode(String.self, forKey: .name)
-        self.amount = try container.decode(Double.self, forKey: .amount)
-        self.type = try container.decodeIfPresent(Style.self, forKey: .type) ?? .other
-    }
-    
-    public static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
-        return
-            lhs.name == rhs.name &&
-            lhs.amount == rhs.amount &&
-        lhs.type == rhs.type
-    }
 }
 
-
+extension Ingredient: SqlableProtocol {
+    
+    // create columns for the sql database
+    static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
+    static let name = Column("name", .text)
+    static let temperature = Column("temperature", .integer)
+    static let amount = Column("amount", .real)
+    static let c = Column("c", .real)
+    public static var tableLayout: [Column] = [id, name, temperature, amount, c]
+    
+    
+    //get values from columns
+    public func valueForColumn(_ column: Column) -> SqlValue? {
+        switch column {
+        case Ingredient.id:
+            return self.id
+        case Ingredient.name:
+            return self.name
+        case Ingredient.temperature:
+            return self.temperature
+        case Ingredient.amount:
+            return self.amount
+        case Ingredient.c:
+            return self.c
+        default:
+            return nil
+        }
+    }
+    
+    // init ingredient from database
+    public init(row: ReadRow) throws {
+        id = try row.get(Ingredient.id)
+        name = try row.get(Ingredient.name)
+        temperature = try? row.get(Ingredient.temperature)
+        amount = try row.get(Ingredient.amount)
+        c = try row.get(Ingredient.c) ?? Style.other.rawValue
+    }
+}

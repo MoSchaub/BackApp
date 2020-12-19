@@ -9,6 +9,7 @@
 import SwiftUI
 import MobileCoreServices
 import BakingRecipeCore
+import BakingRecipeExtra
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
