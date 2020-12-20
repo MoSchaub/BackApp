@@ -6,6 +6,34 @@
 //  Copyright © 2019 Moritz Schaub. All rights reserved.
 //
 
+import Sqlable
+
+public struct Recipe {
+    public var id: Int
+    
+}
+
+extension Recipe: Sqlable {
+    
+    static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
+    public static var tableLayout: [Column] = [id]
+    
+    public func valueForColumn(_ column: Column) -> SqlValue? {
+        switch column {
+        case Recipe.id:
+            return self.id
+        default:
+            return nil
+        }
+    }
+    
+    public init(row: ReadRow) throws {
+        self.id = try row.get(Recipe.id)
+    }
+    
+    
+}
+
 //import Foundation
 //import BakingRecipeStrings
 //

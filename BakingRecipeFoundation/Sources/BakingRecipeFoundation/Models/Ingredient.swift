@@ -54,8 +54,8 @@ public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
     /// - NOTE: The temperature only has a value if the ingredient is a bulkLiquid
     public var temperature: Int?
     
-    /// amount of the ingredient
-    public var amount: Double
+    /// mass of the ingredient
+    public var mass: Double
     
     ///speciphic temperature capacity of the ingredient
     private var c: Double
@@ -66,27 +66,6 @@ public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
 }
 
 public extension Ingredient {
-    
-    private struct Formatter {
-        static public func formattedAmount(for amount: Double) -> String{
-            if amount >= 1000{
-                return "\(amount/1000)" + " Kg"
-            } else if amount < 0.1, amount != 0 {
-                return "\(amount * 1000)" + " mg"
-            } else {
-                return "\(amount)" + " g"
-            }
-        }
-        
-        static public func amountFactor(from rest: String) -> Double{
-            let str = rest.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .decimalDigits).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            switch str {
-            case "kg": return 1000
-            case "mg": return 0.001
-            default: return 1
-            }
-        }
-    }
     
     /// the name of the ingredient
     ///- NOTE: This name should be used whenever you need to only show the name
@@ -106,42 +85,42 @@ public extension Ingredient {
     
     ///amount of the ingredient formatted with the right unit
     var formattedAmount: String{
-        Formatter.formattedAmount(for: self.amount)
+        MassFormatter.formattedMass(for: self.mass)
     }
     
     /// updates the amount
     mutating func formatted(rest: String) -> String{
-        let previousFactor = Formatter.amountFactor(from: rest)
-        self.amount *= previousFactor
+        let previousFactor = MassFormatter.massFactor(from: rest)
+        self.mass *= previousFactor
         return self.formattedAmount
     }
     
     ///amount of the ingredient formatted with the right unit and scaled with the scale Factor provided by the recipe
     func scaledFormattedAmount(with factor: Double) -> String{
-        Formatter.formattedAmount(for: self.amount * factor)
+        MassFormatter.formattedMass(for: self.mass * factor)
     }
     
     //initializer
     init(stepId: Int, id: Int, name: String, amount: Double, type: Style ) {
         self.id = id
         self.name = name
-        self.amount = amount
+        self.mass = amount
         self.c = type.rawValue
         self.stepId = stepId
     }
     
 }
 
-extension Ingredient: SqlableProtocol {
+extension Ingredient: Sqlable {
     
     // create columns for the sql database
     static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
     static let name = Column("name", .text)
     static let temperature = Column("temperature", .integer)
-    static let amount = Column("amount", .real)
+    static let mass = Column("mass", .real)
     static let c = Column("c", .real)
     static let stepId = Column("stepId", .integer, ForeignKey<Step>())
-    public static var tableLayout: [Column] = [id, name, temperature, amount, c]
+    public static var tableLayout: [Column] = [id, name, temperature, mass, c]
     
     
     //get values from columns
@@ -153,8 +132,8 @@ extension Ingredient: SqlableProtocol {
             return self.name
         case Ingredient.temperature:
             return self.temperature
-        case Ingredient.amount:
-            return self.amount
+        case Ingredient.mass:
+            return self.mass
         case Ingredient.c:
             return self.c
         case Ingredient.stepId:
@@ -170,7 +149,7 @@ extension Ingredient: SqlableProtocol {
         id = try row.get(Ingredient.id)
         name = try row.get(Ingredient.name)
         temperature = try? row.get(Ingredient.temperature)
-        amount = try row.get(Ingredient.amount)
+        mass = try row.get(Ingredient.mass)
         c = try row.get(Ingredient.c) ?? Style.other.rawValue
     }
 }

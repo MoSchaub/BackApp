@@ -9,25 +9,25 @@ import Foundation
 import BakingRecipeStrings
 
 extension Int {
-    var formattedTime: String {
+    var formattedDuration: String {
         let hours = self / 60
         let minutes = self % 60
         if self == 1 {
             return Strings.one + " " + Strings.minute
         } else {
             if hours > 1 {
-                return "\(hours) " + formattedTimeAddition(for: hours, hours: true) + " " + (minutes > 0 ? minutes
-                .formattedTime : "")
+                return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + (minutes > 0 ? minutes
+                .formattedDuration : "")
             } else if hours == 1 {
-                return "\(hours) " + formattedTimeAddition(for: hours, hours: true) + " " + minutes.formattedTime
+                return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutes.formattedDuration
             } else {
-                return "\(minutes) " + formattedTimeAddition(for: minutes)
+                return "\(minutes) " + formattedDurationUnit(for: minutes)
             }
         }
     }
 }
 
-fileprivate func formattedTimeAddition(for time: Int, hours: Bool = false) -> String{
+fileprivate func formattedDurationUnit(for time: Int, hours: Bool = false) -> String{
     if hours {
         if time == 1 {
             return Strings.hour
