@@ -12,167 +12,200 @@ import Sqlable
 
 public struct Step: Equatable, Identifiable, Hashable, Codable {
     
-    /// id of the step
+    /// unique id of the step
     public var id: Int
-    public var name: String
-    public var duration: TimeInterval
-    public var temperature: Int
-    public var notes: String
+    
+    /// name of the step
+    ///- NOTE: Should only be used to set not to get. Use formatted name instead
+    public var name: String = ""
+    
+    /// how long the step takes
+    public var duration: TimeInterval = 60
+    
+    /// what the temp of the step is
+    ///- NOTE: This is only not nil if the temp is something different from the room temperature
+    public var temperature: Int? = nil
+    
+    /// some notes you can attach
+    public var notes: String = ""
+    
+    /// the id of the recipe the step is in
     public var recipeId: Int
-    public var superStepId: Int?
     
-    
-    public init(id: Int, name: String = "", duration: TimeInterval = 60, themperature: Int = 20, notes: String = "", superStepId: Int? = nil, recipeId: Int) {
-        self.id = id
-        self.name = name
-        self.duration = duration
-        self.temperature = themperature
-        self.notes = notes
-        self.superStepId = superStepId
-        self.recipeId = recipeId
-    }
+    /// the id of the superstep
+    ///- NOTE: optional because a step can be without a superstep
+    public var superStepId: Int? = nil
     
 }
 
 public extension Step {
     
-//    private var ingredients: [Ingredient] {
-//        return (try? Ingredient.read().filter(Ingredient.stepId == self.id).run(database)) ?? []
-//    }
-//
-//    private var substeps: [Step] {
-//        return (try? Step.read().filter(Step.superStepId == self.id).run(database)) ?? []
-//    }
+    /// ingredients of the step
+    private func ingredients(db: SqliteDatabase) -> [Ingredient] {
+        return (try? Ingredient.read().filter(Ingredient.stepId == self.id).run(db)) ?? []
+    }
     
-    // the duration of the step formatted with the right unit
+    /// the substeps from the database that have this step as their superstep
+    private var substepsRead: Statement<Step, [Step]>? {
+        Step.read().filter(Step.superStepId == self.id)
+    }
+    
+    /// substeps of this step
+    func substeps(db: SqliteDatabase) -> [Step] {
+        return (try? substepsRead?.run(db)) ?? []
+    }
+    
+    /// substep of this step sorted descending by their duration
+    func sortedSubsteps(db: SqliteDatabase) -> [Step] {
+        return (try? substepsRead?.orderBy(Step.duration, .desc).run(db)) ?? []
+    }
+    
+    /// substeps ordered by their duration in descending order + this step
+    /// this order makes the most sense when doing the substeps and this step
+    /// because the substeps are parrallel and so the longest one has to start first.
+    func stepsForReodering(db: SqliteDatabase) -> [Step] {
+        var steps = [Step]()
+        for sub in sortedSubsteps(db: db) {
+            steps.append(contentsOf: sub.stepsForReodering(db: db))
+        }
+        steps.append(self)
+        
+        return steps
+    }
+    
+    /// duration of the step formatted with the right unit
     var formattedDuration: String{
         Int(duration/60).formattedDuration
     }
     
     /// the temperature of the step formatted with Celsius
-    var formattedTemp: String{
-        return String(self.temperature) + " °C"
+    func formattedTemp(roomTemp: Int) -> String{
+        return String(self.temperature ?? roomTemp) + " °C"
     }
     
     /// name of the step
-    ///- NOTE:should be used for displaying the name. For changing the name use name instead
+    ///- NOTE:should be used for displaying the name. For changing the name use name instead.
     var formattedName: String {
         name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedStep : name
     }
     
-//    /// the mass of all Ingredients and Substeps to this step in a given database
-//    var totalMass: Double{
-//        var mass = 0.0
-//
-//        for ingredient in ingredients{
-//            mass += ingredient.mass
-//        }
-//        for substep in substeps {
-//            mass += substep.totalMass
-//        }
-//
-//        return mass
-//    }
-//
-//    /// the mass of all ingredients and substeps formatted with the right unit
-//    var totalFormattedMass: String {
-//        MassFormatter.formattedMass(for: self.totalMass)
-//    }
+    /// the mass of all Ingredients and Substeps to this step in a given database
+    func totalMass(db: SqliteDatabase) -> Double{
+        var mass = 0.0
+        
+        for ingredient in ingredients(db: db) {
+            mass += ingredient.mass
+        }
+        for substep in substeps(db: db) {
+            mass += substep.totalMass(db: db)
+        }
+        
+        return mass
+    }
     
-//    ///Themperature for bulk liquids so the step has the right Temperature
-//    func themperature(for ingredient: Ingredient, roomThemperature: Int) -> Int {
-//
-//        let sumMassCProductAll = self.sumMassCProduct(data: ingredients.map { ($0.amount, $0.c)} + subSteps.map { ($0.totalAmount, $0.c)} )
-//        let tKnet = 0
-//        let sumMassCProductRest = sumMassCTempProduct(data: ingredients.filter { $0 != ingredient }.map { ($0.amount, $0.c, Double(roomThemperature)) } + subSteps.map { ($0.totalAmount, $0.c, Double($0.temperature))})
-//        return Int(((sumMassCProductAll * Double(self.temperature - tKnet)) - sumMassCProductRest)/(ingredient.amount * ingredient.c))
-//    }
+    /// the mass of all ingredients and substeps formatted with the right unit
+    func totalFormattedMass(db: SqliteDatabase) -> String {
+        MassFormatter.formattedMass(for: self.totalMass(db: db))
+    }
     
+    /// temperature for bulk liquids so the step has the right Temperature
+    func themperature(for ingredient: Ingredient, roomThemperature: Int, db: SqliteDatabase) -> Int {
+        
+        let sumMassCProductAll = self.sumMassCProduct(data: ingredients(db: db).map { ($0.mass, $0.type.rawValue)} + substeps(db: db).map { ($0.totalMass(db: db), $0.c(db: db))} )
+        let tKnet = 0
+        
+        let sumMassCProductRest = sumMassCTempProduct(data:
+                                                        ingredients(db: db).filter { $0 != ingredient }
+                                                        .map { ($0.mass, $0.type.rawValue, Double(roomThemperature)) } +
+                                                        substeps(db: db).map { ($0.totalMass(db: db), $0.c(db: db), Double($0.temperature ?? roomThemperature)) }
+        )
+        return Int(((sumMassCProductAll * Double((self.temperature ?? roomThemperature) - tKnet)) - sumMassCProductRest)/(ingredient.mass * ingredient.type.rawValue))
+    }
     
-//    private var c: Double{
-//        let percentageFlour = flourAmount/totalAmount
-//        let percentageWater = waterAmount/totalAmount
-//        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue
-//        //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
-//    }
+    /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
+    private func c(db: SqliteDatabase) -> Double {
+        let percentageFlour = flourMass(db: db)/totalMass(db: db)
+        let percentageWater = waterMass(db: db)/totalMass(db: db)
+        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue
+        //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
+    }
     
-//    /// total mass of flour in the step
-//    private var flourMass: Double {
-//        var mass = 0.0
-//        _ = ingredients.filter { $0.type == .flour }.map { mass += $0.mass}
-//        _ = substeps.map { mass += $0.flourMass }
-//        return mass
-//    }
-//
-//    /// total mass of water in the step
-//    private var waterMass: Double {
-//        var mass = 0.0
-//        _ = ingredients.filter { $0.type == .bulkLiquid }.map { mass += $0.mass}
-//        _ = substeps.map { mass += $0.waterMass }
-//        return mass
-//    }
-    //
-    //    func sumMassCProduct(data: [(mass: Double, c: Double)]) -> Double {
-    //        var value = 0.0
-    //        for pair in data {
-    //            value += pair.mass * pair.c
-    //        }
-    //        return value;
-    //    }
-    //
-    //    func sumMassCTempProduct(data: [(mass: Double, c: Double, temp: Double)]) -> Double {
-    //        var value = 0.0
-    //        _ = data.map { value += ($0.mass * $0.c * $0.temp)}
-    //        return value
-    //    }
-    //
-    //    public func text(startDate: Date, roomTemp: Int, scaleFactor: Double) -> String{
-    //        var text = ""
-    //
-    //        for step in subSteps {
-    //            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor)
-    //        }
-    //
-    //        let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
-    //        text.append(nameString)
-    //
-    //        for ingredient in self.ingredients{
-    //            let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-    //                " \(ingredient.type == .bulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )" + "\n"
-    //            text.append(ingredientString)
-    //        }
-    //        for subStep in self.subSteps{
-    //            let substepString = subStep.formattedName + ": " + "\(self.totalAmount)" + "\(subStep.temperature)" + "° C\n"
-    //            text.append(substepString)
-    //        }
-    //        if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
-    //            text.append(self.notes + "\n")
-    //        }
-    //        return text
-    //    }
-    //
-    //    func stepsForReodering() -> [Step] {
-    //        var steps = [Step]()
-    //        for sub in self.subSteps.sorted(by: { $0.time > $1.time }) {
-    //            steps.append(contentsOf: sub.stepsForReodering())
-    //        }
-    //        steps.append(self)
-    //
-    //        return steps
-    //    }
+    /// total mass of flour in the step
+    private func flourMass(db: SqliteDatabase) -> Double {
+        var mass = 0.0
+        _ = ingredients(db: db).filter { $0.type == .flour }.map { mass += $0.mass}
+        _ = substeps(db: db).map { mass += $0.flourMass(db: db) }
+        return mass
+    }
+    
+    /// total mass of water in the step
+    private func waterMass(db: SqliteDatabase) -> Double {
+        var mass = 0.0
+        _ = ingredients(db: db).filter { $0.type == .bulkLiquid }.map { mass += $0.mass}
+        _ = substeps(db: db).map { mass += $0.waterMass(db: db) }
+        return mass
+    }
+    
+    // TODO: - migrate the following two methods to ingredient
+    
+    /// sum of mass times specific c for a given array of  tuples with mass and specific c
+    private func sumMassCProduct(data: [(mass: Double, c: Double)]) -> Double {
+        var value = 0.0
+        for pair in data {
+            value += pair.mass * pair.c
+        }
+        return value;
+    }
+    
+    /// sum of mass times specific c times temperature of a given data tuple
+    private func sumMassCTempProduct(data: [(mass: Double, c: Double, temp: Double)]) -> Double {
+        var value = 0.0
+        _ = data.map { value += ($0.mass * $0.c * $0.temp)}
+        return value
+    }
+    
+    // MARK: - text
+    
+    ///text for exporting for one step
+    func text(startDate: Date, roomTemp: Int, scaleFactor: Double, db: SqliteDatabase) -> String{
+        var text = ""
+        
+        for step in substeps(db: db) {
+            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, db: db)
+        }
+        
+        let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
+        text.append(nameString)
+        
+        for ingredient in ingredients(db: db){
+            let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
+                " \(ingredient.type == .bulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp, db: db)) + "° C" : "" )" + "\n"
+            text.append(ingredientString)
+        }
+        for subStep in substeps(db: db){
+            let substepString = subStep.formattedName + ": " + "\(totalMass(db: db))" + "\(subStep.temperature ?? roomTemp)" + "° C\n"
+            text.append(substepString)
+        }
+        if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
+            text.append(self.notes + "\n")
+        }
+        return text
+    }
 }
-    
+
 extension Step: Sqlable {
     
+    //create the columns
     static let id = Column("name", .integer, PrimaryKey(autoincrement: true))
     static let name = Column("name", .text)
     static let duration = Column("duration", .real)
     static let temperature = Column("temperature", .integer)
     static let notes = Column("notes", .text)
-    static let superStepId = Column("superStepId", .integer, ForeignKey<Step>())
+    static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>())
     static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>())
     public static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
     
+    /// value for a given column
     public func valueForColumn(_ column: Column) -> SqlValue? {
         switch column {
         case Step.id:
@@ -192,6 +225,7 @@ extension Step: Sqlable {
         }
     }
     
+    /// initialize from database
     public init(row: ReadRow) throws {
         self.recipeId = try row.get(Step.recipeId)
         self.id = try row.get(Step.id)
@@ -204,141 +238,6 @@ extension Step: Sqlable {
     
 }
 
-//import Foundation
-//import BakingRecipeStrings
-//
-//public struct Step: Equatable, Identifiable, Hashable, Codable {
-//
-//    public var id: UUID
-//    
-//    public var time : TimeInterval
-//    
-//    public var name: String
-//    
-//    public var ingredients: [Ingredient]
-//    
-//    public var temperature : Int
-//    
-//    public var notes: String
-//    
-//    public var subSteps: [Step]
-//    
-//    public init(name: String = "", time: TimeInterval = 60, ingredients: [Ingredient] = [], themperature: Int = 20, notes: String = "") {
-//        self.id = UUID()
-//        self.time = time
-//        self.name = name
-//        self.ingredients = ingredients
-//        self.temperature = themperature
-//        self.notes = notes
-//        self.subSteps = []
-//    }
-//    
-//    public var formattedTime: String{
-//        Int(time/60).formattedTime
-//    }
-//    
-//    public var formattedTemp: String{
-//        return String(self.temperature) + " °C"
-//    }
-//    
-//    public var formattedName: String {
-//        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedStep : name
-//    }
-//    
-//    public var totalAmount: Double{
-//        var amount = 0.0
-//        for ingredient in self.ingredients{
-//            amount += ingredient.amount
-//        }
-//        for substep in self.subSteps {
-//            amount += substep.totalAmount
-//        }
-//        return amount
-//    }
-//    
-//    public var totalFormattedAmount: String{
-//        Ingredient.formattedAmount(for: self.totalAmount)
-//    }
-//    
-//    
-//    ///Themperature for bulk liquids so the step has the right Temperature
-//    public func themperature(for ingredient: Ingredient, roomThemperature: Int) -> Int {
-//        
-//        let sumMassCProductAll = self.sumMassCProduct(data: ingredients.map { ($0.amount, $0.c)} + subSteps.map { ($0.totalAmount, $0.c)} )
-//        let tKnet = 0
-//        let sumMassCProductRest = sumMassCTempProduct(data: ingredients.filter { $0 != ingredient }.map { ($0.amount, $0.c, Double(roomThemperature)) } + subSteps.map { ($0.totalAmount, $0.c, Double($0.temperature))})
-//        return Int(((sumMassCProductAll * Double(self.temperature - tKnet)) - sumMassCProductRest)/(ingredient.amount * ingredient.c))
-//    }
-//    
-//    private var c: Double{
-//        let percentageFlour = flourAmount/totalAmount
-//        let percentageWater = waterAmount/totalAmount
-//        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue
-//        //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
-//    }
-//    
-//    private var flourAmount: Double {
-//        var amount = 0.0
-//        _ = ingredients.filter { $0.type == .flour }.map { amount += $0.amount}
-//        _ = subSteps.map { amount += $0.flourAmount }
-//        return amount
-//    }
-//    
-//    private var waterAmount: Double {
-//        var amount = 0.0
-//        _ = ingredients.filter { $0.type == .bulkLiquid }.map { amount += $0.amount}
-//        _ = subSteps.map { amount += $0.waterAmount }
-//        return amount
-//    }
-//    
-//    func sumMassCProduct(data: [(mass: Double, c: Double)]) -> Double {
-//        var value = 0.0
-//        for pair in data {
-//            value += pair.mass * pair.c
-//        }
-//        return value;
-//    }
-//    
-//    func sumMassCTempProduct(data: [(mass: Double, c: Double, temp: Double)]) -> Double {
-//        var value = 0.0
-//        _ = data.map { value += ($0.mass * $0.c * $0.temp)}
-//        return value
-//    }
-//    
-//    public func text(startDate: Date, roomTemp: Int, scaleFactor: Double) -> String{
-//        var text = ""
-//        
-//        for step in subSteps {
-//            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor)
-//        }
-//        
-//        let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
-//        text.append(nameString)
-//        
-//        for ingredient in self.ingredients{
-//            let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-//                " \(ingredient.type == .bulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp)) + "° C" : "" )" + "\n"
-//            text.append(ingredientString)
-//        }
-//        for subStep in self.subSteps{
-//            let substepString = subStep.formattedName + ": " + "\(self.totalAmount)" + "\(subStep.temperature)" + "° C\n"
-//            text.append(substepString)
-//        }
-//        if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
-//            text.append(self.notes + "\n")
-//        }
-//        return text
-//    }
-//    
-//    func stepsForReodering() -> [Step] {
-//        var steps = [Step]()
-//        for sub in self.subSteps.sorted(by: { $0.time > $1.time }) {
-//            steps.append(contentsOf: sub.stepsForReodering())
-//        }
-//        steps.append(self)
-//        
-//        return steps
-//    }
 //    
 //    //MARK: init from Json and ==
 //    
