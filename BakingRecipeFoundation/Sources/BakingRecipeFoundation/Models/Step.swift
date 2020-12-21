@@ -111,14 +111,16 @@ public extension Step {
     /// temperature for bulk liquids so the step has the right Temperature
     func themperature(for ingredient: Ingredient, roomThemperature: Int, db: SqliteDatabase) -> Int {
         
-        let sumMassCProductAll = self.sumMassCProduct(data: ingredients(db: db).map { ($0.mass, $0.type.rawValue)} + substeps(db: db).map { ($0.totalMass(db: db), $0.c(db: db))} )
+        var sumMassCProductAll = 0.0
+        _ = ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
+        _ = substeps(db: db).map { sumMassCProductAll += $0.massCProduct(db: db) }
+        
         let tKnet = 0
         
-        let sumMassCProductRest = sumMassCTempProduct(data:
-                                                        ingredients(db: db).filter { $0 != ingredient }
-                                                        .map { ($0.mass, $0.type.rawValue, Double(roomThemperature)) } +
-                                                        substeps(db: db).map { ($0.totalMass(db: db), $0.c(db: db), Double($0.temperature ?? roomThemperature)) }
-        )
+        var sumMassCProductRest = 0.0
+        _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomThemperature) }
+        _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomThemperature)}
+        
         return Int(((sumMassCProductAll * Double((self.temperature ?? roomThemperature) - tKnet)) - sumMassCProductRest)/(ingredient.mass * ingredient.type.rawValue))
     }
     
@@ -146,25 +148,13 @@ public extension Step {
         return mass
     }
     
-    // TODO: - migrate the following two methods to ingredient
-    
-    /// sum of mass times specific c for a given array of  tuples with mass and specific c
-    private func sumMassCProduct(data: [(mass: Double, c: Double)]) -> Double {
-        var value = 0.0
-        for pair in data {
-            value += pair.mass * pair.c
-        }
-        return value;
+    private func massCProduct(db: SqliteDatabase) -> Double {
+        self.totalMass(db: db) * self.c(db: db)
     }
     
-    /// sum of mass times specific c times temperature of a given data tuple
-    private func sumMassCTempProduct(data: [(mass: Double, c: Double, temp: Double)]) -> Double {
-        var value = 0.0
-        _ = data.map { value += ($0.mass * $0.c * $0.temp)}
-        return value
+    private func massCTempProduct(db: SqliteDatabase, roomTemp: Int) -> Double {
+        return massCProduct(db: db) * Double(self.temperature ?? roomTemp)
     }
-    
-    // MARK: - text
     
     ///text for exporting for one step
     func text(startDate: Date, roomTemp: Int, scaleFactor: Double, db: SqliteDatabase) -> String{

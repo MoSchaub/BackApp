@@ -100,6 +100,14 @@ public extension Ingredient {
         MassFormatter.formattedMass(for: self.mass * factor)
     }
     
+    var massCProduct: Double {
+        mass * c
+    }
+    
+    func massCTempProduct(roomTemp: Int) -> Double {
+        self.massCProduct * Double(temperature ?? roomTemp)
+    }
+    
     //initializer
     init(stepId: Int, id: Int, name: String, amount: Double, type: Style ) {
         self.id = id
