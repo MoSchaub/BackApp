@@ -10,7 +10,7 @@ import Sqlable
 import Foundation
 import BakingRecipeStrings
 
-public struct Recipe: Hashable, Codable, Identifiable, Equatable {
+public struct Recipe: Hashable, Codable, Identifiable, Equatable, Sqlable {
     
     /// id of the recipe
     public var id: Int
@@ -133,6 +133,7 @@ public extension Recipe {
         dateFormatter.string(from: endDate(db: db))
     }
     
+    /// formatted Datetext including start and end Text e. g. "Start: 01.01. 1970 18:00"
     func formattedDate(db: SqliteDatabase) -> String {
         if inverted {
             return "\(Strings.end) \(formattedEndDate(db: db))"
@@ -261,7 +262,7 @@ public extension Recipe {
 
 
 //- MARK: - Sqlable
-extension Recipe: Sqlable {
+public extension Recipe {
     
     //create columns
     static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
@@ -275,10 +276,10 @@ extension Recipe: Sqlable {
     static let imageData = Column("imageData", .nullable(.text))
     
     //create tableLayout from columns
-    public static var tableLayout: [Column] = [id, name, info, isFavorite, difficulty, inverted, times, date, imageData]
+    static var tableLayout: [Column] = [id, name, info, isFavorite, difficulty, inverted, times, date, imageData]
     
     ///get value from column
-    public func valueForColumn(_ column: Column) -> SqlValue? {
+    func valueForColumn(_ column: Column) -> SqlValue? {
         switch column {
         case Recipe.id:
             return self.id
@@ -304,7 +305,7 @@ extension Recipe: Sqlable {
     }
     
     /// initalizer from database
-    public init(row: ReadRow) throws {
+    init(row: ReadRow) throws {
         self.id = try row.get(Recipe.id)
         self.name = try row.get(Recipe.name)
         self.info = try row.get(Recipe.info)

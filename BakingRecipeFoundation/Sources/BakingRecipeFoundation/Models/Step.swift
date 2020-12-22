@@ -10,7 +10,7 @@ import Foundation
 import BakingRecipeStrings
 import Sqlable
 
-public struct Step: Equatable, Identifiable, Hashable, Codable {
+public struct Step: Equatable, Identifiable, Hashable, Codable, Sqlable  {
     
     /// unique id of the step
     public var id: Int
@@ -183,7 +183,8 @@ public extension Step {
     }
 }
 
-extension Step: Sqlable {
+// MARK - Sqlable
+public extension Step{
     
     //create the columns
     static let id = Column("name", .integer, PrimaryKey(autoincrement: true))
@@ -193,10 +194,10 @@ extension Step: Sqlable {
     static let notes = Column("notes", .text)
     static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>())
     static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>())
-    public static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
+    static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
     
     /// value for a given column
-    public func valueForColumn(_ column: Column) -> SqlValue? {
+    func valueForColumn(_ column: Column) -> SqlValue? {
         switch column {
         case Step.id:
             return self.id
@@ -216,7 +217,7 @@ extension Step: Sqlable {
     }
     
     /// initialize from database
-    public init(row: ReadRow) throws {
+    init(row: ReadRow) throws {
         self.recipeId = try row.get(Step.recipeId)
         self.id = try row.get(Step.id)
         self.name = try row.get(Step.name)

@@ -167,6 +167,7 @@
 		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
 		CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
 		CDBDFDD524AA96A4002A6C84 /* StepTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTempTableViewController.swift; sourceTree = "<group>"; };
+		CDDFC21E2591087B00B497AE /* BackAppCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppCore; sourceTree = "<group>"; };
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -248,6 +249,7 @@
 				CD285D21258E412200813A4C /* BakingRecipeExtra */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CD8A742A258E39CD0039C1BF /* BakingRecipeCore */,
+				CDDFC21E2591087B00B497AE /* BackAppCore */,
 				CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */,
 				CD1B6A182483F7FF00597931 /* Default-568h@2x.png */,
 				CD75BFC824629961005C902A /* bread.png */,

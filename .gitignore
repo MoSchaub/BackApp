@@ -33,3 +33,4 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 BackApp.xcodeproj/project.xcworkspace/xcuserdata/moritzschaub.xcuserdatad/UserInterfaceState.xcuserstate
+.DS_Store
