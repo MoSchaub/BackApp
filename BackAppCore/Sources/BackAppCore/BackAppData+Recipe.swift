@@ -96,6 +96,13 @@ public extension BackAppData {
         }
     }
     
+    ///text for exporting
+    func text(for recipeId: Int, roomTemp: Int, scaleFactor: Double) -> String {
+        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
+            return recipe.text(roomTemp: roomTemp, scaleFactor: scaleFactor, db: database)
+        }
+    }
+    
     ///steps that are no substeps of any other step
     func notSubsteps(for recipeId: Int) -> [Step] {
         findRecipeAndReturnAttribute(for: recipeId, failValue: []) { recipe in
