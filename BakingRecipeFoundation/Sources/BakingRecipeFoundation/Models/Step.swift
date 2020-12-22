@@ -74,7 +74,7 @@ public extension Step {
     }
     
     /// duration of the step formatted with the right unit
-    var formattedDuration: String{
+    var formattedDuration: String {
         Int(duration/60).formattedDuration
     }
     
@@ -109,7 +109,7 @@ public extension Step {
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
-    func themperature(for ingredient: Ingredient, roomThemperature: Int, db: SqliteDatabase) -> Int {
+    func temperature(for ingredient: Ingredient, roomTemp: Int, db: SqliteDatabase) -> Int {
         
         var sumMassCProductAll = 0.0
         _ = ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
@@ -118,10 +118,10 @@ public extension Step {
         let tKnet = 0
         
         var sumMassCProductRest = 0.0
-        _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomThemperature) }
-        _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomThemperature)}
+        _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
+        _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomTemp)}
         
-        return Int(((sumMassCProductAll * Double((self.temperature ?? roomThemperature) - tKnet)) - sumMassCProductRest)/(ingredient.mass * ingredient.type.rawValue))
+        return Int(((sumMassCProductAll * Double((self.temperature ?? roomTemp) - tKnet)) - sumMassCProductRest)/(ingredient.mass * ingredient.type.rawValue))
     }
     
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
@@ -169,7 +169,7 @@ public extension Step {
         
         for ingredient in ingredients(db: db){
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? String(self.themperature(for: ingredient, roomThemperature: roomTemp, db: db)) + "° C" : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, db: db)) + "° C" : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in substeps(db: db){
@@ -193,7 +193,7 @@ public extension Step{
     static let temperature = Column("temperature", .integer)
     static let notes = Column("notes", .text)
     static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>())
-    static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>())
+    static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>(onDelete: .cascade, onUpdate: .ignore))
     static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
     
     /// value for a given column

@@ -36,11 +36,6 @@ public extension BackAppData {
         return successCompletion(recipe)
     }
     
-    ///all steps in a recipe
-    func steps(with recipeId: Int) -> [Step] {
-        (try? Step.read().filter(Step.recipeId == recipeId).run(database)) ?? []
-    }
-    
     ///total duration of all steps
     func totalDuration(for recipeId: Int) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
