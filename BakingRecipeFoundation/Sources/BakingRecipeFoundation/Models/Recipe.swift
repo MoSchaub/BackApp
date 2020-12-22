@@ -54,9 +54,9 @@ public extension Recipe {
     private func steps(db: SqliteDatabase) -> [Step] {
         (try? Step.read().filter(Step.recipeId == self.id).run(db)) ?? []
     }
-    
+
     ///starting date
-    private func startDate(db: SqliteDatabase) -> Date {
+    func startDate(db: SqliteDatabase) -> Date {
         if !inverted {
             return date
         } else {
@@ -65,7 +65,7 @@ public extension Recipe {
     }
     
     ///end date
-    private func endDate(db: SqliteDatabase) -> Date {
+    func endDate(db: SqliteDatabase) -> Date {
         if inverted {
             return date
         } else {
@@ -80,15 +80,6 @@ public extension Recipe {
             allTimes += Int(step.duration/60)
         }
         return allTimes
-    }
-    
-    ///number of all ingredients used in the recipe
-    func numberOfAllIngredients(db: SqliteDatabase) -> Int {
-        var counter = 0
-        for step in steps(db: db) {
-            counter += (try? Ingredient.count().filter(Ingredient.stepId == step.id).run(db)) ?? 0
-        }
-        return counter
     }
     
     // formatted text for times
@@ -112,39 +103,10 @@ public extension Recipe {
     
     //MARK: formatted Properties
     
-    ///formatted total duration in the right unit
-    func formattedTotalDuration(db: SqliteDatabase) -> String {
-        totalDuration(db: db).formattedDuration
-    }
-    
     ///formatted Name with a standart value
     ///should be used when displaying the name
     var formattedName: String {
         name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedRecipe : name
-    }
-    
-    /// startDate formatted using the dateFormatter
-    func formattedStartDate(db: SqliteDatabase) -> String {
-        dateFormatter.string(from: startDate(db: db))
-    }
-    
-    /// endDate formatted using the dateFormatter
-    func formattedEndDate(db: SqliteDatabase) -> String {
-        dateFormatter.string(from: endDate(db: db))
-    }
-    
-    /// formatted Datetext including start and end Text e. g. "Start: 01.01. 1970 18:00"
-    func formattedDate(db: SqliteDatabase) -> String {
-        if inverted {
-            return "\(Strings.end) \(formattedEndDate(db: db))"
-        } else{
-            return "\(Strings.start)) \(formattedStartDate(db: db))"
-        }
-    }
-    
-    /// combination of formattedEndDate and formattedStartDate
-    func formattedStartBisEnde(db: SqliteDatabase) -> String{
-        "\(self.formattedStartDate(db: db)) bis \n\(self.formattedEndDate(db: db))"
     }
     
     /// the startDateText for a given Step in this recipe

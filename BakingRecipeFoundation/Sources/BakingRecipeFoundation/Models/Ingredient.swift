@@ -11,7 +11,7 @@ import BakingRecipeStrings
 import Sqlable
 
 ///Ingredient in the Recipe
-public struct Ingredient: Codable, Hashable, Identifiable, Equatable{
+public struct Ingredient: Codable, Hashable, Identifiable, Equatable, Sqlable {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
@@ -119,7 +119,7 @@ public extension Ingredient {
     
 }
 
-extension Ingredient: Sqlable {
+public extension Ingredient{
     
     // create columns for the sql database
     static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
@@ -128,11 +128,11 @@ extension Ingredient: Sqlable {
     static let mass = Column("mass", .real)
     static let c = Column("c", .real)
     static let stepId = Column("stepId", .integer, ForeignKey<Step>())
-    public static var tableLayout: [Column] = [id, name, temperature, mass, c]
+    static var tableLayout: [Column] = [id, name, temperature, mass, c]
     
     
     //get values from columns
-    public func valueForColumn(_ column: Column) -> SqlValue? {
+    func valueForColumn(_ column: Column) -> SqlValue? {
         switch column {
         case Ingredient.id:
             return self.id
@@ -152,7 +152,7 @@ extension Ingredient: Sqlable {
     }
     
     // init ingredient from database
-    public init(row: ReadRow) throws {
+    init(row: ReadRow) throws {
         stepId = try row.get(Ingredient.stepId)
         id = try row.get(Ingredient.id)
         name = try row.get(Ingredient.name)

@@ -7,6 +7,7 @@
 
 import BakingRecipeFoundation
 import Sqlable
+import BakingRecipeStrings
 
 
 // MARK: - Recipes
@@ -50,42 +51,48 @@ public extension BackAppData {
     ///count of all ingredients used in the recipe
     func numberOfAllIngredients(for recipeId: Int) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
-            return recipe.numberOfAllIngredients(db: database)
+            var counter = 0
+            _ = steps(with: recipeId).map { counter += (try? Ingredient.count().filter(Ingredient.stepId == $0.id).run(database)) ?? 0 }
+            return counter
         }
     }
     
     ///formatted total duration in the right unit
     func formattedTotalDuration(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.formattedTotalDuration(db: database)
+            recipe.totalDuration(db: database).formattedDuration
         }
     }
     
     ///startDate formatted using the dateFormatter
     func formattedStartDate(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.formattedStartDate(db: database)
+            return dateFormatter.string(from: recipe.startDate(db: database))
         }
     }
     
     ///endDate formatted using the dateFormatter
     func formattedEndDate(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.formattedEndDate(db: database)
+            return dateFormatter.string(from: recipe.endDate(db: database))
         }
     }
     
     ///formatted Datetext including start and end Text e. g. “Start: 01.01. 1970 18:00”
     func formattedDate(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.formattedDate(db: database)
+            if recipe.inverted {
+                return "\(Strings.end) \(formattedEndDate(for: recipeId))"
+            } else{
+                return "\(Strings.start)) \(formattedStartDate(for: recipeId))"
+            }
         }
     }
     
     ///combination of formattedEndDate and formattedStartDate
     func formattedStartBisEnde(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.formattedStartBisEnde(db: database)
+            return "\(self.formattedStartDate(for: recipeId)) bis \n\(self.formattedEndDate(for: recipeId))"
         }
     }
     

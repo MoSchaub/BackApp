@@ -1,5 +1,5 @@
 //
-//  Int+formattedTime.swift
+//  Int+formattedDuration.swift
 //  
 //
 //  Created by Moritz Schaub on 08.09.20.
@@ -8,7 +8,7 @@
 import Foundation
 import BakingRecipeStrings
 
-extension Int {
+public extension Int {
     var formattedDuration: String {
         let hours = self / 60
         let minutes = self % 60
