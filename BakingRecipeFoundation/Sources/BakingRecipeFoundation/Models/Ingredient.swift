@@ -11,7 +11,7 @@ import BakingRecipeStrings
 import Sqlable
 
 ///Ingredient in the Recipe
-public struct Ingredient: Codable, Hashable, Identifiable, Equatable, Sqlable {
+public struct Ingredient: Equatable, BakingRecipeSqlable {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c

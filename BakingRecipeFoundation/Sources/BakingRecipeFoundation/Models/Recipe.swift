@@ -1,5 +1,5 @@
 //
-//  Rezept.swift
+//  Recipe.swift
 //  BrotApp2
 //
 //  Created by Moritz Schaub on 29.09.19.
@@ -10,7 +10,7 @@ import Sqlable
 import Foundation
 import BakingRecipeStrings
 
-public struct Recipe: Hashable, Codable, Identifiable, Equatable, Sqlable {
+public struct Recipe: Equatable, BakingRecipeSqlable {
     
     /// id of the recipe
     public var id: Int

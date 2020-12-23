@@ -10,7 +10,7 @@ import Foundation
 import BakingRecipeStrings
 import Sqlable
 
-public struct Step: Equatable, Identifiable, Hashable, Codable, Sqlable  {
+public struct Step: Equatable, BakingRecipeSqlable {
     
     /// unique id of the step
     public var id: Int
