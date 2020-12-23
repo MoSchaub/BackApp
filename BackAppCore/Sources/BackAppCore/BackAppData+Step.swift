@@ -81,3 +81,79 @@ public extension BackAppData {
 }
 
 //TODO: CRUD Operations
+
+public extension BackAppData {
+    
+    private func search(for stepId: Int) -> (isNotEmpty: Bool, results: [Step]) {
+        guard let results = try? Step.read().filter(Step.id == stepId).run(database) else {
+            return (false, [])
+        }
+        
+        if results.isEmpty {
+            return (false, results)
+        } else {
+            return (true, results)
+        }
+    }
+  
+    /// updates step in database if it does not exitst it gets inserted.
+    func update(step: Step) -> Bool {
+        let search = self.search(for: step.id)
+        
+        if search.isNotEmpty {
+            do {
+                try step.update().run(database)
+            } catch {
+                print(error.localizedDescription)
+                return false
+            }
+            
+            return true
+        } else {
+            // step can not be found insert it
+            return self.insert(step: step)
+        }
+        
+    }
+    
+    /// insert a step into the database
+    /// if it already exists nothing happens
+    func insert(step: Step) -> Bool {
+        let search = self.search(for: step.id)
+        
+        if search.isNotEmpty {
+            //the step already exists
+            return false
+        } else {
+            do {
+                try step.insert().run(database)
+            } catch {
+                print(error.localizedDescription)
+                return false
+            }
+            
+            return true
+        }
+    }
+    
+    
+    ///deletes a step from the database if it is present
+    func delete(step: Step) -> Bool {
+        let search = self.search(for: step.id)
+        
+        if search.isNotEmpty {
+            do {
+                try step.delete().run(database)
+            } catch {
+                print(error.localizedDescription)
+                return false
+            }
+            
+            return true
+            
+        } else {
+            return false
+        }
+    }
+    
+}

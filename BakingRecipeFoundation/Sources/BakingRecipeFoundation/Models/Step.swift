@@ -192,7 +192,7 @@ public extension Step{
     static let duration = Column("duration", .real)
     static let temperature = Column("temperature", .integer)
     static let notes = Column("notes", .text)
-    static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>())
+    static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>(onDelete: .ignore, onUpdate: .ignore))
     static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>(onDelete: .cascade, onUpdate: .ignore))
     static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
     

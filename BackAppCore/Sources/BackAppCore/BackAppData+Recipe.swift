@@ -116,9 +116,9 @@ public extension BackAppData {
         }
         
         if results.isEmpty {
-            return (false, [])
+            return (false, results)
         } else {
-            return (true, [])
+            return (true, results)
         }
     }
     
@@ -132,6 +132,7 @@ public extension BackAppData {
                 try recipe.update().run(database)
             } catch  {
                 print(error.localizedDescription)
+                return false
             }
             
             return true
