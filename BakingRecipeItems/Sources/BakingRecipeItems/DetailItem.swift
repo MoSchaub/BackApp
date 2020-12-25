@@ -9,9 +9,9 @@
 public class DetailItem: TextItem {
     public var detailLabel: String
     
-    public init(name: String, detailLabel: String = "" ) {
+    public init(id: Int? = nil, name: String, detailLabel: String = "" ) {
         self.detailLabel = detailLabel
-        super.init(text: name)
+        super.init(id: id, text: name)
     }
 }
 

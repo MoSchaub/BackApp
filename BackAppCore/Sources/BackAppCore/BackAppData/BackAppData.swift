@@ -112,4 +112,8 @@ public class BackAppData {
             return false
         }
     }
+    
+    public func object<T:BakingRecipeSqlable>(with id: Int, of Type: T.Type = T.self) -> T? {
+        ((try? T.read().filter(T.id == id).run(database)) ?? []).first
+    }
 }

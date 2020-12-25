@@ -13,6 +13,7 @@ import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
 import BakingRecipeCells
+import BakingRecipeFoundation
 
 extension UITableViewCell {
     func setupPlainCell(text: String) {
@@ -81,7 +82,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     
     /// deleting recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete, indexPath.section == 0, let item = itemIdentifier(for: indexPath), let recipe = self.appData.recipe(with: item.id) {
+        if editingStyle == .delete, indexPath.section == 0, let item = itemIdentifier(for: indexPath), let recipe = self.appData.object(with: item.id, of: Recipe.self) {
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {

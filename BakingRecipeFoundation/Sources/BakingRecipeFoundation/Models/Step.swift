@@ -36,6 +36,16 @@ public struct Step: Equatable, BakingRecipeSqlable {
     ///- NOTE: optional because a step can be without a superstep
     public var superStepId: Int? = nil
     
+    public init(id: Int, name: String = "", duration: TimeInterval = 60, temperature: Int? = nil, notes: String = "", recipeId: Int) {
+        self.id = id
+        self.name = name
+        self.duration = duration
+        self.temperature = temperature
+        self.notes = notes
+        self.recipeId = recipeId
+        self.superStepId = nil
+    }
+    
 }
 
 public extension Step {
@@ -190,11 +200,11 @@ public extension Step{
     static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
     static let name = Column("name", .text)
     static let duration = Column("duration", .real)
-    static let temperature = Column("temperature", .integer)
+    static let temperature = Column("temperature", .nullable(.integer))
     static let notes = Column("notes", .text)
     static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>(onDelete: .ignore, onUpdate: .ignore))
-    static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>(onDelete: .cascade, onUpdate: .ignore))
-    static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId]
+    static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>(column: Recipe.id, onDelete: .cascade, onUpdate: .ignore))
+    static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId, recipeId]
     
     /// value for a given column
     func valueForColumn(_ column: Column) -> SqlValue? {
@@ -211,6 +221,8 @@ public extension Step{
             return self.notes
         case Step.superStepId:
             return self.superStepId
+        case Step.recipeId:
+            return self.recipeId
         default:
             return nil
         }
@@ -218,13 +230,13 @@ public extension Step{
     
     /// initialize from database
     init(row: ReadRow) throws {
-        self.recipeId = try row.get(Step.recipeId)
         self.id = try row.get(Step.id)
         self.name = try row.get(Step.name)
         self.duration = try row.get(Step.duration)
         self.temperature = try row.get(Step.temperature)
         self.notes = try row.get(Step.notes)
         self.superStepId = try? row.get(Step.superStepId)
+        self.recipeId = try row.get(Step.recipeId)
     }
     
 }

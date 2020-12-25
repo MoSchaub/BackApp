@@ -121,7 +121,7 @@ extension CompactHomeViewController {
     private func navigateToRecipe(recipeItem: RecipeItem) {
         
         // get the recipe from the database
-        if let recipe = appData.recipe(with: recipeItem.id) {
+        if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
             
             //create the vc
             let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
