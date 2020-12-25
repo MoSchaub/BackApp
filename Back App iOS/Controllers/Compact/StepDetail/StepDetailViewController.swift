@@ -28,6 +28,8 @@ class StepDetailViewController: UITableViewController {
     /// table view dataSource
     private lazy var dataSource = makeDiffableDataSource()
     
+    /// appData
+    private lazy var appData = BackAppData()
     
     ///wether the datePickerCell is shown
     private var datePickerShown: Bool {
@@ -97,7 +99,7 @@ extension StepDetailViewController {
     }
     
     private func editButtonEnabled() -> Bool {
-        !self.step.ingredients.isEmpty || !self.step.subSteps.isEmpty
+        !appData.ingredients(with: step.id).isEmpty || !appData.substeps(for: step.id).isEmpty
     }
 
 }
@@ -165,60 +167,60 @@ enum StepDetailSection: Int, CaseIterable{
 extension StepDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) as? DetailItem else { return }
-        
-        if item is IngredientItem {
-            
-            // navigate to existing ingredient
-            navigateToIngredientDetail(id: item.id)
-        } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) { //add ingredient pressed
-            
-            //add ingredient or substep
-            let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
-            let stepsWithSubsteps = recipe.steps.filter({ step1 in step1.subSteps.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: { step1.id == $0.id})}).filter({ !stepsWithIngredients.contains($0)})
-            if stepsWithIngredients.count > 0 || stepsWithSubsteps.count > 0{
-                
-                //action sheet let the user pick
-                presentSubstepIngredientDecisionSheet(possibleSubsteps: stepsWithIngredients + stepsWithSubsteps)
-                
-            } else {
-                
-                //no possible substeps so create new ingredient
-                navigateToIngredientDetail(id: nil)
-            }
-            
-        } else if StepDetailSection.allCases[indexPath.section] == .durationTemp {
-            
-            if item.text == Strings.duration {
-                
-                //duration cell tapped now expand the datePickerCell
-                self.datePickerShown ? collapseDatePicker() : expandDatePicker(animated: false)
-            } else if item.text == Strings.temperature {
-                
-                // temp cell tapped expand tempPicker Cell
-                self.tempPickerShown ? collapseTempPicker() : expandTempPicker(animated: false)
-            }
-        } else if item is SubstepItem {
-            
-            //substep has been selected navigate to step detail
-            let substep = self.step.subSteps.first(where: { $0.id == item.id })!
-            
-            let stepDetailVC = StepDetailViewController(
-                step: Binding<Step>(
-                    get: { self.step.subSteps.first(where: { $0.id == substep.id })! },
-                    set: { newStep in if let index = self.step.subSteps.firstIndex(where: { $0.id == newStep.id }) {
-                        self.step.subSteps[index] = newStep
-                        self.updateList(animated: false)
-                    } }
-                ), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in if newRecipe != self.recipe {
-                    self.recipe = newRecipe
-                    self.updateList(animated: false)
-                } }
-                )
-            )
-            
-            //navigate to the controller
-            navigationController?.pushViewController(stepDetailVC, animated: true)
-        }
+//
+//        if item is IngredientItem {
+//
+//            // navigate to existing ingredient
+//            navigateToIngredientDetail(id: item.id)
+//        } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) { //add ingredient pressed
+//
+//            //add ingredient or substep
+//            let stepsWithIngredients = recipe.steps.filter({ step1 in step1.ingredients.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: {step1.id == $0.id})})
+//            let stepsWithSubsteps = recipe.steps.filter({ step1 in step1.subSteps.count != 0 && step1.id != self.step.id && !self.step.subSteps.contains(where: { step1.id == $0.id})}).filter({ !stepsWithIngredients.contains($0)})
+//            if stepsWithIngredients.count > 0 || stepsWithSubsteps.count > 0{
+//
+//                //action sheet let the user pick
+//                presentSubstepIngredientDecisionSheet(possibleSubsteps: stepsWithIngredients + stepsWithSubsteps)
+//
+//            } else {
+//
+//                //no possible substeps so create new ingredient
+//                navigateToIngredientDetail(id: nil)
+//            }
+//
+//        } else if StepDetailSection.allCases[indexPath.section] == .durationTemp {
+//
+//            if item.text == Strings.duration {
+//
+//                //duration cell tapped now expand the datePickerCell
+//                self.datePickerShown ? collapseDatePicker() : expandDatePicker(animated: false)
+//            } else if item.text == Strings.temperature {
+//
+//                // temp cell tapped expand tempPicker Cell
+//                self.tempPickerShown ? collapseTempPicker() : expandTempPicker(animated: false)
+//            }
+//        } else if item is SubstepItem {
+//
+//            //substep has been selected navigate to step detail
+//            let substep = self.step.subSteps.first(where: { $0.id == item.id })!
+//
+//            let stepDetailVC = StepDetailViewController(
+//                step: Binding<Step>(
+//                    get: { self.step.subSteps.first(where: { $0.id == substep.id })! },
+//                    set: { newStep in if let index = self.step.subSteps.firstIndex(where: { $0.id == newStep.id }) {
+//                        self.step.subSteps[index] = newStep
+//                        self.updateList(animated: false)
+//                    } }
+//                ), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in if newRecipe != self.recipe {
+//                    self.recipe = newRecipe
+//                    self.updateList(animated: false)
+//                } }
+//                )
+//            )
+//
+//            //navigate to the controller
+//            navigationController?.pushViewController(stepDetailVC, animated: true)
+//        }
     }
     
     /// presents an actionsheet asking the user if he wants to add a substep or a new ingredient
@@ -247,9 +249,12 @@ extension StepDetailViewController {
         
         for possibleSubstep in possibleSubsteps {
             actionSheet.addAction(UIAlertAction(title: possibleSubstep.formattedName, style: .default, handler: { _ in
-                //self.step.subSteps.append(possibleSubstep)
-                self.step.subSteps.append(possibleSubstep)
-                self.updateList(animated: false)
+                var newSubstep = possibleSubstep
+                newSubstep.superStepId = self.step.id
+                
+                if self.appData.insert(newSubstep) {
+                    self.updateList(animated: false)
+                }
             }))
         }
         
@@ -264,18 +269,18 @@ private extension StepDetailViewController {
     /// navigate to an ingredient with a given id
     /// - Note: if id is nil it creates a new one
     private func navigateToIngredientDetail(id: UUID?) {
-        let ingredient = id == nil ? Ingredient(name: "", amount: 0, type: .other) : step.ingredients.first(where: { $0.id == id!.uuidString })!
-        
-        if id == nil {
-            self.step.ingredients.append(ingredient)
-        }
-        let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
-            self.step.ingredients[self.step.ingredients.firstIndex(matching: newValue)!] = newValue
-            DispatchQueue.main.async {
-                self.updateList(animated: false)
-            }
-        }
-        navigationController?.pushViewController(vc, animated: true)
+//        let ingredient = id == nil ? Ingredient(name: "", amount: 0, type: .other) : step.ingredients.first(where: { $0.id == id!.uuidString })!
+//
+//        if id == nil {
+//            self.step.ingredients.append(ingredient)
+//        }
+//        let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
+//            self.step.ingredients[self.step.ingredients.firstIndex(matching: newValue)!] = newValue
+//            DispatchQueue.main.async {
+//                self.updateList(animated: false)
+//            }
+//        }
+//        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -405,9 +410,9 @@ private extension StepDetailViewController {
                     }
                 }
             } else if self.datePickerShown, indexPath.row == 1{
-                return TimePickerCell(time: Binding(get: { self.step.time}, set: { self.step.time = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
+                return TimePickerCell(time: Binding(get: { self.step.duration}, set: { self.step.duration = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
             } else if self.tempPickerShown, indexPath.row > 1 {
-                return TempPickerCell(temp: Binding(get: { self.step.temperature }, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
+                return TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.standardRoomTemperature}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
             }
             return CustomCell()
         }
@@ -432,8 +437,8 @@ private extension StepDetailViewController {
         // notesTextFieldItem
         let notesItem = TextFieldItem(text: step.notes)
 
-        let ingredientItems = step.ingredients.map { IngredientItem(id: UUID(uuidString: $0.id)!, name: $0.formattedName, detailLabel: $0.detailLabel(for: step))}
-        let substepItems = step.subSteps.map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: $0.totalFormattedAmount + " " + $0.formattedTemp)}
+        let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step)) }
+        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: step.id) + " " + $0.formattedTemp(roomTemp: Standarts.standardRoomTemperature) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
         // create the snapshot
@@ -477,12 +482,12 @@ private extension StepDetailViewController {
     
     /// detailItem for duration
     private var durationItem: DetailItem {
-        DetailItem(name: Strings.duration, detailLabel: step.formattedTime)
+        DetailItem(name: Strings.duration, detailLabel: step.formattedDuration )
     }
     
     /// detailItem for temp
     private var tempItem: DetailItem {
-        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp)
+        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.standardRoomTemperature))
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
@@ -499,7 +504,7 @@ private extension StepDetailViewController {
 
 fileprivate extension Ingredient {
     func detailLabel(for step: Step) -> String {
-        self.formattedAmount + (self.type == .bulkLiquid ? " \(step.themperature(for: self, roomThemperature: Standarts.standardRoomTemperature))° C" : "")
+        self.formattedAmount + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.standardRoomTemperature))° C" : "")
     }
 }
 
@@ -507,6 +512,8 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     
     @Binding var step: Step
     @Binding var recipe: Recipe
+    
+    private lazy var appData = BackAppData()
     
     init(tableView: UITableView, step: Binding<Step>, recipe: Binding<Recipe>, cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
         self._step = step
@@ -528,7 +535,9 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
             snapshot.deleteItems([item])
             
             apply(snapshot, animatingDifferences: true) {
-                self.deleteIngredient(id: item.id)
+                if let ingredient = self.appData.object(with: item.id, of: Ingredient.self) {
+                    _ = self.appData.delete(ingredient)
+                }
             }
         } else if item is SubstepItem {
             
@@ -537,21 +546,11 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
             snapshot.deleteItems([item])
             
             apply(snapshot, animatingDifferences: true) {
-                self.removeSubstep(id: item.id)
+                if var substep = self.appData.object(with: item.id, of: Step.self) {
+                    substep.superStepId = nil
+                    _ = self.appData.update(substep)
+                }
             }
-        }
-    }
-    
-    private func deleteIngredient(id: UUID) {
-        if let ingredientIndex = step.ingredients.firstIndex(where: { $0.id == id.uuidString}) , ingredientIndex < step.ingredients.count {
-            _ = step.ingredients.remove(at: ingredientIndex)
-        }
-    }
-    
-    private func removeSubstep(id: UUID) {
-        if let index = step.subSteps.firstIndex(where: { $0.id == id }), index < step.subSteps.count {
-            let substep = step.subSteps.remove(at: index)
-            self.recipe.steps.append(substep)
         }
     }
     
@@ -559,15 +558,15 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
         self.itemIdentifier(for: indexPath) is IngredientItem || self.itemIdentifier(for: indexPath) is SubstepItem
     }
 
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        self.itemIdentifier(for: indexPath) is IngredientItem
-    }
-
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { return }
-        guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { return }
-
-        let ingredientToMove = step.ingredients.remove(at: sourceIndexPath.row)
-        step.ingredients.insert(ingredientToMove, at: destinationIndexPath.row)
-    }
+//    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+//        self.itemIdentifier(for: indexPath) is IngredientItem
+//    }
+//
+//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//        guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { return }
+//        guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { return }
+//
+//        let ingredientToMove = step.ingredients.remove(at: sourceIndexPath.row)
+//        step.ingredients.insert(ingredientToMove, at: destinationIndexPath.row)
+//    }
 }
