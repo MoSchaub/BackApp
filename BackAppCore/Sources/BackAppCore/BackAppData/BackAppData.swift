@@ -45,7 +45,7 @@ public class BackAppData {
     }
     
     ///generates a unique id for a new object in the database
-    private func newId<T: BakingRecipeSqlable>(for type: T.Type) -> Int {
+    public func newId<T: BakingRecipeSqlable>(for type: T.Type) -> Int {
         var id = 0
         while objectsNotEmpty(with: id, on: type) {
             id = Int.random(in: 0..<Int.max)
@@ -63,11 +63,8 @@ public class BackAppData {
         } else {
             //object does not exist yet: Try inserting it!
             do {
-                //first make its id unique
-                var newObject = object
-                newObject.id = newId(for: T.self)
                 
-                try newObject.insert().run(database)
+                try object.insert().run(database)
             } catch {
                 print(error.localizedDescription)
                 return false

@@ -272,7 +272,11 @@ public extension Recipe {
         case Recipe.date:
             return self.date
         case Recipe.imageData:
-            return self.imageData?.base64EncodedString()
+            if self.imageData != nil {
+                return self.imageData?.base64EncodedString()
+            } else {
+                return nil
+            }
         default:
             return nil
         }
@@ -291,7 +295,7 @@ public extension Recipe {
         self.inverted = try row.get(Recipe.inverted)
         
         if let timesDouble = try? row.get(Recipe.times) ?? 1.0 {
-        self.times = Decimal(timesDouble)
+            self.times = Decimal(timesDouble)
         } else {
             self.times = nil
             
@@ -299,7 +303,13 @@ public extension Recipe {
         
         self.date = try row.get(Recipe.date)
         let imageText = try row.get(Recipe.imageData) ?? ""
-        self.imageData = Data(base64Encoded: imageText)
+        
+        if imageText != "" {
+            self.imageData = Data(base64Encoded: imageText)
+        } else {
+            self.imageData = nil
+        }
+        
     }
     
 }

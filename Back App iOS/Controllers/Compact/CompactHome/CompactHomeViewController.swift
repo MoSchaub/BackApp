@@ -75,7 +75,12 @@ private extension CompactHomeViewController {
         let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
             
             //insert the new recipe when saving
-            if self.appData.insert(recipe) {
+            //first make its id unique
+            var newRecipe = recipe
+            newRecipe.id = self.appData.newId(for: Recipe.self)
+            
+            
+            if self.appData.insert(newRecipe) {
                 DispatchQueue.main.async {
                     self.dataSource.update(animated: false)
                 }
