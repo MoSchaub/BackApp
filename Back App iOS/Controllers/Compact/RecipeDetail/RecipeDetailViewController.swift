@@ -13,6 +13,7 @@ import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeCells
+import BackAppCore
 
 class RecipeDetailViewController: UITableViewController {
     
@@ -20,6 +21,8 @@ class RecipeDetailViewController: UITableViewController {
     typealias DeleteRecipe = ((Recipe) -> Bool)
     
     private lazy var dataSource = makeDataSource()
+    
+    private lazy var appData = BackAppData()
     
     private var imagePickerController: UIImagePickerController?
     
@@ -30,7 +33,7 @@ class RecipeDetailViewController: UITableViewController {
                     if oldValue.formattedName != self.recipe.formattedName {
                         self.setUpNavigationBar()
                     }
-                    if oldValue.isFavourite != self.recipe.isFavourite {
+                    if oldValue.isFavorite != self.recipe.isFavorite {
                         self.setUpNavigationBar()
                     }
                     if !self.creating, oldValue != self.recipe {
@@ -168,7 +171,7 @@ private extension RecipeDetailViewController {
         } else {
             
             //create the items
-            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
             let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
             
@@ -214,13 +217,13 @@ private extension RecipeDetailViewController {
 private extension RecipeDetailViewController {
     
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
-        recipe.isFavourite.toggle()
+        recipe.isFavorite.toggle()
     }
     
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
-        let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
-        vc.popoverPresentationController?.barButtonItem = sender
-        present(vc, animated: true)
+//        let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
+//        vc.popoverPresentationController?.barButtonItem = sender
+//        present(vc, animated: true)
     }
     
     @objc private func saveRecipeWrapper() {
@@ -270,7 +273,8 @@ extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
-        return customHeader(enabled: !self.recipe.steps.isEmpty, title: Strings.steps, frame: tableView.frame)
+        let steps = appData.steps(with: recipe.id)
+        return customHeader(enabled: !steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
 
     
@@ -317,7 +321,7 @@ private extension RecipeDetailViewController {
         }
         
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
-            self.recipe.imageString = nil
+            self.recipe.imageData = nil
             self.dataSource.update(animated: false)
         }))
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
@@ -332,39 +336,39 @@ private extension RecipeDetailViewController {
         
     }
     
-    private func showStepDetail(id: UUID?) {
-        let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
-        
-        // create new step
-        if id == nil {
-            self.recipe.steps.append(step)
-        }
-        
-        let stepDetailVC = StepDetailViewController(step: Binding(get: { self.recipe.steps.first(where: { $0.id == step.id })! }, set: { newStep in
-            if let index = self.recipe.steps.firstIndex(where: { $0.id == newStep.id }) {
-                self.recipe.steps[index] = newStep
-                self.dataSource.update(animated: false)
-            }
-        }), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in
-            if newRecipe != self.recipe {
-                self.recipe = newRecipe
-                self.dataSource.update(animated: false)
-            }
-        }))
-        
-        //navigate to the controller
-        navigationController?.pushViewController(stepDetailVC, animated: true)
+    private func showStepDetail(id: Int?) {
+//        let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
+//
+//        // create new step
+//        if id == nil {
+//            self.recipe.steps.append(step)
+//        }
+//
+//        let stepDetailVC = StepDetailViewController(step: Binding(get: { self.recipe.steps.first(where: { $0.id == step.id })! }, set: { newStep in
+//            if let index = self.recipe.steps.firstIndex(where: { $0.id == newStep.id }) {
+//                self.recipe.steps[index] = newStep
+//                self.dataSource.update(animated: false)
+//            }
+//        }), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in
+//            if newRecipe != self.recipe {
+//                self.recipe = newRecipe
+//                self.dataSource.update(animated: false)
+//            }
+//        }))
+//
+//        //navigate to the controller
+//        navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
     private func startRecipe() {
-        let recipeBinding = Binding(get: {
-            return self.recipe
-        }) { (newValue) in
-            self.recipe = newValue
-        }
-        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
-        
-        navigationController?.pushViewController(scheduleForm, animated: true)
+//        let recipeBinding = Binding(get: {
+//            return self.recipe
+//        }) { (newValue) in
+//            self.recipe = newValue
+//        }
+//        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
+//
+//        navigationController?.pushViewController(scheduleForm, animated: true)
     }
 }
 
@@ -400,7 +404,7 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
         if let uiImage = info[.originalImage] as? UIImage {
-            recipe.imageString = uiImage.jpegData(compressionQuality: 0.3)
+            recipe.imageData = uiImage.jpegData(compressionQuality: 0.3)
             self.dataSource.update(animated: false)
             
             picker.dismiss(animated: true) {

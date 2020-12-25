@@ -15,10 +15,14 @@ public class BackAppData {
     
     private(set) internal var database: SqliteDatabase
     
+    private static func documentsPath() -> String {
+        FileManager.default.documentsDirectory.path
+    }
+    
     public init() {
         /// create new database or use the existing one if it exist in the documents directory
         do {
-            self.database = try SqliteDatabase(filepath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path + "/db.sqlite")
+            self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
             try database.createTable(Recipe.self)
             try database.createTable(Step.self)
             try database.createTable(Ingredient.self)
@@ -40,6 +44,15 @@ public class BackAppData {
         return !results.isEmpty
     }
     
+    ///generates a unique id for a new object in the database
+    private func newId<T: BakingRecipeSqlable>(for type: T.Type) -> Int {
+        var id = 0
+        while objectsNotEmpty(with: id, on: type) {
+            id = Int.random(in: 0..<Int.max)
+        }
+        return id
+    }
+    
     ///inserts a given object into the database
     ///if it already exists nothing happens
     /// - returns: wether  it succeded
@@ -50,7 +63,11 @@ public class BackAppData {
         } else {
             //object does not exist yet: Try inserting it!
             do {
-                try object.insert().run(database)
+                //first make its id unique
+                var newObject = object
+                newObject.id = newId(for: T.self)
+                
+                try newObject.insert().run(database)
             } catch {
                 print(error.localizedDescription)
                 return false
