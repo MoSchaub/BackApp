@@ -4,26 +4,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "BakingRecipeExtra",
+    name: "BackAppExtra",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "BakingRecipeExtra",
-            targets: ["BakingRecipeExtra"]),
+            name: "BackAppExtra",
+            targets: ["BackAppExtra"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(name: "BakingRecipeItems", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeItems"),
-        .package(name: "BakingRecipeCore", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeCore")
+        .package(name: "BackAppCore", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BackAppCore")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "BakingRecipeExtra",
-            dependencies: ["BakingRecipeItems", "BakingRecipeCore"]),
+            name: "BackAppExtra",
+            dependencies: ["BakingRecipeItems", "BackAppCore"]),
         .testTarget(
-            name: "BakingRecipeExtraTests",
-            dependencies: ["BakingRecipeExtra"]),
+            name: "BackAppExtraTests",
+            dependencies: ["BackAppExtra"]),
     ]
 )

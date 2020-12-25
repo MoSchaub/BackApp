@@ -7,7 +7,7 @@
 //
 
 public class AmountItem: TextItem {
-    public override init(text: String) {
-        super.init(text: text)
+    public override init(id: Int? = nil, text: String) {
+        super.init(id: id, text: text)
     }
 }

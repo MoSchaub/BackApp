@@ -8,8 +8,7 @@
 
 import SwiftUI
 import MobileCoreServices
-import BakingRecipeCore
-import BakingRecipeExtra
+import BackAppCore
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
@@ -21,13 +20,13 @@ class CompactHomeViewController: UITableViewController {
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
 
     private(set) lazy var dataSource = makeDataSource()
-    private var recipeStore: RecipeStore
+    private var appData: BackAppData
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
     
-    init(recipeStore: RecipeStore) {
-        self.recipeStore = recipeStore
+    init(appData: BackAppData) {
+        self.appData = appData
         super.init(style: .insetGrouped)
     }
     
@@ -68,27 +67,27 @@ private extension CompactHomeViewController {
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         
         // the new fresh recipe
-        let recipe = Recipe(name: "", brotValues: [])
+        let recipe = Recipe(id: 1, name: "")
         
-        //the vc
-        let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
-            self.recipeStore.save(recipe: recipe)
-            DispatchQueue.main.async {
-                self.dataSource.update(animated: false)
-            }
-        }, deleteRecipe: { _ in return false })
-        
-        // navigation Controller
-        let nv = UINavigationController(rootViewController: vc)
-        nv.modalPresentationStyle = .fullScreen //to prevent data loss
-        
-        present(nv, animated: true)
+//        //the vc
+//        let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
+//            self.recipeStore.save(recipe: recipe)
+//            DispatchQueue.main.async {
+//                self.dataSource.update(animated: false)
+//            }
+//        }, deleteRecipe: { _ in return false })
+//        
+//        // navigation Controller
+//        let nv = UINavigationController(rootViewController: vc)
+//        nv.modalPresentationStyle = .fullScreen //to prevent data loss
+//        
+//        present(nv, animated: true)
        }
 }
 
 private extension CompactHomeViewController {
     private func makeDataSource() -> DataSource {
-        HomeDataSource(recipeStore: recipeStore, tableView: tableView)
+        HomeDataSource(appData: appData, tableView: tableView)
     }
 }
 
@@ -101,7 +100,7 @@ extension CompactHomeViewController {
         } else if item.text == Strings.roomTemperature {
             navigateToRoomTempPicker(item: item)
         } else if item.text == Strings.importFile {
-            openImportFilePopover()
+//            openImportFilePopover()
         } else if item.text == Strings.exportAll {
             openExportAllShareSheet(sender: tableView.cellForRow(at: indexPath)!)
         } else if item.text == Strings.about {
@@ -110,32 +109,32 @@ extension CompactHomeViewController {
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
-        if let recipe = recipeStore.allRecipes.first(where: { $0.id == recipeItem.id}) {
-            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
-                self.recipeStore.update(recipe: recipe)
-                DispatchQueue.main.async {
-                    self.dataSource.update(animated: false)
-                }
-            }) { recipe in
-                let result: Bool
-                if self.splitViewController?.isCollapsed ?? false {
-                    result = self.dataSource.deleteRecipe(recipe.id)
-                    self.navigationController?.popViewController(animated: true)
-                } else {
-                    let _ = self.splitViewController?.viewControllers.popLast()
-                    result = self.dataSource.deleteRecipe(recipe.id)
-                    self.dataSource.update()
-                }
-                return result
-            }
-            splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
+        if let recipe = appData.recipe(with: recipeItem.id) {
+//            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
+//                self.recipeStore.update(recipe: recipe)
+//                DispatchQueue.main.async {
+//                    self.dataSource.update(animated: false)
+//                }
+//            }) { recipe in
+//                let result: Bool
+//                if self.splitViewController?.isCollapsed ?? false {
+//                    result = self.dataSource.deleteRecipe(recipe.id)
+//                    self.navigationController?.popViewController(animated: true)
+//                } else {
+//                    let _ = self.splitViewController?.viewControllers.popLast()
+//                    result = self.dataSource.deleteRecipe(recipe.id)
+//                    self.dataSource.update()
+//                }
+//                return result
+//            }
+//            splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }
     }
     
     private func navigateToRoomTempPicker(item: TextItem) {
         let vc = RoomTempTableViewController(style: .insetGrouped)
         
-        vc.recipeStore = recipeStore
+        vc.appData = appData
         vc.updateTemp = { [self] temp in
             Standarts.standardRoomTemperature = temp
             self.updateStandarts()
@@ -148,23 +147,23 @@ extension CompactHomeViewController {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteSections([.settings])
             snapshot.appendSections([.settings])
-            snapshot.appendItems(self.recipeStore.settingsItems, toSection: .settings)
+            snapshot.appendItems(self.appData.settingsItems, toSection: .settings)
             DispatchQueue.main.async {
                 self.dataSource.apply(snapshot, animatingDifferences: false)
             }
         }
     }
     
-    private func openImportFilePopover() {
-        self.documentPicker.delegate = self
-        // Present the document picker.
-        self.present(documentPicker, animated: true, completion: deselectRow)
-    }
+//    private func openImportFilePopover() {
+//        self.documentPicker.delegate = self
+//        // Present the document picker.
+//        self.present(documentPicker, animated: true, completion: deselectRow)
+//    }
     
     private func openExportAllShareSheet(sender: UIView) {
-        let ac = UIActivityViewController(activityItems: [recipeStore.exportToURL()], applicationActivities: nil)
-        ac.popoverPresentationController?.sourceView = sender
-        present(ac,animated: true, completion: deselectRow)
+//        let ac = UIActivityViewController(activityItems: [appData.exportToURL()], applicationActivities: nil)
+//        ac.popoverPresentationController?.sourceView = sender
+//        present(ac,animated: true, completion: deselectRow)
     }
     
     private func navigateToAboutView() {
@@ -180,23 +179,23 @@ extension CompactHomeViewController {
     
 }
 
-extension CompactHomeViewController: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        
-        //load recipes
-        for url in urls {
-            recipeStore.open(url)
-        }
-        
-        //update cells
-        self.dataSource.update(animated: true)
-        
-        //alert
-        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
-            alert.dismiss(animated: true)
-        }))
-        
-        present(alert, animated: true)
-    }
-}
+//extension CompactHomeViewController: UIDocumentPickerDelegate {
+//    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+//        
+//        //load recipes
+//        for url in urls {
+//            recipeStore.open(url)
+//        }
+//        
+//        //update cells
+//        self.dataSource.update(animated: true)
+//        
+//        //alert
+//        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
+//            alert.dismiss(animated: true)
+//        }))
+//        
+//        present(alert, animated: true)
+//    }
+//}

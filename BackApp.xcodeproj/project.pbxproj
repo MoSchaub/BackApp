@@ -14,7 +14,9 @@
 		CD29972224A9D89900759EBA /* StepTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD29972124A9D89900759EBA /* StepTimeTableViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
-		CD38FFDB2594D77700F352E9 /* BakingRecipeCells in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFDA2594D77700F352E9 /* BakingRecipeCells */; };
+		CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFE225960DFA00F352E9 /* BakingRecipeCells */; };
+		CD38FFEF259612DF00F352E9 /* BackAppExtra in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFEE259612DF00F352E9 /* BackAppExtra */; };
+		CD38FFF5259617C300F352E9 /* BakingRecipeSections in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFF4259617C300F352E9 /* BakingRecipeSections */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
@@ -189,7 +191,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD38FFDB2594D77700F352E9 /* BakingRecipeCells in Frameworks */,
+				CD38FFEF259612DF00F352E9 /* BackAppExtra in Frameworks */,
+				CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */,
+				CD38FFF5259617C300F352E9 /* BakingRecipeSections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,7 +530,9 @@
 			);
 			name = "Back App iOS";
 			packageProductDependencies = (
-				CD38FFDA2594D77700F352E9 /* BakingRecipeCells */,
+				CD38FFE225960DFA00F352E9 /* BakingRecipeCells */,
+				CD38FFEE259612DF00F352E9 /* BackAppExtra */,
+				CD38FFF4259617C300F352E9 /* BakingRecipeSections */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -1084,9 +1090,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CD38FFDA2594D77700F352E9 /* BakingRecipeCells */ = {
+		CD38FFE225960DFA00F352E9 /* BakingRecipeCells */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BakingRecipeCells;
+		};
+		CD38FFEE259612DF00F352E9 /* BackAppExtra */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BackAppExtra;
+		};
+		CD38FFF4259617C300F352E9 /* BakingRecipeSections */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BakingRecipeSections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

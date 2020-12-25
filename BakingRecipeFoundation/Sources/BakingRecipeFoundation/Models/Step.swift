@@ -187,7 +187,7 @@ public extension Step {
 public extension Step{
     
     //create the columns
-    static let id = Column("name", .integer, PrimaryKey(autoincrement: true))
+    static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
     static let name = Column("name", .text)
     static let duration = Column("duration", .real)
     static let temperature = Column("temperature", .integer)

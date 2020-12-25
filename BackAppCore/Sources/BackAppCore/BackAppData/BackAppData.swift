@@ -18,7 +18,7 @@ public class BackAppData {
     public init() {
         /// create new database or use the existing one if it exist in the documents directory
         do {
-            self.database = try SqliteDatabase(filepath: FileManager.default.documentsDirectory.path + "db.sqlite")
+            self.database = try SqliteDatabase(filepath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path + "/db.sqlite")
             try database.createTable(Recipe.self)
             try database.createTable(Step.self)
             try database.createTable(Ingredient.self)
@@ -43,7 +43,7 @@ public class BackAppData {
     ///inserts a given object into the database
     ///if it already exists nothing happens
     /// - returns: wether  it succeded
-    func insert<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    public func insert<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //the object already exists: Do nothing!
             return false
@@ -62,7 +62,7 @@ public class BackAppData {
     }
     
     ///updates object in the database if it does not exists it gets inserted
-    func update<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    public func update<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //found the object in the database: Try updating it!
             do {
@@ -81,7 +81,7 @@ public class BackAppData {
     }
     
     ///deletes an object if present from the database
-    func delete<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    public func delete<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //found the object in the database: Try deleting it!
             do {

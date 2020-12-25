@@ -22,6 +22,11 @@ public extension BackAppData {
     var favorites: [Recipe] {
         (try? Recipe.read().filter(Recipe.isFavorite == true).run(database)) ?? []
     }
+    
+    func recipe(with id: Int) -> Recipe? {
+        allRecipes.first(where: { $0.id == id})
+    }
+    
 }
 
 //MARK: - Recipe Properties

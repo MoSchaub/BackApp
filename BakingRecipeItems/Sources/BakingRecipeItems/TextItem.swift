@@ -11,8 +11,8 @@ import Foundation
 public class TextItem: Item {
     public var text: String
     
-    public init(text: String) {
+    public init(id: Int? = nil, text: String) {
         self.text = text
-        super.init()
+        super.init(id: id)
     }
 }

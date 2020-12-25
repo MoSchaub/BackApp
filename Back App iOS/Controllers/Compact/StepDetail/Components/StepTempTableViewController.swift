@@ -10,6 +10,7 @@ import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BakingRecipeCells
+import BackAppCore
 
 class StepTempTableViewController: UITableViewController {
     // MARK: - Properties
@@ -80,7 +81,8 @@ class StepTempTableViewController: UITableViewController {
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
         pickerLabelProxy.textColorWorkaround = .cellTextColor
         
-        picker.selectRow(step.temperature + 10, inComponent: 0, animated: false)
+        let roomTemp = Standarts.standardRoomTemperature
+        picker.selectRow(step.temperature ?? roomTemp + 10, inComponent: 0, animated: false)
     }
     
     private func addPickerConstraints(cell: UITableViewCell) {

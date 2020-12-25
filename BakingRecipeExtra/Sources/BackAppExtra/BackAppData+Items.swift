@@ -5,17 +5,16 @@
 //  Created by Moritz Schaub on 19.12.20.
 //
 
-import BakingRecipeItems
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeFoundation
+import BakingRecipeItems
 import BakingRecipeStrings
 
-@available(iOS 13, *)
-public extension RecipeStore {
+public extension BackAppData {
 
     ///all recipes where isFavourites is true
     var favorites: [Recipe] {
-        allRecipes.filter { $0.isFavourite }
+        allRecipes.filter { $0.isFavorite }
     }
     
     
@@ -23,12 +22,16 @@ public extension RecipeStore {
     
     ///items for favourites
     var favoriteItems: [RecipeItem] {
-        favorites.map { RecipeItem(id: $0.id, name: $0.name, imageData: $0.imageString, minuteLabel: $0.formattedTotalTime)}
+        favorites.map { recipeItem(for: $0)}
+    }
+    
+    private func recipeItem(for recipe: Recipe) -> RecipeItem {
+        return RecipeItem(id: recipe.id, name: recipe.name, imageData: recipe.imageData, minuteLabel: self.formattedTotalDuration(for: recipe.id))
     }
     
     ///items for all recipes
     var allRecipesItems: [RecipeItem] {
-        allRecipes.map({ RecipeItem(id: $0.id, name: $0.formattedName, imageData: $0.imageString, minuteLabel: $0.formattedTotalTime)})
+        allRecipes.map({ recipeItem(for: $0) })
     }
     
     var settingsItems: [TextItem] { [

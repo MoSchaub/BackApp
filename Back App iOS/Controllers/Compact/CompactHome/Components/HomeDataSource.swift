@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import BakingRecipeCore
+import BackAppCore
+import BackAppExtra
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
@@ -29,10 +30,10 @@ extension UITableViewCell {
 
 class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     // storage object for recipes
-    var recipeStore: RecipeStore
+    var appData: BackAppData
 
-    init(recipeStore: RecipeStore, tableView: UITableView) {
-        self.recipeStore = recipeStore
+    init(appData: BackAppData, tableView: UITableView) {
+        self.appData = appData
         
         super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
             // Configuring cells
@@ -58,8 +59,8 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     func update(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<HomeSection, TextItem>()
         snapshot.appendSections(HomeSection.allCases)
-        snapshot.appendItems(recipeStore.allRecipesItems, toSection: .recipes)
-        snapshot.appendItems(recipeStore.settingsItems, toSection: .settings)
+        snapshot.appendItems(appData.allRecipesItems, toSection: .recipes)
+        snapshot.appendItems(appData.settingsItems, toSection: .settings)
         self.apply(snapshot, animatingDifferences: animated)
     }
     
@@ -80,34 +81,34 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     
     /// deleting recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete, indexPath.section == 0, let item = itemIdentifier(for: indexPath) {
+        if editingStyle == .delete, indexPath.section == 0, let item = itemIdentifier(for: indexPath), let recipe = self.appData.recipe(with: item.id) {
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
-                let _ = self.deleteRecipe(item.id)
+                _ = self.appData.delete(recipe)
             }
         }
     }
     
-    func deleteRecipe(_ id: UUID) -> Bool {
-        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
-            return self.recipeStore.deleteRecipe(at: index)
-        } else { return false }
-    }
+//    func deleteRecipe(_ id: Int) -> Bool {
+//        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
+//            return self.recipeStore.deleteRecipe(at: index)
+//        } else { return false }
+//    }
     
-    // moving recipes
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row < recipeStore.allRecipes.count else { reset(); return }
-        guard destinationIndexPath.section == 0 else { reset(); return}
-        guard recipeStore.allRecipes.count > sourceIndexPath.row else { reset(); return }
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
-            DispatchQueue.main.async {
-                self.update(animated: false)
-            }
-        }
-
-    }
+//    // moving recipes
+//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//        guard destinationIndexPath.row < appData.allRecipes.count else { reset(); return }
+//        guard destinationIndexPath.section == 0 else { reset(); return}
+//        guard appData.allRecipes.count > sourceIndexPath.row else { reset(); return }
+//        DispatchQueue.global(qos: .userInteractive).async {
+//            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+//            DispatchQueue.main.async {
+//                self.update(animated: false)
+//            }
+//        }
+//
+//    }
     
     //wether a row can be deleted or not
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -118,9 +119,10 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     
     //wether a row can be moved or not
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 0 {
-            return true
-        } else {return false}
+//        if indexPath.section == 0 {
+//            return true
+//        } else {return false}
+        return false
     }
 
 }
