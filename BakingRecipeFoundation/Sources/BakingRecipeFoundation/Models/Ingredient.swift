@@ -61,7 +61,7 @@ public struct Ingredient: Equatable, BakingRecipeSqlable {
     private var c: Double
     
     /// the id of the step the ingredient is used for
-    private var stepId: Int
+    public private(set) var stepId: Int
     
 }
 

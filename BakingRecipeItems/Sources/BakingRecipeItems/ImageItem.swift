@@ -11,8 +11,8 @@ import Foundation
 public class ImageItem: Item {
     public var imageData: Data?
     
-    public init(id: UUID = UUID(), imageData: Data?) {
+    public init(imageData: Data?) {
         self.imageData = imageData
-        super.init(id: id)
+        super.init()
     }
 }

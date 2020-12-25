@@ -8,12 +8,21 @@
 
 import Foundation
 
+fileprivate var counter = 0
+
 public class Item: Hashable {
     
-    public var id: UUID
+    public var id: Int
     
-    public init(id: UUID = UUID()) {
-        self.id = id
+    public init(id: Int? = nil) {
+        if id != nil {
+            self.id = id!
+        } else {
+            self.id = counter
+        }
+        if self.id == counter {
+            counter += 1
+        }
     }
     
     static public func == (lhs: Item, rhs: Item) -> Bool {

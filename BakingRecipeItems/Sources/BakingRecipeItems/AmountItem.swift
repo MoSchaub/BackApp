@@ -6,10 +6,8 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
-
 public class AmountItem: TextItem {
-    public override init(id: UUID = UUID(), text: String) {
-        super.init(id: id, text: text)
+    public override init(text: String) {
+        super.init(text: text)
     }
 }

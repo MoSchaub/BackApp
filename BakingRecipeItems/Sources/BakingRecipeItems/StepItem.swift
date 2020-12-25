@@ -12,7 +12,7 @@ import BakingRecipeFoundation
 public class StepItem: Item {
     public var step: Step
     
-    public init(id: UUID = UUID(), step: Step) {
+    public init(id: Int, step: Step) {
         self.step = step
         super.init(id: id)
     }

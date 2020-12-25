@@ -6,14 +6,12 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
-
 public class DetailItem: TextItem {
     public var detailLabel: String
     
-    public init(id: UUID = UUID(), name: String, detailLabel: String = "" ) {
+    public init(name: String, detailLabel: String = "" ) {
         self.detailLabel = detailLabel
-        super.init(id: id, text: name)
+        super.init(text: name)
     }
 }
 

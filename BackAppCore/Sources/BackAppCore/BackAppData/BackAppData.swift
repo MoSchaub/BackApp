@@ -43,7 +43,7 @@ public class BackAppData {
     ///inserts a given object into the database
     ///if it already exists nothing happens
     /// - returns: wether  it succeded
-    internal func insert<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    func insert<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //the object already exists: Do nothing!
             return false
@@ -62,7 +62,7 @@ public class BackAppData {
     }
     
     ///updates object in the database if it does not exists it gets inserted
-    internal func update<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    func update<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //found the object in the database: Try updating it!
             do {
@@ -81,7 +81,7 @@ public class BackAppData {
     }
     
     ///deletes an object if present from the database
-    internal func delete<T:BakingRecipeSqlable>(_ object: T) -> Bool {
+    func delete<T:BakingRecipeSqlable>(_ object: T) -> Bool {
         if objectsNotEmpty(with: object.id, on: T.self) {
             //found the object in the database: Try deleting it!
             do {

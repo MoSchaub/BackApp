@@ -39,6 +39,18 @@ public struct Recipe: Equatable, BakingRecipeSqlable {
     ///data of the image for the recipe
     public var imageData: Data?
     
+    public init(id: Int, name: String = "", info: String = "", isFavorite: Bool = false, difficulty: Difficulty = .easy, inverted: Bool = false, times: Decimal? = Decimal(integerLiteral: 1), date: Date = Date(), imageData: Data? = nil) {
+        self.id = id
+        self.name = name
+        self.info = info
+        self.isFavorite = isFavorite
+        self.difficulty = difficulty
+        self.inverted = inverted
+        self.times = times
+        self.date = date
+        self.imageData = imageData
+    }
+    
 }
 
 ///date formatter with custom dateFormat
@@ -60,7 +72,7 @@ public extension Recipe {
         if !inverted {
             return date
         } else {
-            return date.addingTimeInterval(TimeInterval(-(totalDuration(db: db) * 60)))
+            return date.addingTimeInterval(TimeInterval(-(totalDuration(steps: steps(db: db)) * 60)))
         }
     }
     
@@ -69,14 +81,14 @@ public extension Recipe {
         if inverted {
             return date
         } else {
-            return date.addingTimeInterval(TimeInterval(totalDuration(db: db) * 60))
+            return date.addingTimeInterval(TimeInterval(totalDuration(steps: steps(db: db)) * 60))
         }
     }
     
     /// total duration of all the steps in the brotValues array
-    func totalDuration(db: SqliteDatabase) -> Int {
+    func totalDuration(steps: [Step]) -> Int {
         var allTimes: Int = 0
-        for step in steps(db: db) {
+        for step in steps {
             allTimes += Int(step.duration/60)
         }
         return allTimes

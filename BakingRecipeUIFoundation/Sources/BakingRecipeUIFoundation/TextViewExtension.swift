@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-@available(iOS 13.0, *)
+
 public extension Text{
     func secondary() -> Text {
         self
@@ -17,7 +17,6 @@ public extension Text{
     }
 }
 
-@available(iOS 13.0, *)
 struct TextViewExtension_Previews: PreviewProvider {
     static var previews: some View {
         Text(".secondary").secondary()

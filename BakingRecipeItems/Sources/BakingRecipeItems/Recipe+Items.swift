@@ -8,16 +8,15 @@
 
 import BakingRecipeFoundation
 import BakingRecipeStrings
-import Foundation
+import BackAppCore
 
-@available(iOS 10.0, *)
 public extension Recipe {
     func nameItem() -> TextFieldItem {
         TextFieldItem(text: name)
     }
     
     var imageItem: ImageItem {
-        ImageItem(imageData: imageString)
+        ImageItem(imageData: imageData)
     }
     
     func amountItem() -> AmountItem {
@@ -29,16 +28,22 @@ public extension Recipe {
     }
     
     func controlStripItems(creating: Bool) -> [Item] {
-        creating ? [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients)] : [InfoStripItem(stepCount: steps.count, minuteCount: totalTime, ingredientCount: numberOfIngredients), DetailItem(name: Strings.startRecipe)]
+        let appData = BackAppData()
+        let steps = appData.steps(with: self.id)
+        let infoStripItem = InfoStripItem(stepCount: steps.count, minuteCount: totalDuration(steps: steps), ingredientCount: appData.numberOfAllIngredients(for: self.id))
+        return creating ? [infoStripItem] : [infoStripItem, DetailItem(name: Strings.startRecipe)]
     }
     
     var stepItems: [StepItem] {
-        steps.map({ StepItem(id: $0.id, step: $0)})
+        let appData = BackAppData()
+        let steps = appData.steps(with: self.id)
+        return steps.map({ StepItem(id: $0.id, step: $0)})
     }
     
     
     /// items for all steps in right order
     var allReoderedStepItems: [StepItem] {
-        reorderedSteps.map({ StepItem(id: $0.id, step: $0)})
+        let appData = BackAppData()
+        return appData.reorderedSteps(for: self.id).map({ StepItem(id: $0.id, step: $0)})
     }
 }

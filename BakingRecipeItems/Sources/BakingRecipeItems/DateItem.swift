@@ -11,8 +11,8 @@ import Foundation
 public class DateItem: Item {
     public var date: Date
     
-    public init(id: UUID = UUID(), date: Date) {
+    public init(date: Date) {
         self.date = date
-        super.init(id: id)
+        super.init()
     }
 }

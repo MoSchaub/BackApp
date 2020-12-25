@@ -8,11 +8,13 @@
 
 import SwiftUI
 import BakingRecipeFoundation
+import BackAppCore
 
 public struct StepRow: View {
     
     let step: Step
     let roomTemp = UserDefaults.standard.integer(forKey: "roomTemp")
+    let appData = BackAppData()
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -21,25 +23,26 @@ public struct StepRow: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(step.formattedName).font(.headline).lineLimit(1)
-                    Text(step.formattedTemp).secondary()
+                    Text(step.formattedTemp(roomTemp: roomTemp)).secondary()
                 }
                 Spacer()
-                Text(step.formattedTime).secondary()
+                Text(step.formattedDuration).secondary()
             }
             
-            ForEach(step.ingredients){ ingredient in
-                IngredientRow(ingredient: ingredient, step: self.step, roomTemp: self.roomTemp)
+            ForEach(appData.ingredients(with: step.id)) { ingredient in
+                IngredientRow(ingredient: ingredient, roomTemp: roomTemp)
             }
             
-            ForEach(step.subSteps){substep in
-                HStack{
+            ForEach(appData.substeps(for: step.id)) { substep in
+                HStack {
                     Text(substep.formattedName)
                     Spacer()
-                    Text(substep.formattedTemp)
+                    Text(substep.formattedTemp(roomTemp: roomTemp))
                     Spacer()
-                    Text(substep.totalFormattedAmount)
+                    Text(appData.totalFormattedMass(for: substep.id))
                 }
             }
+            
             HStack {
                 Text(step.notes)
                 Spacer()
@@ -54,18 +57,18 @@ public struct StepRow: View {
         self.step = step
     }
 }
-
-struct StepRow_Previews: PreviewProvider {
-    
-    static var recipe: Recipe{
-        let i = Ingredient(name: "Mehl", amount: 100, type: .flour)
-        let b2 = Step(name: "Sub", time: 60, ingredients: [], themperature: 20)
-        var b = Step(name: "Schritt1", time: 60, ingredients: [i], themperature: 20)
-        b.subSteps.append(b2)
-        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false)
-    }
-    
-    static var previews: some View {
-        StepRow(step: recipe.steps.first!)
-    }
-}
+//
+//struct StepRow_Previews: PreviewProvider {
+//
+//    static var recipe: Recipe{
+//        let i = Ingredient(name: "Mehl", amount: 100, type: .flour)
+//        let b2 = Step(name: "Sub", time: 60, ingredients: [], themperature: 20)
+//        var b = Step(name: "Schritt1", time: 60, ingredients: [i], themperature: 20)
+//        b.subSteps.append(b2)
+//        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false)
+//    }
+//
+//    static var previews: some View {
+//        StepRow(step: recipe.steps.first!)
+//    }
+//}

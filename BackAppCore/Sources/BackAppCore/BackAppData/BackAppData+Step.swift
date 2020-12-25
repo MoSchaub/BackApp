@@ -72,8 +72,8 @@ public extension BackAppData {
     }
     
     ///temperature for bulk liquids so the step has the right temperature
-    func temperature(for ingredient: Ingredient, roomTemp: Int, for stepId: Int) -> Int {
-        findStepAndReturnAttribute(for: stepId, failValue: 0) { step in
+    func temperature(for ingredient: Ingredient, roomTemp: Int) -> Int {
+        findStepAndReturnAttribute(for: ingredient.stepId, failValue: 0) { step in
             step.temperature(for: ingredient, roomTemp: roomTemp, db: database)
         }
     }

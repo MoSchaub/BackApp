@@ -6,7 +6,5 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
-
 public class InfoItem: TextItem {
 }

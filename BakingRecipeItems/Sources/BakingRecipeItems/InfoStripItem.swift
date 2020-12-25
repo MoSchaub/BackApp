@@ -6,8 +6,6 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import Foundation
-
 public class InfoStripItem: Item {
     public var stepCount: Int
     public var minuteCount: Int

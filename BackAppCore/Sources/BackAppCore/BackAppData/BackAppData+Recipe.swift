@@ -39,7 +39,7 @@ public extension BackAppData {
     ///total duration of all steps
     func totalDuration(for recipeId: Int) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
-            return recipe.totalDuration(db: database)
+            return recipe.totalDuration(steps: steps(with: recipeId))
         }
     }
     
@@ -55,7 +55,7 @@ public extension BackAppData {
     ///formatted total duration in the right unit
     func formattedTotalDuration(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            recipe.totalDuration(db: database).formattedDuration
+            recipe.totalDuration(steps: steps(with: recipeId)).formattedDuration
         }
     }
     
@@ -102,6 +102,12 @@ public extension BackAppData {
     func notSubsteps(for recipeId: Int) -> [Step] {
         findRecipeAndReturnAttribute(for: recipeId, failValue: []) { recipe in
             recipe.notSubsteps(db: database)
+        }
+    }
+    
+    func reorderedSteps(for recipeId: Int) -> [Step] {
+        findRecipeAndReturnAttribute(for: recipeId, failValue: []) { recipe in
+            recipe.reorderedSteps(db: database)
         }
     }
 }

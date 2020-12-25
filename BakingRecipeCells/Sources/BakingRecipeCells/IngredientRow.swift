@@ -9,19 +9,20 @@
 import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
+import BackAppCore
 
 struct IngredientRow: View {
     
     let ingredient: Ingredient
-    let step: Step
     let roomTemp: Int
+    let appData = BackAppData()
     
     var body: some View {
         HStack {
             Text(ingredient.name).lineLimit(1)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C").lineLimit(1)
+                Text("\(appData.temperature(for: ingredient, roomTemp: roomTemp))"  + "° C").lineLimit(1)
                 Spacer()
             } else{
                 EmptyView()

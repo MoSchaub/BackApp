@@ -8,7 +8,6 @@
 import SwiftUI
 import BakingRecipeStrings
 
-@available(iOS 13.0, *)
 public extension Color {
     static func cellBackgroundColor() -> Color {
         Color(UIColor.backgroundColor)

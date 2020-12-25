@@ -11,8 +11,8 @@ import Foundation
 public class TimesItem: Item {
     public var decimal: Decimal?
     
-    public init(id: UUID = UUID(), decimal: Decimal?) {
+    public init(decimal: Decimal?) {
         self.decimal = decimal
-        super.init(id: id)
+        super.init()
     }
 }

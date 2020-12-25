@@ -9,7 +9,7 @@
 import Foundation
 
 public class TextFieldItem: TextItem {
-    public override init(id: UUID = UUID(), text: String) {
-        super.init(id: id, text: text)
+    public override init(text: String) {
+        super.init(text: text)
     }
 }
