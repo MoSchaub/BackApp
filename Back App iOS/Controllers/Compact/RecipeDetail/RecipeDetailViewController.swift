@@ -360,6 +360,10 @@ private extension RecipeDetailViewController {
                 
         }
         
+        appData.observeChange(of: Step.self) { _ in
+            self.dataSource.update(animated: false)
+        }
+        
         let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)
         
         //navigate to the conroller

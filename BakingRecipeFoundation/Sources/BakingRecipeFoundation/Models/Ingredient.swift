@@ -124,7 +124,7 @@ public extension Ingredient{
     // create columns for the sql database
     static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
     static let name = Column("name", .text)
-    static let temperature = Column("temperature", .integer)
+    static let temperature = Column("temperature", .nullable(.integer))
     static let mass = Column("mass", .real)
     static let c = Column("c", .real)
     static let stepId = Column("stepId", .integer, ForeignKey<Step>(onDelete: .cascade, onUpdate: .ignore))
