@@ -21,7 +21,11 @@ class CompactHomeViewController: UITableViewController {
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
 
     private(set) lazy var dataSource = makeDataSource()
+    
     private var appData: BackAppData
+    
+    private lazy var pressed = false
+    
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
@@ -68,24 +72,16 @@ private extension CompactHomeViewController {
     ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         
-        // the new fresh recipe
-        let recipe = Recipe.init(id: 1)
+        let uniqueId = self.appData.newId(for: Recipe.self)
         
-        //the vc
-        let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
-            
-            //insert the new recipe when saving
-            //first make its id unique
-            var newRecipe = recipe
-            newRecipe.id = self.appData.newId(for: Recipe.self)
-            
-            
-            if self.appData.insert(newRecipe) {
-                DispatchQueue.main.async {
-                    self.dataSource.update(animated: false)
-                }
-            }
-        }, deleteRecipe: { _ in return false }) // no need to delete something if it does not exits yet
+        // the new fresh recipe
+        let recipe = Recipe.init(id: uniqueId)
+        
+        // insert the new recipe
+        guard appData.insert(recipe) else { return }
+        
+        // create the vc
+        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -103,6 +99,8 @@ private extension CompactHomeViewController {
 
 extension CompactHomeViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !pressed else { return }
+        pressed = true
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return}
         
         if let recipeItem = item as? RecipeItem {
@@ -116,6 +114,9 @@ extension CompactHomeViewController {
         } else if item.text == Strings.about {
             navigateToAboutView()
         }
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.35) {
+            self.pressed = false
+        }
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
@@ -124,26 +125,37 @@ extension CompactHomeViewController {
         if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
             
             //create the vc
-            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
-                
-                //update in the database if it changes
-                if self.appData.update(recipe) {
-                    DispatchQueue.main.async {
-                        self.dataSource.update(animated: false)
-                    }
-                }
-            }) { recipe in //delete recipe
-                let result: Bool
-                if self.splitViewController?.isCollapsed ?? false { //no splitvc visible
-                    result = self.appData.delete(recipe)
+            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData) {
+                //dismiss detail
+                if self.splitViewController?.isCollapsed ?? false {
+                    //nosplitVc visible
                     self.navigationController?.popViewController(animated: true)
-                } else { //splitvc
-                    let _ = self.splitViewController?.viewControllers.popLast()
-                    result = self.appData.delete(recipe)
-                    self.dataSource.update()
+                } else {
+                    //splitVc visible
+                    _ = self.splitViewController?.viewControllers.popLast()
                 }
-                return result
             }
+            
+//            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
+//
+//                //update in the database if it changes
+//                if self.appData.update(recipe) {
+//                    DispatchQueue.main.async {
+//                        self.dataSource.update(animated: false)
+//                    }
+//                }
+//            }) { recipe in //delete recipe
+//                let result: Bool
+//                if self.splitViewController?.isCollapsed ?? false { //no splitvc visible
+//                    result = self.appData.delete(recipe)
+//                    self.navigationController?.popViewController(animated: true)
+//                } else { //splitvc
+//                    let _ = self.splitViewController?.viewControllers.popLast()
+//                    result = self.appData.delete(recipe)
+//                    self.dataSource.update()
+//                }
+//                return result
+//            }
             
             //push to the view controller
             splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)

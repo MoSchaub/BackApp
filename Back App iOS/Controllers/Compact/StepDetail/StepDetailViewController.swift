@@ -19,17 +19,30 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Properties
     
-    /// the step whose details are shown
-    @Binding private var step: Step
+    private let stepId: Int
     
-    /// the recipe the step is in
-    @Binding private var recipe: Recipe
+    /// the step whose details are shown
+    private var step: Step {
+        get {
+            return appData.object(with: stepId, of: Step.self)!
+        }
+        
+        set {
+            DispatchQueue.global(qos: .utility).async {
+                if self.appData.update(newValue) {
+                    DispatchQueue.global(qos: .utility).async {
+                        self.setupNavigationBar()
+                    }
+                }
+            }
+        }
+    }
 
     /// table view dataSource
     private lazy var dataSource = makeDiffableDataSource()
     
     /// appData
-    private lazy var appData = BackAppData()
+    private var appData: BackAppData
     
     ///wether the datePickerCell is shown
     private var datePickerShown: Bool {
@@ -43,16 +56,10 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Initalizers
     
-    init(step: Binding<Step>, recipe: Binding<Recipe>) {
-        self._step = step
-        self._recipe = recipe
+    init(stepId: Int, appData: BackAppData) {
+        self.appData = appData
+        self.stepId = stepId
         super.init(style: .insetGrouped)
-        
-        self._step = step.onUpdate{
-            DispatchQueue.global(qos: .utility).async {
-                self.setupNavigationBar()
-            }
-        }
         
     }
     
@@ -88,7 +95,7 @@ extension StepDetailViewController {
         return UITableView.automaticDimension
     }
     
-    // MARK: - Header
+    // MARK:  Header
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == StepDetailSection.ingredients.rawValue {
@@ -361,9 +368,7 @@ private extension StepDetailViewController {
         
         // MARK: Creating Cells
 
-        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep }),
-                                    recipe: Binding<Recipe>(get: { return self.recipe }, set: { newRecipe in  self.recipe = newRecipe })
-        ){ (tableView, indexPath, item) -> UITableViewCell? in
+        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep })) { (tableView, indexPath, item) -> UITableViewCell? in
             if let textFieldItem = item as? TextFieldItem {
                 // notes or name
                 
@@ -511,13 +516,12 @@ fileprivate extension Ingredient {
 fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetailSection, Item> {
     
     @Binding var step: Step
-    @Binding var recipe: Recipe
     
     private lazy var appData = BackAppData()
     
-    init(tableView: UITableView, step: Binding<Step>, recipe: Binding<Recipe>, cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
+    init(tableView: UITableView, step: Binding<Step>,
+         cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
         self._step = step
-        self._recipe = recipe
         super.init(tableView: tableView, cellProvider: cellProvider)
     }
     

@@ -23,11 +23,16 @@ public class BackAppData {
         /// create new database or use the existing one if it exist in the documents directory
         do {
             self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+        
+        do {
             try database.createTable(Recipe.self)
             try database.createTable(Step.self)
             try database.createTable(Ingredient.self)
         } catch {
-            fatalError(error.localizedDescription)
+            print(error.localizedDescription)
         }
 
     }
@@ -116,4 +121,10 @@ public class BackAppData {
     public func object<T:BakingRecipeSqlable>(with id: Int, of Type: T.Type = T.self) -> T? {
         ((try? T.read().filter(T.id == id).run(database)) ?? []).first
     }
+    
+    /// do something if a specified table in the database updates
+    public func observeChange<T:BakingRecipeSqlable>(of type: T.Type, do something: @escaping (Int) -> Void ) {
+        database.observe(on: type, doThis: something)
+    }
+    
 }

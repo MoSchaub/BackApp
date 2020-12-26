@@ -54,6 +54,10 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
                 return cell
             }
         }
+        
+        appData.observeChange(of: Recipe.self) { _ in
+            self.update(animated: false)
+        }
     }
     
     /// updates and rerenders the tableview

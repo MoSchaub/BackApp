@@ -26,7 +26,7 @@ public extension BackAppData {
     }
     
     private func recipeItem(for recipe: Recipe) -> RecipeItem {
-        return RecipeItem(id: recipe.id, name: recipe.name, imageData: recipe.imageData, minuteLabel: self.formattedTotalDuration(for: recipe.id))
+        return RecipeItem(id: recipe.id, name: recipe.formattedName, imageData: recipe.imageData, minuteLabel: self.formattedTotalDuration(for: recipe.id))
     }
     
     ///items for all recipes
