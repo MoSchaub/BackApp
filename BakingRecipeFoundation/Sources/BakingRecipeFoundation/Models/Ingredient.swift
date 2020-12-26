@@ -128,7 +128,7 @@ public extension Ingredient{
     static let mass = Column("mass", .real)
     static let c = Column("c", .real)
     static let stepId = Column("stepId", .integer, ForeignKey<Step>(onDelete: .cascade, onUpdate: .ignore))
-    static var tableLayout: [Column] = [id, name, temperature, mass, c]
+    static var tableLayout: [Column] = [id, name, temperature, mass, c, stepId]
     
     
     //get values from columns
