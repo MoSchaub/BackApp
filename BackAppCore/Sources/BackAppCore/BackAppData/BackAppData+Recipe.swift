@@ -111,4 +111,10 @@ public extension BackAppData {
             recipe.reorderedSteps(db: database)
         }
     }
+    
+    func formattedStartDate(for item: Step, with recipeId: Int) -> String {
+        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
+            recipe.formattedStartDate(for: item, db: database)
+        }
+    }
 }

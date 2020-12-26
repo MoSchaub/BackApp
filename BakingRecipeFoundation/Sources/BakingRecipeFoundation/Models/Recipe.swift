@@ -122,7 +122,7 @@ public extension Recipe {
     }
     
     /// the startDateText for a given Step in this recipe
-    private func formattedStartDate(for item: Step, db: SqliteDatabase) -> String {
+    func formattedStartDate(for item: Step, db: SqliteDatabase) -> String {
         let datesDict = startDatesDictionary(db: db)
         if let date = datesDict[item] {
             return dateFormatter.string(from: date)

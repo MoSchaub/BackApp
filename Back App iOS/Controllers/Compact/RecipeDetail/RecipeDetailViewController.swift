@@ -367,14 +367,14 @@ private extension RecipeDetailViewController {
     }
     
     private func startRecipe() {
-//        let recipeBinding = Binding(get: {
-//            return self.recipe
-//        }) { (newValue) in
-//            self.recipe = newValue
-//        }
-//        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
-//
-//        navigationController?.pushViewController(scheduleForm, animated: true)
+        let recipeBinding = Binding(get: {
+            return self.recipe
+        }) { (newValue) in
+            self.recipe = newValue
+        }
+        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
+
+        navigationController?.pushViewController(scheduleForm, animated: true)
     }
 }
 
