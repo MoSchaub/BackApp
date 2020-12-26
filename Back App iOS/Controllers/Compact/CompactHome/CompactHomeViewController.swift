@@ -136,27 +136,6 @@ extension CompactHomeViewController {
                 }
             }
             
-//            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
-//
-//                //update in the database if it changes
-//                if self.appData.update(recipe) {
-//                    DispatchQueue.main.async {
-//                        self.dataSource.update(animated: false)
-//                    }
-//                }
-//            }) { recipe in //delete recipe
-//                let result: Bool
-//                if self.splitViewController?.isCollapsed ?? false { //no splitvc visible
-//                    result = self.appData.delete(recipe)
-//                    self.navigationController?.popViewController(animated: true)
-//                } else { //splitvc
-//                    let _ = self.splitViewController?.viewControllers.popLast()
-//                    result = self.appData.delete(recipe)
-//                    self.dataSource.update()
-//                }
-//                return result
-//            }
-            
             //push to the view controller
             splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }
