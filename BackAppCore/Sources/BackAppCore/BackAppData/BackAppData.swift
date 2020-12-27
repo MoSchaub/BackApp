@@ -19,6 +19,12 @@ public class BackAppData {
         FileManager.default.documentsDirectory.path
     }
     
+    ///the title of an alert displayed in the ui
+    public var inputAlertTitle = ""
+    
+    ///the alert message for the same alert
+    public var inputAlertMessage = ""
+    
     public init() {
         /// create new database or use the existing one if it exist in the documents directory
         do {

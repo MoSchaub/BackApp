@@ -37,19 +37,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //    func sceneWillResignActive(_ scene: UIScene) {
 //        recipeStore.update()
 //    }
-//    
-//    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-//        // open file in app
-//        let _ = URLContexts.map({ self.recipeStore.open($0.url)})
-//        compactHomeVC.dataSource.update(animated: true)
-//        
-//        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-//            alert.dismiss(animated: true, completion: nil)
-//        }))
-//        
-//        compactHomeVC.present(alert, animated: true)
-//    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        // open file in app
+        let _ = URLContexts.map({ self.appData.open($0.url)})
+        compactHomeVC.dataSource.update(animated: true)
+        
+        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        compactHomeVC.present(alert, animated: true)
+    }
 
 }
 

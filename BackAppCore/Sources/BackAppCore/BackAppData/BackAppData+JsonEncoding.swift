@@ -29,7 +29,13 @@ public extension BackAppData {
         case type
     }
     
-    //encodes a recipe with its steps and ingredients to a .bakingAppRecipeFile
+    ///exports all recipes to a file
+    /// - Returns: the url the file is written to
+    func exportAllRecipesToFile() -> URL {
+        return exportRecipesToFile(recipes: self.allRecipes)
+    }
+    
+    //encodes recipes with its steps and ingredients to a .bakingAppRecipeFile
     func exportRecipesToFile(recipes: [Recipe]) -> URL {
         let recipesJSON = recipes.map { encodeRecipeToJson(with: $0.id) }
         

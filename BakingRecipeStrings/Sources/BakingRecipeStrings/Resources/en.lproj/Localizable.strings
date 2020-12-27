@@ -57,10 +57,10 @@
 "bulkLiquid" = "bulk liquid";
 
 /*  */
-"date" = "";
+"date" = "date";
 
 
-"deleteRecipeMessage" = "";
+"deleteRecipeMessage" = "do you really want to delete this recipe";
 
 
 "donate_text" = "The use of this app with all its functions is completely free and without any advertising.\nHowever, the development of this app is connected with a lot of costs and work and if you want to support the development of this app with a small contribution, we as developers would be very happy.";

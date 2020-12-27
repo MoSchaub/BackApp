@@ -108,7 +108,7 @@ extension CompactHomeViewController {
         } else if item.text == Strings.roomTemperature {
             navigateToRoomTempPicker(item: item)
         } else if item.text == Strings.importFile {
-//            openImportFilePopover()
+            openImportFilePopover()
         } else if item.text == Strings.exportAll {
             openExportAllShareSheet(sender: tableView.cellForRow(at: indexPath)!)
         } else if item.text == Strings.about {
@@ -164,16 +164,16 @@ extension CompactHomeViewController {
         }
     }
     
-//    private func openImportFilePopover() {
-//        self.documentPicker.delegate = self
-//        // Present the document picker.
-//        self.present(documentPicker, animated: true, completion: deselectRow)
-//    }
+    private func openImportFilePopover() {
+        self.documentPicker.delegate = self
+        // Present the document picker.
+        self.present(documentPicker, animated: true, completion: deselectRow)
+    }
     
     private func openExportAllShareSheet(sender: UIView) {
-//        let ac = UIActivityViewController(activityItems: [appData.exportToURL()], applicationActivities: nil)
-//        ac.popoverPresentationController?.sourceView = sender
-//        present(ac,animated: true, completion: deselectRow)
+        let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
+        ac.popoverPresentationController?.sourceView = sender
+        present(ac,animated: true, completion: deselectRow)
     }
     
     private func navigateToAboutView() {
@@ -189,23 +189,23 @@ extension CompactHomeViewController {
     
 }
 
-//extension CompactHomeViewController: UIDocumentPickerDelegate {
-//    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-//        
-//        //load recipes
-//        for url in urls {
-//            recipeStore.open(url)
-//        }
-//        
-//        //update cells
-//        self.dataSource.update(animated: true)
-//        
-//        //alert
-//        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
-//            alert.dismiss(animated: true)
-//        }))
-//        
-//        present(alert, animated: true)
-//    }
-//}
+extension CompactHomeViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        
+        //load recipes
+        for url in urls {
+            appData.open(url)
+        }
+        
+        //update cells
+        self.dataSource.update(animated: true)
+        
+        //alert
+        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
+            alert.dismiss(animated: true)
+        }))
+        
+        present(alert, animated: true)
+    }
+}

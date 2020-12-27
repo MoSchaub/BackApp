@@ -170,7 +170,7 @@ public extension Recipe {
     
     /// steps that are no substeps of any other step
     func notSubsteps(db: SqliteDatabase) -> [Step] {
-        self.steps(db: db).filter({ $0.superStepId != nil })
+        self.steps(db: db).filter({ $0.superStepId == nil })
     }
     
     static var example: (Recipe, [Step], [Ingredient]) {

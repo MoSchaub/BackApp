@@ -8,15 +8,37 @@
 import SwiftyJSON
 import Foundation
 import BakingRecipeFoundation
+import BakingRecipeStrings
 
 public extension BackAppData {
     
-    func importFile(data: Data) {
+    func open(_ url: URL) {
+        let loaded = url.loadData()
+        
+        if let loadedData = loaded.data {
+            if importData(loadedData) {
+                
+                //set succes
+                self.inputAlertTitle = Strings.success
+                self.inputAlertTitle = Strings.recipesImported
+            } else {
+                
+                //send error message
+                self.inputAlertTitle = Strings.Alert_Error
+                self.inputAlertMessage = ""
+            }
+        }
+    }
+    
+    func importData(_ data: Data) -> Bool {
         if let json = try? JSON(data: data) {
 
             if let recipesJson = json[CodingKeys.recipes.rawValue].array {
                 _ = recipesJson.map { decodeAndImportRecipe(from: $0)}
             }
+            return true
+        } else {
+            return false
         }
     }
     
@@ -105,7 +127,7 @@ public extension BackAppData {
         ingredient.type = Ingredient.Style(rawValue: typeDouble) ?? .other
         
         //insert it
-        insert(ingredient)
+        _ = insert(ingredient)
     }
     
 }

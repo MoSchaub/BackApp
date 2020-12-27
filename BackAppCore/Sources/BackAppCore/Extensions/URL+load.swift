@@ -35,4 +35,22 @@ extension URL {
         // return decoded Data
         return (decodedData, nil)
     }
+    
+    ///loads data from the url
+    /// - returns: the loaded data and the potential error 
+    func loadData() -> (data: Data?, error: Error?) {
+        let data: Data
+        
+        // read data from url
+        do {
+            let _ = self.startAccessingSecurityScopedResource() // start the security-scoped resource before reading the file
+            data = try Data(contentsOf: self)
+            self.stopAccessingSecurityScopedResource() // release the security-scoped resource after the data is read from the file
+        } catch {
+            print("Couldn't load \(self) from main bundle:\n\(error)")
+            return (nil, error)
+        }
+        
+        return (data, nil)
+    }
 }
