@@ -164,7 +164,6 @@
 		CDDFC21E2591087B00B497AE /* BackAppCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppCore; sourceTree = "<group>"; };
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
-		CDF65BC42598B92F0098629C /* BackAppJson */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppJson; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,7 +234,6 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
-				CDF65BC42598B92F0098629C /* BackAppJson */,
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD285D3C258E44E900813A4C /* BakingRecipeCells */,
 				CD285D31258E440C00813A4C /* BakingRecipeSections */,

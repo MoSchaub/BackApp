@@ -5,7 +5,6 @@
 //  Created by Moritz Schaub on 27.12.20.
 //
 
-import BackAppCore
 import SwiftyJSON
 import Foundation
 import BakingRecipeFoundation
