@@ -109,7 +109,7 @@ public extension Ingredient {
     }
     
     //initializer
-    init(stepId: Int, id: Int, name: String, amount: Double, type: Style ) {
+    init(stepId: Int, id: Int, name: String = "", amount: Double = 0, type: Style = .other) {
         self.id = id
         self.name = name
         self.mass = amount
