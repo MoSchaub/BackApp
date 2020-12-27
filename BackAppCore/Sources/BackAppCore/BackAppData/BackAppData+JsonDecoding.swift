@@ -9,12 +9,12 @@ import SwiftyJSON
 import Foundation
 import BakingRecipeFoundation
 
-extension BackAppData {
+public extension BackAppData {
     
     func importFile(data: Data) {
         if let json = try? JSON(data: data) {
 
-            if let recipesJson = json["recipes"].array {
+            if let recipesJson = json[CodingKeys.recipes.rawValue].array {
                 _ = recipesJson.map { decodeAndImportRecipe(from: $0)}
             }
         }
@@ -25,22 +25,22 @@ extension BackAppData {
         
         var recipe = Recipe(id: newId)
         
-        recipe.name = json["name"].stringValue
+        recipe.name = json[CodingKeys.name.rawValue].stringValue
         
-        if let info = json["info"].string {
+        if let info = json[CodingKeys.info.rawValue].string {
             recipe.info = info
         }
         
-        let difficultyNumber = json["difficulty"].intValue
+        let difficultyNumber = json[CodingKeys.info.rawValue].intValue
         recipe.difficulty = Difficulty(rawValue: difficultyNumber) ?? .easy
         
-        recipe.times = Decimal(json["times"].doubleValue)
+        recipe.times = Decimal(json[CodingKeys.times.rawValue].doubleValue)
         
-        let imageString = json["imageData"].stringValue
+        let imageString = json[CodingKeys.imageData.rawValue].stringValue
         recipe.imageData = Data(base64Encoded: imageString)
         
         //add the recipe
-        if insert(recipe), let stepsJson = json["step"].array {
+        if insert(recipe), let stepsJson = json[CodingKeys.steps.rawValue].array {
             //decode and import the steps
             _ = stepsJson.map { decodeAndImportStep(from: $0, with: newId, and: nil) }
         }
@@ -55,15 +55,15 @@ extension BackAppData {
 
         step.superStepId = superstepId
 
-        step.name = json["name"].stringValue
+        step.name = json[CodingKeys.name.rawValue].stringValue
         
-        step.duration = json["duration"].doubleValue
+        step.duration = json[CodingKeys.duration.rawValue].doubleValue
         
-        if let temperature = json["temperature"].int {
+        if let temperature = json[CodingKeys.temperature.rawValue].int {
             step.temperature = temperature
         }
         
-        if let notes = json["notes"].string {
+        if let notes = json[CodingKeys.notes.rawValue].string {
             step.notes = notes
         }
         
@@ -71,16 +71,16 @@ extension BackAppData {
         if insert(step) {
         
             //substeps
-            if let substepsJson = json["substeps"].array {
+            if let substepsJson = json[CodingKeys.substeps.rawValue].array {
                 
                 //do the same thing to the substeps
                 _ = substepsJson.map { decodeAndImportStep(from: $0, with: recipeId, and: step.id) }
             }
             
             //ingredients
-            if let ingredientsJson = json["ingredients"].array {
+            if let ingredientsJson = json[CodingKeys.ingredients.rawValue].array {
                 
-                
+                //import the ingredients used in this step
                 _ = ingredientsJson.map { decodeAndImportIngredient(from: $0, with: step.id)  }
             }
         
@@ -93,49 +93,19 @@ extension BackAppData {
         
         var ingredient = Ingredient(stepId: stepId, id: newId)
         
-        ingredient.name = json["name"].stringValue
+        ingredient.name = json[CodingKeys.name.rawValue].stringValue
         
-        ingredient.mass = json["mass"].doubleValue
+        ingredient.mass = json[CodingKeys.mass.rawValue].doubleValue
         
-        if let temperature = json["temperature"].int {
+        if let temperature = json[CodingKeys.temperature.rawValue].int {
             ingredient.temperature = temperature
         }
         
-        let typeDouble = json["type"].doubleValue
+        let typeDouble = json[CodingKeys.type.rawValue].doubleValue
         ingredient.type = Ingredient.Style(rawValue: typeDouble) ?? .other
         
         //insert it
         insert(ingredient)
     }
-    
-//    private func decodeIngredient(from json: JSON, with stepId: Int) {
-//
-//        let newId = self.newId(for: Ingredient.self)
-//
-//        var ingredient = Ingredient(stepId: stepId, id: newId)
-//
-//        ingredient.name = json["name"].stringValue
-//
-//        if let amount = json["amount"].double {
-//            ingredient.mass = amount
-//        } else if let mass = json["mass"].double {
-//            ingredient.mass = mass
-//        }
-//
-//        if let isBulkLiquid = json["isBulkLiquid"].bool {
-//            if isBulkLiquid {
-//                ingredient.type = .bulkLiquid
-//            } else {
-//                ingredient.type = .other
-//            }
-//        } else if let typeDouble = json["type"].double {
-//            let type = Ingredient.Style.allCases.first(where: { $0.rawValue == typeDouble }) ?? .other
-//            ingredient.type = type
-//        }
-//
-//        //insert the ingredient into the database
-//
-//        _ = self.insert(ingredient)
-//    }
     
 }
