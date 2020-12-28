@@ -358,10 +358,7 @@ private extension RecipeDetailViewController {
             // insert it
             guard appData.insert(step) else { return }
                 
-        }
-        
-        appData.observeChange(of: Step.self) { _ in
-            self.dataSource.update(animated: false)
+            self.recipeChanged = true
         }
         
         let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)

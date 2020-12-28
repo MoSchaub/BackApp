@@ -215,10 +215,6 @@ extension StepDetailViewController {
             
             let stepDetailVC = StepDetailViewController(stepId: item.id, appData: appData)
             
-            appData.observeChange(of: Step.self) { _ in
-                self.updateList(animated: false)
-            }
-
             //navigate to the controller
             navigationController?.pushViewController(stepDetailVC, animated: true)
         }

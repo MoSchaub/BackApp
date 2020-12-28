@@ -57,7 +57,7 @@ class CompactHomeTests: XCTestCase {
     }
     
     func delete(recipe: Recipe) throws {
-        appTables.staticTexts[recipe.name].swipeLeft()
+        appTables.staticTexts[recipe.name].firstMatch.swipeLeft()
         appTables.buttons["Delete"].tap()
         XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipe.name].exists)
     }
