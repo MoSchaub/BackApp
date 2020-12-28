@@ -8,12 +8,12 @@
 
 import UIKit
 import BakingRecipeStrings
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeCells
 
 class RoomTempTableViewController: UITableViewController {
     
-    var recipeStore: RecipeStore!
+    var appData: BackAppData!
     var updateTemp: ((Int) -> ())!
     var picker: UIPickerView!
 

@@ -12,15 +12,18 @@ import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeCells
+import BackAppCore
 
 class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
     
     @Binding var recipe: Recipe
     let creating: Bool
+    let appData: BackAppData
     
-    init(recipe: Binding<Recipe>, creating: Bool, tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String), updateInfo: @escaping (String) -> () ) {
+    init(recipe: Binding<Recipe>, creating: Bool, appData: BackAppData ,tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String), updateInfo: @escaping (String) -> () ) {
         self._recipe = recipe
         self.creating = creating
+        self.appData = appData
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             let color = UIColor.backgroundColor
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldCell {
@@ -68,9 +71,9 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         (itemIdentifier(for: indexPath) as? StepItem) != nil
     }
     
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        itemIdentifier(for: indexPath) as? StepItem != nil
-    }
+//    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+//        itemIdentifier(for: indexPath) as? StepItem != nil
+//    }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete, let item = itemIdentifier(for: indexPath) as? StepItem {
@@ -82,14 +85,15 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         }
     }
     
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.row < recipe.steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-        guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
-        guard recipe.steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-    
-        let stepToMove = recipe.steps.remove(at: sourceIndexPath.row)
-        recipe.steps.insert(stepToMove, at: destinationIndexPath.row)
-    }
+//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//        let steps = appData.steps(with: recipe.id)
+//        guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+//        guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
+//        guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+//
+//        let stepToMove = steps.remove(at: sourceIndexPath.row)
+//        recipe.steps.insert(stepToMove, at: destinationIndexPath.row)
+//    }
     
 }
 
@@ -121,9 +125,9 @@ extension RecipeDetailDataSource {
         tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
     }
     
-    private func deleteStep(_ id: UUID) {
-        if let index = recipe.steps.firstIndex(where: { $0.id == id }) {
-            self.recipe.steps.remove(at: index)
+    private func deleteStep(_ id: Int) {
+        if let step = appData.steps(with: recipe.id).first(where: { $0.id == id }) {
+            _ = appData.delete(step)
         }
     }
 }

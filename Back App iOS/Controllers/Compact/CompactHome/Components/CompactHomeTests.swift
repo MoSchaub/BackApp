@@ -30,6 +30,16 @@ class CompactHomeTests: XCTestCase {
         app.navigationBars["room temperature"].buttons["Baking App"].tap()
 
         XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
+        
+        app.terminate()
+        
+        app.launch()
+        
+        appTables.cells.staticTexts["room temperature"].tap()
+        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "20")
+        app.navigationBars["room temperature"].buttons["Baking App"].tap()
+        
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["20° C"].exists)
     }
     
     func testNavigatingToAboutScreen() throws {
@@ -40,8 +50,10 @@ class CompactHomeTests: XCTestCase {
     }
     
     func testDeletingRecipe() throws {
-        app.launch()
-        try! delete(recipe: Recipe.example)
+        if app.tables.staticTexts[Recipe.example.name].exists {
+            app.launch()
+            try! delete(recipe: Recipe.example)
+        }
     }
     
     func delete(recipe: Recipe) throws {

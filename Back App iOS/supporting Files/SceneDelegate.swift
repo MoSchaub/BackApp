@@ -7,15 +7,15 @@
 //
 
 import UIKit
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeStrings
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
-    let recipeStore = RecipeStore()
-    lazy var compactHomeVC = CompactHomeViewController(recipeStore: recipeStore)
+    let appData = BackAppData()
+    lazy var compactHomeVC = CompactHomeViewController(appData: appData)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -34,16 +34,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window!.tintColor = UIColor.backgroundColor
     }
     
-    func sceneWillResignActive(_ scene: UIScene) {
-        recipeStore.update()
-    }
+//    func sceneWillResignActive(_ scene: UIScene) {
+//        recipeStore.update()
+//    }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
-        let _ = URLContexts.map({ self.recipeStore.open($0.url)})
+        let _ = URLContexts.map({ self.appData.open($0.url)})
         compactHomeVC.dataSource.update(animated: true)
         
-        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
+        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
             alert.dismiss(animated: true, completion: nil)
         }))

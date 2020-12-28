@@ -9,7 +9,7 @@
 import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeSections
 import BakingRecipeItems
 import BakingRecipeCells
@@ -18,12 +18,14 @@ class ScheduleFormViewController: UITableViewController {
     
     @Binding private var recipe: Recipe
     var times: Decimal?
+    private var appData: BackAppData
     
     private lazy var dataSource = makeDataSource()
     
-    init(recipe: Binding<Recipe>) {
+    init(recipe: Binding<Recipe>, appData: BackAppData) {
         self._recipe = recipe
         self.times = recipe.wrappedValue.times
+        self.appData = appData
         super.init(style: .insetGrouped)
     }
     
@@ -61,7 +63,7 @@ private extension ScheduleFormViewController {
     }
     
     @objc private func proceedToScheduleView() {
-        navigationController?.pushViewController(ScheduleViewControllor(recipe: self.recipe, roomTemp: Standarts.standardRoomTemperature, times: self.times), animated: true)
+        navigationController?.pushViewController(ScheduleViewController(recipe: self.recipe, roomTemp: Standarts.standardRoomTemperature, times: self.times, appData: appData), animated: true)
     }
     
     private func registerCells() {

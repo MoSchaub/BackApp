@@ -8,11 +8,12 @@
 
 import SwiftUI
 import MobileCoreServices
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeItems
 import BakingRecipeCells
+import BakingRecipeFoundation
 
 class CompactHomeViewController: UITableViewController {
     
@@ -20,13 +21,17 @@ class CompactHomeViewController: UITableViewController {
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
 
     private(set) lazy var dataSource = makeDataSource()
-    private var recipeStore: RecipeStore
+    
+    private var appData: BackAppData
+    
+    private lazy var pressed = false
+    
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
     
-    init(recipeStore: RecipeStore) {
-        self.recipeStore = recipeStore
+    init(appData: BackAppData) {
+        self.appData = appData
         super.init(style: .insetGrouped)
     }
     
@@ -64,18 +69,19 @@ private extension CompactHomeViewController {
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
     }
     
+    ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         
-        // the new fresh recipe
-        let recipe = Recipe(name: "", brotValues: [])
+        let uniqueId = self.appData.newId(for: Recipe.self)
         
-        //the vc
-        let vc = RecipeDetailViewController(recipe: recipe, creating: true, saveRecipe: { recipe in
-            self.recipeStore.save(recipe: recipe)
-            DispatchQueue.main.async {
-                self.dataSource.update(animated: false)
-            }
-        }, deleteRecipe: { _ in return false })
+        // the new fresh recipe
+        let recipe = Recipe.init(id: uniqueId)
+        
+        // insert the new recipe
+        guard appData.insert(recipe) else { return }
+        
+        // create the vc
+        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -87,12 +93,14 @@ private extension CompactHomeViewController {
 
 private extension CompactHomeViewController {
     private func makeDataSource() -> DataSource {
-        HomeDataSource(recipeStore: recipeStore, tableView: tableView)
+        HomeDataSource(appData: appData, tableView: tableView)
     }
 }
 
 extension CompactHomeViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !pressed else { return }
+        pressed = true
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return}
         
         if let recipeItem = item as? RecipeItem {
@@ -106,27 +114,29 @@ extension CompactHomeViewController {
         } else if item.text == Strings.about {
             navigateToAboutView()
         }
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.35) {
+            self.pressed = false
+        }
     }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
-        if let recipe = recipeStore.allRecipes.first(where: { $0.id == recipeItem.id}) {
-            let vc = RecipeDetailViewController(recipe: recipe, creating: false, saveRecipe: { recipe in
-                self.recipeStore.update(recipe: recipe)
-                DispatchQueue.main.async {
-                    self.dataSource.update(animated: false)
-                }
-            }) { recipe in
-                let result: Bool
+        
+        // get the recipe from the database
+        if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
+            
+            //create the vc
+            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData) {
+                //dismiss detail
                 if self.splitViewController?.isCollapsed ?? false {
-                    result = self.dataSource.deleteRecipe(recipe.id)
+                    //nosplitVc visible
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let _ = self.splitViewController?.viewControllers.popLast()
-                    result = self.dataSource.deleteRecipe(recipe.id)
-                    self.dataSource.update()
+                    //splitVc visible
+                    _ = self.splitViewController?.viewControllers.popLast()
                 }
-                return result
             }
+            
+            //push to the view controller
             splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }
     }
@@ -134,7 +144,7 @@ extension CompactHomeViewController {
     private func navigateToRoomTempPicker(item: TextItem) {
         let vc = RoomTempTableViewController(style: .insetGrouped)
         
-        vc.recipeStore = recipeStore
+        vc.appData = appData
         vc.updateTemp = { [self] temp in
             Standarts.standardRoomTemperature = temp
             self.updateStandarts()
@@ -147,7 +157,7 @@ extension CompactHomeViewController {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteSections([.settings])
             snapshot.appendSections([.settings])
-            snapshot.appendItems(self.recipeStore.settingsItems, toSection: .settings)
+            snapshot.appendItems(self.appData.settingsItems, toSection: .settings)
             DispatchQueue.main.async {
                 self.dataSource.apply(snapshot, animatingDifferences: false)
             }
@@ -161,7 +171,7 @@ extension CompactHomeViewController {
     }
     
     private func openExportAllShareSheet(sender: UIView) {
-        let ac = UIActivityViewController(activityItems: [recipeStore.exportToURL()], applicationActivities: nil)
+        let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         ac.popoverPresentationController?.sourceView = sender
         present(ac,animated: true, completion: deselectRow)
     }
@@ -184,14 +194,14 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         
         //load recipes
         for url in urls {
-            recipeStore.open(url)
+            appData.open(url)
         }
         
         //update cells
         self.dataSource.update(animated: true)
         
         //alert
-        let alert = UIAlertController(title: recipeStore.inputAlertTitle, message: recipeStore.inputAlertMessage, preferredStyle: .alert)
+        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
             alert.dismiss(animated: true)
         }))

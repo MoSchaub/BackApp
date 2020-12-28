@@ -9,22 +9,24 @@
 import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
-import BakingRecipeCore
+import BackAppCore
 import BakingRecipeItems
 
-class ScheduleViewControllor: UITableViewController {
+class ScheduleViewController: UITableViewController {
     // - MARK: - Properties
     let recipe: Recipe
     let roomTemp: Int
     let times: Decimal?
+    let appData: BackAppData
     
     private lazy var dataSource = makeDataSource()
     
     // - MARK: - Initializer
-    init(recipe: Recipe, roomTemp: Int, times: Decimal?) {
+    init(recipe: Recipe, roomTemp: Int, times: Decimal?, appData: BackAppData) {
         self.recipe = recipe
         self.roomTemp = roomTemp
         self.times = times
+        self.appData = appData
         super.init(style: .insetGrouped)
     }
     
@@ -34,7 +36,7 @@ class ScheduleViewControllor: UITableViewController {
     
 }
 
-extension ScheduleViewControllor {
+extension ScheduleViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
@@ -52,7 +54,7 @@ extension ScheduleViewControllor {
     }
 }
 
-private extension ScheduleViewControllor {
+private extension ScheduleViewController {
     // - MARK: - Register Cells
     private func registerCells() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.scheduleCell)
@@ -65,11 +67,11 @@ private extension ScheduleViewControllor {
     }
 }
 
-private extension ScheduleViewControllor {
+private extension ScheduleViewController {
     // - MARK: - Data Source
     private func makeDataSource() -> UITableViewDiffableDataSource<Int, StepItem> {
         UITableViewDiffableDataSource<Int, StepItem>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            if let step = self.recipe.reorderedSteps.first(where: { $0.id == item.id }) {
+            if let step = self.appData.object(with: item.id, of: Step.self) {
                 let cell = UITableViewCell()
                 cell.selectionStyle = .none
                 
@@ -87,7 +89,7 @@ private extension ScheduleViewControllor {
     // - MARK: - Snapshot
     private func updateList(animated: Bool = true) {
         var sections = [Int]()
-        let _ = recipe.reorderedSteps.enumerated().map { sections.append($0.offset)} //get a section for each step
+        let _ = appData.reorderedSteps(for: self.recipe.id).enumerated().map { sections.append($0.offset)} //get a section for each step
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, StepItem>() // create the snapshot
         
@@ -100,13 +102,17 @@ private extension ScheduleViewControllor {
 }
 
 // - MARK: - Share text
-private extension ScheduleViewControllor {
+private extension ScheduleViewController {
     @objc private func shareText(sender: UIBarButtonItem) {
-        let vc = UIActivityViewController(activityItems: [recipe.text(roomTemp: roomTemp, scaleFactor: factor)], applicationActivities: nil)
+        
+        let textToShare = appData.text(for: recipe.id, roomTemp: roomTemp, scaleFactor: factor) //get the text to share
+        
+        let vc = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil) //share the text
         vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
     }
     
+    //calculate the factor
     private var factor: Double {
         let times = self.times ?? 1
         let recipeTimes = self.recipe.times ?? 1
@@ -117,13 +123,13 @@ private extension ScheduleViewControllor {
 
 // - MARK: - SwiftUI Views
 import SwiftUI
-private extension ScheduleViewControllor {
+private extension ScheduleViewController {
     private func customIngredientRow(ingredient: Ingredient, step: Step) -> some View{
         HStack {
             Text(ingredient.name)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text("\(step.themperature(for: ingredient, roomThemperature: roomTemp))" + "° C")
+                Text("\(appData.temperature(for: ingredient, roomTemp: roomTemp))" + "° C")
                 Spacer()
             } else{
                 EmptyView()
@@ -140,25 +146,26 @@ private extension ScheduleViewControllor {
                     Text(step.formattedName)
                         .font(.headline)
                     Spacer()
-                    Text(recipe.formattedStartDate(for: step))
+                    Text(appData.formattedStartDate(for: step, with: recipe.id))
                 }
-                Text("\(step.formattedTime), \(step.formattedTemp)").secondary()
+                Text("\(step.formattedDuration), \(step.formattedTemp(roomTemp: roomTemp))").secondary()
             }
             
-            ForEach(step.ingredients){ ingredient in
+            ForEach(appData.ingredients(with: step.id)){ ingredient in
                 self.customIngredientRow(ingredient: ingredient, step: step)
                     .padding(.vertical, 5)
             }
             
-            ForEach(step.subSteps){substep in
-                HStack{
+            ForEach(appData.substeps(for: step.id)) { substep in
+                HStack {
                     Text(substep.formattedName)
                     Spacer()
-                    Text(substep.formattedTemp)
+                    Text(substep.formattedTemp(roomTemp: self.roomTemp))
                     Spacer()
-                    Text(substep.totalFormattedAmount)
+                    Text(self.appData.totalFormattedMass(for: substep.id))
                 }
             }
+            
             HStack {
                 Text(step.notes)
                 Spacer()

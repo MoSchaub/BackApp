@@ -13,45 +13,55 @@ import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeCells
+import BackAppCore
 
 class RecipeDetailViewController: UITableViewController {
     
-    typealias SaveRecipe = ((Recipe) -> ())
-    typealias DeleteRecipe = ((Recipe) -> Bool)
+    // MARK: Properties
     
+    // class for managing table creation and updates
     private lazy var dataSource = makeDataSource()
     
+    //interface object for the database
+    private var appData: BackAppData
+    
+    // for picking imagea
     private var imagePickerController: UIImagePickerController?
     
+    // id of the recipe for pulling the recipe from the database
+    private let recipeId: Int
+    
+    // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
-        didSet {
-            DispatchQueue.global(qos: .utility).async {
-                if oldValue != self.recipe {
-                    if oldValue.formattedName != self.recipe.formattedName {
-                        self.setUpNavigationBar()
-                    }
-                    if oldValue.isFavourite != self.recipe.isFavourite {
-                        self.setUpNavigationBar()
-                    }
-                    if !self.creating, oldValue != self.recipe {
-                        self.saveRecipe(self.recipe)
-                    } else if !self.recipeChanged, self.creating{
-                        self.recipeChanged = true
-                    }
+        get {
+            self.appData.object(with: recipeId)!
+        }
+        set {
+            if newValue != self.recipe {
+                if self.appData.update(newValue) {
+                    self.setUpNavigationBar()
+                } else if !self.recipeChanged, self.creating{
+                    self.recipeChanged = true
                 }
             }
         }
     }
+
+    // wether the recipe is freshly created
     private var creating: Bool
-    private var recipeChanged: Bool = false
-    private var saveRecipe: SaveRecipe
-    private var deleteRecipe: DeleteRecipe
     
-    init(recipe: Recipe, creating: Bool, saveRecipe: @escaping SaveRecipe, deleteRecipe: @escaping DeleteRecipe) {
-        self.recipe = recipe
+    // wether the recipe already has been changed
+    private var recipeChanged: Bool = false
+
+    // func for dissmissing after pressing delete button
+    private var dismissDetail: (() -> ())?
+    
+    //initializer
+    init(recipeId: Int, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
         self.creating = creating
-        self.saveRecipe = saveRecipe
-        self.deleteRecipe = deleteRecipe
+        self.recipeId = recipeId
+        self.appData = appData
+        self.dismissDetail = dismissDetail
         super.init(style: .insetGrouped)
     }
     
@@ -59,6 +69,8 @@ class RecipeDetailViewController: UITableViewController {
         fatalError(Strings.init_coder_not_implemented)
     }
 }
+
+// MARK: - Update and Load View
 
 extension RecipeDetailViewController {
     override func loadView() {
@@ -109,7 +121,9 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
             //show alert
             showAlert()
         } else {
-            dissmiss()
+            if appData.delete(recipe) {
+                dissmiss()
+            }
         }
     }
     
@@ -118,12 +132,14 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
-            self.dissmiss()
+            if self.appData.delete(self.recipe) {
+                self.dissmiss()
+            }
         })
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
             alertVC.dismiss(animated: false)
-            self.saveRecipeWrapper()
+            self.dissmiss()
         })
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel) { _ in
@@ -135,7 +151,7 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
     
 }
 
-
+// MARK: - DataSource
 
 private extension RecipeDetailViewController {
     private func makeDataSource() -> RecipeDetailDataSource {
@@ -143,7 +159,7 @@ private extension RecipeDetailViewController {
             return self.recipe
         }, set: { newValue in
             self.recipe = newValue
-        }), creating: creating, tableView: tableView, nameChanged: { name in
+        }), creating: creating, appData: appData, tableView: tableView, nameChanged: { name in
             self.recipe.name = name
         }, formatAmount: { timesText in
             guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
@@ -155,20 +171,22 @@ private extension RecipeDetailViewController {
     }
 }
 
+// MARK: - NavigationBar
+
 private extension RecipeDetailViewController {
     private func setUpNavigationBar() {
         
         if creating {
             DispatchQueue.main.async {
                 //set the items
-                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.saveRecipeWrapper))]
+                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
                 self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
                 
             }
         } else {
             
             //create the items
-            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavourite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
             let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
             
@@ -199,6 +217,8 @@ private extension RecipeDetailViewController {
             
     }
     
+    // MARK: Cell registration
+    
     private func registerCells() {
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
         tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
@@ -211,35 +231,22 @@ private extension RecipeDetailViewController {
     }
 }
 
+// MARK: helpers for navbarItems
+
 private extension RecipeDetailViewController {
     
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
-        recipe.isFavourite.toggle()
+        recipe.isFavorite.toggle()
     }
     
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
-        let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
-        vc.popoverPresentationController?.barButtonItem = sender
-        present(vc, animated: true)
-    }
-    
-    @objc private func saveRecipeWrapper() {
-        if creating {
-            saveRecipe(self.recipe)
-            dissmiss()
-        }
+//        let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
+//        vc.popoverPresentationController?.barButtonItem = sender
+//        present(vc, animated: true)
     }
     
     @objc private func cancel() {
-        //dissmiss()
         handleCancelButtonPress()
-    }
-    
-    @objc private func deleteRecipeWrapper() {
-        navigationController?.popToRootViewController(animated: true)
-        if !creating, self.deleteRecipe(recipe) {
-            navigationController?.popToRootViewController(animated: true)
-        }
     }
     
     @objc private func deletePressed(sender: UIBarButtonItem) {
@@ -247,7 +254,9 @@ private extension RecipeDetailViewController {
         
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
-                self.deleteRecipeWrapper()
+                if !self.creating, self.appData.delete(self.recipe) {
+                    self.dismissDetail!()
+                }
             }
         }))
         
@@ -260,7 +269,7 @@ private extension RecipeDetailViewController {
         present(sheet, animated: true)
     }
     
-    private func dissmiss() {
+    @objc private func dissmiss() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
 }
@@ -270,11 +279,14 @@ extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
-        return customHeader(enabled: !self.recipe.steps.isEmpty, title: Strings.steps, frame: tableView.frame)
+        let steps = appData.steps(with: recipe.id)
+        return customHeader(enabled: !steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
 
     
 }
+
+// MARK: - Cell Selection
 
 extension RecipeDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -317,8 +329,11 @@ private extension RecipeDetailViewController {
         }
         
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
-            self.recipe.imageString = nil
-            self.dataSource.update(animated: false)
+            var recipe = self.recipe
+            recipe.imageData = nil
+            if self.appData.delete(self.recipe), self.appData.insert(recipe) {
+                self.dataSource.update(animated: false)
+            }
         }))
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
@@ -332,27 +347,26 @@ private extension RecipeDetailViewController {
         
     }
     
-    private func showStepDetail(id: UUID?) {
-        let step = id == nil ? Step(time: 60) : recipe.steps.first(where: { $0.id == id })!
-        
-        // create new step
+    private func showStepDetail(id: Int?) {
+        var step = id == nil ? Step(id: 0, recipeId: self.recipe.id) : appData.object(with: id!, of: Step.self)!
+
+        // insert the new step
         if id == nil {
-            self.recipe.steps.append(step)
+            //get a unique id
+            step.id = appData.newId(for: Step.self)
+
+            // insert it
+            guard appData.insert(step) else { return }
+                
         }
         
-        let stepDetailVC = StepDetailViewController(step: Binding(get: { self.recipe.steps.first(where: { $0.id == step.id })! }, set: { newStep in
-            if let index = self.recipe.steps.firstIndex(where: { $0.id == newStep.id }) {
-                self.recipe.steps[index] = newStep
-                self.dataSource.update(animated: false)
-            }
-        }), recipe: Binding<Recipe>(get: { self.recipe }, set: { newRecipe in
-            if newRecipe != self.recipe {
-                self.recipe = newRecipe
-                self.dataSource.update(animated: false)
-            }
-        }))
+        appData.observeChange(of: Step.self) { _ in
+            self.dataSource.update(animated: false)
+        }
         
-        //navigate to the controller
+        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)
+        
+        //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)
     }
     
@@ -362,8 +376,8 @@ private extension RecipeDetailViewController {
         }) { (newValue) in
             self.recipe = newValue
         }
-        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding)
-        
+        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
+
         navigationController?.pushViewController(scheduleForm, animated: true)
     }
 }
@@ -400,8 +414,11 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
         if let uiImage = info[.originalImage] as? UIImage {
-            recipe.imageString = uiImage.jpegData(compressionQuality: 0.3)
-            self.dataSource.update(animated: false)
+            var recipe = self.recipe
+            recipe.imageData = uiImage.jpegData(compressionQuality: 0.3)
+            if self.appData.delete(self.recipe), self.appData.insert(recipe) {
+                self.dataSource.update(animated: false)
+            }
             
             picker.dismiss(animated: true) {
                 self.terminate(picker)
