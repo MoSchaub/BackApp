@@ -79,9 +79,9 @@ struct ScheduleForm: View {
                     .cornerRadius(10)
                     .padding()
                 }
-                NavigationLink(destination: ScheduleView(recipe: self.recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
-                    EmptyView()
-                }
+//                NavigationLink(destination: ScheduleView(recipe: self.recipe, roomTemp: self.roomTemp, times: self.times), isActive: self.$showingSchedule) {
+//                    EmptyView()
+//                }
             }
         }
         .onAppear{
@@ -95,10 +95,10 @@ struct ScheduleForm: View {
     }
 }
 
-struct ScheduleForm_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ScheduleForm(recipe: .constant(Recipe.example), roomTemp: 20)
-        }
-    }
-}
+//struct ScheduleForm_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ScheduleForm(recipe: .constant(Recipe.example), roomTemp: 20)
+//        }
+//    }
+//}
