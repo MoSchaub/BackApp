@@ -1,7 +1,6 @@
 import XCTest
 @testable import BakingRecipeFoundation
 
-@available(iOS 10.0, *)
 final class BakingRecipeFoundationTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.

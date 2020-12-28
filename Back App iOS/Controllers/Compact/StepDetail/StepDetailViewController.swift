@@ -28,11 +28,9 @@ class StepDetailViewController: UITableViewController {
         }
         
         set {
-            DispatchQueue.global(qos: .utility).async {
-                if self.appData.update(newValue) {
-                    DispatchQueue.global(qos: .utility).async {
-                        self.setupNavigationBar()
-                    }
+            if self.appData.update(newValue) {
+                DispatchQueue.global(qos: .utility).async {
+                    self.setupNavigationBar()
                 }
             }
         }
@@ -67,6 +65,10 @@ class StepDetailViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
 }
 
 // MARK: - Startup functions
@@ -76,6 +78,11 @@ extension StepDetailViewController {
         tableView.separatorStyle = .none
         registerCells()
         setupNavigationBar()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateListWrapper), name: .init("stepChanged"), object: nil)
+    }
+    
+    @objc private func updateListWrapper(animated: Bool = false) {
+        self.updateList(animated: animated)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -182,10 +189,10 @@ extension StepDetailViewController {
         } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) { //add ingredient pressed
 
             //add ingredient or substep
-            if appData.stepsWithIngredientsOrSupersteps(in: self.step.recipeId).count > 0{
+            if appData.stepsWithIngredientsOrSupersteps(in: self.step.recipeId, without: self.stepId).count > 0{
 
                 //action sheet let the user pick
-                presentSubstepIngredientDecisionSheet(possibleSubsteps: appData.stepsWithIngredientsOrSupersteps(in: self.step.recipeId))
+                presentSubstepIngredientDecisionSheet(possibleSubsteps: appData.stepsWithIngredientsOrSupersteps(in: self.step.recipeId, without: self.stepId))
 
             } else {
 
@@ -246,7 +253,7 @@ extension StepDetailViewController {
                 var newSubstep = possibleSubstep
                 newSubstep.superStepId = self.step.id
                 
-                if self.appData.insert(newSubstep) {
+                if self.appData.update(newSubstep) {
                     self.updateList(animated: false)
                 }
             }))
@@ -405,7 +412,8 @@ private extension StepDetailViewController {
                     }
                 }
             } else if self.datePickerShown, indexPath.row == 1{
-                return TimePickerCell(time: Binding(get: { self.step.duration}, set: { self.step.duration = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
+                return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
+                //return TimePickerCell(time: Binding(get: { self.step.duration}, set: { self.step.duration = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
             } else if self.tempPickerShown, indexPath.row > 1 {
                 return TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.standardRoomTemperature}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
             }

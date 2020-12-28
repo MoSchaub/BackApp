@@ -20,13 +20,13 @@ public extension BackAppData {
         (try? Step.read().filter(.equalsValue(Step.recipeId, recipeId)).run(database)) ?? []
     }
     
-    func stepsWithIngredientsOrSupersteps(in recipeId: Int) -> [Step] {
+    func stepsWithIngredientsOrSupersteps(in recipeId: Int, without stepId: Int) -> [Step] {
         let stepIdsOfIngredients = allIngredients.map { $0.stepId }
         
         let substeps =  allSteps.filter({ $0.superStepId != nil } )
         let superstepIds = substeps.map { $0.superStepId! }
         
-        let stepIdsWithIngredientsOrSubsteps: Set<Int> = Set(stepIdsOfIngredients + superstepIds)
+        let stepIdsWithIngredientsOrSubsteps: Set<Int> = Set(stepIdsOfIngredients + superstepIds).filter({ $0 != stepId })
         
         return stepIdsWithIngredientsOrSubsteps.map { object(with: $0, of: Step.self)!}.filter({ $0.recipeId == recipeId })
     }

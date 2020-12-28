@@ -173,7 +173,7 @@ public extension Recipe {
         self.steps(db: db).filter({ $0.superStepId == nil })
     }
     
-    static var example: (Recipe, [Step], [Ingredient]) {
+    static var example: (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
         let vollkornMehl = Ingredient(stepId: 1, id: 1, name: "Vollkornmehl", amount: 50, type: .flour)
         let anstellgut = Ingredient(stepId: 1, id: 2, name: "Anstellgut TA 200", amount: 120, type: .ta200)
         let olivenöl = Ingredient(stepId: 1, id: 3, name: "Olivenöl", amount: 40, type: .bulkLiquid)
@@ -184,7 +184,7 @@ public extension Recipe {
         
         let backen = Step(id: 2, name: "Backen", duration: 18*60, notes: "170˚ C", recipeId: 1)
         
-        return (Recipe(id: 1, name: "Sauerteigcracker"), [schritt1,backen], [vollkornMehl, anstellgut, olivenöl, saaten, salz])
+        return (Recipe(id: 1, name: "Sauerteigcracker"), [(schritt1, [vollkornMehl, anstellgut, olivenöl, saaten, salz]), (backen, [])])
     }
     
 //    static public var complexExample: Recipe {

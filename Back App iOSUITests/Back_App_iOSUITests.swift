@@ -87,7 +87,8 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
 
-    func testa() throws {
+    //tests adding an example recipe
+    func testAddingExampleRecipe() throws {
         
         let recipe = Recipe.example
         
@@ -202,53 +203,6 @@ class Back_App_iOSUITests: XCTestCase {
         app.navigationBars[step.formattedName].buttons[recipeName].tap()
         
         XCTAssertTrue(appTables.staticTexts[step.name].exists)
-    }
-    
-    func testb() throws {
-        
-        app.launch()
-        
-        addButton.tap()
-        
-        nameTextField.tap()
-        nameTextField.typeText("test")
-        returnButton.tap()
-        
-        app.navigationBars["test"].buttons["Cancel"].tap()
-        XCUIApplication().alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
-                
-        XCTAssertFalse(appTables.staticTexts["test"].exists)
-        
-        //relaunch
-        app.terminate()
-        app.launch()
-        
-        XCTAssertFalse(appTables.staticTexts["test"].exists)
-    }
-    
-    func testc() throws {
-        
-        let recipe = Recipe(name: "test", brotValues: [])
-        
-        app.launch()
-        
-        addButton.tap()
-        
-        nameTextField.tap()
-        nameTextField.typeText(recipe.name)
-        returnButton.tap()
-        
-        app.navigationBars[recipe.name].buttons["Save"].tap()
-        
-        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
-        
-        //relaunch
-        app.terminate()
-        app.launch()
-        
-        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
-        XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
-
     }
     
     func testd() throws {

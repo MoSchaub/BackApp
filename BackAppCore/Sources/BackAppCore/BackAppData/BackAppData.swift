@@ -25,9 +25,12 @@ public class BackAppData {
     ///the alert message for the same alert
     public var inputAlertMessage = ""
     
-    public init() {
+    public init(debug: Bool = false) {
         /// create new database or use the existing one if it exist in the documents directory
         do {
+            if debug {
+                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/db.sqlite")
+            }
             self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
         } catch {
             fatalError(error.localizedDescription)

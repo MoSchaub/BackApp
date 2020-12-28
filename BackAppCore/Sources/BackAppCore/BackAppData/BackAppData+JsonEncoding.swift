@@ -113,7 +113,7 @@ public extension BackAppData {
         
         var json: JSON = [
             CodingKeys.name.rawValue:ingredient.name,
-            CodingKeys.name.rawValue:ingredient.mass,
+            CodingKeys.mass.rawValue:ingredient.mass,
             CodingKeys.type.rawValue:ingredient.type.rawValue
         ]
         

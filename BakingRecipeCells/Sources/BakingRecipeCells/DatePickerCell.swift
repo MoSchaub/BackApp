@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import BackAppCore
+import BakingRecipeFoundation
 
 /// workaround to change textcolor
 public extension UILabel {
@@ -77,14 +79,30 @@ private extension DatePickerCell {
 
 public class TimePickerCell: CustomCell {
     
-    ///currently selected Date
-    @Binding private var time: TimeInterval
+    ///currently selected duration
+    private var time: TimeInterval {
+        get {
+            return appData.object(with: stepId, of: Step.self)!.duration
+        }
+        set {
+            var newStep = appData.object(with: stepId, of: Step.self)!
+            newStep.duration = newValue
+            _ = self.appData.update(newStep)
+            NotificationCenter.default.post(Notification(name: .init(rawValue: "stepChanged")))
+        }
+    }
+    
+    ///the id of the step whose duration is modified
+    private var stepId: Int
+    
+    private var appData: BackAppData
     
     /// the datePicker displayed in the cell
     private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
     
-    public init(time: Binding<TimeInterval>, reuseIdentifier: String?) {
-        self._time = time
+    public init(stepId: Int, appData: BackAppData, reuseIdentifier: String?) {
+        self.stepId = stepId
+        self.appData = appData
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }
