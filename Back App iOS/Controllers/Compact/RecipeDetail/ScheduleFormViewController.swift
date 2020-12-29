@@ -13,6 +13,7 @@ import BackAppCore
 import BakingRecipeSections
 import BakingRecipeItems
 import BakingRecipeCells
+import BakingRecipeUIFoundation
 
 class ScheduleFormViewController: UITableViewController {
     
@@ -22,10 +23,13 @@ class ScheduleFormViewController: UITableViewController {
     
     private lazy var dataSource = makeDataSource()
     
-    init(recipe: Binding<Recipe>, appData: BackAppData) {
+    private let theme: Theme
+    
+    init(recipe: Binding<Recipe>, appData: BackAppData, theme: Theme) {
         self._recipe = recipe
         self.times = recipe.wrappedValue.times
         self.appData = appData
+        self.theme = theme
         super.init(style: .insetGrouped)
     }
     
@@ -41,6 +45,8 @@ extension ScheduleFormViewController {
         updateTableView()
         setUpNavigationBar()
         self.tableView.separatorStyle = .none
+        
+        navigationController?.setToolbarHidden(true, animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -93,7 +99,7 @@ private extension ScheduleFormViewController {
                 }, set: { (newDate) in
                     item.date = newDate
                     self.recipe.date = newDate
-                }), reuseIdentifier: "datePicker")
+                }), theme: self.theme, reuseIdentifier: "datePicker")
             } else  {
                 let cell = CustomCell()
                 let picker = self.makePicker()
@@ -108,9 +114,9 @@ private extension ScheduleFormViewController {
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
         picker.backgroundColor = UIColor.cellBackgroundColor
         
-        ///textColor
-        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self])
-        pickerLabelProxy.textColorWorkaround = UIColor.primaryCellTextColor
+        let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primaryCellTextColor!]
+        picker.setTitleTextAttributes(titleTextAttributes, for: .selected)
+        picker.setTitleTextAttributes(titleTextAttributes, for: .normal)
         
         picker.selectedSegmentTintColor = .secondaryCellTextColor
         

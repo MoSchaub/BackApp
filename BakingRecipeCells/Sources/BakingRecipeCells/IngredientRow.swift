@@ -29,6 +29,6 @@ struct IngredientRow: View {
             }
             Text(ingredient.formattedAmount).lineLimit(1)
         }
-        .foregroundColor(Color(.primaryCellTextColor))
+        .foregroundColor(Color(UIColor.primaryCellTextColor!))
     }
 }

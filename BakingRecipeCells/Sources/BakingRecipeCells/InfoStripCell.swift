@@ -38,9 +38,9 @@ public class InfoStripCell: CustomCell {
                 }
                 Spacer()
             }
-            .foregroundColor(Color(.primaryCellTextColor))
+            .foregroundColor(Color(UIColor.primaryCellTextColor!))
             .padding()
-            .background(Color.cellBackgroundColor())
+            .background(Color(UIColor.cellBackgroundColor!))
         }
     }
     

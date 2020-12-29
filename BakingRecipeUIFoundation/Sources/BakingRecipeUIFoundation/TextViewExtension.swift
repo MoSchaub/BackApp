@@ -8,12 +8,11 @@
 
 import SwiftUI
 
-
 public extension Text{
     func secondary() -> Text {
         self
             .font(.subheadline)
-            .foregroundColor(Color(.secondaryCellTextColor))
+            .foregroundColor(Color(UIColor.secondaryCellTextColor!))
     }
 }
 

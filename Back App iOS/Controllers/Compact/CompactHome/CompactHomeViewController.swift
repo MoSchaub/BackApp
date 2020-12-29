@@ -14,6 +14,7 @@ import BakingRecipeSections
 import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
+import BakingRecipeUIFoundation
 
 class CompactHomeViewController: UITableViewController {
     
@@ -26,12 +27,15 @@ class CompactHomeViewController: UITableViewController {
     
     private lazy var pressed = false
     
+    private var themeManager: ThemeManager
+    
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
     
     init(appData: BackAppData) {
         self.appData = appData
+        self.themeManager = .default
         super.init(style: .insetGrouped)
     }
     
@@ -43,6 +47,9 @@ class CompactHomeViewController: UITableViewController {
         registerCells()
         configureNavigationBar()
         self.tableView.separatorStyle = .none
+        
+        //theme the splitvc
+        splitViewController?.theme(with: themeManager.currentTheme)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -81,7 +88,7 @@ private extension CompactHomeViewController {
         guard appData.insert(recipe) else { return }
         
         // create the vc
-        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData)
+        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData, currentTheme: themeManager.currentTheme)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -125,7 +132,7 @@ extension CompactHomeViewController {
         if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
             
             //create the vc
-            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData) {
+            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData, currentTheme: themeManager.currentTheme) {
                 //dismiss detail
                 if self.splitViewController?.isCollapsed ?? false {
                     //nosplitVc visible
@@ -165,13 +172,22 @@ extension CompactHomeViewController {
     }
     
     private func openImportFilePopover() {
+        //set the delegate
         self.documentPicker.delegate = self
+        
+        //theme the picker
+        self.documentPicker.theme(with: themeManager.currentTheme)
+        
         // Present the document picker.
         self.present(documentPicker, animated: true, completion: deselectRow)
     }
     
     private func openExportAllShareSheet(sender: UIView) {
         let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
+        
+        //theme the shareSheet
+        ac.theme(with: themeManager.currentTheme)
+        
         ac.popoverPresentationController?.sourceView = sender
         present(ac,animated: true, completion: deselectRow)
     }

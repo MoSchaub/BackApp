@@ -136,7 +136,7 @@ private extension ScheduleViewController {
             }
             Text(ingredient.scaledFormattedAmount(with: self.factor))
         }
-        .foregroundColor(Color(.primaryCellTextColor))
+        .foregroundColor(Color(UIColor.primaryCellTextColor!))
     }
     
     private func customStepRow(step: Step) -> some View {
@@ -172,7 +172,7 @@ private extension ScheduleViewController {
             }
             Spacer()
         }
-        .foregroundColor(Color(.primaryCellTextColor))
+        .foregroundColor(Color(UIColor.primaryCellTextColor!))
         .padding()
         .clipped()
     }

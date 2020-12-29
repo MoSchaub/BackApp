@@ -28,7 +28,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
             //let color = UIColor.cellBackgroundColor
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldCell {
                 cell.textField.text = recipe.wrappedValue.name
-                cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryCellTextColor])
+                cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
                 return cell

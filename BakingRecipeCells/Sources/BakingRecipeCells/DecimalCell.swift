@@ -56,7 +56,7 @@ private extension DecimalCell {
         
         textField.tintColor = .tintColor
         textField.textColor = .primaryCellTextColor
-        textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryCellTextColor])
+        textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
         setTextFieldConstraints()
         textField.becomeFirstResponder()

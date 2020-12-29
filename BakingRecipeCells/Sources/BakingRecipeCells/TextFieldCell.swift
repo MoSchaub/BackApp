@@ -41,7 +41,7 @@ private extension TextFieldCell {
         textField.textColor = .primaryCellTextColor
         textField.tintColor = .tintColor
         textField.placeholder = placeholder
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor])
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
         setTextFieldConstraints()
     }

@@ -24,8 +24,9 @@ public class CustomCell: UITableViewCell {
         self.backgroundColor = UIColor.cellBackgroundColor
         
         textLabel?.textColor = .primaryCellTextColor
+        detailTextLabel?.textColor = .secondaryCellTextColor
         
-        self.selectedBackgroundView = UIView(backgroundColor: .selectionCellBackgroundColor)
+        selectedBackgroundView = UIView(backgroundColor: UIColor.selectedCellBackgroundColor!)
         
         selectionStyle = .blue
     }
@@ -36,7 +37,7 @@ public class CustomCell: UITableViewCell {
         
         textLabel?.text = text
         accessoryView = UIImageView(image: image)
-        accessoryView?.tintColor = .tintColor
+        accessoryView?.tintColor = UIView.appearance().tintColor
     }
     
 }
