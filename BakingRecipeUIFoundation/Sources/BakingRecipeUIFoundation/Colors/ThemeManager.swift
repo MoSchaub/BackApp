@@ -13,7 +13,7 @@ extension Notification.Name {
 
 public final class ThemeManager {
     
-    private static let defaultThemeName = "light"
+    private static let defaultThemeName = "auto"
     
     public static let `default` = ThemeManager()
     
