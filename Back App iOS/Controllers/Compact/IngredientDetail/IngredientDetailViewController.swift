@@ -132,9 +132,9 @@ private extension IngredientDetailViewController {
                 cell.textLabel?.text = detailItem.text
                 cell.detailTextLabel?.text = detailItem.detailLabel
                 if self.typeSectionExpanded {
-                    cell.detailTextLabel?.textColor = .red
+                    cell.detailTextLabel?.textColor = .tintColor
                 } else {
-                    cell.detailTextLabel?.textColor = .secondaryColor
+                    cell.detailTextLabel?.textColor = .secondaryCellTextColor
                 }
                 return cell
             } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as? CustomCell {

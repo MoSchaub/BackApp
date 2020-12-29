@@ -21,6 +21,8 @@ class StepDetailViewController: UITableViewController {
     
     private let stepId: Int
     
+    private let theme: Theme
+    
     /// the step whose details are shown
     private var step: Step {
         get {
@@ -54,9 +56,10 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Initalizers
     
-    init(stepId: Int, appData: BackAppData) {
+    init(stepId: Int, appData: BackAppData, theme: Theme) {
         self.appData = appData
         self.stepId = stepId
+        self.theme = theme
         super.init(style: .insetGrouped)
         
     }
@@ -213,12 +216,8 @@ extension StepDetailViewController {
             }
         } else if item is SubstepItem {
             
-            let stepDetailVC = StepDetailViewController(stepId: item.id, appData: appData)
+            let stepDetailVC = StepDetailViewController(stepId: item.id, appData: appData, theme: theme)
             
-            appData.observeChange(of: Step.self) { _ in
-                self.updateList(animated: false)
-            }
-
             //navigate to the controller
             navigationController?.pushViewController(stepDetailVC, animated: true)
         }
@@ -391,12 +390,12 @@ private extension StepDetailViewController {
                     if detailItem.text == Strings.duration {
                         //duration
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.datePickerShown ? .systemRed : .secondaryColor
+                        cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
                         return cell
                     } else {
                         //temp
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .systemRed : .secondaryColor
+                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
                         return cell
                     }
                 } else if indexPath.section == StepDetailSection.ingredients.rawValue {
@@ -412,8 +411,7 @@ private extension StepDetailViewController {
                     }
                 }
             } else if self.datePickerShown, indexPath.row == 1{
-                return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
-                //return TimePickerCell(time: Binding(get: { self.step.duration}, set: { self.step.duration = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.timePickerCell)
+                return TimePickerCell(stepId: self.stepId, appData: self.appData, theme: self.theme, reuseIdentifier: Strings.timePickerCell)
             } else if self.tempPickerShown, indexPath.row > 1 {
                 return TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.standardRoomTemperature}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
             }
@@ -507,7 +505,7 @@ private extension StepDetailViewController {
 
 fileprivate extension Ingredient {
     func detailLabel(for step: Step) -> String {
-        self.formattedAmount + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.standardRoomTemperature))° C" : "")
+        self.formattedAmount + " " + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.standardRoomTemperature))° C" : "")
     }
 }
 

@@ -48,7 +48,7 @@ public struct StepRow: View {
                 Spacer()
             }
         }
-        .foregroundColor(Color(.cellTextColor))
+        .foregroundColor(Color(UIColor.primaryCellTextColor!))
         .padding()
         .padding(.trailing)
     }

@@ -8,7 +8,6 @@
 
 import XCTest
 
-
 var app: XCUIApplication {
     XCUIApplication()
 }
@@ -31,6 +30,10 @@ var nameTextField: XCUIElement {
 
 var returnButton: XCUIElement {
     app.keyboards.buttons["Return"]
+}
+
+var doneButton: XCUIElement {
+    app.toolbars.firstMatch.buttons["Done"]
 }
 
 class Back_App_iOSUITests: XCTestCase {
@@ -56,24 +59,30 @@ class Back_App_iOSUITests: XCTestCase {
         var sub3 = Step(name: "Sub3")
         sub3.subSteps.append(sub2)
         
+        let recipeName = "substepTest"
+        
         let subs = [sub1, sub2, sub3]
         
         app.launch()
         
         addButton.tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText(recipeName)
 
         for sub in subs {
-            try addStep(step: sub, recipeName: "unnamed recipe")
+            try addStep(step: sub, recipeName: recipeName)
         }
         
-        removeSubstep()
+        removeSubstep(recipeName: recipeName)
         
-        app.navigationBars["unnamed recipe"].buttons["Save"].tap()
+        app.navigationBars[recipeName].buttons["Save"].tap()
 
-        
+        let recipeToDelete = Recipe(name: recipeName, brotValues: [])
+        try! CompactHomeTests().delete(recipe: recipeToDelete)
     }
     
-    func removeSubstep() {
+    func removeSubstep(recipeName: String) {
         
         appTables.staticTexts["Sub3"].firstMatch.tap()
         
@@ -82,7 +91,54 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.buttons["Delete Sub2, 1.0 Kg 20 °C"].tap()
         appTables.buttons["Delete"].tap()
         appTables.children(matching: .button)["Done"].tap()
-        app.navigationBars["Sub3"].buttons["unnamed recipe"].tap()
+        app.navigationBars["Sub3"].buttons[recipeName].tap()
+        
+    }
+    
+    func testAddingRecipeStepUpdateBug() {
+        app.launch()
+        
+        addButton.tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText("testRezept")
+        doneButton.tap()
+        
+        appTables.staticTexts["add Step"].tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText("testSchritt")
+        doneButton.tap()
+        
+        app.navigationBars.firstMatch.buttons.firstMatch.tap()
+        
+        app.navigationBars.firstMatch.buttons["Cancel"].tap()
+        
+        app.alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
+    }
+    
+    func testAddingIngredientBug() throws {
+        app.launch()
+        
+        addButton.tap()
+        
+        appTables.staticTexts["add Step"].tap()
+        
+        appTables.staticTexts["add Ingredient"].tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText("test")
+        
+        appTables.staticTexts["other"].tap()
+        
+        appTables.staticTexts["bulk liquid"].tap()
+        
+        app.navigationBars.firstMatch.buttons.firstMatch.tap()
+        
+        app.navigationBars.firstMatch.buttons.firstMatch.tap()
+        XCUIApplication().navigationBars["unnamed recipe"].buttons["Cancel"].tap()
+
+        app.alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
         
     }
     

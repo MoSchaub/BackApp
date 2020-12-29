@@ -58,9 +58,6 @@ class RoomTempTableViewController: UITableViewController {
         picker.dataSource = self
         picker.delegate = self
         
-        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
-        
         picker.selectRow(Standarts.standardRoomTemperature + 10, inComponent: 0, animated: false)
     }
 }
@@ -74,8 +71,8 @@ extension RoomTempTableViewController: UIPickerViewDelegate, UIPickerViewDataSou
         60
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        String((row - 10))
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        NSAttributedString(string: String((row - 10)), attributes: [NSAttributedString.Key.foregroundColor: UIColor.primaryCellTextColor!])
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

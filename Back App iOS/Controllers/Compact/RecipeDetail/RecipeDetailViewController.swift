@@ -31,6 +31,8 @@ class RecipeDetailViewController: UITableViewController {
     // id of the recipe for pulling the recipe from the database
     private let recipeId: Int
     
+    private let currentTheme: Theme
+    
     // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
         get {
@@ -57,10 +59,11 @@ class RecipeDetailViewController: UITableViewController {
     private var dismissDetail: (() -> ())?
     
     //initializer
-    init(recipeId: Int, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
+    init(recipeId: Int, creating: Bool, appData: BackAppData, currentTheme: Theme, dismissDetail: (() -> ())? = nil ) {
         self.creating = creating
         self.recipeId = recipeId
         self.appData = appData
+        self.currentTheme = currentTheme
         self.dismissDetail = dismissDetail
         super.init(style: .insetGrouped)
     }
@@ -129,6 +132,8 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
     
     private func showAlert() {
         let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+        
+        alertVC.theme(with: currentTheme)
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
@@ -240,9 +245,10 @@ private extension RecipeDetailViewController {
     }
     
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
-//        let vc = UIActivityViewController(activityItems: [recipe.createFile()], applicationActivities: nil)
-//        vc.popoverPresentationController?.barButtonItem = sender
-//        present(vc, animated: true)
+        let vc = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
+        vc.popoverPresentationController?.barButtonItem = sender
+        present(vc, animated: true)
+        vc.theme(with: currentTheme)
     }
     
     @objc private func cancel() {
@@ -251,6 +257,8 @@ private extension RecipeDetailViewController {
     
     @objc private func deletePressed(sender: UIBarButtonItem) {
         let sheet = UIAlertController(preferredStyle: .actionSheet)
+        
+        sheet.theme(with: currentTheme)
         
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
@@ -316,6 +324,8 @@ private extension RecipeDetailViewController {
         
         let alert = UIAlertController(title: Strings.image_alert_title, message: nil, preferredStyle: .actionSheet)
         
+        alert.theme(with: currentTheme)
+        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(UIAlertAction(title: Strings.take_picture, style: .default, handler: { (_) in
                 self.presentImagePicker(controller: self.imagePickerController!, for: .camera)
@@ -358,13 +368,10 @@ private extension RecipeDetailViewController {
             // insert it
             guard appData.insert(step) else { return }
                 
+            self.recipeChanged = true
         }
         
-        appData.observeChange(of: Step.self) { _ in
-            self.dataSource.update(animated: false)
-        }
-        
-        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)
+        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData, theme: currentTheme)
         
         //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)
@@ -376,7 +383,7 @@ private extension RecipeDetailViewController {
         }) { (newValue) in
             self.recipe = newValue
         }
-        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
+        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData, theme: currentTheme)
 
         navigationController?.pushViewController(scheduleForm, animated: true)
     }
@@ -397,6 +404,8 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {
         controller.delegate = self
         controller.sourceType = source
+        
+        controller.theme(with: currentTheme)
         
         present(controller, animated: true)
     }

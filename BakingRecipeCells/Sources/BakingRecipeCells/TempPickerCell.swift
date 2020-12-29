@@ -13,7 +13,7 @@ public class TempPickerCell: CustomCell {
     @Binding private var temp: Int
     
     /// the datePicker displayed in the cell
-    private lazy var tempPicker = UIPickerView(backgroundColor: .backgroundColor)
+    private lazy var tempPicker = UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
     
     public init(temp: Binding<Int>, reuseIdentifier: String?) {
         self._temp = temp
@@ -40,10 +40,7 @@ private extension TempPickerCell {
         tempPicker.dataSource = self
         tempPicker.delegate = self
         
-        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
-        
-        tempPicker.setValue(UIColor.cellTextColor, forKeyPath: "textColor")
+        tempPicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
         
         tempPicker.selectRow(temp + 10, inComponent: 0, animated: false)
     }
@@ -64,8 +61,8 @@ extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
         60
     }
     
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(row - 10)"
+    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        return NSAttributedString(string: "\(row - 10)", attributes: [NSAttributedString.Key.foregroundColor:UIColor.primaryCellTextColor!])
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

@@ -36,7 +36,6 @@ public class RecipeCell: CustomCell {
         
         self.textLabel?.text = name
         self.detailTextLabel?.text = minuteLabel
-        self.detailTextLabel?.textColor = .secondaryColor
         
         self.accessoryView = imageAccessory
     }

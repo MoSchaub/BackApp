@@ -8,16 +8,12 @@
 import SwiftUI
 import BackAppCore
 import BakingRecipeFoundation
+import BakingRecipeUIFoundation
 
-/// workaround to change textcolor
-public extension UILabel {
-    @objc dynamic var textColorWorkaround: UIColor? {
-        get {
-            return textColor
-        }
-        set {
-            textColor = newValue
-        }
+extension UIDatePicker {
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setValue(UIColor.label, forKeyPath: "textColor")
     }
 }
 
@@ -26,11 +22,14 @@ public class DatePickerCell: CustomCell {
     ///currently selected Date
     @Binding private var date: Date
     
-    /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
+    private var theme: Theme
     
-    public init(date: Binding<Date>, reuseIdentifier: String?) {
+    /// the datePicker displayed in the cell
+    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
+    
+    public init(date: Binding<Date>, theme: Theme, reuseIdentifier: String?) {
         self._date = date
+        self.theme = theme
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -45,6 +44,16 @@ public class DatePickerCell: CustomCell {
         addSubview(datePicker)
         self.configureDatePicker()
     }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if theme.name == "light" {
+            datePicker.overrideUserInterfaceStyle = .dark
+        } else if theme.name == "dark" {
+            datePicker.overrideUserInterfaceStyle = .light
+        }
+    }
 }
 
 private extension DatePickerCell {
@@ -52,8 +61,6 @@ private extension DatePickerCell {
     /// sets the date picker up
     func configureDatePicker() {
         datePicker.datePickerMode = .dateAndTime
-        
-        datePicker.setValue(UIColor.cellTextColor, forKey: "textColor")
         
         if #available(iOS 14.0, *) {
             #if canImport(WidgetKit)
@@ -97,12 +104,15 @@ public class TimePickerCell: CustomCell {
     
     private var appData: BackAppData
     
-    /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
+    private var theme: Theme
     
-    public init(stepId: Int, appData: BackAppData, reuseIdentifier: String?) {
+    /// the datePicker displayed in the cell
+    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
+    
+    public init(stepId: Int, appData: BackAppData, theme: Theme, reuseIdentifier: String?) {
         self.stepId = stepId
         self.appData = appData
+        self.theme = theme
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -116,6 +126,16 @@ public class TimePickerCell: CustomCell {
         
         addSubview(datePicker)
         self.configureDatePicker()
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if theme.name == "light" {
+            datePicker.overrideUserInterfaceStyle = .dark
+        } else if theme.name == "dark" {
+            datePicker.overrideUserInterfaceStyle = .light
+        }
     }
 }
 
@@ -135,12 +155,6 @@ private extension TimePickerCell {
         DispatchQueue.main.async {
             self.datePicker.countDownDuration = self.time
         }
-        
-        let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
-        
-        datePicker.setValue(UIColor.cellTextColor, forKeyPath: "textColor")
-        
     }
     
     //sets constraints for picker

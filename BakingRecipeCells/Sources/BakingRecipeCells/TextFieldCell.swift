@@ -38,10 +38,10 @@ private extension TextFieldCell {
         setTextFieldBehavior()
         textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         
-        textField.textColor = .cellTextColor
-        textField.tintColor = .red
+        textField.textColor = .primaryCellTextColor
+        textField.tintColor = .tintColor
         textField.placeholder = placeholder
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryColor])
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
         setTextFieldConstraints()
     }

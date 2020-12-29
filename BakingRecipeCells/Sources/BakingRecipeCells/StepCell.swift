@@ -29,6 +29,6 @@ public class StepCell: DetailCell {
         let hostingController = UIHostingController(rootView: rootView)
         contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
-        hostingController.view.backgroundColor = UIColor.backgroundColor
+        hostingController.view.backgroundColor = UIColor.cellBackgroundColor
     }
 }

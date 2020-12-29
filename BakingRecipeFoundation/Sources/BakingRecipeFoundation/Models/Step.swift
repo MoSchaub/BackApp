@@ -131,7 +131,18 @@ public extension Step {
         _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
         _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomTemp)}
         
-        return Int(((sumMassCProductAll * Double((self.temperature ?? roomTemp) - tKnet)) - sumMassCProductRest)/(ingredient.mass * ingredient.type.rawValue))
+        let ingredientMassCProduct = ingredient.massCProduct
+        let temperature = Double(self.temperature ?? roomTemp - tKnet)
+        
+        guard ingredientMassCProduct != 0.0 else {
+            return roomTemp
+        }
+        
+        let returnDouble = ((sumMassCProductAll * temperature) - sumMassCProductRest)/ingredientMassCProduct
+        
+        return Int(
+            returnDouble
+        )
     }
     
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
@@ -179,7 +190,7 @@ public extension Step {
         
         for ingredient in ingredients(db: db){
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, db: db)) + "° C" : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, db: db) ) + "° C" : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in substeps(db: db){

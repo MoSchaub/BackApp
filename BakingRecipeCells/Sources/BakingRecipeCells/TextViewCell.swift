@@ -72,10 +72,10 @@ private extension TextViewCell {
                 NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .body)
             ])
             textView.attributedText = attributedPlaceholder
-            textView.textColor = .secondaryColor
+            textView.textColor = .secondaryCellTextColor
         } else {
             textView.text = textContent
-            textView.textColor =  .cellTextColor
+            textView.textColor =  .primaryCellTextColor
         }
     }
     
@@ -89,8 +89,8 @@ private extension TextViewCell {
     }
     
     private func setUpCellDesign() {
-        textView.backgroundColor = UIColor.backgroundColor
-        textView.tintColor = .red
+        textView.backgroundColor = UIColor.cellBackgroundColor
+        textView.tintColor = .tintColor
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         setText()
     }
