@@ -15,20 +15,6 @@ import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
 
-extension UITableViewCell {
-    func setupPlainCell(text: String) {
-        let color = UIColor.backgroundColor
-        let image = UIImage(systemName: "chevron.up")
-        image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
-        
-        textLabel?.text = text
-        backgroundColor = color
-        accessoryView = UIImageView(image: image)
-        accessoryView?.tintColor = .cellTextColor
-        selectionStyle = .none
-    }
-}
-
 class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     // storage object for recipes
     var appData: BackAppData
@@ -49,8 +35,8 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
                 return cell
             } else {
                 // plain cell
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) //plain cells
-                cell.setupPlainCell(text: homeItem.text)
+                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as! CustomCell//plain cells
+                cell.chevronUpCell(text: homeItem.text)
                 return cell
             }
         }

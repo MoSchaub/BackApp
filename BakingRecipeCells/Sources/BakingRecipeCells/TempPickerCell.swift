@@ -13,7 +13,7 @@ public class TempPickerCell: CustomCell {
     @Binding private var temp: Int
     
     /// the datePicker displayed in the cell
-    private lazy var tempPicker = UIPickerView(backgroundColor: .backgroundColor)
+    private lazy var tempPicker = UIPickerView(backgroundColor: .cellBackgroundColor)
     
     public init(temp: Binding<Int>, reuseIdentifier: String?) {
         self._temp = temp
@@ -41,9 +41,9 @@ private extension TempPickerCell {
         tempPicker.delegate = self
         
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
+        pickerLabelProxy.textColorWorkaround = .primaryCellTextColor
         
-        tempPicker.setValue(UIColor.cellTextColor, forKeyPath: "textColor")
+        tempPicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
         
         tempPicker.selectRow(temp + 10, inComponent: 0, animated: false)
     }

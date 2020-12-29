@@ -21,11 +21,22 @@ public class CustomCell: UITableViewCell {
     }
     
     internal func setup() {
-        self.backgroundColor = UIColor.backgroundColor
+        self.backgroundColor = UIColor.cellBackgroundColor
         
-        textLabel?.textColor = .cellTextColor
+        textLabel?.textColor = .primaryCellTextColor
         
-        selectionStyle = .none
+        self.selectedBackgroundView = UIView(backgroundColor: .selectionCellBackgroundColor)
+        
+        selectionStyle = .blue
+    }
+    
+    public func chevronUpCell(text: String) {
+        let image = UIImage(systemName: "chevron.up")
+        image?.applyingSymbolConfiguration(.init(textStyle: .body, scale: .large))
+        
+        textLabel?.text = text
+        accessoryView = UIImageView(image: image)
+        accessoryView?.tintColor = .tintColor
     }
     
 }

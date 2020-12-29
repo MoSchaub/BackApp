@@ -59,7 +59,7 @@ class RoomTempTableViewController: UITableViewController {
         picker.delegate = self
         
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
+        pickerLabelProxy.textColorWorkaround = .primaryCellTextColor
         
         picker.selectRow(Standarts.standardRoomTemperature + 10, inComponent: 0, animated: false)
     }

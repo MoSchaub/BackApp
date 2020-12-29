@@ -85,7 +85,7 @@ private extension ScheduleFormViewController {
                     item.decimal = newValue
                     self.times = newValue!
                 }), reuseIdentifier: "times", standartValue: self.recipe.times!)
-                cell.backgroundColor = UIColor.backgroundColor
+//                cell.backgroundColor = UIColor.backgroundColor
                 return cell
             } else if let item = item as? DateItem {
                 return DatePickerCell(date: Binding(get: {
@@ -106,13 +106,13 @@ private extension ScheduleFormViewController {
     
     private func makePicker() -> UISegmentedControl{
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
-        picker.backgroundColor = UIColor.backgroundColor
+        picker.backgroundColor = UIColor.cellBackgroundColor
         
         ///textColor
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self])
-        pickerLabelProxy.textColorWorkaround = UIColor.cellTextColor
+        pickerLabelProxy.textColorWorkaround = UIColor.primaryCellTextColor
         
-        picker.selectedSegmentTintColor = .secondaryColor
+        picker.selectedSegmentTintColor = .secondaryCellTextColor
         
         picker.selectedSegmentIndex = recipe.inverted ? 1 : 0
         picker.addTarget(self, action: #selector(didSelectOption), for: .valueChanged)

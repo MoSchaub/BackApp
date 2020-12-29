@@ -38,7 +38,7 @@ public class InfoStripCell: CustomCell {
                 }
                 Spacer()
             }
-            .foregroundColor(Color(.cellTextColor))
+            .foregroundColor(Color(.primaryCellTextColor))
             .padding()
             .background(Color.cellBackgroundColor())
         }

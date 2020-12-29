@@ -18,7 +18,7 @@ public class ImageCell: CustomCell {
             imageView?.contentMode = .scaleAspectFill
         } else {
             imageView?.image = Images.largePhoto
-            imageView?.tintColor = .cellTextColor
+            imageView?.tintColor = .primaryCellTextColor
             imageView?.contentMode = .scaleAspectFit
         }
         

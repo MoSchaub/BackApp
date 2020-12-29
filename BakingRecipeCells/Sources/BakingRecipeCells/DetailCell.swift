@@ -20,7 +20,7 @@ public class DetailCell: CustomCell {
     override func setup() {
         super.setup()
         self.accessoryType = .disclosureIndicator
-        self.detailTextLabel?.textColor = .secondaryColor
+        self.detailTextLabel?.textColor = .secondaryCellTextColor
     }
     
     public override func layoutSubviews() {
@@ -29,7 +29,7 @@ public class DetailCell: CustomCell {
         if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
             let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
             indicatorButton.setBackgroundImage(image, for: .normal)
-            indicatorButton.tintColor = .cellTextColor
+            indicatorButton.tintColor = .tintColor
         }
     }
 }

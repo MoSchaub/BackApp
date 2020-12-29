@@ -25,10 +25,10 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         self.creating = creating
         self.appData = appData
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            let color = UIColor.backgroundColor
+            //let color = UIColor.cellBackgroundColor
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldCell {
                 cell.textField.text = recipe.wrappedValue.name
-                cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryColor])
+                cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryCellTextColor])
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
                 return cell
@@ -37,7 +37,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 return imageCell
             } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell{
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)//.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
-                amountCell.backgroundColor = color
+//                amountCell.backgroundColor = color
                 return amountCell
             } else if item is InfoItem {
                 return TextViewCell(textContent: Binding(get: {

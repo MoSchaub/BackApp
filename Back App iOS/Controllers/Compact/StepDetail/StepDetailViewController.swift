@@ -387,12 +387,12 @@ private extension StepDetailViewController {
                     if detailItem.text == Strings.duration {
                         //duration
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.datePickerShown ? .systemRed : .secondaryColor
+                        cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
                         return cell
                     } else {
                         //temp
                         let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .systemRed : .secondaryColor
+                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
                         return cell
                     }
                 } else if indexPath.section == StepDetailSection.ingredients.rawValue {

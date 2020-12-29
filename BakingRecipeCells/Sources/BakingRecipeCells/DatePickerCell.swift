@@ -27,7 +27,7 @@ public class DatePickerCell: CustomCell {
     @Binding private var date: Date
     
     /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
+    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor)
     
     public init(date: Binding<Date>, reuseIdentifier: String?) {
         self._date = date
@@ -53,7 +53,7 @@ private extension DatePickerCell {
     func configureDatePicker() {
         datePicker.datePickerMode = .dateAndTime
         
-        datePicker.setValue(UIColor.cellTextColor, forKey: "textColor")
+        datePicker.setValue(UIColor.primaryCellTextColor, forKey: "textColor")
         
         if #available(iOS 14.0, *) {
             #if canImport(WidgetKit)
@@ -98,7 +98,7 @@ public class TimePickerCell: CustomCell {
     private var appData: BackAppData
     
     /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.backgroundColor)
+    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor)
     
     public init(stepId: Int, appData: BackAppData, reuseIdentifier: String?) {
         self.stepId = stepId
@@ -137,9 +137,9 @@ private extension TimePickerCell {
         }
         
         let pickerLabelProxy = UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self])
-        pickerLabelProxy.textColorWorkaround = .cellTextColor
+        pickerLabelProxy.textColorWorkaround = .primaryCellTextColor
         
-        datePicker.setValue(UIColor.cellTextColor, forKeyPath: "textColor")
+        datePicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
         
     }
     

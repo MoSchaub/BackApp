@@ -13,7 +13,7 @@ public extension Text{
     func secondary() -> Text {
         self
             .font(.subheadline)
-            .foregroundColor(Color(.secondaryColor))
+            .foregroundColor(Color(.secondaryCellTextColor))
     }
 }
 

@@ -11,6 +11,7 @@ import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeItems
+import BakingRecipeCells
 
 class ScheduleViewController: UITableViewController {
     // - MARK: - Properties
@@ -72,13 +73,12 @@ private extension ScheduleViewController {
     private func makeDataSource() -> UITableViewDiffableDataSource<Int, StepItem> {
         UITableViewDiffableDataSource<Int, StepItem>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             if let step = self.appData.object(with: item.id, of: Step.self) {
-                let cell = UITableViewCell()
-                cell.selectionStyle = .none
+                let cell = CustomCell()
                 
                 let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
                 cell.addSubview(hostingController.view)
                 hostingController.view?.fillSuperview()
-                hostingController.view?.backgroundColor = UIColor.backgroundColor
+                hostingController.view?.backgroundColor = UIColor.cellBackgroundColor
                 
                 return cell
             }
@@ -136,7 +136,7 @@ private extension ScheduleViewController {
             }
             Text(ingredient.scaledFormattedAmount(with: self.factor))
         }
-        .foregroundColor(Color(.cellTextColor))
+        .foregroundColor(Color(.primaryCellTextColor))
     }
     
     private func customStepRow(step: Step) -> some View {
@@ -172,7 +172,7 @@ private extension ScheduleViewController {
             }
             Spacer()
         }
-        .foregroundColor(Color(.cellTextColor))
+        .foregroundColor(Color(.primaryCellTextColor))
         .padding()
         .clipped()
     }

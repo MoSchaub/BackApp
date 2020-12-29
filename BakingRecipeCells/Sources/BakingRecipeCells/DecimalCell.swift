@@ -54,9 +54,9 @@ private extension DecimalCell {
         textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
         textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         
-        textField.tintColor = .red
-        textField.textColor = .cellTextColor
-        textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryColor])
+        textField.tintColor = .tintColor
+        textField.textColor = .primaryCellTextColor
+        textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryCellTextColor])
         
         setTextFieldConstraints()
         textField.becomeFirstResponder()
