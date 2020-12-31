@@ -31,8 +31,6 @@ class RecipeDetailViewController: UITableViewController {
     // id of the recipe for pulling the recipe from the database
     private let recipeId: Int
     
-    private let currentTheme: Theme
-    
     // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
         get {
@@ -59,11 +57,10 @@ class RecipeDetailViewController: UITableViewController {
     private var dismissDetail: (() -> ())?
     
     //initializer
-    init(recipeId: Int, creating: Bool, appData: BackAppData, currentTheme: Theme, dismissDetail: (() -> ())? = nil ) {
+    init(recipeId: Int, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
         self.creating = creating
         self.recipeId = recipeId
         self.appData = appData
-        self.currentTheme = currentTheme
         self.dismissDetail = dismissDetail
         super.init(style: .insetGrouped)
     }
@@ -133,7 +130,7 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
     private func showAlert() {
         let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
         
-        alertVC.theme(with: currentTheme)
+        alertVC.theme()
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
@@ -248,7 +245,7 @@ private extension RecipeDetailViewController {
         let vc = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
-        vc.theme(with: currentTheme)
+        vc.theme()
     }
     
     @objc private func cancel() {
@@ -258,7 +255,7 @@ private extension RecipeDetailViewController {
     @objc private func deletePressed(sender: UIBarButtonItem) {
         let sheet = UIAlertController(preferredStyle: .actionSheet)
         
-        sheet.theme(with: currentTheme)
+        sheet.theme()
         
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
@@ -324,7 +321,7 @@ private extension RecipeDetailViewController {
         
         let alert = UIAlertController(title: Strings.image_alert_title, message: nil, preferredStyle: .actionSheet)
         
-        alert.theme(with: currentTheme)
+        alert.theme()
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(UIAlertAction(title: Strings.take_picture, style: .default, handler: { (_) in
@@ -371,7 +368,7 @@ private extension RecipeDetailViewController {
             self.recipeChanged = true
         }
         
-        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData, theme: currentTheme)
+        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)
         
         //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)
@@ -383,7 +380,7 @@ private extension RecipeDetailViewController {
         }) { (newValue) in
             self.recipe = newValue
         }
-        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData, theme: currentTheme)
+        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
 
         navigationController?.pushViewController(scheduleForm, animated: true)
     }
@@ -405,7 +402,7 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
         controller.delegate = self
         controller.sourceType = source
         
-        controller.theme(with: currentTheme)
+        controller.theme()
         
         present(controller, animated: true)
     }

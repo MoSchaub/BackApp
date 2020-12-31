@@ -7,6 +7,7 @@
 
 import UIKit
 import BakingRecipeStrings
+import BackAppCore
 
 @available(iOS 13.0, *)
 public extension UIViewController {
@@ -60,10 +61,11 @@ public extension UIViewController {
 }
 
 public extension UIViewController {
-    func theme(with theme: Theme) {
-        if theme.name == "light" {
+    func theme() {
+        let theme = Standarts.theme
+        if theme.style == .light {
             self.overrideUserInterfaceStyle = .light
-        } else if theme.name == "dark" {
+        } else if theme.style == .dark {
             self.overrideUserInterfaceStyle = .dark
         }
     }

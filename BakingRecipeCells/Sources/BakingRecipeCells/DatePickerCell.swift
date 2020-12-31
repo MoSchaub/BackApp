@@ -19,17 +19,15 @@ extension UIDatePicker {
 
 protocol CellDatePickerable {
     var datePicker: UIDatePicker { get set }
-    
-    var theme: Theme { get set }
 }
 
 extension CellDatePickerable {
     func setTextColor(userInterfaceStyle: UIUserInterfaceStyle) {
-        if theme.name == "light" {
+        if Standarts.theme.style == .light {
             datePicker.overrideUserInterfaceStyle = .dark
-        } else if theme.name == "dark" {
+        } else if Standarts.theme.style == .dark {
             datePicker.overrideUserInterfaceStyle = .light
-        } else if theme.name == "auto" {
+        } else if Standarts.theme.style == .auto {
             if userInterfaceStyle == .dark {
                 datePicker.overrideUserInterfaceStyle = .light
             } else if userInterfaceStyle == .light {
@@ -44,14 +42,11 @@ public class DatePickerCell: CustomCell, CellDatePickerable {
     ///currently selected Date
     @Binding private var date: Date
     
-    internal var theme: Theme
-    
     /// the datePicker displayed in the cell
     internal lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
     
-    public init(date: Binding<Date>, theme: Theme, reuseIdentifier: String?) {
+    public init(date: Binding<Date>, reuseIdentifier: String?) {
         self._date = date
-        self.theme = theme
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -122,15 +117,12 @@ public class TimePickerCell: CustomCell, CellDatePickerable {
     
     private var appData: BackAppData
     
-    internal var theme: Theme
-    
     /// the datePicker displayed in the cell
     internal lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
     
-    public init(stepId: Int, appData: BackAppData, theme: Theme, reuseIdentifier: String?) {
+    public init(stepId: Int, appData: BackAppData, reuseIdentifier: String?) {
         self.stepId = stepId
         self.appData = appData
-        self.theme = theme
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }

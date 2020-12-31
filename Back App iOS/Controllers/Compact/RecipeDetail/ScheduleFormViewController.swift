@@ -22,14 +22,11 @@ class ScheduleFormViewController: UITableViewController {
     private var appData: BackAppData
     
     private lazy var dataSource = makeDataSource()
-    
-    private let theme: Theme
-    
-    init(recipe: Binding<Recipe>, appData: BackAppData, theme: Theme) {
+
+    init(recipe: Binding<Recipe>, appData: BackAppData) {
         self._recipe = recipe
         self.times = recipe.wrappedValue.times
         self.appData = appData
-        self.theme = theme
         super.init(style: .insetGrouped)
     }
     
@@ -93,7 +90,7 @@ private extension ScheduleFormViewController {
                 }, set: { (newDate) in
                     item.date = newDate
                     self.recipe.date = newDate
-                }), theme: self.theme, reuseIdentifier: "datePicker")
+                }), reuseIdentifier: "datePicker")
             } else  {
                 let cell = CustomCell()
                 let picker = self.makePicker()

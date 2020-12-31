@@ -13,7 +13,7 @@ extension Notification.Name {
 
 public final class ThemeManager {
     
-    private static let defaultThemeName = "auto"
+    private static let defaultThemeName = Theme.Style.auto
     
     public static let `default` = ThemeManager()
     
@@ -27,7 +27,7 @@ public final class ThemeManager {
     
     init() {
         do {
-            self.currentTheme = try Theme(name: ThemeManager.defaultThemeName)
+            self.currentTheme = try Theme(style: ThemeManager.defaultThemeName)//Theme(name: ThemeManager.defaultThemeName)
             registerAppearance()
         } catch {
             fatalError(String(describing: error))
@@ -38,9 +38,9 @@ public final class ThemeManager {
         UIWindow.appearance().backgroundColor = currentTheme.backgroundColor
         UIWindow.appearance().tintColor = currentTheme.tintColor
 
-        if currentTheme.name == "light" {
+        if currentTheme.style == .light {
             UIWindow.appearance().overrideUserInterfaceStyle = .light
-        } else if currentTheme.name == "dark" {
+        } else if currentTheme.style == .dark {
             UIWindow.appearance().overrideUserInterfaceStyle = .dark
         }
 

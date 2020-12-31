@@ -16,17 +16,23 @@ public struct Theme {
         case configUnserialize(Error)
     }
     
+    public enum Style: String {
+        case auto
+        case light
+        case dark
+    }
+    
     private static let bundleExtension = "bundle"
     
-    public let name: String
+    public let style: Style
     let bundle: Bundle
     let config: ThemeConfiguration
     
-    init(name: String, in containingBundle: Bundle = .main) throws {
-        self.name = name
+    init(style: Style, in containingBundle: Bundle = .main) throws {
+        self.style = style
         
-        guard let bundleURL = containingBundle.url(forResource: name, withExtension: Theme.bundleExtension) else {
-            throw LoadError.resourceNotFound(name)
+        guard let bundleURL = containingBundle.url(forResource: style.rawValue, withExtension: Theme.bundleExtension) else {
+            throw LoadError.resourceNotFound(style.rawValue)
         }
         
         guard let bundle = Bundle(url: bundleURL) else {

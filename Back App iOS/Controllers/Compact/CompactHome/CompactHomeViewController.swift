@@ -49,7 +49,7 @@ class CompactHomeViewController: UITableViewController {
         self.tableView.separatorStyle = .none
         
         //theme the splitvc
-        splitViewController?.theme(with: themeManager.currentTheme)
+        splitViewController?.theme()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -88,7 +88,7 @@ private extension CompactHomeViewController {
         guard appData.insert(recipe) else { return }
         
         // create the vc
-        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData, currentTheme: themeManager.currentTheme)
+        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -132,7 +132,7 @@ extension CompactHomeViewController {
         if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
             
             //create the vc
-            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData, currentTheme: themeManager.currentTheme) {
+            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData) {
                 //dismiss detail
                 if self.splitViewController?.isCollapsed ?? false {
                     //nosplitVc visible
@@ -176,7 +176,7 @@ extension CompactHomeViewController {
         self.documentPicker.delegate = self
         
         //theme the picker
-        self.documentPicker.theme(with: themeManager.currentTheme)
+        self.documentPicker.theme()
         
         // Present the document picker.
         self.present(documentPicker, animated: true, completion: deselectRow)
@@ -186,7 +186,7 @@ extension CompactHomeViewController {
         let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         
         //theme the shareSheet
-        ac.theme(with: themeManager.currentTheme)
+        ac.theme()
         
         ac.popoverPresentationController?.sourceView = sender
         present(ac,animated: true, completion: deselectRow)
