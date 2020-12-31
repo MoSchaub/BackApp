@@ -19,18 +19,17 @@ public class SubtitleCell: CustomCell {
     
     override func setup() {
         super.setup()
-        detailTextLabel?.textColor = .secondaryCellTextColor
         accessoryType = .disclosureIndicator
     }
     
-//    public override func layoutSubviews() {
-//        super.layoutSubviews()
-//        
-//        if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
-//            let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
-//            indicatorButton.setBackgroundImage(image, for: .normal)
-//            indicatorButton.tintColor = .tintColor
-//        }
-//    }
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
+            let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            indicatorButton.setBackgroundImage(image, for: .normal)
+            indicatorButton.tintColor = .tintColor
+        }
+    }
     
 }

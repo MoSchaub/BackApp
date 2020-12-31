@@ -7,10 +7,12 @@
 
 import UIKit
 
-/// The `CustomSwitchCellDelegate` protocol allows the adopting delegate to respond to the UI interaction. Not available on tvOS.
-public protocol CustomSwitchCellDelegate: class {
+/// The `SwitchCellDelegate` protocol allows the adopting delegate to respond to the UI interaction
+public protocol SwitchCellDelegate: class {
     /// Tells the delegate that the switch control is toggled.
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool)
+    
+    func switchValue(in cell: SwitchCell) -> Bool
 }
 
 /// A `UITableViewCell` subclass that shows a `UISwitch` as the `accessoryView`.
@@ -23,8 +25,10 @@ public class SwitchCell: CustomCell {
         return control
     }()
     
+    private var switchValue: Bool = false
+    
     /// The switch cell's delegate object, which should conform to `SwitchCellDelegate`
-    open weak var delegate: CustomSwitchCellDelegate?
+    open weak var delegate: SwitchCellDelegate?
     
     // MARK: - Initializer
     /**
@@ -35,6 +39,7 @@ public class SwitchCell: CustomCell {
      */
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        configure()
     }
     
     /**
@@ -44,11 +49,23 @@ public class SwitchCell: CustomCell {
      */
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        configure()
+    }
+    
+    open func configure() {
+        update()
+        accessoryView = switchControl
+    }
+    
+    private func update() {
+        self.switchValue = delegate?.switchValue(in: self) ?? false
+        switchControl.isOn = switchValue
     }
     
     // MARK: - Private
     @objc private func didToggleSwitch(_ sender: UISwitch) {
         delegate?.switchCell(self, didToggleSwitch: sender.isOn)
+        update()
     }
     
 }

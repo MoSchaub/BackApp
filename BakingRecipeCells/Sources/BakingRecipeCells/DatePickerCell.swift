@@ -17,15 +17,37 @@ extension UIDatePicker {
     }
 }
 
-public class DatePickerCell: CustomCell {
+protocol CellDatePickerable {
+    var datePicker: UIDatePicker { get set }
+    
+    var theme: Theme { get set }
+}
+
+extension CellDatePickerable {
+    func setTextColor(userInterfaceStyle: UIUserInterfaceStyle) {
+        if theme.name == "light" {
+            datePicker.overrideUserInterfaceStyle = .dark
+        } else if theme.name == "dark" {
+            datePicker.overrideUserInterfaceStyle = .light
+        } else if theme.name == "auto" {
+            if userInterfaceStyle == .dark {
+                datePicker.overrideUserInterfaceStyle = .light
+            } else if userInterfaceStyle == .light {
+                datePicker.overrideUserInterfaceStyle = .dark
+            }
+        }
+    }
+}
+
+public class DatePickerCell: CustomCell, CellDatePickerable {
     
     ///currently selected Date
     @Binding private var date: Date
     
-    private var theme: Theme
+    internal var theme: Theme
     
     /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
+    internal lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
     
     public init(date: Binding<Date>, theme: Theme, reuseIdentifier: String?) {
         self._date = date
@@ -48,11 +70,7 @@ public class DatePickerCell: CustomCell {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
-        if theme.name == "light" {
-            datePicker.overrideUserInterfaceStyle = .dark
-        } else if theme.name == "dark" {
-            datePicker.overrideUserInterfaceStyle = .light
-        }
+        setTextColor(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
     }
 }
 
@@ -84,7 +102,7 @@ private extension DatePickerCell {
     
 }
 
-public class TimePickerCell: CustomCell {
+public class TimePickerCell: CustomCell, CellDatePickerable {
     
     ///currently selected duration
     private var time: TimeInterval {
@@ -104,10 +122,10 @@ public class TimePickerCell: CustomCell {
     
     private var appData: BackAppData
     
-    private var theme: Theme
+    internal var theme: Theme
     
     /// the datePicker displayed in the cell
-    private lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
+    internal lazy var datePicker = UIDatePicker(backgroundColor: UIColor.cellBackgroundColor!)
     
     public init(stepId: Int, appData: BackAppData, theme: Theme, reuseIdentifier: String?) {
         self.stepId = stepId
@@ -131,11 +149,7 @@ public class TimePickerCell: CustomCell {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
-        if theme.name == "light" {
-            datePicker.overrideUserInterfaceStyle = .dark
-        } else if theme.name == "dark" {
-            datePicker.overrideUserInterfaceStyle = .light
-        }
+        setTextColor(userInterfaceStyle: traitCollection.userInterfaceStyle)
     }
 }
 

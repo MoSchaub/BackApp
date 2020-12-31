@@ -84,14 +84,8 @@ private extension ScheduleFormViewController {
             inverted: Binding(get: {self.recipe.inverted}, set: { _ in}),
             tableView: tableView
         ) { (tableView, indexPath, item) -> UITableViewCell? in
-            if let item = item as? TimesItem {
-                let cell = DecimalCell(decimal: Binding(get: {
-                    return item.decimal
-                }, set: { newValue in
-                    item.decimal = newValue
-                    self.times = newValue!
-                }), reuseIdentifier: "times", standartValue: self.recipe.times!)
-//                cell.backgroundColor = UIColor.backgroundColor
+            if item is TimesItem, let cell = tableView.dequeueReusableCell(withIdentifier: "times", for: indexPath) as? DecimalCell {
+                cell.delegate = self
                 return cell
             } else if let item = item as? DateItem {
                 return DatePickerCell(date: Binding(get: {
@@ -147,6 +141,17 @@ private extension ScheduleFormViewController {
     }
 }
 
+extension ScheduleFormViewController: DecimalCellDelegate {
+    
+    func decimalCell(_ cell: DecimalCell, didChangeValue value: Decimal?) {
+        self.times = value
+    }
+    
+    func standardValue(in cell: DecimalCell) -> Decimal {
+        self.recipe.times!
+    }
+    
+}
 class ScheduleFormDataSource: UITableViewDiffableDataSource<ScheduleFormSection, Item> {
     
     @Binding private var inverted: Bool
