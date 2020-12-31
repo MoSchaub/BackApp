@@ -27,7 +27,7 @@ public final class ThemeManager {
     
     init() {
         do {
-            self.currentTheme = try Theme(style: ThemeManager.defaultThemeName)//Theme(name: ThemeManager.defaultThemeName)
+            self.currentTheme = try Theme(style: ThemeManager.defaultThemeName)
             registerAppearance()
         } catch {
             fatalError(String(describing: error))
@@ -53,6 +53,7 @@ public final class ThemeManager {
         UIColor.tintColor = currentTheme.tintColor
         UIColor.primaryCellTextColor = currentTheme.primaryCellTextColor
         UIColor.secondaryCellTextColor = currentTheme.secondaryCellTextColor
+        UIColor.secondaryTextColor = currentTheme.secondaryTextColor
         
         UINavigationBar.appearance().backgroundColor = currentTheme.backgroundColor
         UINavigationBar.appearance().barTintColor = currentTheme.backgroundColor

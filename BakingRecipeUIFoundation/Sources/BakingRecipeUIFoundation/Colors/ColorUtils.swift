@@ -18,6 +18,8 @@ struct AssociatedKeys {
     static var selectedCellBackgroundColor: UIColor?
     
     static var tintColor: UIColor?
+    
+    static var secondaryTextColor: UIColor?
 }
 
 public extension UIColor {
@@ -27,6 +29,15 @@ public extension UIColor {
         }
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.primaryCellTextColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    static var secondaryTextColor: UIColor? {
+        get {
+            objc_getAssociatedObject(self, &AssociatedKeys.secondaryTextColor) as? UIColor
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.secondaryTextColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     

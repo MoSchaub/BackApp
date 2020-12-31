@@ -24,7 +24,7 @@ struct AboutView: View {
                 Text(Strings.appTitle)
                     .font(.largeTitle)
                 Text(Strings.version)
-                    .secondary()
+                    .secondaryNotCell()
                 
                 Spacer()
                 
@@ -41,6 +41,7 @@ struct AboutView: View {
             }
             
         }
+        .background(Color(UIWindow.appearance().backgroundColor!).edgesIgnoringSafeArea(.bottom))
         .navigationBarTitle(Text(Strings.about), displayMode: .inline)
     }
 }

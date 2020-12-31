@@ -14,6 +14,12 @@ public extension Text{
             .font(.subheadline)
             .foregroundColor(Color(UIColor.secondaryCellTextColor!))
     }
+    
+    func secondaryNotCell() -> Text {
+        self
+            .font(.subheadline)
+            .foregroundColor(Color(UIColor.secondaryTextColor!))
+    }
 }
 
 struct TextViewExtension_Previews: PreviewProvider {
