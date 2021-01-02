@@ -336,11 +336,7 @@ private extension RecipeDetailViewController {
         }
         
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
-            var recipe = self.recipe
-            recipe.imageData = nil
-            if self.appData.delete(self.recipe), self.appData.insert(recipe) {
-                self.dataSource.update(animated: false)
-            }
+            self.changeRecipeImage(to: nil)
         }))
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
@@ -352,6 +348,28 @@ private extension RecipeDetailViewController {
         
         present(alert, animated: true)
         
+    }
+    
+    // changes the image of an recipe
+    private func changeRecipeImage(to image: UIImage?) {
+        var recipe = self.recipe
+        recipe.imageData = image?.jpegData(compressionQuality: 0.3)
+        
+        //delete and reinsert it
+        //first save all steps and ingredients
+        let steps = appData.steps(with: recipe.id)
+        
+        var ingredients = [Ingredient]()
+        _ = steps.map {
+            ingredients += self.appData.ingredients(with: $0.id)
+        }
+        //delete the recipe
+        if self.appData.delete(self.recipe), self.appData.insert(recipe) {
+            //and reinsert them
+            _ = steps.map { self.appData.insert($0) }
+            _ = ingredients.map { self.appData.insert($0)}
+            self.dataSource.update(animated: false)
+        }
     }
     
     private func showStepDetail(id: Int?) {
@@ -420,11 +438,7 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
         if let uiImage = info[.originalImage] as? UIImage {
-            var recipe = self.recipe
-            recipe.imageData = uiImage.jpegData(compressionQuality: 0.3)
-            if self.appData.delete(self.recipe), self.appData.insert(recipe) {
-                self.dataSource.update(animated: false)
-            }
+            changeRecipeImage(to: uiImage)
             
             picker.dismiss(animated: true) {
                 self.terminate(picker)
