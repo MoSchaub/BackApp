@@ -6,7 +6,7 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 import BakingRecipeItems
 import BakingRecipeSections
 import BakingRecipeCells
@@ -68,6 +68,8 @@ private extension SettingsViewController {
         tableView.register(KneadingHeatingCell.self, forCellReuseIdentifier: Strings.kneadingHeatingCell) //kneading heating textField
 
         tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.apperanceCell) //apearance Cells
+        
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell) //about
 
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.languageCell)
     }
@@ -80,9 +82,16 @@ private extension SettingsViewController {
             self.title = Strings.settings
             
             //large Title
-            self.navigationController?.navigationBar.prefersLargeTitles = true
+            self.navigationController!.navigationBar.prefersLargeTitles = true
+            self.navigationController!.navigationItem.largeTitleDisplayMode = .always
+            //self.navigationController?.navigationBar.prefersLargeTitles = true
             
+            self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(self.dismis))
         }
+    }
+    
+    @objc private func dismis() {
+        self.dismiss(animated: true, completion: nil)
     }
     
 }
@@ -98,11 +107,7 @@ extension SettingsViewController {
         }
         
         let section = indexPath.section
-        if section == SettingsSection.appearance.rawValue, let newThemeStyle = Theme.Style.allCases.first(where: { $0.number == indexPath.row }) {
-            
-            //apperance
-            Standarts.theme = newThemeStyle
-        } else if section == SettingsSection.language.rawValue {
+        if section == SettingsSection.language.rawValue {
             
             //language
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
@@ -110,19 +115,37 @@ extension SettingsViewController {
             
             //roomTempCell
             self.roomTempPickerShown.toggle()
+        } else if section == SettingsSection.export.rawValue {
+            
+            // export all recipes
+            exportAllRecipes(sender: tableView.cellForRow(at: indexPath)!)
+        } else if section == SettingsSection.about.rawValue {
+            
+            // navigate to aboutView
+            let hostingController = UIHostingController(rootView: AboutView())
+            self.navigationController?.pushViewController(hostingController, animated: true)
         } else {
             return
         }
         
-        self.deselectRow(at: indexPath)
+        self.deselectRow()
         self.updateList(animated: false)
     }
     
-    private func deselectRow(at indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+    private func deselectRow() {
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
     
-    
+    @objc private func exportAllRecipes(sender: UIView) {
+        let appData = BackAppData()
+        let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
+        
+        ac.popoverPresentationController?.sourceView = sender
+        present(ac,animated: true, completion: deselectRow)
+    }
+
 }
 
 
@@ -133,18 +156,11 @@ extension SettingsViewController {
     private func makeDiffableDataSource() -> SettingsDataSource {
         SettingsDataSource(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             let section = indexPath.section
-            
-            if section == SettingsSection.appearance.rawValue, let item = item as? TextItem {
+            if section == SettingsSection.export.rawValue, let item = item as? TextItem,
+               let cell = tableView.dequeueReusableCell(withIdentifier: Strings.apperanceCell, for: indexPath) as? CustomCell {
                 
-                //apearance
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.apperanceCell, for: indexPath)
-                cell.textLabel?.text = item.text
-                
-                if indexPath.row == Standarts.theme.number {
-                    cell.accessoryType = .checkmark
-                } else {
-                    cell.accessoryType = .none
-                }
+                // export Cell
+                cell.chevronUpCell(text: item.text)
                 return cell
             } else if section == SettingsSection.language.rawValue, let item = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.languageCell) as? DetailCell {
                 
@@ -191,6 +207,11 @@ extension SettingsViewController {
                         return cell
                     }
                 }
+            } else if section == SettingsSection.about.rawValue, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell, let item = item as? DetailItem {
+                
+                // about back app
+                cell.textLabel?.text = item.text
+                return cell
             }
             return CustomCell()
         }
@@ -264,20 +285,22 @@ extension SettingsViewController {
     private func snapshotBase() -> NSDiffableDataSourceSnapshot<SettingsSection, Item> {
         
         //apearance Section
-        let apearanceItems = Theme.Style.allCases.map { TextItem(text: $0.description)}
+        let exportItems = [TextItem(text: Strings.exportAll)]
         
         //language Section
         let languageItems = [DetailItem(name: Strings.language, detailLabel: Bundle.main.preferredLocalizations.first!)]
+        
+        let aboutItems = [DetailItem(name: Strings.about)]
         
         // create the snapshot
         var snapshot = NSDiffableDataSourceSnapshot<SettingsSection, Item>() // create the snapshot
         snapshot.appendSections(SettingsSection.allCases) //append sections
         
-        snapshot.appendItems(apearanceItems, toSection: .appearance)
+        snapshot.appendItems(exportItems, toSection: .export)
         
         snapshot.appendItems(languageItems, toSection: .language)
-
-
+        
+        snapshot.appendItems(aboutItems, toSection: .about)
         
         return snapshot
     }

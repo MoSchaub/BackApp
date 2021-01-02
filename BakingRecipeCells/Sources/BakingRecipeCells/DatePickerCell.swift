@@ -23,16 +23,10 @@ protocol CellDatePickerable {
 
 extension CellDatePickerable {
     func setTextColor(userInterfaceStyle: UIUserInterfaceStyle) {
-        if Standarts.theme == .light {
-            datePicker.overrideUserInterfaceStyle = .dark
-        } else if Standarts.theme == .dark {
+        if userInterfaceStyle == .dark {
             datePicker.overrideUserInterfaceStyle = .light
-        } else if Standarts.theme == .auto {
-            if userInterfaceStyle == .dark {
-                datePicker.overrideUserInterfaceStyle = .light
-            } else if userInterfaceStyle == .light {
-                datePicker.overrideUserInterfaceStyle = .dark
-            }
+        } else if userInterfaceStyle == .light {
+            datePicker.overrideUserInterfaceStyle = .dark
         }
     }
 }

@@ -8,6 +8,10 @@
 
 import XCTest
 
+var settingsButton: XCUIElement {
+    navigationBar.buttons["settings"]
+}
+
 class CompactHomeTests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -25,27 +29,39 @@ class CompactHomeTests: XCTestCase {
     func testChangingRoomTempature() throws {
         app.launch()
         
+        settingsButton.tap()
+        
         appTables.cells.staticTexts["room temperature"].tap()
         appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
-        app.navigationBars["room temperature"].buttons["Baking App"].tap()
-
+        
+        app.navigationBars["Settings"].buttons["Done"].tap()
+        
+        settingsButton.tap()
         XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
         
         app.terminate()
-        
+
         app.launch()
         
-        appTables.cells.staticTexts["room temperature"].tap()
-        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "20")
-        app.navigationBars["room temperature"].buttons["Baking App"].tap()
+        settingsButton.tap()
         
+        appTables.cells.staticTexts["room temperature"].tap()
+        
+        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "20")
+        app.navigationBars["Settings"].buttons["Done"].tap()
+        
+        settingsButton.tap()
         XCTAssertTrue(XCUIApplication().tables.staticTexts["20° C"].exists)
     }
     
     func testNavigatingToAboutScreen() throws {
         app.launch()
 
-        app.tables.staticTexts["about Baking App"].tap()
+        settingsButton.tap()
+        
+        appTables.cells.staticTexts["about Baking App"].tap()
+        
+        XCTAssert(app.navigationBars["about Baking App"].exists)
                         
     }
     

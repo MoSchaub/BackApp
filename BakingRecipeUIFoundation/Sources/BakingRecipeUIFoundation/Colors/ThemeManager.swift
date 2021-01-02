@@ -7,20 +7,13 @@
 
 import UIKit
 
-public extension Notification.Name {
-    static let currentThemeDidChangeToAuto = Notification.Name("CurrentThemeDidChangeToAuto")
-    static let currentThemeDidChangeToLight = Notification.Name("CurrentThemeDidChangeToLight")
-    static let currentThemeDidChangeToDark = Notification.Name("CurrentThemeDidChangeToDark")
-    static let sceneShouldReload = Notification.Name("SceneShouldReload")
-}
-
 public final class ThemeManager {
     
     private static let defaultThemeName = Theme.Style.auto
     
     public static let `default` = ThemeManager()
     
-    public var currentTheme: Theme {
+    private var currentTheme: Theme {
         didSet {
             registerAppearance()
         }
@@ -33,25 +26,6 @@ public final class ThemeManager {
         } catch {
             fatalError(String(describing: error))
         }
-        
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(changeToAuto), name: .currentThemeDidChangeToAuto, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(changeToLight), name: .currentThemeDidChangeToLight, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(changeToDark), name: .currentThemeDidChangeToDark, object: nil)
-    }
-    
-    @objc private func changeToAuto() {
-        changeCurrentTheme(with: Theme.Style.auto)
-    }
-    @objc private func changeToLight() {
-        changeCurrentTheme(with: Theme.Style.light)
-    }
-    @objc private func changeToDark() {
-        changeCurrentTheme(with: Theme.Style.dark)
-    }
-    
-    private func changeCurrentTheme(with style: Theme.Style) {
-        self.currentTheme.style = style
     }
     
     private func registerAppearance() {
@@ -90,21 +64,6 @@ public final class ThemeManager {
         
         UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = currentTheme.primaryTextColor
 
-        
-        invalidateViews()
-    }
-    
-    private func invalidateViews() {
-        NotificationCenter.default.post(Notification(name: .sceneShouldReload))
-//        UIApplication.shared.windows.forEach { window in
-//            window.rootViewController?.setNeedsStatusBarAppearanceUpdate()
-//            window.rootViewController?.children.forEach({ $0.setNeedsStatusBarAppearanceUpdate() })
-//
-//            window.subviews.forEach { view in
-//                view.removeFromSuperview()
-//                window.addSubview(view)
-//            }
-//        }
     }
     
 }

@@ -9,12 +9,12 @@ import Foundation
 import BakingRecipeStrings
 
 public enum SettingsSection: Int, CaseIterable {
-    case temp, appearance, language, about
+    case temp, export, language , about
     
     public var headerTitle: String? {
         switch self {
-        case .temp: return nil
-        case .appearance: return Strings.appearance
+        case .temp: return Strings.temperature
+        case .export: return nil
         case .language: return nil
         case .about: return nil
         }

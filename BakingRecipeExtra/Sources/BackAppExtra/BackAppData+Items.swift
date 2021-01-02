@@ -33,12 +33,5 @@ public extension BackAppData {
     var allRecipesItems: [RecipeItem] {
         allRecipes.map({ recipeItem(for: $0) })
     }
-    
-    var settingsItems: [TextItem] { [
-        DetailItem(name: Strings.roomTemperature, detailLabel: "\(Standarts.roomTemp)° C"),
-        TextItem(text: Strings.importFile),
-        TextItem(text: Strings.exportAll),
-        DetailItem(name: Strings.about)
-    ]}
 
 }

@@ -15,30 +15,17 @@ import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
 
-class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
+class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
     // storage object for recipes
     var appData: BackAppData
-
+    
     init(appData: BackAppData, tableView: UITableView) {
         self.appData = appData
         
-        super.init(tableView: tableView) { (_, indexPath, homeItem) -> UITableViewCell? in
-            // Configuring cells
-            if let recipeItem = homeItem as? RecipeItem{
+        super.init(tableView: tableView) { (_, indexPath, recipeItem) -> UITableViewCell? in
                 //recipeCell
                 let recipeCell = RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, reuseIdentifier: Strings.recipeCell)
                 return recipeCell
-            } else if let detailItem = homeItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
-                // Detail Cell (RoomTemp und About)
-                cell.textLabel?.text = detailItem.text
-                cell.detailTextLabel?.text = detailItem.detailLabel
-                return cell
-            } else {
-                // plain cell
-                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as! CustomCell//plain cells
-                cell.chevronUpCell(text: homeItem.text)
-                return cell
-            }
         }
         
         appData.observeChange(of: Recipe.self) { _ in
@@ -48,10 +35,19 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     
     /// updates and rerenders the tableview
     func update(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, TextItem>()
-        snapshot.appendSections(HomeSection.allCases)
-        snapshot.appendItems(appData.allRecipesItems, toSection: .recipes)
-        snapshot.appendItems(appData.settingsItems, toSection: .settings)
+        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>()
+        
+        //append sections and items
+        if appData.favoriteItems.isEmpty {
+            snapshot.appendSections([HomeSection.recipes])
+            snapshot.appendItems(appData.allRecipesItems, toSection: .recipes)
+        } else {
+            snapshot.appendSections(HomeSection.allCases)
+            snapshot.appendItems(appData.allRecipesItems, toSection: .recipes)
+            snapshot.appendItems(appData.favoriteItems, toSection: .favourites)
+        }
+        
+
         self.apply(snapshot, animatingDifferences: animated)
     }
     
@@ -72,38 +68,68 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
     
     /// deleting recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete, indexPath.section == 0, let item = itemIdentifier(for: indexPath), let recipe = self.appData.object(with: item.id, of: Recipe.self) {
-            var snapshot = self.snapshot()
+        
+        // make sure editingStyle is delete
+        guard editingStyle == .delete else {
+            return
+        }
+        
+        ///make sure the item exists and there is an recipe that belongs to this item
+        guard let item = itemIdentifier(for: indexPath), var recipe = self.appData.object(with: item.id, of: Recipe.self) else {
+            return
+        }
+        
+        func deleteRecipe() {
+            //delete the item and apply changes
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
                 _ = self.appData.delete(recipe)
             }
         }
+        
+        var snapshot = self.snapshot()
+        
+        if appData.favoriteItems.isEmpty {
+            deleteRecipe()
+        } else {
+            if indexPath.section == HomeSection.recipes.rawValue {
+                
+                deleteRecipe()
+            } else if indexPath.section == HomeSection.favourites.rawValue {
+                
+                //delete the item from the list and make it a non favourite
+                snapshot.deleteItems([item])
+                recipe.isFavorite = false
+                apply(snapshot, animatingDifferences: true) {
+                    _ = self.appData.update(recipe)
+                }
+            }
+        }
     }
     
-//    func deleteRecipe(_ id: Int) -> Bool {
-//        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
-//            return self.recipeStore.deleteRecipe(at: index)
-//        } else { return false }
-//    }
+    //    func deleteRecipe(_ id: Int) -> Bool {
+    //        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
+    //            return self.recipeStore.deleteRecipe(at: index)
+    //        } else { return false }
+    //    }
     
-//    // moving recipes
-//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        guard destinationIndexPath.row < appData.allRecipes.count else { reset(); return }
-//        guard destinationIndexPath.section == 0 else { reset(); return}
-//        guard appData.allRecipes.count > sourceIndexPath.row else { reset(); return }
-//        DispatchQueue.global(qos: .userInteractive).async {
-//            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
-//            DispatchQueue.main.async {
-//                self.update(animated: false)
-//            }
-//        }
-//
-//    }
+    //    // moving recipes
+    //    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    //        guard destinationIndexPath.row < appData.allRecipes.count else { reset(); return }
+    //        guard destinationIndexPath.section == 0 else { reset(); return}
+    //        guard appData.allRecipes.count > sourceIndexPath.row else { reset(); return }
+    //        DispatchQueue.global(qos: .userInteractive).async {
+    //            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+    //            DispatchQueue.main.async {
+    //                self.update(animated: false)
+    //            }
+    //        }
+    //
+    //    }
     
     //wether a row can be deleted or not
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if itemIdentifier(for: indexPath) as? RecipeItem != nil {
+        if itemIdentifier(for: indexPath) != nil {
             return true
         } else {return false}
     }
@@ -115,5 +141,11 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,TextItem> {
 //        } else {return false}
         return false
     }
-
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let section = HomeSection.init(rawValue: section) else { return nil }
+        
+        return section.headerTitle(favouritesEmpty: appData.favoriteItems.isEmpty)
+    }
+    
 }

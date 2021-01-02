@@ -24,7 +24,6 @@
 		CD38FFEF259612DF00F352E9 /* BackAppExtra in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFEE259612DF00F352E9 /* BackAppExtra */; };
 		CD38FFF5259617C300F352E9 /* BakingRecipeSections in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFF4259617C300F352E9 /* BakingRecipeSections */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
-		CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
@@ -142,7 +141,6 @@
 		CD31489E259BBB0F000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD3148A9259BBB1B000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
-		CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempTableViewController.swift; sourceTree = "<group>"; };
 		CD59040724E2CF4F008A0E6E /* Push Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Push Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD59040824E2CF4F008A0E6E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
@@ -178,7 +176,6 @@
 		CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
-		CD8A742A258E39CD0039C1BF /* BakingRecipeCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeCore; sourceTree = "<group>"; };
 		CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeStrings; sourceTree = "<group>"; };
 		CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeFoundation; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
@@ -305,7 +302,6 @@
 				CD285D2C258E429400813A4C /* BakingRecipeItems */,
 				CD285D21258E412200813A4C /* BakingRecipeExtra */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
-				CD8A742A258E39CD0039C1BF /* BakingRecipeCore */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
 				CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */,
 				CD1B6A182483F7FF00597931 /* Default-568h@2x.png */,
@@ -524,7 +520,6 @@
 		CDBDFDD324AA95BE002A6C84 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
 				CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */,
 				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
@@ -831,7 +826,6 @@
 				CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
-				CD399AD424AA766500232F90 /* RoomTempTableViewController.swift in Sources */,
 				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
 				CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */,

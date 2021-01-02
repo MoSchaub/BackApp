@@ -93,6 +93,7 @@ extension RecipeDetailViewController {
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 250
+        self.setUpNavigationBar()
     }
     
 }
@@ -129,8 +130,6 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
     
     private func showAlert() {
         let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
-        
-        alertVC.theme()
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
@@ -245,7 +244,6 @@ private extension RecipeDetailViewController {
         let vc = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
-        vc.theme()
     }
     
     @objc private func cancel() {
@@ -254,8 +252,6 @@ private extension RecipeDetailViewController {
     
     @objc private func deletePressed(sender: UIBarButtonItem) {
         let sheet = UIAlertController(preferredStyle: .actionSheet)
-        
-        sheet.theme()
         
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
@@ -320,8 +316,6 @@ private extension RecipeDetailViewController {
         imagePickerController = UIImagePickerController()
         
         let alert = UIAlertController(title: Strings.image_alert_title, message: nil, preferredStyle: .actionSheet)
-        
-        alert.theme()
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(UIAlertAction(title: Strings.take_picture, style: .default, handler: { (_) in
@@ -419,8 +413,6 @@ extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigat
     private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {
         controller.delegate = self
         controller.sourceType = source
-        
-        controller.theme()
         
         present(controller, animated: true)
     }

@@ -7,8 +7,16 @@
 //
 
 import Foundation
+import BakingRecipeStrings
 
-public enum HomeSection: CaseIterable {
+public enum HomeSection: Int, CaseIterable {
+    case favourites
     case recipes
-    case settings
+    
+    public func headerTitle(favouritesEmpty: Bool) -> String? {
+        switch self {
+        case .favourites: return favouritesEmpty ? nil : Strings.favorites
+        case .recipes: return favouritesEmpty ? nil : Strings.allRecipes
+        }
+    }
 }

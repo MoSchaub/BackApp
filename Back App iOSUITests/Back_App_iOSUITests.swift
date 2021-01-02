@@ -21,7 +21,7 @@ var navigationBar: XCUIElement {
 }
 
 var addButton: XCUIElement {
-    navigationBar.buttons["Add"]
+    navigationBar.buttons["Add"].firstMatch
 }
 
 var nameTextField: XCUIElement {
@@ -261,44 +261,7 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssertTrue(appTables.staticTexts[step.name].exists)
     }
     
-    func testd() throws {
-        
-        app.launch()
-
-        appTables.staticTexts[Recipe.example.name].tap()
-
-        let nameTextField = appTables.textFields[Recipe.example.name]
-        nameTextField.tap()
-        nameTextField.typeText("TEST")
-        app.keyboards.buttons["Return"].tap()
-
-        app.navigationBars[Recipe.example.name + "TEST"].buttons["Baking App"].tap()
-        
-        app.terminate()
-        app.launch()
-        
-        XCTAssertTrue(appTables.staticTexts[Recipe.example.name + "TEST"].exists)
-        
-        
-        appTables.staticTexts[Recipe.example.name + "TEST"].tap()
-        let nameTextField2 = appTables.textFields[Recipe.example.name + "TEST"]
-        nameTextField2.tap()
-        
-        let deleteKey = app.keys["delete"]
-        deleteKey.tap()
-        deleteKey.tap()
-        deleteKey.tap()
-        deleteKey.tap()
-        app.buttons["Return"].tap()
-        app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
-
-        app.terminate()
-        app.launch()
-        
-        XCTAssertTrue(appTables.staticTexts[Recipe.example.name].exists)
-    }
-    
-    func testg() throws {
+    func testChangingRecipeExample() throws {
 
         app.launch()
 
@@ -315,7 +278,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         XCTAssertTrue(appTables.cells.staticTexts["18 minutes"].exists)
 
-        app.navigationBars[Recipe.example.name].buttons["Baking App"].tap()
+        app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
         
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }

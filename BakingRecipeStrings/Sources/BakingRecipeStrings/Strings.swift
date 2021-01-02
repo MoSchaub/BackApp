@@ -85,7 +85,9 @@ public struct Strings {
     public static let dark = NSLocalizedString("dark", bundle: .module, comment: "")
     public static let light = NSLocalizedString("light", bundle: .module, comment: "")
     public static let language = NSLocalizedString("language", bundle: .module, comment: "")
-    
+    public static var favorites = NSLocalizedString("favorites", bundle: .module, comment: "")
+    public static var allRecipes = NSLocalizedString("allRecipes", bundle: .module, comment: "")
+
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
     public static let websiteURL = URL(string: "https://heimbaecker.de/backapp")!

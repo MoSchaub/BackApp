@@ -42,6 +42,9 @@
 "addStep" = "Schritt hinzufügen";
 
 
+"allRecipes" = "alle Rezepte";
+
+
 "amount" = "Menge";
 
 
@@ -87,7 +90,10 @@
 "endDate" = "Enddatum";
 
 
-"exportAll" = "alle exportieren";
+"exportAll" = "alle Rezepte exportieren";
+
+
+"favorites" = "Favoriten";
 
 
 "flour" = "Mehl";

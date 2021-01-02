@@ -20,18 +20,28 @@ class CompactHomeViewController: UITableViewController {
     
     typealias DataSource = HomeDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
+    
+    // MARK: Properties
 
+    ///data source for the recipe
     private(set) lazy var dataSource = makeDataSource()
     
+    /// appData storage interface
     private var appData: BackAppData
     
+    /// wether a cell has been pressed
     private lazy var pressed = false
     
+    /// for managing the theme
     private var themeManager: ThemeManager
     
+    /// for picking documents
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
+    
+    
+    // MARK: - Initializers
     
     init(appData: BackAppData) {
         self.appData = appData
@@ -43,13 +53,12 @@ class CompactHomeViewController: UITableViewController {
         fatalError(Strings.init_coder_not_implemented)
     }
     
+    // MARK: - Startup functions
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
         registerCells()
         configureNavigationBar()
-        self.tableView.separatorStyle = .none
-        
-        //theme the splitvc
-        splitViewController?.theme()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -63,11 +72,14 @@ class CompactHomeViewController: UITableViewController {
 import BakingRecipeFoundation
 
 private extension CompactHomeViewController {
+    
+    // MARK: - Cell Registration
+    
     private func registerCells() {
         tableView.register(RecipeCell.self, forCellReuseIdentifier: Strings.recipeCell)
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell)
     }
+    
+    // MARK: - NavigationBar
     
     private func configureNavigationBar() {
         title = Strings.recipes
@@ -98,40 +110,49 @@ private extension CompactHomeViewController {
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
         nv.modalPresentationStyle = .fullScreen //to prevent data loss
-        nv.theme()
         
         present(nv, animated: true)
        }
     
     @objc private func navigateToSettings() {
         let vc = SettingsViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        
+        // navigation Controller
+        let nv = UINavigationController(rootViewController: vc)
+        
+        present(nv, animated: true)
     }
+    
+    @objc private func openImportFilePopover() {
+        //set the delegate
+        self.documentPicker.delegate = self
+        
+        // Present the document picker.
+        self.present(documentPicker, animated: true, completion: deselectRow)
+    }
+    
 }
 
 private extension CompactHomeViewController {
+    
+    // MARK: - DataSource
+    
     private func makeDataSource() -> DataSource {
         HomeDataSource(appData: appData, tableView: tableView)
     }
 }
 
 extension CompactHomeViewController {
+    
+    // MARK: - Cell Selection
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard !pressed else { return }
         pressed = true
-        guard let item = dataSource.itemIdentifier(for: indexPath) else { return}
+        guard let recipeItem = dataSource.itemIdentifier(for: indexPath) as? RecipeItem else { return}
         
-        if let recipeItem = item as? RecipeItem {
-            navigateToRecipe(recipeItem: recipeItem)
-        } else if item.text == Strings.roomTemperature {
-            navigateToRoomTempPicker(item: item)
-        } else if item.text == Strings.importFile {
-            openImportFilePopover()
-        } else if item.text == Strings.exportAll {
-            openExportAllShareSheet(sender: tableView.cellForRow(at: indexPath)!)
-        } else if item.text == Strings.about {
-            navigateToAboutView()
-        }
+        navigateToRecipe(recipeItem: recipeItem)
+        
         DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.35) {
             self.pressed = false
         }
@@ -159,55 +180,6 @@ extension CompactHomeViewController {
         }
     }
     
-    private func navigateToRoomTempPicker(item: TextItem) {
-        let vc = RoomTempTableViewController(style: .insetGrouped)
-        
-        vc.appData = appData
-        vc.updateTemp = { [self] temp in
-            Standarts.roomTemp = temp
-            self.updateStandarts()
-        }
-        splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
-    }
-    
-    private func updateStandarts() {
-        DispatchQueue.global(qos: .background).async {
-            var snapshot = self.dataSource.snapshot()
-            snapshot.deleteSections([.settings])
-            snapshot.appendSections([.settings])
-            snapshot.appendItems(self.appData.settingsItems, toSection: .settings)
-            DispatchQueue.main.async {
-                self.dataSource.apply(snapshot, animatingDifferences: false)
-            }
-        }
-    }
-    
-    @objc private func openImportFilePopover() {
-        //set the delegate
-        self.documentPicker.delegate = self
-        
-        //theme the picker
-        self.documentPicker.theme()
-        
-        // Present the document picker.
-        self.present(documentPicker, animated: true, completion: deselectRow)
-    }
-    
-    private func openExportAllShareSheet(sender: UIView) {
-        let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
-        
-        //theme the shareSheet
-        ac.theme()
-        
-        ac.popoverPresentationController?.sourceView = sender
-        present(ac,animated: true, completion: deselectRow)
-    }
-    
-    private func navigateToAboutView() {
-        let hostingController = SettingsViewController()//UIHostingController(rootView: AboutView())
-        splitViewController?.showDetailViewController(UINavigationController(rootViewController: hostingController), sender: self)
-    }
-    
     private func deselectRow() {
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
@@ -215,6 +187,8 @@ extension CompactHomeViewController {
     }
     
 }
+
+// MARK: - Document Picker
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
