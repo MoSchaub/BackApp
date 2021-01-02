@@ -58,7 +58,7 @@ class RoomTempTableViewController: UITableViewController {
         picker.dataSource = self
         picker.delegate = self
         
-        picker.selectRow(Standarts.standardRoomTemperature + 10, inComponent: 0, animated: false)
+        picker.selectRow(Standarts.roomTemp + 10, inComponent: 0, animated: false)
     }
 }
 

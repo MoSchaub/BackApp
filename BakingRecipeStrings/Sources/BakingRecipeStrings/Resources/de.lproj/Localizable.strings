@@ -54,7 +54,16 @@
 "appTitle" = "Back App";
 
 
+"appearance" = "Erscheinungsbild";
+
+
+"auto" = "automatisch";
+
+
 "bulkLiquid" = "Schüttflüssigkeit";
+
+
+"dark" = "dunkel";
 
 
 "date" = "Datum";
@@ -103,6 +112,18 @@
 
 
 "ingredients" = "Zutaten";
+
+
+"kneadingHeatCellPlaceholder" = "kneterwärmung";
+
+
+"kneadingHeating" = "kneterwärmung";
+
+
+"language" = "Sprache";
+
+
+"light" = "hell";
 
 
 "minute" = "Minute";
@@ -160,6 +181,9 @@
 
 
 "select_image" = "Bild auswählen";
+
+
+"settings" = "Einstellungen";
 
 
 "start" = "Start";

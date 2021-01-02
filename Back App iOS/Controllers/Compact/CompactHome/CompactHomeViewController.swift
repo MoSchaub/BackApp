@@ -93,6 +93,7 @@ private extension CompactHomeViewController {
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
         nv.modalPresentationStyle = .fullScreen //to prevent data loss
+        nv.theme()
         
         present(nv, animated: true)
        }
@@ -153,7 +154,7 @@ extension CompactHomeViewController {
         
         vc.appData = appData
         vc.updateTemp = { [self] temp in
-            Standarts.standardRoomTemperature = temp
+            Standarts.roomTemp = temp
             self.updateStandarts()
         }
         splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
@@ -193,7 +194,7 @@ extension CompactHomeViewController {
     }
     
     private func navigateToAboutView() {
-        let hostingController = UIHostingController(rootView: AboutView())
+        let hostingController = SettingsViewController()//UIHostingController(rootView: AboutView())
         splitViewController?.showDetailViewController(UINavigationController(rootViewController: hostingController), sender: self)
     }
     

@@ -21,6 +21,7 @@ public class SwitchCell: CustomCell {
     /// A `UISwitch` as the `accessoryView`
     public private(set) lazy var switchControl: UISwitch = {
         let control = UISwitch()
+        control.isOn = delegate?.switchValue(in: self) ?? false
         control.addTarget(self, action: #selector(SwitchCell.didToggleSwitch(_:)), for: .valueChanged)
         return control
     }()
@@ -28,7 +29,11 @@ public class SwitchCell: CustomCell {
     private var switchValue: Bool = false
     
     /// The switch cell's delegate object, which should conform to `SwitchCellDelegate`
-    open weak var delegate: SwitchCellDelegate?
+    open weak var delegate: SwitchCellDelegate? {
+        didSet {
+            self.update()
+        }
+    }
     
     // MARK: - Initializer
     /**
@@ -52,9 +57,10 @@ public class SwitchCell: CustomCell {
         configure()
     }
     
-    open func configure() {
+    private func configure() {
         update()
         accessoryView = switchControl
+        selectionStyle = .none
     }
     
     private func update() {

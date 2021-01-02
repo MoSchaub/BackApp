@@ -54,7 +54,16 @@
 "appTitle" = "Baking App";
 
 
+"appearance" = "Appearance";
+
+
+"auto" = "automatic";
+
+
 "bulkLiquid" = "bulk liquid";
+
+
+"dark" = "dark";
 
 /*  */
 "date" = "date";
@@ -103,6 +112,18 @@
 
 
 "ingredients" = "ingredients";
+
+
+"kneadingHeatCellPlaceholder" = "kneading heating";
+
+
+"kneadingHeating" = "kneading heating";
+
+
+"language" = "language";
+
+
+"light" = "light";
 
 
 "minute" = "minute";
@@ -160,6 +181,9 @@
 
 
 "select_image" = "pick image";
+
+
+"settings" = "Settings";
 
 
 "start" = "start";

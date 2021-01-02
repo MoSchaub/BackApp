@@ -409,13 +409,31 @@ private extension StepDetailViewController {
                 }
             } else if self.datePickerShown, indexPath.row == 1{
                 return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
-            } else if self.tempPickerShown, indexPath.row > 1 {
-                return TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.standardRoomTemperature}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
+            } else if self.tempPickerShown, indexPath.row > 1, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
+                cell.delegate = self
+                //TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.roomTemp}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
+                return cell
             }
             return CustomCell()
         }
     }
+}
+
+extension StepDetailViewController: TempPickerCellDelegate {
+    func startValue(for cell: TempPickerCell) -> Int {
+        self.step.temperature ?? Standarts.roomTemp
+    }
     
+    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Int) {
+        self.step.temperature = value
+        self.updateList(animated: false)
+    }
+    
+    
+}
+
+    
+private extension StepDetailViewController {
     // MARK: Snapshot
     
     /// creates the initial list
@@ -436,7 +454,7 @@ private extension StepDetailViewController {
         let notesItem = TextFieldItem(text: step.notes)
 
         let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step)) }
-        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: step.id) + " " + $0.formattedTemp(roomTemp: Standarts.standardRoomTemperature) )}
+        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: step.id) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
         // create the snapshot
@@ -485,7 +503,7 @@ private extension StepDetailViewController {
     
     /// detailItem for temp
     private var tempItem: DetailItem {
-        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.standardRoomTemperature))
+        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.roomTemp))
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
@@ -502,7 +520,7 @@ private extension StepDetailViewController {
 
 fileprivate extension Ingredient {
     func detailLabel(for step: Step) -> String {
-        self.formattedAmount + " " + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.standardRoomTemperature))° C" : "")
+        self.formattedAmount + " " + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.roomTemp))° C" : "")
     }
 }
 

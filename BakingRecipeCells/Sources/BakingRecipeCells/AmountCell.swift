@@ -15,6 +15,7 @@ public class AmountCell: TextFieldCell {
         textField.text = String(ingredient.formattedAmount)
         textField.placeholder = Strings.amountCellPlaceholder1
         textField.accessibilityIdentifier = Strings.amountCellPlaceholder1
+        textField.keyboardType = .decimalPad
         setUpBoth(format: format)
         self.textChanged!(textField.text ?? "0g" )
     }
@@ -23,6 +24,7 @@ public class AmountCell: TextFieldCell {
         textField.text = text
         textField.placeholder = Strings.amountCellPlaceholder2
         textField.accessibilityIdentifier = Strings.amountCellPlaceholder2
+        textField.keyboardType = .numberPad
         setUpBoth(format: format)
         self.textChanged!(textField.text ?? "" )
     }

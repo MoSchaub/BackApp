@@ -163,7 +163,7 @@ class Back_App_iOSUITests: XCTestCase {
         let textField = appTables.textFields["Number of breads, rolls, etc."]
         textField.tap()
         textField.typeText(recipe.timesText)
-        returnButton.tap()
+        doneButton.tap()
         
         // steps
         for step in recipe.steps {
@@ -193,7 +193,7 @@ class Back_App_iOSUITests: XCTestCase {
         let amountTextField = appTables.textFields["amount in gramms"]
         amountTextField.tap()
         amountTextField.typeText("\(ingredient.amount)")
-        returnButton.tap()
+        doneButton.tap()
         
         
         let tablesQuery = XCUIApplication().tables

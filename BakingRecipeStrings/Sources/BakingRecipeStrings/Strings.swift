@@ -77,6 +77,15 @@ public struct Strings {
     public static let one = NSLocalizedString("one", bundle: .module, comment: "")
     public static let hour = NSLocalizedString("hour", bundle: .module, comment: "")
     public static let hours = NSLocalizedString("hours", bundle: .module, comment: "")
+    public static let settings = NSLocalizedString("settings", bundle: .module, comment: "")
+    public static let kneadingHeating = NSLocalizedString("kneadingHeating", bundle: .module, comment: "")
+    public static let kneadingHeatCellPlaceholder = NSLocalizedString("kneadingHeatCellPlaceholder", bundle: .module, comment: "")
+    public static let appearance = NSLocalizedString("appearance", bundle: .module, comment: "")
+    public static let auto = NSLocalizedString("auto", bundle: .module, comment: "")
+    public static let dark = NSLocalizedString("dark", bundle: .module, comment: "")
+    public static let light = NSLocalizedString("light", bundle: .module, comment: "")
+    public static let language = NSLocalizedString("language", bundle: .module, comment: "")
+    
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
     public static let websiteURL = URL(string: "https://heimbaecker.de/backapp")!
@@ -107,4 +116,8 @@ public struct Strings {
     public static let infoCell = "info"
     public static let textFieldCell = "textField"
     public static let scheduleCell = "schedule"
+    public static let switchCell = "switch"
+    public static let kneadingHeatingCell = "kneadingHeating"
+    public static let apperanceCell = "appearance"
+    public static let languageCell = "language"
 }

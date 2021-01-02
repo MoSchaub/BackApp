@@ -35,7 +35,7 @@ public extension BackAppData {
     }
     
     var settingsItems: [TextItem] { [
-        DetailItem(name: Strings.roomTemperature, detailLabel: "\(Standarts.standardRoomTemperature)° C"),
+        DetailItem(name: Strings.roomTemperature, detailLabel: "\(Standarts.roomTemp)° C"),
         TextItem(text: Strings.importFile),
         TextItem(text: Strings.exportAll),
         DetailItem(name: Strings.about)

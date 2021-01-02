@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Standarts+Theme.swift
 //  
 //
 //  Created by Moritz Schaub on 31.12.20.
@@ -9,18 +9,22 @@ import BackAppCore
 import Foundation
 
 public extension Standarts {
-    static var theme: Theme {
+    
+    @UserDefaultsWrapper(key: .theme, defaultValue: Theme.Style.auto.number)
+    static private var themeNumber: Int
+    
+    static var theme: Theme.Style {
         get {
-            if let themeRawValue = UserDefaults.standard.object(for: .theme, as: String.self) {
-                return try! Theme(style: Theme.Style(rawValue: themeRawValue)!)
-            } else {
-                UserDefaults.standard.set(Theme.Style.auto.rawValue, for: .theme)
-                return try! Theme(style: .auto)
-            }
+            Theme.Style.allCases.first(where: {$0.number == themeNumber}) ?? Theme.Style.auto
         }
         set {
-            let newString = newValue.style.rawValue 
-            UserDefaults.standard.set(newString, for: .theme)
+            self.themeNumber = newValue.number
+            switch newValue {
+            case .auto: NotificationCenter.default.post(name: .currentThemeDidChangeToAuto, object: nil)
+            case .light: NotificationCenter.default.post(name: .currentThemeDidChangeToLight, object: nil)
+            case .dark: NotificationCenter.default.post(name: .currentThemeDidChangeToDark, object: nil)
+            }
         }
     }
+    
 }

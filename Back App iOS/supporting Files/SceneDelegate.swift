@@ -9,6 +9,7 @@
 import UIKit
 import BackAppCore
 import BakingRecipeStrings
+import BakingRecipeUIFoundation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,6 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     let appData = BackAppData()
     lazy var compactHomeVC = CompactHomeViewController(appData: appData)
+    
+    override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadWindows), name: .sceneShouldReload, object: nil)
+    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -34,10 +40,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window!.tintColor = UIColor.tintColor
     }
     
-//    func sceneWillResignActive(_ scene: UIScene) {
-//        recipeStore.update()
-//    }
-    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
         let _ = URLContexts.map({ self.appData.open($0.url)})
@@ -49,6 +51,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }))
         
         compactHomeVC.present(alert, animated: true)
+    }
+    
+    @objc private func reloadWindows() {
+        window?.rootViewController?.setNeedsStatusBarAppearanceUpdate()
+        window?.rootViewController?.children.forEach({
+            $0.setNeedsStatusBarAppearanceUpdate()
+        })
+        
+        window?.subviews.forEach({ view in
+            view.removeFromSuperview()
+            window?.addSubview(view)
+        })
     }
 
 }

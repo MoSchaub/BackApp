@@ -6,43 +6,65 @@
 //
 
 import SwiftUI
+import BackAppCore
+
+public protocol TempPickerCellDelegate: class {
+    
+    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Int)
+    
+    func startValue(for cell: TempPickerCell) -> Int
+    
+}
 
 public class TempPickerCell: CustomCell {
     
-    ///currently selected Date
-    @Binding private var temp: Int
+    ///currently selected temperature
+    private var temp: Int = 20 {
+        didSet {
+            delegate?.tempPickerCell(self, didChangeValue: temp)
+        }
+    }
+    
+    open weak var delegate: TempPickerCellDelegate? {
+        didSet {
+            self.setupCell()
+        }
+    }
     
     /// the datePicker displayed in the cell
-    private lazy var tempPicker = UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
+    private lazy var tempPicker = makeTempPicker()
     
-    public init(temp: Binding<Int>, reuseIdentifier: String?) {
-        self._temp = temp
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setup()
     }
-    
-    override func setup() {
-        super.setup()
-        
-        addSubview(tempPicker)
-        self.configureTempPicker()
-    }
+
 }
 
 private extension TempPickerCell {
     
+    func makeTempPicker() -> UIPickerView {
+        let picker = UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
+        
+        
+//        tempPicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
+        
+        return picker
+    }
+    
     func configureTempPicker() {
-        setUpTempPickerConstraints()
+        addSubview(tempPicker)
+        
         tempPicker.dataSource = self
         tempPicker.delegate = self
         
-        tempPicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
-        
-        tempPicker.selectRow(temp + 10, inComponent: 0, animated: false)
+        setUpTempPickerConstraints()
+        updatePicker()
     }
     
     //sets constraints for picker
@@ -50,9 +72,19 @@ private extension TempPickerCell {
         tempPicker.fillSuperview()
     }
     
+    private func setupCell() {
+        self.selectionStyle = .none
+        configureTempPicker()
+    }
+    
 }
 
 extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    @objc private func updatePicker() {
+        tempPicker.selectRow((delegate?.startValue(for: self) ?? Standarts.roomTemp) + 10, inComponent: 0, animated: false)
+    }
+    
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1
     }

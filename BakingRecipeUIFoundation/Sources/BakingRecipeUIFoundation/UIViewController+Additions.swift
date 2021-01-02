@@ -63,9 +63,9 @@ public extension UIViewController {
 public extension UIViewController {
     func theme() {
         let theme = Standarts.theme
-        if theme.style == .light {
+        if theme == .light {
             self.overrideUserInterfaceStyle = .light
-        } else if theme.style == .dark {
+        } else if theme == .dark {
             self.overrideUserInterfaceStyle = .dark
         }
     }

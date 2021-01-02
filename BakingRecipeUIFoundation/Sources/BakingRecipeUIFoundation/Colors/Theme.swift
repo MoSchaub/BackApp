@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import BakingRecipeStrings
 
 public struct Theme {
     
@@ -16,15 +17,31 @@ public struct Theme {
         case configUnserialize(Error)
     }
     
-    public enum Style: String {
+    public enum Style: String, CaseIterable, Codable {
         case auto
         case light
         case dark
+        
+        public var description: String {
+            switch self {
+            case .auto: return Strings.auto
+            case .light: return Strings.light
+            case .dark: return Strings.dark
+            }
+        }
+        
+        public var number: Int {
+            switch self {
+            case .auto: return 0
+            case .light: return 1
+            case .dark: return 2
+            }
+        }
     }
     
     private static let bundleExtension = "bundle"
     
-    public let style: Style
+    public var style: Style
     let bundle: Bundle
     let config: ThemeConfiguration
     

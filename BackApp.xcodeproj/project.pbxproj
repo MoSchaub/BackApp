@@ -11,6 +11,7 @@
 		CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B4248BDA3000D11DD3 /* NeomorphicToggleStyle.swift */; };
 		CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F999248BDA3000D11DD3 /* DecimalField.swift */; };
 		CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9A7248BDA3000D11DD3 /* MODatePicker.swift */; };
+		CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
 		CD314861259B7BEB000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD314860259B7BEB000FAB6F /* Colors.xcassets */; };
@@ -127,6 +128,7 @@
 		CD285D31258E440C00813A4C /* BakingRecipeSections */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeSections; sourceTree = "<group>"; };
 		CD285D3C258E44E900813A4C /* BakingRecipeCells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeCells; sourceTree = "<group>"; };
 		CD285D47258E474000813A4C /* BakingRecipeUIFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeUIFoundation; sourceTree = "<group>"; };
+		CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
 		CD2BCE5724AE72CB00B868D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 			isa = PBXGroup;
 			children = (
 				CD399AD324AA766500232F90 /* RoomTempTableViewController.swift */,
+				CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */,
 				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
 				CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */,
@@ -818,6 +821,7 @@
 				CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */,
 				CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */,
 				CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */,
+				CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */,
 				CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */,
