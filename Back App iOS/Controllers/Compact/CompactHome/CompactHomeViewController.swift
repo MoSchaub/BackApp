@@ -70,10 +70,15 @@ private extension CompactHomeViewController {
     }
     
     private func configureNavigationBar() {
-        title = Strings.appTitle
+        title = Strings.recipes
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.leftBarButtonItem = editButtonItem
-        navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
+       
+        let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(navigateToSettings))
+        navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
+        
+        let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
+        let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.doc"), style: .plain, target: self, action: #selector(openImportFilePopover))
+        navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
     }
     
     ///present popover for creating new recipe
@@ -97,6 +102,11 @@ private extension CompactHomeViewController {
         
         present(nv, animated: true)
        }
+    
+    @objc private func navigateToSettings() {
+        let vc = SettingsViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 private extension CompactHomeViewController {
@@ -172,7 +182,7 @@ extension CompactHomeViewController {
         }
     }
     
-    private func openImportFilePopover() {
+    @objc private func openImportFilePopover() {
         //set the delegate
         self.documentPicker.delegate = self
         

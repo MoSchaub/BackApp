@@ -165,7 +165,7 @@
 "recipe_already_exist_error" = "The file contains already existing recipes";
 
 
-"recipes" = "recipes";
+"recipes" = "Recipes";
 
 
 "recipesImported" = "recipes have been imported";
