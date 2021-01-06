@@ -142,6 +142,32 @@ class Back_App_iOSUITests: XCTestCase {
         
     }
     
+    func testIngredientMassTextConvertBug() {
+        app.launch()
+        
+        addButton.tap()
+        
+        appTables.staticTexts["add Step"].tap()
+        
+        appTables.staticTexts["add Ingredient"].tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText("test")
+        
+        let amountTextField = appTables.textFields["amount in gramms"]
+        amountTextField.tap()
+        amountTextField.typeText("10,5")
+        
+        doneButton.tap()
+        
+        XCTAssert(appTables.textFields["10.5 g"].firstMatch.exists)
+        
+        app.navigationBars.firstMatch.buttons.firstMatch.tap()
+                
+        XCTAssert(appTables.textFields["10.5 g"].firstMatch.exists)
+        
+    }
+    
 
     //tests adding an example recipe
     func testAddingExampleRecipe() throws {

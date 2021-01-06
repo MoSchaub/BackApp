@@ -113,8 +113,8 @@ private extension IngredientDetailViewController {
     
         /// format func for amountCell
         func format(amountText: String) -> String {
-            guard Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.ingredient.formattedAmount }
-            ingredient.mass = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+            guard let mass = Double(amountText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: ",", with: ".")) else { return self.ingredient.formattedAmount }
+            ingredient.mass = mass
             return ingredient.formatted(rest: amountText)
         }
         return IngredientDetailDataSource(tableView: tableView) { (tableView, indexPath, textItem) -> UITableViewCell? in
