@@ -131,9 +131,4 @@ public class BackAppData {
         ((try? T.read().filter(T.id == id).run(database)) ?? []).first
     }
     
-    /// do something if a specified table in the database updates
-    public func observeChange<T:BakingRecipeSqlable>(of type: T.Type, do something: @escaping (Int) -> Void ) {
-        database.observe(on: type, doThis: something)
-    }
-    
 }

@@ -27,10 +27,6 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
                 let recipeCell = RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, reuseIdentifier: Strings.recipeCell)
                 return recipeCell
         }
-        
-        appData.observeChange(of: Recipe.self) { _ in
-            self.update(animated: false)
-        }
     }
     
     /// updates and rerenders the tableview
@@ -107,25 +103,19 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
         }
     }
     
-    //    func deleteRecipe(_ id: Int) -> Bool {
-    //        if let index = recipeStore.allRecipes.firstIndex(where: { $0.id == id }) {
-    //            return self.recipeStore.deleteRecipe(at: index)
-    //        } else { return false }
-    //    }
+        // moving recipes
+        override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+            guard destinationIndexPath.row < appData.allRecipes.count else { reset(); return }
+            guard destinationIndexPath.section == 0 else { reset(); return}
+            guard appData.allRecipes.count > sourceIndexPath.row else { reset(); return }
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.appData.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+                DispatchQueue.main.async {
+                    self.update(animated: false)
+                }
+            }
     
-    //    // moving recipes
-    //    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-    //        guard destinationIndexPath.row < appData.allRecipes.count else { reset(); return }
-    //        guard destinationIndexPath.section == 0 else { reset(); return}
-    //        guard appData.allRecipes.count > sourceIndexPath.row else { reset(); return }
-    //        DispatchQueue.global(qos: .userInteractive).async {
-    //            self.recipeStore.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
-    //            DispatchQueue.main.async {
-    //                self.update(animated: false)
-    //            }
-    //        }
-    //
-    //    }
+        }
     
     //wether a row can be deleted or not
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -136,10 +126,11 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
     
     //wether a row can be moved or not
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        if indexPath.section == 0 {
-//            return true
-//        } else {return false}
-        return false
+        if appData.favoriteItems.isEmpty {
+            return true
+        } else {
+            return indexPath.section == HomeSection.recipes.rawValue
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

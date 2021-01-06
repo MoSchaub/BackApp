@@ -98,8 +98,10 @@ private extension CompactHomeViewController {
         
         let uniqueId = self.appData.newId(for: Recipe.self)
         
+        let newNumber = (appData.allRecipes.last?.number ?? -1) + 1
+        
         // the new fresh recipe
-        let recipe = Recipe.init(id: uniqueId)
+        let recipe = Recipe.init(id: uniqueId, number: newNumber)
         
         // insert the new recipe
         guard appData.insert(recipe) else { return }
@@ -149,7 +151,7 @@ extension CompactHomeViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard !pressed else { return }
         pressed = true
-        guard let recipeItem = dataSource.itemIdentifier(for: indexPath) as? RecipeItem else { return}
+        guard let recipeItem = dataSource.itemIdentifier(for: indexPath) else { return}
         
         navigateToRecipe(recipeItem: recipeItem)
         

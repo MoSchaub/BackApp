@@ -15,7 +15,7 @@ public extension BackAppData {
     
     /// all Recipes in the database
     var allRecipes: [Recipe] {
-        (try? Recipe.read().run(database)) ?? []
+        (try? Recipe.read().orderBy(Recipe.number, .asc).run(database)) ?? []
     }
     
     /// all favorited recipes in the database
@@ -23,6 +23,21 @@ public extension BackAppData {
         (try? Recipe.read().filter(Recipe.isFavorite == true).run(database)) ?? []
     }
     
+    func moveRecipe(from source: Int, to destination: Int) {
+    
+        var recipeIds = allRecipes.map { $0.id }
+        
+        let removedObject = recipeIds.remove(at: source)
+        recipeIds.insert(removedObject, at: destination)
+        
+        var number = 0
+        for id in recipeIds {
+            var object = self.object(with: id, of: Recipe.self)!
+            object.number = number
+            number += 1
+            _ = self.update(object)
+        }
+    }
 }
 
 //MARK: - Recipe Properties

@@ -367,12 +367,14 @@ private extension RecipeDetailViewController {
     }
     
     private func showStepDetail(id: Int?) {
-        var step = id == nil ? Step(id: 0, recipeId: self.recipe.id) : appData.object(with: id!, of: Step.self)!
+        var step = id == nil ? Step(id: 0, recipeId: self.recipe.id, number: 0) : appData.object(with: id!, of: Step.self)!
 
         // insert the new step
         if id == nil {
             //get a unique id
             step.id = appData.newId(for: Step.self)
+            
+            step.number = (appData.notSubsteps(for: self.recipeId).last?.number ?? -1) + 1
 
             // insert it
             guard appData.insert(step) else { return }

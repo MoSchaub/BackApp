@@ -59,6 +59,7 @@ class StepDetailViewController: UITableViewController {
         self.stepId = stepId
         super.init(style: .insetGrouped)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .listShouldUpdate, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -270,7 +271,9 @@ private extension StepDetailViewController {
     private func navigateToIngredientDetail(id: Int?) {
         let newId = appData.newId(for: Ingredient.self)
         
-        let ingredient = id == nil ? Ingredient(stepId: self.stepId, id: newId, name: "", amount: 0, type: .other) : appData.object(with: id!, of: Ingredient.self)!
+        let newNumber = (appData.ingredients(with: self.stepId).last?.number ?? -1) + 1
+        
+        let ingredient = id == nil ? Ingredient(stepId: self.stepId, id: newId, name: "", amount: 0, type: .other, number: newNumber) : appData.object(with: id!, of: Ingredient.self)!
 
         if id == nil {
             guard appData.insert(ingredient) else { return }
@@ -443,7 +446,7 @@ private extension StepDetailViewController {
         self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
     }
     
-    private func updateList(animated: Bool = true) {
+    @objc private func updateList(animated: Bool = true) {
         self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated)
     }
     
@@ -538,9 +541,13 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
         super.init(tableView: tableView, cellProvider: cellProvider)
     }
     
+    // MARK: section title
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         StepDetailSection.allCases.map { $0.headerTitle }[section]
     }
+    
+    // MARK: Deleting Ingredients and removing substeps
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
@@ -574,16 +581,27 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         self.itemIdentifier(for: indexPath) is IngredientItem || self.itemIdentifier(for: indexPath) is SubstepItem
     }
+    
+    // MARK: Moving Ingredients
 
-//    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        self.itemIdentifier(for: indexPath) is IngredientItem
-//    }
-//
-//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { return }
-//        guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { return }
-//
-//        let ingredientToMove = step.ingredients.remove(at: sourceIndexPath.row)
-//        step.ingredients.insert(ingredientToMove, at: destinationIndexPath.row)
-//    }
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        self.itemIdentifier(for: indexPath) is IngredientItem
+    }
+
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { updateList(); return }
+        guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { updateList(); return }
+
+        appData.moveIngredient(with: step.id, from: sourceIndexPath.row, to: destinationIndexPath.row)
+    }
+    
+    private func updateList() {
+        NotificationCenter.default.post(name: .listShouldUpdate, object: nil)
+    }
+}
+
+public extension Notification.Name {
+    static var listShouldUpdate: Notification.Name {
+        Notification.Name.init("listShouldUpdate")
+    }
 }

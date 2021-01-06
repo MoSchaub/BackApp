@@ -36,7 +36,10 @@ public struct Step: Equatable, BakingRecipeSqlable {
     ///- NOTE: optional because a step can be without a superstep
     public var superStepId: Int? = nil
     
-    public init(id: Int, name: String = "", duration: TimeInterval = 60, temperature: Int? = nil, notes: String = "", recipeId: Int) {
+    /// number of the step for sorting
+    public var number: Int
+    
+    public init(id: Int, name: String = "", duration: TimeInterval = 60, temperature: Int? = nil, notes: String = "", recipeId: Int, number: Int) {
         self.id = id
         self.name = name
         self.duration = duration
@@ -44,6 +47,7 @@ public struct Step: Equatable, BakingRecipeSqlable {
         self.notes = notes
         self.recipeId = recipeId
         self.superStepId = nil
+        self.number = number
     }
     
 }
@@ -215,7 +219,8 @@ public extension Step{
     static let notes = Column("notes", .text)
     static let superStepId = Column("superStepId", .nullable(.integer), ForeignKey<Step>(onDelete: .ignore, onUpdate: .ignore))
     static let recipeId = Column("recipeId", .integer, ForeignKey<Recipe>(column: Recipe.id, onDelete: .cascade, onUpdate: .ignore))
-    static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId, recipeId]
+    static let number = Column("number", .integer)
+    static var tableLayout: [Column] = [id, name, duration, temperature, notes, superStepId, recipeId, number]
     
     /// value for a given column
     func valueForColumn(_ column: Column) -> SqlValue? {
@@ -234,6 +239,8 @@ public extension Step{
             return self.superStepId
         case Step.recipeId:
             return self.recipeId
+        case Step.number:
+            return self.number
         default:
             return nil
         }
@@ -248,41 +255,7 @@ public extension Step{
         self.notes = try row.get(Step.notes)
         self.superStepId = try? row.get(Step.superStepId)
         self.recipeId = try row.get(Step.recipeId)
+        self.number = try row.get(Step.number)
     }
     
 }
-
-//    
-//    //MARK: init from Json and ==
-//    
-//    enum CodingKeys: CodingKey{
-//        case time
-//        case name
-//        case ingredients
-//        case temperature
-//        case notes
-//        case subSteps
-//        case id
-//    }
-//    
-//    public init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        self.id = try container.decode(UUID.self, forKey: .id)
-//        self.time = try container.decode(TimeInterval.self, forKey: .time)
-//        self.name = try container.decode(String.self, forKey: .name)
-//        self.ingredients = try container.decode([Ingredient].self, forKey: .ingredients)
-//        self.temperature = try container.decode(Int.self, forKey: .temperature)
-//        self.notes = try container.decode(String.self, forKey: .notes)
-//        self.subSteps = try container.decode([Step].self, forKey: .subSteps)
-//    }
-//    
-//    public static func == (lhs: Step, rhs: Step) -> Bool {
-//        return lhs.name == rhs.name &&
-//            lhs.time == rhs.time &&
-//            lhs.ingredients == rhs.ingredients &&
-//            lhs.temperature == rhs.temperature &&
-//            lhs.notes == rhs.notes &&
-//            lhs.subSteps == rhs.subSteps
-//    }
-//
-//}

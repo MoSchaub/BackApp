@@ -27,6 +27,7 @@ public extension BackAppData {
         case ingredients
         case mass
         case type
+        case number
     }
     
     ///exports all recipes to a file
@@ -62,7 +63,8 @@ public extension BackAppData {
         var json: JSON = [
             CodingKeys.name.rawValue:recipe.name,
             CodingKeys.difficulty.rawValue:recipe.difficulty.rawValue,
-            CodingKeys.steps.rawValue:steps
+            CodingKeys.steps.rawValue:steps,
+            CodingKeys.number.rawValue:recipe.number
         ]
         
         if recipe.info != "" {
@@ -92,7 +94,8 @@ public extension BackAppData {
             CodingKeys.name.rawValue:step.name,
             CodingKeys.duration.rawValue:step.duration,
             CodingKeys.ingredients.rawValue: ingredients,
-            CodingKeys.substeps.rawValue: substeps
+            CodingKeys.substeps.rawValue: substeps,
+            CodingKeys.number.rawValue: step.number
         ]
         
         if let temperature = step.temperature {
@@ -114,7 +117,8 @@ public extension BackAppData {
         var json: JSON = [
             CodingKeys.name.rawValue:ingredient.name,
             CodingKeys.mass.rawValue:ingredient.mass,
-            CodingKeys.type.rawValue:ingredient.type.rawValue
+            CodingKeys.type.rawValue:ingredient.type.rawValue,
+            CodingKeys.number.rawValue:ingredient.number
         ]
         
         if let temperature = ingredient.temperature {

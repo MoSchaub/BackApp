@@ -39,7 +39,13 @@ public struct Recipe: Equatable, BakingRecipeSqlable {
     ///data of the image for the recipe
     public var imageData: Data?
     
-    public init(id: Int, name: String = "", info: String = "", isFavorite: Bool = false, difficulty: Difficulty = .easy, inverted: Bool = false, times: Decimal? = Decimal(integerLiteral: 1), date: Date = Date(), imageData: Data? = nil) {
+    /// number used for sorting
+    public var number: Int
+    
+    public init(id: Int, name: String = "", info: String = "",
+                isFavorite: Bool = false, difficulty: Difficulty = .easy,
+                inverted: Bool = false, times: Decimal? = Decimal(integerLiteral: 1),
+                date: Date = Date(), imageData: Data? = nil, number: Int) {
         self.id = id
         self.name = name
         self.info = info
@@ -49,6 +55,7 @@ public struct Recipe: Equatable, BakingRecipeSqlable {
         self.times = times
         self.date = date
         self.imageData = imageData
+        self.number = number
     }
     
 }
@@ -170,21 +177,21 @@ public extension Recipe {
     
     /// steps that are no substeps of any other step
     func notSubsteps(db: SqliteDatabase) -> [Step] {
-        self.steps(db: db).filter({ $0.superStepId == nil })
+        self.steps(db: db).filter({ $0.superStepId == nil }).sorted(by: { $0.number > $1.number })
     }
     
     static var example: (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
-        let vollkornMehl = Ingredient(stepId: 1, id: 1, name: "Vollkornmehl", amount: 50, type: .flour)
-        let anstellgut = Ingredient(stepId: 1, id: 2, name: "Anstellgut TA 200", amount: 120, type: .ta200)
-        let olivenöl = Ingredient(stepId: 1, id: 3, name: "Olivenöl", amount: 40, type: .bulkLiquid)
-        let saaten = Ingredient(stepId: 1, id: 4, name: "Saaten", amount: 30, type: .other)
-        let salz = Ingredient(stepId: 1, id: 5, name: "Salz", amount: 5, type: .other)
+        let vollkornMehl = Ingredient(stepId: 1, id: 1, name: "Vollkornmehl", amount: 50, type: .flour, number: 0)
+        let anstellgut = Ingredient(stepId: 1, id: 2, name: "Anstellgut TA 200", amount: 120, type: .ta200, number: 1)
+        let olivenöl = Ingredient(stepId: 1, id: 3, name: "Olivenöl", amount: 40, type: .bulkLiquid, number: 2)
+        let saaten = Ingredient(stepId: 1, id: 4, name: "Saaten", amount: 30, type: .other, number: 3)
+        let salz = Ingredient(stepId: 1, id: 5, name: "Salz", amount: 5, type: .other, number: 4)
         
-        let schritt1 = Step(id: 1, name: "Mischen", duration: 2*60, temperature: 20, recipeId: 1)
+        let schritt1 = Step(id: 1, name: "Mischen", duration: 2*60, temperature: 20, recipeId: 1, number: 0)
         
-        let backen = Step(id: 2, name: "Backen", duration: 18*60, notes: "170˚ C", recipeId: 1)
+        let backen = Step(id: 2, name: "Backen", duration: 18*60, notes: "170˚ C", recipeId: 1, number: 1)
         
-        return (Recipe(id: 1, name: "Sauerteigcracker"), [(schritt1, [vollkornMehl, anstellgut, olivenöl, saaten, salz]), (backen, [])])
+        return (Recipe(id: 1, name: "Sauerteigcracker", number: 0), [(schritt1, [vollkornMehl, anstellgut, olivenöl, saaten, salz]), (backen, [])])
     }
     
 //    static public var complexExample: Recipe {
@@ -248,9 +255,10 @@ public extension Recipe {
     static let times = Column("times", .nullable(.real))
     static let date = Column("date", .date)
     static let imageData = Column("imageData", .nullable(.text))
+    static let number = Column("number", .integer)
     
     //create tableLayout from columns
-    static var tableLayout: [Column] = [id, name, info, isFavorite, difficulty, inverted, times, date, imageData]
+    static var tableLayout: [Column] = [id, name, info, isFavorite, difficulty, inverted, times, date, imageData, number]
     
     ///get value from column
     func valueForColumn(_ column: Column) -> SqlValue? {
@@ -277,6 +285,8 @@ public extension Recipe {
             } else {
                 return nil
             }
+        case Recipe.number:
+            return self.number
         default:
             return nil
         }
@@ -310,6 +320,7 @@ public extension Recipe {
             self.imageData = nil
         }
         
+        self.number = try row.get(Recipe.number)
     }
     
 }

@@ -36,8 +36,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 let imageCell = ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
                 return imageCell
             } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell{
-                amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)//.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
-//                amountCell.backgroundColor = color
+                amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
                 return amountCell
             } else if item is InfoItem {
                 return TextViewCell(textContent: Binding(get: {
@@ -71,9 +70,12 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         (itemIdentifier(for: indexPath) as? StepItem) != nil
     }
     
-//    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        itemIdentifier(for: indexPath) as? StepItem != nil
-//    }
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        if let stepItem = itemIdentifier(for: indexPath) as? StepItem, let step = appData.object(with: stepItem.id, of: Step.self), step.superStepId == nil {
+            return true
+        }
+        return false
+    }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete, let item = itemIdentifier(for: indexPath) as? StepItem {
@@ -85,15 +87,15 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         }
     }
     
-//    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        let steps = appData.steps(with: recipe.id)
-//        guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-//        guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
-//        guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
-//
-//        let stepToMove = steps.remove(at: sourceIndexPath.row)
-//        recipe.steps.insert(stepToMove, at: destinationIndexPath.row)
-//    }
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let steps = appData.steps(with: recipe.id)
+        guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+        guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
+        guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
+
+        appData.moveStep(with: recipe.id, from: sourceIndexPath.row, to: destinationIndexPath.row)
+        update(animated: false)
+    }
     
 }
 

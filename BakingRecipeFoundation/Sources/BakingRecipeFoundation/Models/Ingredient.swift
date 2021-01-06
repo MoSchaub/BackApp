@@ -63,6 +63,9 @@ public struct Ingredient: Equatable, BakingRecipeSqlable {
     /// the id of the step the ingredient is used for
     public var stepId: Int
     
+    /// the number in a step used for sorting the ingredient
+    public var number: Int
+    
 }
 
 public extension Ingredient {
@@ -109,12 +112,13 @@ public extension Ingredient {
     }
     
     //initializer
-    init(stepId: Int, id: Int, name: String = "", amount: Double = 0, type: Style = .other) {
+    init(stepId: Int, id: Int, name: String = "", amount: Double = 0, type: Style = .other, number: Int) {
         self.id = id
         self.name = name
         self.mass = amount
         self.c = type.rawValue
         self.stepId = stepId
+        self.number = number
     }
     
 }
@@ -128,7 +132,8 @@ public extension Ingredient{
     static let mass = Column("mass", .real)
     static let c = Column("c", .real)
     static let stepId = Column("stepId", .integer, ForeignKey<Step>(onDelete: .cascade, onUpdate: .ignore))
-    static var tableLayout: [Column] = [id, name, temperature, mass, c, stepId]
+    static let number = Column("number", .integer)
+    static var tableLayout: [Column] = [id, name, temperature, mass, c, stepId, number]
     
     
     //get values from columns
@@ -146,6 +151,8 @@ public extension Ingredient{
             return self.c
         case Ingredient.stepId:
             return self.stepId
+        case Ingredient.number:
+            return self.number
         default:
             return nil
         }
@@ -159,5 +166,6 @@ public extension Ingredient{
         temperature = try? row.get(Ingredient.temperature)
         mass = try row.get(Ingredient.mass)
         c = try row.get(Ingredient.c) ?? Style.other.rawValue
+        number = try row.get(Ingredient.number)
     }
 }

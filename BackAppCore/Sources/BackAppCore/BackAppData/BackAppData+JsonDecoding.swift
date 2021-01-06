@@ -45,7 +45,7 @@ public extension BackAppData {
     private func decodeAndImportRecipe(from json: JSON) {
         let newId = self.newId(for: Recipe.self)
         
-        var recipe = Recipe(id: newId)
+        var recipe = Recipe(id: newId, number: 0)
         
         recipe.name = json[CodingKeys.name.rawValue].stringValue
         
@@ -61,6 +61,8 @@ public extension BackAppData {
         let imageString = json[CodingKeys.imageData.rawValue].stringValue
         recipe.imageData = Data(base64Encoded: imageString)
         
+        recipe.number = json[CodingKeys.number.rawValue].intValue
+        
         //add the recipe
         if insert(recipe), let stepsJson = json[CodingKeys.steps.rawValue].array {
             //decode and import the steps
@@ -73,13 +75,15 @@ public extension BackAppData {
 
         let newId = self.newId(for: Step.self)
 
-        var step = Step(id: newId, recipeId: recipeId)
+        var step = Step(id: newId, recipeId: recipeId, number: 0)
 
         step.superStepId = superstepId
 
         step.name = json[CodingKeys.name.rawValue].stringValue
         
         step.duration = json[CodingKeys.duration.rawValue].doubleValue
+        
+        step.number = json[CodingKeys.number.rawValue].intValue
         
         if let temperature = json[CodingKeys.temperature.rawValue].int {
             step.temperature = temperature
@@ -113,11 +117,13 @@ public extension BackAppData {
         
         let newId = self.newId(for: Ingredient.self)
         
-        var ingredient = Ingredient(stepId: stepId, id: newId)
+        var ingredient = Ingredient(stepId: stepId, id: newId, number: 0)
         
         ingredient.name = json[CodingKeys.name.rawValue].stringValue
         
         ingredient.mass = json[CodingKeys.mass.rawValue].doubleValue
+        
+        ingredient.number = json[CodingKeys.number.rawValue].intValue
         
         if let temperature = json[CodingKeys.temperature.rawValue].int {
             ingredient.temperature = temperature
