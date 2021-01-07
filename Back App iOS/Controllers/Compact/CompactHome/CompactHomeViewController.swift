@@ -58,12 +58,14 @@ class CompactHomeViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        configureNavigationBar()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(configureNavigationBar), name: .homeNavBarShouldReload, object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dataSource.update(animated: false)
+        configureNavigationBar()
     }
 
 }
@@ -81,11 +83,13 @@ private extension CompactHomeViewController {
     
     // MARK: - NavigationBar
     
-    private func configureNavigationBar() {
+    @objc private func configureNavigationBar() {
         title = Strings.recipes
         navigationController?.navigationBar.prefersLargeTitles = true
        
         let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(navigateToSettings))
+        let editButtonItem = self.editButtonItem
+        editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
         navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
         
         let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))

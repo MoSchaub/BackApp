@@ -10,16 +10,16 @@ import BackAppCore
 
 public protocol TempPickerCellDelegate: class {
     
-    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Int)
+    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double)
     
-    func startValue(for cell: TempPickerCell) -> Int
+    func startValue(for cell: TempPickerCell) -> Double
     
 }
 
 public class TempPickerCell: CustomCell {
     
     ///currently selected temperature
-    private var temp: Int = 20 {
+    private var temp: Double = 20.0 {
         didSet {
             delegate?.tempPickerCell(self, didChangeValue: temp)
         }
@@ -82,7 +82,7 @@ private extension TempPickerCell {
 extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     
     @objc private func updatePicker() {
-        tempPicker.selectRow((delegate?.startValue(for: self) ?? Standarts.roomTemp) + 10, inComponent: 0, animated: false)
+        tempPicker.selectRow(Int(delegate?.startValue(for: self) ?? Standarts.roomTemp) + 10, inComponent: 0, animated: false)
     }
     
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -98,7 +98,7 @@ extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        temp = row - 10
+        temp = Double(row - 10)
     }
     
 }

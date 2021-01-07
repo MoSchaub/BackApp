@@ -24,7 +24,7 @@ public struct Step: Equatable, BakingRecipeSqlable {
     
     /// what the temp of the step is
     ///- NOTE: This is only not nil if the temp is something different from the room temperature
-    public var temperature: Int? = nil
+    public var temperature: Double? = nil
     
     /// some notes you can attach
     public var notes: String = ""
@@ -39,7 +39,7 @@ public struct Step: Equatable, BakingRecipeSqlable {
     /// number of the step for sorting
     public var number: Int
     
-    public init(id: Int, name: String = "", duration: TimeInterval = 60, temperature: Int? = nil, notes: String = "", recipeId: Int, number: Int) {
+    public init(id: Int, name: String = "", duration: TimeInterval = 60, temperature: Double? = nil, notes: String = "", recipeId: Int, number: Int) {
         self.id = id
         self.name = name
         self.duration = duration
@@ -93,8 +93,8 @@ public extension Step {
     }
     
     /// the temperature of the step formatted with Celsius
-    func formattedTemp(roomTemp: Int) -> String{
-        return String(self.temperature ?? roomTemp) + " °C"
+    func formattedTemp(roomTemp: Double) -> String{
+        return String(format: "%.01f", self.temperature ?? roomTemp) + " °C"
     }
     
     /// name of the step
@@ -123,30 +123,26 @@ public extension Step {
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
-    func temperature(for ingredient: Ingredient, roomTemp: Int, db: SqliteDatabase) -> Int {
+    func temperature(for ingredient: Ingredient, roomTemp: Double, kneadingHeating: Double, db: SqliteDatabase) -> Double {
         
         var sumMassCProductAll = 0.0
         _ = ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
         _ = substeps(db: db).map { sumMassCProductAll += $0.massCProduct(db: db) }
-        
-        let tKnet = 0
         
         var sumMassCProductRest = 0.0
         _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
         _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomTemp)}
         
         let ingredientMassCProduct = ingredient.massCProduct
-        let temperature = Double(self.temperature ?? roomTemp - tKnet)
+        let roomTemp = Double(roomTemp)
+        
+        let temperature = (self.temperature ?? roomTemp) - kneadingHeating
         
         guard ingredientMassCProduct != 0.0 else {
             return roomTemp
         }
         
-        let returnDouble = ((sumMassCProductAll * temperature) - sumMassCProductRest)/ingredientMassCProduct
-        
-        return Int(
-            returnDouble
-        )
+        return ((sumMassCProductAll * temperature) - sumMassCProductRest)/ingredientMassCProduct
     }
     
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
@@ -177,16 +173,17 @@ public extension Step {
         self.totalMass(db: db) * self.c(db: db)
     }
     
-    private func massCTempProduct(db: SqliteDatabase, roomTemp: Int) -> Double {
-        return massCProduct(db: db) * Double(self.temperature ?? roomTemp)
+    private func massCTempProduct(db: SqliteDatabase, roomTemp: Double) -> Double {
+        let temp: Double = self.temperature ?? roomTemp
+        return massCProduct(db: db) * temp
     }
     
     ///text for exporting for one step
-    func text(startDate: Date, roomTemp: Int, scaleFactor: Double, db: SqliteDatabase) -> String{
+    func text(startDate: Date, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, db: SqliteDatabase) -> String{
         var text = ""
         
         for step in substeps(db: db) {
-            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, db: db)
+            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, db: db)
         }
         
         let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
@@ -194,7 +191,7 @@ public extension Step {
         
         for ingredient in ingredients(db: db){
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, db: db) ) + "° C" : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, db: db) ) + "° C" : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in substeps(db: db){

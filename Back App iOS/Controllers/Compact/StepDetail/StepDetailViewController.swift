@@ -425,11 +425,11 @@ private extension StepDetailViewController {
 }
 
 extension StepDetailViewController: TempPickerCellDelegate {
-    func startValue(for cell: TempPickerCell) -> Int {
+    func startValue(for cell: TempPickerCell) -> Double {
         self.step.temperature ?? Standarts.roomTemp
     }
     
-    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Int) {
+    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double) {
         self.step.temperature = value
         self.updateList(animated: false)
     }

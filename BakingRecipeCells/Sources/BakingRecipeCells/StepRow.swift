@@ -13,7 +13,8 @@ import BackAppCore
 public struct StepRow: View {
     
     let step: Step
-    let roomTemp = UserDefaults.standard.integer(forKey: "roomTemp")
+    let roomTemp = Standarts.roomTemp
+    let kneadingHeating = Standarts.kneadingHeating
     let appData = BackAppData()
     
     @Environment(\.colorScheme) var colorScheme
@@ -30,7 +31,7 @@ public struct StepRow: View {
             }
             
             ForEach(appData.ingredients(with: step.id)) { ingredient in
-                IngredientRow(ingredient: ingredient, roomTemp: roomTemp)
+                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating)
             }
             
             ForEach(appData.substeps(for: step.id)) { substep in

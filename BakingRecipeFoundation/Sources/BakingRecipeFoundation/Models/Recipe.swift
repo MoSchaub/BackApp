@@ -220,12 +220,12 @@ public extension Recipe {
     }
     
     ///text for exporting
-    func text(roomTemp: Int, scaleFactor: Double, db: SqliteDatabase) -> String {
+    func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, db: SqliteDatabase) -> String {
         var h = startDate(db: db)
         var text = ""
         
         for step in notSubsteps(db: db) {
-            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, db: db)
+            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, db: db)
             h = h.addingTimeInterval(step.duration)
         }
         text += "Fertig: \(dateFormatter.string(from: endDate(db: db)))"

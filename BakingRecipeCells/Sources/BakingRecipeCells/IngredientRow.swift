@@ -14,7 +14,8 @@ import BackAppCore
 struct IngredientRow: View {
     
     let ingredient: Ingredient
-    let roomTemp: Int
+    let roomTemp: Double
+    let kneadingHeating: Double
     let appData = BackAppData()
     
     var body: some View {

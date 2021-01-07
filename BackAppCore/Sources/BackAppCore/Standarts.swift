@@ -9,7 +9,7 @@
 public struct Standarts {
     
     @UserDefaultsWrapper(key: .roomTemp, defaultValue: 20)
-    public static var roomTemp: Int
+    public static var roomTemp: Double
     
     @UserDefaultsWrapper(key: .kneadingHeatingEnabled, defaultValue: false)
     public static var kneadingHeatingEnabled: Bool

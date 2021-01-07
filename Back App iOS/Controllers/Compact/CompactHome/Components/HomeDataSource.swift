@@ -15,6 +15,10 @@ import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
 
+public extension Notification.Name {
+    static var homeNavBarShouldReload = Self.init(rawValue: "homeNavBarShouldReload")
+}
+
 class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
     // storage object for recipes
     var appData: BackAppData
@@ -80,6 +84,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection,RecipeItem> {
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
                 _ = self.appData.delete(recipe)
+                NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
             }
         }
         

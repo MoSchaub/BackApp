@@ -16,14 +16,14 @@ import BakingRecipeCells
 class ScheduleViewController: UITableViewController {
     // - MARK: - Properties
     let recipe: Recipe
-    let roomTemp: Int
+    let roomTemp: Double
     let times: Decimal?
     let appData: BackAppData
     
     private lazy var dataSource = makeDataSource()
     
     // - MARK: - Initializer
-    init(recipe: Recipe, roomTemp: Int, times: Decimal?, appData: BackAppData) {
+    init(recipe: Recipe, roomTemp: Double, times: Decimal?, appData: BackAppData) {
         self.recipe = recipe
         self.roomTemp = roomTemp
         self.times = times
@@ -105,7 +105,7 @@ private extension ScheduleViewController {
 private extension ScheduleViewController {
     @objc private func shareText(sender: UIBarButtonItem) {
         
-        let textToShare = appData.text(for: recipe.id, roomTemp: roomTemp, scaleFactor: factor) //get the text to share
+        let textToShare = appData.text(for: recipe.id, roomTemp: roomTemp, scaleFactor: factor, kneadingHeating: Standarts.kneadingHeating) //get the text to share
         
         let vc = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil) //share the text
         vc.popoverPresentationController?.barButtonItem = sender

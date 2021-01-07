@@ -223,12 +223,12 @@ extension SettingsViewController {
 // MARK: TempPickerCell
 extension SettingsViewController: TempPickerCellDelegate {
     
-    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Int) {
+    func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double) {
         Standarts.roomTemp = value
         self.updateList(animated: false)
     }
     
-    func startValue(for cell: TempPickerCell) -> Int {
+    func startValue(for cell: TempPickerCell) -> Double {
         Standarts.roomTemp
     }
     

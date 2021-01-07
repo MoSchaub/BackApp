@@ -98,9 +98,10 @@ public extension BackAppData {
     }
     
     ///temperature for bulk liquids so the step has the right temperature
-    func temperature(for ingredient: Ingredient, roomTemp: Int) -> Int {
-        findStepAndReturnAttribute(for: ingredient.stepId, failValue: 0) { step in
-            step.temperature(for: ingredient, roomTemp: roomTemp, db: database)
+    func temperature(for ingredient: Ingredient, roomTemp: Double) -> Double {
+        let kneadingHeating = Standarts.kneadingHeatingEnabled ? Standarts.kneadingHeating : 0.0
+        return findStepAndReturnAttribute(for: ingredient.stepId, failValue: 0) { step in
+            step.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, db: database)
         }
     }
     

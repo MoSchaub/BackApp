@@ -107,8 +107,8 @@ public extension Ingredient {
         mass * c
     }
     
-    func massCTempProduct(roomTemp: Int) -> Double {
-        self.massCProduct * Double(temperature ?? roomTemp)
+    func massCTempProduct(roomTemp: Double) -> Double {
+        self.massCProduct * Double(temperature ?? Int(roomTemp))
     }
     
     //initializer

@@ -99,7 +99,7 @@ public extension BackAppData {
         ]
         
         if let temperature = step.temperature {
-            json[CodingKeys.temperature.rawValue].int = temperature
+            json[CodingKeys.temperature.rawValue].double = temperature
         }
         if step.notes != "" {
             json[CodingKeys.notes.rawValue].string = step.notes
