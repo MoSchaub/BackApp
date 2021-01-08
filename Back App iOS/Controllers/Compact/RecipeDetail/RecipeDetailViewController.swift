@@ -241,7 +241,7 @@ private extension RecipeDetailViewController {
     }
     
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
-        let vc = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
+        let vc = UIActivityViewController(activityItems: [appData.exportRecipesToFile(recipes: [self.recipe])], applicationActivities: nil)
         vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
     }
@@ -346,23 +346,11 @@ private extension RecipeDetailViewController {
     
     // changes the image of an recipe
     private func changeRecipeImage(to image: UIImage?) {
-        var recipe = self.recipe
-        recipe.imageData = image?.jpegData(compressionQuality: 0.3)
-        
-        //delete and reinsert it
-        //first save all steps and ingredients
-        let steps = appData.steps(with: recipe.id)
-        
-        var ingredients = [Ingredient]()
-        _ = steps.map {
-            ingredients += self.appData.ingredients(with: $0.id)
-        }
-        //delete the recipe
-        if self.appData.delete(self.recipe), self.appData.insert(recipe) {
-            //and reinsert them
-            _ = steps.map { self.appData.insert($0) }
-            _ = ingredients.map { self.appData.insert($0)}
+        self.recipe.imageData = image?.jpegData(compressionQuality: 0.3)
+        if self.appData.update(recipe) {
             self.dataSource.update(animated: false)
+        } else {
+            print("Error changing recipe")
         }
     }
     

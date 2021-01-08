@@ -229,11 +229,15 @@ public extension Step{
         case Step.duration:
             return self.duration
         case Step.temperature:
-            return self.temperature
+            return self.temperature == nil ? Null() : self.temperature!
         case Step.notes:
             return self.notes
         case Step.superStepId:
-            return self.superStepId
+            if self.superStepId == nil {
+                return Null()
+            } else {
+                return self.superStepId!
+            }
         case Step.recipeId:
             return self.recipeId
         case Step.number:

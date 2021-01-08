@@ -37,7 +37,7 @@ class CompactHomeTests: XCTestCase {
         app.navigationBars["Settings"].buttons["Done"].tap()
         
         settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["30° C"].exists)
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["30.0° C"].exists)
         
         app.terminate()
 
@@ -51,7 +51,7 @@ class CompactHomeTests: XCTestCase {
         app.navigationBars["Settings"].buttons["Done"].tap()
         
         settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["20° C"].exists)
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["20.0° C"].exists)
     }
     
     func testNavigatingToAboutScreen() throws {
@@ -68,14 +68,17 @@ class CompactHomeTests: XCTestCase {
     func testDeletingRecipe() throws {
         if app.tables.staticTexts[Recipe.example.name].exists {
             app.launch()
-            try! delete(recipe: Recipe.example)
+            try! delete(recipeName: Recipe.example.name)
         }
-    }
-    
-    func delete(recipe: Recipe) throws {
-        appTables.staticTexts[recipe.name].firstMatch.swipeLeft()
-        appTables.buttons["Delete"].tap()
-        XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipe.name].exists)
     }
 
 }
+
+func delete(recipeName: String) throws {
+    
+    appTables.staticTexts[recipeName].firstMatch.swipeLeft()
+    appTables.buttons["Delete"].tap()
+    XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipeName].exists)
+}
+
+

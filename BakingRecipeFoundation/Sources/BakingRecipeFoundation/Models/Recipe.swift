@@ -276,15 +276,11 @@ public extension Recipe {
         case Recipe.inverted:
             return self.inverted
         case Recipe.times:
-            return (self.times as NSDecimalNumber?)?.doubleValue
+            return self.times == nil ? Null() : (self.times as NSDecimalNumber?)?.doubleValue
         case Recipe.date:
             return self.date
         case Recipe.imageData:
-            if self.imageData != nil {
-                return self.imageData?.base64EncodedString()
-            } else {
-                return nil
-            }
+            return self.imageData == nil ? Null() : self.imageData!.base64EncodedString()
         case Recipe.number:
             return self.number
         default:

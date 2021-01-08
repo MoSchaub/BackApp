@@ -78,21 +78,28 @@ class Back_App_iOSUITests: XCTestCase {
         
         app.navigationBars[recipeName].buttons["Save"].tap()
 
-        let recipeToDelete = Recipe(name: recipeName, brotValues: [])
-        try! CompactHomeTests().delete(recipe: recipeToDelete)
+        try delete(recipeName: recipeName)
     }
     
     func removeSubstep(recipeName: String) {
         
         appTables.staticTexts["Sub3"].firstMatch.tap()
         
+        // delete the substep
         appTables.children(matching: .button)["Edit"].tap()
-        
-        appTables.buttons["Delete Sub2, 1.0 Kg 20 °C"].tap()
+        appTables.buttons["Delete Sub2, 1.0 Kg 20.0 °C"].tap()
         appTables.buttons["Delete"].tap()
         appTables.children(matching: .button)["Done"].tap()
+        
+        
         app.navigationBars["Sub3"].buttons[recipeName].tap()
         
+        appTables.staticTexts["Sub3"].firstMatch.tap()
+        
+        XCTAssertFalse(appTables.staticTexts["Sub2"].firstMatch.exists)
+        
+        //get back
+        app.navigationBars["Sub3"].buttons[recipeName].tap()
     }
     
     func testAddingRecipeStepUpdateBug() {
@@ -164,7 +171,15 @@ class Back_App_iOSUITests: XCTestCase {
         
         app.navigationBars.firstMatch.buttons.firstMatch.tap()
                 
-        XCTAssert(appTables.textFields["10.5 g"].firstMatch.exists)
+        XCTAssert(appTables.staticTexts["10.5 g "].firstMatch.exists)
+        
+        app.terminate()
+        
+        app.launch()
+        
+        try! delete(recipeName: Recipe(name: "unnamed recipe", brotValues: []).formattedName)
+        
+        
         
     }
     

@@ -411,7 +411,7 @@ public struct Recipe: Hashable, Codable, Identifiable{
 //    }
 
     public var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? NSLocalizedString("unnamedRecipe", comment: "") : name
+        name.trimmingCharacters(in: .whitespaces).isEmpty ? NSLocalizedString("unnamed recipe", comment: "") : name
     }
     
     /// startDate formatted using the dateFormatter

@@ -144,7 +144,7 @@ public extension Ingredient{
         case Ingredient.name:
             return self.name
         case Ingredient.temperature:
-            return self.temperature
+            return self.temperature == nil ? Null() : self.temperature!
         case Ingredient.mass:
             return self.mass
         case Ingredient.c:
