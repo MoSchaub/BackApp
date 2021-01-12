@@ -60,6 +60,7 @@ class StepDetailViewController: UITableViewController {
         super.init(style: .insetGrouped)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .listShouldUpdate, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pushAdditionalIngredient), name: .pushAdditionalIngredient, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -286,6 +287,13 @@ private extension StepDetailViewController {
             }
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    /// pops the existing ingredientDetailVC and pushes a new one
+    @objc private func pushAdditionalIngredient() {
+        
+        self.navigationController?.popToViewController(self, animated: true)
+        self.navigateToIngredientDetail(id: nil)
     }
     
 }

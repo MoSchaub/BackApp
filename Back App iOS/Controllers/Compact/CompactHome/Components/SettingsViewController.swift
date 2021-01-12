@@ -41,7 +41,6 @@ class SettingsViewController: UITableViewController {
 extension SettingsViewController {
     override func loadView() {
         super.loadView()
-//        tableView.separatorStyle = .none
         registerCells()
         setupNavigationBar()
     }
@@ -84,7 +83,6 @@ private extension SettingsViewController {
             //large Title
             self.navigationController!.navigationBar.prefersLargeTitles = true
             self.navigationController!.navigationItem.largeTitleDisplayMode = .always
-            //self.navigationController?.navigationBar.prefersLargeTitles = true
             
             self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(self.dismis))
         }

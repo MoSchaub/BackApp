@@ -96,6 +96,7 @@ public struct Strings {
     public static let language = NSLocalizedString("language", bundle: .module, comment: "")
     public static var favorites = NSLocalizedString("favorites", bundle: .module, comment: "")
     public static var allRecipes = NSLocalizedString("allRecipes", bundle: .module, comment: "")
+    public static var next = NSLocalizedString("next", bundle: .module, comment: "")
 
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")

@@ -58,6 +58,7 @@ class CompactHomeViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
+        configureNavigationBar()
         
         NotificationCenter.default.addObserver(self, selector: #selector(configureNavigationBar), name: .homeNavBarShouldReload, object: nil)
     }
