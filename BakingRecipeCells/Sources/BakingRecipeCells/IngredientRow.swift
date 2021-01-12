@@ -23,7 +23,7 @@ struct IngredientRow: View {
             Text(ingredient.name).lineLimit(1)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text("\(appData.temperature(for: ingredient, roomTemp: roomTemp))"  + "° C").lineLimit(1)
+                Text(String(format: "%.01f", appData.temperature(for: ingredient, roomTemp: roomTemp)) + "° C").lineLimit(1)
                 Spacer()
             } else{
                 EmptyView()

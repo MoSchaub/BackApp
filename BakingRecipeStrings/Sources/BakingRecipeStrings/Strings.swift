@@ -8,6 +8,15 @@
 
 import Foundation
 
+extension Bundle {
+    var releaseVersionNumber: String? {
+        return infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    var buildVersionNumber: String? {
+        return infoDictionary?["CFBundleVersion"] as? String
+    }
+}
+
 public struct Strings {
     public static let General_BackButtonTitle = NSLocalizedString("General_BackButtonTitle", bundle: .module, comment: "")
     public static let Alert_ActionCancel = NSLocalizedString("Alert_ActionCancel", bundle: .module, comment: "")
@@ -59,7 +68,7 @@ public struct Strings {
     public static let unnamedStep = NSLocalizedString("unnamedStep", bundle: .module, comment: "")
     public static let image_alert_title = NSLocalizedString("image_alert_title", bundle: .module, comment: "")
     public static let take_picture = NSLocalizedString("take_picture", bundle: .module, comment: "")
-    public static let version = NSLocalizedString("version", bundle: .module, comment: "")
+    public static let version = NSLocalizedString("version", bundle: .module, comment: "") + " \(Bundle.main.releaseVersionNumber!).\(Bundle.main.buildVersionNumber!)"
     public static let donate_text = NSLocalizedString("donateText", bundle: .module, comment: "")
     public static let website = NSLocalizedString("website", bundle: .module, comment: "")
     public static let support = NSLocalizedString("support", bundle: .module, comment: "")
