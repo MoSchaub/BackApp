@@ -55,7 +55,7 @@ public struct Step: Equatable, BakingRecipeSqlable {
 public extension Step {
     
     /// ingredients of the step
-    private func ingredients(db: SqliteDatabase) -> [Ingredient] {
+    internal func ingredients(db: SqliteDatabase) -> [Ingredient] {
         return (try? Ingredient.read().filter(Ingredient.stepId == self.id).run(db)) ?? []
     }
     
@@ -129,9 +129,9 @@ public extension Step {
         _ = ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
         _ = substeps(db: db).map { sumMassCProductAll += $0.massCProduct(db: db) }
         
-        var sumMassCProductRest = 0.0
-        _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
-        _ = substeps(db: db).map { sumMassCProductRest += $0.massCTempProduct(db: db, roomTemp: roomTemp)}
+        var sumMassCTempProductRest = 0.0
+        _ = ingredients(db: db).filter { $0 != ingredient }.map { sumMassCTempProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
+        _ = substeps(db: db).map { sumMassCTempProductRest += $0.massCTempProduct(db: db, superTemp: self.temperature ?? roomTemp)}
         
         let ingredientMassCProduct = ingredient.massCProduct
         let roomTemp = Double(roomTemp)
@@ -142,39 +142,60 @@ public extension Step {
             return roomTemp
         }
         
-        return ((sumMassCProductAll * temperature) - sumMassCProductRest)/ingredientMassCProduct
+        return ((sumMassCProductAll * temperature) - sumMassCTempProductRest)/ingredientMassCProduct
     }
     
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
     private func c(db: SqliteDatabase) -> Double {
         let percentageFlour = flourMass(db: db)/totalMass(db: db)
         let percentageWater = waterMass(db: db)/totalMass(db: db)
-        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue
+        let percentageOther = otherMass(db: db)/totalMass(db: db)
+        let percentageTa150 = ta150Mass(db: db)/totalMass(db: db)
+        let percentageTa200 = ta200Mass(db: db)/totalMass(db: db)
+        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue + percentageOther * Ingredient.Style.other.rawValue + percentageTa150 * Ingredient.Style.ta150.rawValue + percentageTa200 * Ingredient.Style.ta200.rawValue
         //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
     }
     
     /// total mass of flour in the step
     private func flourMass(db: SqliteDatabase) -> Double {
-        var mass = 0.0
-        _ = ingredients(db: db).filter { $0.type == .flour }.map { mass += $0.mass}
+        var mass = Ingredient.Style.flour.massOfSelfIngredients(in: self, db: db)
         _ = substeps(db: db).map { mass += $0.flourMass(db: db) }
         return mass
     }
     
     /// total mass of water in the step
     private func waterMass(db: SqliteDatabase) -> Double {
-        var mass = 0.0
-        _ = ingredients(db: db).filter { $0.type == .bulkLiquid }.map { mass += $0.mass}
+        var mass = Ingredient.Style.bulkLiquid.massOfSelfIngredients(in: self, db: db)
         _ = substeps(db: db).map { mass += $0.waterMass(db: db) }
         return mass
     }
+    
+    /// total mass of ingredient with type other
+    private func otherMass(db: SqliteDatabase) -> Double {
+        var mass = Ingredient.Style.other.massOfSelfIngredients(in: self, db: db)
+        _ = substeps(db: db).map { mass += $0.otherMass(db: db) }
+        return mass
+    }
+    
+    private func ta150Mass(db: SqliteDatabase) -> Double {
+        var mass = Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db)
+        _ = substeps(db: db).map { mass += $0.ta150Mass(db: db)}
+        return mass
+    }
+    
+    private func ta200Mass(db: SqliteDatabase) -> Double {
+        var mass = Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db)
+        _ = substeps(db: db).map { mass += $0.ta200Mass(db: db)}
+        return mass
+    }
+    
     
     private func massCProduct(db: SqliteDatabase) -> Double {
         self.totalMass(db: db) * self.c(db: db)
     }
     
-    private func massCTempProduct(db: SqliteDatabase, roomTemp: Double) -> Double {
-        let temp: Double = self.temperature ?? roomTemp
+    private func massCTempProduct(db: SqliteDatabase, superTemp: Double) -> Double {
+        let temp: Double = self.temperature ?? superTemp
         return massCProduct(db: db) * temp
     }
     

@@ -41,6 +41,12 @@ public struct Ingredient: Equatable, BakingRecipeSqlable {
             case .other: return Strings.other
             }
         }
+        
+        public func massOfSelfIngredients(in step: Step, db: SqliteDatabase) -> Double {
+            var mass = 0.0
+            _ = step.ingredients(db: db).filter { $0.type == self }.map { mass += $0.mass}
+            return mass
+        }
     }
     
     ///id of the ingredient, is counted up incrementally
@@ -108,7 +114,8 @@ public extension Ingredient {
     }
     
     func massCTempProduct(roomTemp: Double) -> Double {
-        self.massCProduct * Double(temperature ?? Int(roomTemp))
+        let temp = self.temperature == nil ? roomTemp : Double(self.temperature!)
+        return self.massCProduct * temp
     }
     
     //initializer

@@ -13,12 +13,6 @@ import BakingRecipeStrings
 import BakingRecipeItems
 import BakingRecipeSections
 
-public extension Notification.Name {
-    
-    /// for messaging the stepDetailVC to Push an additional ingredient
-    static var pushAdditionalIngredient = Notification.Name.init("pushAdditionalIngredient")
-}
-
 class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Properties
@@ -87,28 +81,12 @@ private extension IngredientDetailViewController {
         
         //large Title
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        if self.ingredient.formattedName != Strings.unnamedIngredient, self.ingredient.mass != 0 {
-            //new ingredient title
-            navigationItem.rightBarButtonItem = .init(title: Strings.next, style: .plain, target: self, action: #selector(newIngredient))
-        }
     }
     
     /// adds the ingredient and pops the top view controller on the navigation stack
     @objc private func addIngredient(_ sender: UIBarButtonItem) {
         saveIngredient(ingredient)
         navigationController?.popViewController(animated: true)
-    }
-    
-    /// saves the current ingredient and sends a notification to step detail to dissmiss the current vc
-    /// and to push a new ingredientDetail with a new ingredient
-    @objc private func newIngredient(_ sender: UIBarButtonItem) {
-        
-        // save the current one
-        saveIngredient(ingredient)
-        
-        //send notification to stepDetail to dissmiss and push new one
-        NotificationCenter.default.post(Notification(name: .pushAdditionalIngredient))
     }
     
 }

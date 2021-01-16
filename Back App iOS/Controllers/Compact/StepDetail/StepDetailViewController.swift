@@ -60,7 +60,6 @@ class StepDetailViewController: UITableViewController {
         super.init(style: .insetGrouped)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .listShouldUpdate, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pushAdditionalIngredient), name: .pushAdditionalIngredient, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -80,11 +79,7 @@ extension StepDetailViewController {
         tableView.separatorStyle = .none
         registerCells()
         setupNavigationBar()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateListWrapper), name: .init("stepChanged"), object: nil)
-    }
-    
-    @objc private func updateListWrapper(animated: Bool = false) {
-        self.updateList(animated: animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .init("stepChanged"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -289,13 +284,6 @@ private extension StepDetailViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    /// pops the existing ingredientDetailVC and pushes a new one
-    @objc private func pushAdditionalIngredient() {
-        
-        self.navigationController?.popToViewController(self, animated: true)
-        self.navigateToIngredientDetail(id: nil)
-    }
-    
 }
 
 // MARK: - Expanding Cells
@@ -467,7 +455,7 @@ private extension StepDetailViewController {
         let notesItem = TextFieldItem(text: step.notes)
 
         let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step)) }
-        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: step.id) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
+        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: $0.id) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
         // create the snapshot
