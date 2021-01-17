@@ -521,7 +521,7 @@ private extension StepDetailViewController {
 
 fileprivate extension Ingredient {
     func detailLabel(for step: Step) -> String {
-        self.formattedAmount + " " + (self.type == .bulkLiquid ? "\(BackAppData().temperature(for: self, roomTemp: Standarts.roomTemp))° C" : "")
+        self.formattedAmount + " " + (self.type == .bulkLiquid ? BackAppData().temperature(for: self, roomTemp: Standarts.roomTemp).formattedTemp : "")
     }
 }
 

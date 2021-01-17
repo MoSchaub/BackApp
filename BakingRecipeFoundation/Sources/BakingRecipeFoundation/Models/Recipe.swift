@@ -71,7 +71,7 @@ public extension Recipe {
     
     /// steps of the recipe
     private func steps(db: SqliteDatabase) -> [Step] {
-        (try? Step.read().filter(Step.recipeId == self.id).run(db)) ?? []
+        (try? Step.read().filter(Step.recipeId == self.id).orderBy(Step.number, .asc).run(db)) ?? []
     }
 
     ///starting date
@@ -177,7 +177,7 @@ public extension Recipe {
     
     /// steps that are no substeps of any other step
     func notSubsteps(db: SqliteDatabase) -> [Step] {
-        self.steps(db: db).filter({ $0.superStepId == nil }).sorted(by: { $0.number > $1.number })
+        self.steps(db: db).filter({ $0.superStepId == nil })
     }
     
     static var example: (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
@@ -212,10 +212,15 @@ public extension Recipe {
     //reorderSteps to make sense
     func reorderedSteps(db: SqliteDatabase) -> [Step] {
         var steps = [Step]()
+        var number = 0
         for step in self.notSubsteps(db: db) {
-            steps.append(contentsOf: step.stepsForReodering(db: db))
+            let stepReodereredSteps = step.stepsForReodering(db: db, number: number)
+            steps.append(contentsOf: stepReodereredSteps.steps)
+            
+            number = stepReodereredSteps.number
         }
         steps = Array<Step>(Set(steps)) // make them unique
+        steps.sort(by: { $0.number < $1.number })
         return steps
     }
     

@@ -36,7 +36,7 @@ public extension Recipe {
     
     var stepItems: [StepItem] {
         let appData = BackAppData()
-        let steps = appData.steps(with: self.id)
+        let steps = appData.reorderedSteps(for: self.id)
         return steps.map({ StepItem(id: $0.id, step: $0)})
     }
     

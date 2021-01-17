@@ -74,15 +74,6 @@ public extension BackAppData {
         }
     }
     
-    ///substeps of a step ordered by their duration in descending order in combination with this step.
-    ///This order makes sense when doing the substeps and this step
-    ///because the substeps are going parrellel and so the longest step has to start first
-    func stepsForReodering(for stepId: Int) -> [Step] {
-        findStepAndReturnAttribute(for: stepId, failValue: []) { step in
-            step.stepsForReodering(db: database)
-        }
-    }
-    
     ///mass of all Ingredients and Substeps of a step in a given database
     func totalMass(for stepId: Int) -> Double {
         findStepAndReturnAttribute(for: stepId, failValue: 0) { step in

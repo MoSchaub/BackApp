@@ -77,14 +77,31 @@ public extension Step {
     /// substeps ordered by their duration in descending order + this step
     /// this order makes the most sense when doing the substeps and this step
     /// because the substeps are parrallel and so the longest one has to start first.
-    func stepsForReodering(db: SqliteDatabase) -> [Step] {
+    func stepsForReodering(db: SqliteDatabase, number: Int) -> (steps: [Step], number: Int) {
         var steps = [Step]()
+        var number = number
         for sub in sortedSubsteps(db: db) {
-            steps.append(contentsOf: sub.stepsForReodering(db: db))
+            var sub = sub
+            
+            sub.number = number
+            _ = sub.update()
+            number += 1
+            
+            let subStepsForReodering = sub.stepsForReodering(db: db, number: number + 1)
+
+            steps.append(contentsOf: subStepsForReodering.steps)
+            
+            number = subStepsForReodering.number
         }
-        steps.append(self)
+        var step = self
         
-        return steps
+        step.number = number
+        _ = step.update()
+        number += 1
+        
+        steps.append(step)
+        
+        return (steps, number)
     }
     
     /// duration of the step formatted with the right unit

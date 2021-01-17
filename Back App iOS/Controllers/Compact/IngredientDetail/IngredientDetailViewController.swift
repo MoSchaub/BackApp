@@ -118,8 +118,8 @@ private extension IngredientDetailViewController {
             return ingredient.formatted(rest: amountText)
         }
         return IngredientDetailDataSource(tableView: tableView) { (tableView, indexPath, textItem) -> UITableViewCell? in
-            if let textFieldItem = textItem as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell {
-                cell.textField.text = textFieldItem.text
+            if textItem is TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell {
+                cell.textField.text = self.ingredient.name
                 cell.textField.placeholder = Strings.name
                 cell.textChanged = { text in
                     self.ingredient.name = text

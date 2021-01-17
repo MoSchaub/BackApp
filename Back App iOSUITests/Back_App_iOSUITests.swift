@@ -237,20 +237,23 @@ class Back_App_iOSUITests: XCTestCase {
         doneButton.tap()
         
         
-        let tablesQuery = XCUIApplication().tables
-        tablesQuery.staticTexts["other"].tap()
+        
+        appTables.staticTexts["other"].tap()
+        
+        XCTAssert(appTables.textFields[ingredient.name].exists)
+        
         switch ingredient.type {
         case .bulkLiquid:
-            tablesQuery.staticTexts["bulk liquid"].tap()
+            appTables.staticTexts["bulk liquid"].tap()
 
         case .flour:
-            tablesQuery.staticTexts["flour"].tap()
+            appTables.staticTexts["flour"].tap()
         case .ta150:
-            tablesQuery.staticTexts["starter 50% hydration"].tap()
+            appTables.staticTexts["starter 50% hydration"].tap()
         case .ta200:
-            tablesQuery.staticTexts["starter 100% hydration"].tap()
+            appTables.staticTexts["starter 100% hydration"].tap()
         case .other:
-            tablesQuery.staticTexts["other"].firstMatch.tap()
+            appTables.staticTexts["other"].firstMatch.tap()
         }
         
         XCUIApplication().navigationBars[ingredient.name].buttons[stepName].tap()
