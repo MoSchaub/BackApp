@@ -10,8 +10,8 @@ import BakingRecipeStrings
 
 public extension Int {
     var formattedDuration: String {
-        let hours = self / 60
-        let minutes = self % 60
+        let hours = self.hours
+        let minutes = self.minutes
         if self == 1 {
             return Strings.one + " " + Strings.minute
         } else {
@@ -24,6 +24,14 @@ public extension Int {
                 return "\(minutes) " + formattedDurationUnit(for: minutes)
             }
         }
+    }
+    
+    var minutes: Int {
+        self % 60
+    }
+    
+    var hours: Int {
+        self / 60
     }
 }
 
