@@ -46,7 +46,12 @@ public extension BackAppData {
         
         let url = FileManager.default.documentsDirectory.appendingPathComponent("exportedRecipes.bakingAppRecipe")
         
-        let data = try! json.rawData(options: .prettyPrinted)
+        let data: Data
+        if #available(iOS 11.0, *) {
+            data = try! json.rawData(options: .sortedKeys)
+        } else {
+            data = try! json.rawData(options: .prettyPrinted)
+        }
         
          try! data.write(to: url)
         
