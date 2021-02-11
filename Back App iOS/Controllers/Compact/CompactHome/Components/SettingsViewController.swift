@@ -13,6 +13,7 @@ import BakingRecipeCells
 import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeUIFoundation
+import Combine
 
 class SettingsViewController: UITableViewController {
     
@@ -23,6 +24,9 @@ class SettingsViewController: UITableViewController {
     
     private var roomTempPickerShown = false
     
+    /// storage for cancellable tokens
+    private var tokens = Set<AnyCancellable>()
+    
     
     //MARK: Initializer
     
@@ -32,6 +36,12 @@ class SettingsViewController: UITableViewController {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    deinit {
+        for token in tokens {
+            token.cancel()
+        }
     }
     
 }
@@ -152,7 +162,7 @@ extension SettingsViewController {
     // MARK: DataSource
     
     private func makeDiffableDataSource() -> SettingsDataSource {
-        SettingsDataSource(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
+        SettingsDataSource(tableView: tableView) { [self] (tableView, indexPath, item) -> UITableViewCell? in
             let section = indexPath.section
             if section == SettingsSection.export.rawValue, let item = item as? TextItem,
                let cell = tableView.dequeueReusableCell(withIdentifier: Strings.apperanceCell, for: indexPath) as? CustomCell {
@@ -194,8 +204,27 @@ extension SettingsViewController {
                     if indexPath.row > 1,
                        let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingHeatingCell, for: indexPath) as? KneadingHeatingCell {
                         
-                        //kneadingHeatingCell
-                        cell.delegate = self
+                        //kneading heating Cell
+                        Standarts.standartsChangedPublisher
+                            .sink { key in
+                                switch key {
+                                case .kneadingHeating(let newValue):
+                                    cell.defaultValue = newValue
+                                case .kneadingHeatingEnabled(true):
+                                    cell.defaultValue = Standarts.kneadingHeating
+                                default:
+                                    _ = 1
+                                }
+                            }.store(in: &self.tokens)
+                        
+                        if Standarts.kneadingHeatingEnabled {
+                            cell.defaultValue = Standarts.kneadingHeating
+                        }
+                        
+                        cell.valueChangedPublisher.sink { (kneadingCell, newValue) in
+                            Standarts.kneadingHeating = newValue
+                        }.store(in: &self.tokens)
+                        
                         return cell
                     } else if self.roomTempPickerShown, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
                         
@@ -247,17 +276,17 @@ extension SettingsViewController: SwitchCellDelegate {
     
 }
 
-extension SettingsViewController: KneadingHeatingCellDelegate {
-    
-    func startValue(for cell: KneadingHeatingCell) -> Double {
-        return Standarts.kneadingHeating
-    }
-    
-    func kneadingHeatingCell(_ cell: KneadingHeatingCell, didChangeValue value: Double) {
-        Standarts.kneadingHeating = value
-    }
-    
-}
+//extension SettingsViewController: KneadingHeatingCellDelegate {
+//
+//    func startValue(for cell: KneadingHeatingCell) -> Double {
+//        return Standarts.kneadingHeating
+//    }
+//
+//    func kneadingHeatingCell(_ cell: KneadingHeatingCell, didChangeValue value: Double) {
+//        Standarts.kneadingHeating = value
+//    }
+//
+//}
 
 // MARK: Section Header
 private class SettingsDataSource: UITableViewDiffableDataSource<SettingsSection, Item> {

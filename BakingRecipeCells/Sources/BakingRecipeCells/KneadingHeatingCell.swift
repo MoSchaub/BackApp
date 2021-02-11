@@ -7,14 +7,7 @@
 
 import UIKit
 import BakingRecipeStrings
-
-public protocol KneadingHeatingCellDelegate: class {
-    
-    func kneadingHeatingCell(_ cell: KneadingHeatingCell, didChangeValue value: Double)
-    
-    func startValue(for cell: KneadingHeatingCell) -> Double
-    
-}
+import Combine
 
 /// the number formatter
 private var formatter: NumberFormatter {
@@ -27,17 +20,28 @@ public class KneadingHeatingCell: CustomCell {
     
     private var value: Double = 0 {
         didSet {
-            delegate?.kneadingHeatingCell(self, didChangeValue: value)
+            valueChangedPublisher.send((self, value))
         }
     }
     
     private lazy var textField = makeTextField()
     
-    open weak var delegate: KneadingHeatingCellDelegate? {
+    ///whether the defaultValue is going to be set the fist time
+    private lazy var firstTime = true
+    
+    /// default value if no correct value was entered
+    /// - Note: This one should be provided by the enclosing ViewController
+    public var defaultValue: Double = 0 {
         didSet {
-            self.setupCell()
+            if firstTime {
+                self.firstTime = false
+                self.setupCell()
+            }
         }
     }
+    
+    /// notify the enclosing viewController that the value changed
+    public var valueChangedPublisher = PassthroughSubject<(KneadingHeatingCell, Double), Never>()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
@@ -94,8 +98,7 @@ extension KneadingHeatingCell: UITextFieldDelegate {
             self.textField.text = String(newValue)
             self.value = newValue
         } else {
-            let defaultValue: Double = 0
-            self.textField.text = String(delegate?.startValue(for: self) ?? defaultValue)
+            self.textField.text = String(defaultValue)
         }
     }
     

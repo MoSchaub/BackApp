@@ -50,6 +50,7 @@ class Back_App_iOSUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        print("error")
     }
     
     func testAddingSubstep() throws {
@@ -83,7 +84,7 @@ class Back_App_iOSUITests: XCTestCase {
     
     func removeSubstep(recipeName: String) {
         
-        appTables.staticTexts["Sub3"].firstMatch.tap()
+        XCUIApplication().tables.children(matching: .cell).element(boundBy: 6).children(matching: .other).element(boundBy: 1).staticTexts["Sub3"].tap()
         
         // delete the substep
         appTables.children(matching: .button)["Edit"].tap()
@@ -281,7 +282,9 @@ class Back_App_iOSUITests: XCTestCase {
         
         // duration
         XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
-        XCUIApplication().tables.pickerWheels["1 min"].adjust(toPickerWheelValue: "\(Int(step.time/60))")
+        if step.time != 60 {
+            XCUIApplication().tables.pickerWheels["one minute"].adjust(toPickerWheelValue: "\(Int(step.time/60)) minutes")
+        }
         
         // ingredients
         for ingredient in step.ingredients {
@@ -315,7 +318,7 @@ class Back_App_iOSUITests: XCTestCase {
         staticText.tap()
         staticText.tap()
     
-        appTables.cells.pickerWheels["2 min"].adjust(toPickerWheelValue: "\(18)")
+        appTables.cells.pickerWheels["2 minutes"].adjust(toPickerWheelValue: "\(18) minutes")
         
         
         app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
