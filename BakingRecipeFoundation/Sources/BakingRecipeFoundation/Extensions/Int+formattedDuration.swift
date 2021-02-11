@@ -12,17 +12,23 @@ public extension Int {
     var formattedDuration: String {
         let hours = self.hours
         let minutes = self.minutes
-        if self == 1 {
-            return Strings.one + " " + Strings.minute
-        } else {
-            if hours > 1 {
-                return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + (minutes > 0 ? minutes
-                .formattedDuration : "")
-            } else if hours == 1 {
-                return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutes.formattedDuration
+        
+        func minutesFormatted() -> String {
+            if minutes == 0 && hours != 0 {
+                return ""
+            } else if minutes == 1 {
+                return Strings.one + " " + formattedDurationUnit(for: minutes)
             } else {
                 return "\(minutes) " + formattedDurationUnit(for: minutes)
             }
+        }
+        
+        if hours > 1 {
+            return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
+        } else if hours == 1 {
+            return Strings.one + " " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
+        } else {
+            return minutesFormatted()
         }
     }
     
