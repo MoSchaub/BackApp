@@ -15,6 +15,7 @@ import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
+import Combine
 
 class CompactHomeViewController: UITableViewController {
     
@@ -40,6 +41,8 @@ class CompactHomeViewController: UITableViewController {
         documentTypes: [kUTTypeJSON as String], in: .open
     )
     
+    /// set for storing publishers
+    private var tokens = Set<AnyCancellable>()
     
     // MARK: - Initializers
     
@@ -53,26 +56,29 @@ class CompactHomeViewController: UITableViewController {
         fatalError(Strings.init_coder_not_implemented)
     }
     
+    deinit {
+        //cancel listening to all publishers
+        for token in tokens{
+            token.cancel()
+        }
+    }
+    
     // MARK: - Startup functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
         configureNavigationBar()
+        dataSource.update(animated: true)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(configureNavigationBar), name: .homeNavBarShouldReload, object: nil)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        dataSource.update(animated: false)
-        configureNavigationBar()
+        //attack publisher for navbar reload
+        NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
+            self.configureNavigationBar()
+        }.store(in: &tokens)
     }
 
 }
 
-
-import BakingRecipeFoundation
 
 private extension CompactHomeViewController {
     

@@ -76,6 +76,7 @@ extension RecipeDetailViewController {
     override func loadView() {
         super.loadView()
         setUpNavigationBar()
+        self.title = self.recipe.formattedName
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -272,6 +273,7 @@ private extension RecipeDetailViewController {
     
     @objc private func dissmiss() {
         navigationController?.dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
     }
 }
 

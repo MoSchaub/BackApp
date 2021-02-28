@@ -8,6 +8,35 @@
 import BakingRecipeFoundation
 import Sqlable
 import BakingRecipeStrings
+import Combine
+import NotificationCenter
+
+public extension Notification.Name {
+    static var recipesChanged: Notification.Name {
+        return Notification.Name.init(rawValue: "recipesChanged")
+    }
+}
+
+
+@available(iOS 13.0, *)
+public extension BackAppData {
+    #if canImport(Combine)
+    func getRecipes(favouritesOnly: Bool = false) -> Future<[Recipe], Error> {
+        Future { promise in
+            do {
+                var statement = Recipe.read().orderBy(Recipe.number)
+                if favouritesOnly {
+                    statement = statement.filter(Recipe.isFavorite == true)
+                }
+                let recipes = try statement.run(self.database)
+                promise(.success(recipes))
+            } catch {
+                promise(.failure(error))
+            }
+        }
+    }
+    #endif
+}
 
 
 // MARK: - Recipes
@@ -32,10 +61,14 @@ public extension BackAppData {
         
         var number = 0
         for id in recipeIds {
-            var object = self.object(with: id, of: Recipe.self)!
-            object.number = number
-            number += 1
-            _ = self.update(object)
+            
+            //database operations need to be run from the main thread
+            DispatchQueue.main.async {
+                var object = self.object(with: id, of: Recipe.self)!
+                object.number = number
+                number += 1
+                _ = self.update(object)
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ public class BackAppData {
     ///the alert message for the same alert
     public var inputAlertMessage = ""
     
+    private var observerIds = [String]()
+    
     public init(debug: Bool = false) {
         /// create new database or use the existing one if it exist in the documents directory
         do {
@@ -43,7 +45,25 @@ public class BackAppData {
         } catch {
             print(error.localizedDescription)
         }
+        
+        let recipesObserver = database.observe(on: Recipe.self) { _ in
+            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
+        }
+        let stepsObserver = database.observe(on: Step.self) { _ in
+            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
+        }
+        let ingredientsObserver = database.observe(on: Ingredient.self) { _ in
+            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
+        }
+        
+        observerIds.append(contentsOf: [recipesObserver, stepsObserver, ingredientsObserver])
 
+    }
+    
+    deinit {
+        for id in observerIds {
+            database.removeObserver(id)
+        }
     }
     
     //MARK: - CUD Operations

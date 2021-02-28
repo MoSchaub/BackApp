@@ -276,18 +276,6 @@ extension SettingsViewController: SwitchCellDelegate {
     
 }
 
-//extension SettingsViewController: KneadingHeatingCellDelegate {
-//
-//    func startValue(for cell: KneadingHeatingCell) -> Double {
-//        return Standarts.kneadingHeating
-//    }
-//
-//    func kneadingHeatingCell(_ cell: KneadingHeatingCell, didChangeValue value: Double) {
-//        Standarts.kneadingHeating = value
-//    }
-//
-//}
-
 // MARK: Section Header
 private class SettingsDataSource: UITableViewDiffableDataSource<SettingsSection, Item> {
     
