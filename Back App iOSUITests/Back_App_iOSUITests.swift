@@ -329,4 +329,11 @@ class Back_App_iOSUITests: XCTestCase {
         
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }
+    
+    func testInEditingDissmissCrash() throws {
+        app.launch()
+        addButton.tap()
+        nameTextField.tap()
+        app.navigationBars.firstMatch.buttons["Cancel"].tap()
+    }
 }

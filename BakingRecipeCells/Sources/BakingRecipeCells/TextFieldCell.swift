@@ -7,6 +7,8 @@
 
 import UIKit
 import BakingRecipeStrings
+import CombineCocoa
+import Combine
 
 public class TextFieldCell: CustomCell {
     
@@ -14,6 +16,8 @@ public class TextFieldCell: CustomCell {
     public var textField = UITextField(frame: .zero)
     
     private var placeholder = "Placeholder"
+    
+    private var tokens = Set<AnyCancellable>()
     
     /// method called when text changed
     public var textChanged: ((String) -> Void)?
@@ -25,8 +29,19 @@ public class TextFieldCell: CustomCell {
     }
     
     public func setTextFieldBehavior() {
-        textField.addTarget(self, action: #selector(updateText), for: .editingChanged)
+        textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
+        textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
     }
+    
+    deinit {
+        
+        // cancel listening to control event publishers
+        for token in tokens {
+            token.cancel()
+        }
+    }
+    
+    
 }
 
 private extension TextFieldCell {
@@ -75,4 +90,12 @@ extension TextFieldCell: UITextFieldDelegate {
         return false
     }
     
+    public override func endEditing(_ force: Bool) -> Bool {
+        // cancel listening to control event publishers
+        for token in tokens {
+            token.cancel()
+        }
+        
+        return super.endEditing(force)
+    }
 }

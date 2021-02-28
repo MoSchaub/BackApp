@@ -25,7 +25,7 @@ class RecipeDetailViewController: UITableViewController {
     //interface object for the database
     private var appData: BackAppData
     
-    // for picking imagea
+    // for picking images
     private var imagePickerController: UIImagePickerController?
     
     // id of the recipe for pulling the recipe from the database
@@ -40,8 +40,9 @@ class RecipeDetailViewController: UITableViewController {
             if newValue != self.recipe {
                 if self.appData.update(newValue) {
                     self.setUpNavigationBar()
-                } else if !self.recipeChanged, self.creating{
-                    self.recipeChanged = true
+                    if !self.recipeChanged, self.creating{
+                        self.recipeChanged = true
+                    }
                 }
             }
         }
@@ -123,6 +124,11 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
             //show alert
             showAlert()
         } else {
+            
+            // make sure the textFieldObserver is stopped
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextFieldCell, cell.textField.isEditing {
+                cell.textField.endEditing(true)
+            }
             if appData.delete(recipe) {
                 dissmiss()
             }

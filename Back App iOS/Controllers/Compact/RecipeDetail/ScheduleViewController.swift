@@ -129,7 +129,7 @@ private extension ScheduleViewController {
             Text(ingredient.name)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text("\(appData.temperature(for: ingredient, roomTemp: roomTemp))" + "° C")
+                Text(appData.temperature(for: ingredient, roomTemp: roomTemp).formattedTemp)
                 Spacer()
             } else{
                 EmptyView()
