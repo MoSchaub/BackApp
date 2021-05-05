@@ -10,13 +10,25 @@ import Foundation
 public struct MassFormatter {
     
     ///func that takes in a raw mass and formatts it with the right unit
-    static public func formattedMass(for amount: Double) -> String{
+    static public func formattedMass(for amount: Double, short: Bool = false) -> String{
         if amount >= 1000{
-            return "\(amount/1000)" + " Kg"
+            if short {
+                return String(format: "%.2f", (amount/1000)) + " Kg"
+            } else {
+                return "\(amount/1000)" + " Kg"
+            }
         } else if amount < 0.1, amount != 0 {
-            return "\(amount * 1000)" + " mg"
+            if short {
+                return String(format: "%.2f", (amount * 1000)) + " mg"
+            } else {
+                return "\(amount * 1000)" + " mg"
+            }
         } else {
-            return "\(amount)" + " g"
+            if short {
+                return String(format: "%.2f", (amount)) + " g"
+            } else {
+                return "\(amount)" + " g"
+            }
         }
     }
     
