@@ -10,7 +10,6 @@ import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
-import BakingRecipeSections
 import BakingRecipeCells
 import BakingRecipeUIFoundation
 

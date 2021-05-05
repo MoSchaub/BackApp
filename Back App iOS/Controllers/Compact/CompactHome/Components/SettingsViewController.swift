@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import BakingRecipeSections
 import BakingRecipeCells
 import BakingRecipeStrings
 import BackAppCore
