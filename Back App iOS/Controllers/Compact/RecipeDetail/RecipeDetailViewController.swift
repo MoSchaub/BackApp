@@ -9,7 +9,6 @@
 import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
-import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeCells

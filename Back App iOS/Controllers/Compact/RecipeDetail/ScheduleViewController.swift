@@ -10,7 +10,6 @@ import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
-import BakingRecipeItems
 import BakingRecipeCells
 
 class ScheduleViewController: UITableViewController {

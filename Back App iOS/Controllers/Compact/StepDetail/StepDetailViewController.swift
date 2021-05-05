@@ -11,7 +11,6 @@ import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeCells
-import BakingRecipeItems
 import BakingRecipeUIFoundation
 
 class StepDetailViewController: UITableViewController {

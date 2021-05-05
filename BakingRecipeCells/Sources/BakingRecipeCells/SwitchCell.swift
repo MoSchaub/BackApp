@@ -8,7 +8,7 @@
 import UIKit
 
 /// The `SwitchCellDelegate` protocol allows the adopting delegate to respond to the UI interaction
-public protocol SwitchCellDelegate: class {
+public protocol SwitchCellDelegate: AnyObject {
     /// Tells the delegate that the switch control is toggled.
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool)
     

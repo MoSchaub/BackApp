@@ -11,7 +11,6 @@ import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeSections
-import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeUIFoundation
 

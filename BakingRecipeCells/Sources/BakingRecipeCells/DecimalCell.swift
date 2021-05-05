@@ -9,7 +9,7 @@ import SwiftUI
 import BakingRecipeStrings
 
 /// The `DecimalCellDelegate` protocol allows the adopting delegate to respond to the UI interaction
-public protocol DecimalCellDelegate: class {
+public protocol DecimalCellDelegate: AnyObject {
     func decimalCell(_ cell: DecimalCell, didChangeValue value: Decimal?)
     
     func standardValue(in cell: DecimalCell) -> Decimal

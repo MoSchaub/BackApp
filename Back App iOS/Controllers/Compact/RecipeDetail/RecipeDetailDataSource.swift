@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
+import BackAppCore
 import BakingRecipeFoundation
-import BakingRecipeItems
 import BakingRecipeStrings
 import BakingRecipeSections
 import BakingRecipeCells

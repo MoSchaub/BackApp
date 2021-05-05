@@ -8,7 +8,7 @@
 import SwiftUI
 import BakingRecipeUIFoundation
 import BakingRecipeStrings
-import BakingRecipeItems
+import BackAppCore
 
 public class InfoStripCell: CustomCell {
     

@@ -11,7 +11,6 @@ import MobileCoreServices
 import BackAppCore
 import BakingRecipeStrings
 import BakingRecipeSections
-import BakingRecipeItems
 import BakingRecipeCells
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation

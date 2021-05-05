@@ -7,10 +7,10 @@
 //
 
 import UIKit
+import BackAppCore
 import BakingRecipeFoundation
 import BakingRecipeCells
 import BakingRecipeStrings
-import BakingRecipeItems
 import BakingRecipeSections
 
 class IngredientDetailViewController: UITableViewController {

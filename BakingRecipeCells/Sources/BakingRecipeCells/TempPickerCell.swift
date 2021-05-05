@@ -8,7 +8,7 @@
 import SwiftUI
 import BackAppCore
 
-public protocol TempPickerCellDelegate: class {
+public protocol TempPickerCellDelegate: AnyObject {
     
     func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double)
     

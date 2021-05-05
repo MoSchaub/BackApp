@@ -8,7 +8,6 @@
 
 import BakingRecipeFoundation
 import BakingRecipeStrings
-import BackAppCore
 
 public extension Recipe {
     func nameItem() -> TextFieldItem {
