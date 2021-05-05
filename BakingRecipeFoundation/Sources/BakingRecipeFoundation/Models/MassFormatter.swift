@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MassFormatter {
+public struct MassFormatter {
     
     ///func that takes in a raw mass and formatts it with the right unit
     static public func formattedMass(for amount: Double) -> String{

@@ -97,7 +97,9 @@ public struct Strings {
     public static var favorites = NSLocalizedString("favorites", bundle: .module, comment: "")
     public static var allRecipes = NSLocalizedString("allRecipes", bundle: .module, comment: "")
     public static var next = NSLocalizedString("next", bundle: .module, comment: "")
-
+    public static var weighIn = NSLocalizedString("weighIn", bundle: .module, comment: "")
+    public static var doughYield = NSLocalizedString("doughYield", bundle: .module, comment: "")
+    
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
     public static let websiteURL = URL(string: "https://heimbaecker.de/backapp")!

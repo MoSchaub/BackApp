@@ -174,14 +174,14 @@ public extension Step {
     }
     
     /// total mass of flour in the step
-    private func flourMass(db: SqliteDatabase) -> Double {
+    func flourMass(db: SqliteDatabase) -> Double {
         var mass = Ingredient.Style.flour.massOfSelfIngredients(in: self, db: db)
         _ = substeps(db: db).map { mass += $0.flourMass(db: db) }
         return mass
     }
     
     /// total mass of water in the step
-    private func waterMass(db: SqliteDatabase) -> Double {
+    func waterMass(db: SqliteDatabase) -> Double {
         var mass = Ingredient.Style.bulkLiquid.massOfSelfIngredients(in: self, db: db)
         _ = substeps(db: db).map { mass += $0.waterMass(db: db) }
         return mass

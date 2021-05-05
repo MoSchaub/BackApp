@@ -78,6 +78,9 @@
 "donate_text" = "Die Nutzung dieser App mit allen Funktionen ist komplett gratis und ohne jegliche Werbung.\nJedoch ist die Entwicklung dieser App mit einer Menge an Kosten und Arbeit verbunden und wenn sie mit einem kleinem Beitrag die Entwicklung dieser App unterstützen wollen, würden wir uns als Entwickler sehr freuen.";
 
 
+"doughYield" = "Teigausbeute";
+
+
 "duration" = "Dauer";
 
 
@@ -247,3 +250,6 @@
 
 
 "website" = "Website";
+
+
+"weighIn" = "Einwage";

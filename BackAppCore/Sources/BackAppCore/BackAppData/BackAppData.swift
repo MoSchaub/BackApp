@@ -31,7 +31,7 @@ public class BackAppData {
         /// create new database or use the existing one if it exist in the documents directory
         do {
             if debug {
-                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/db.sqlite")
+                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/debug.sqlite")
             }
             self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
         } catch {
@@ -57,7 +57,7 @@ public class BackAppData {
         }
         
         observerIds.append(contentsOf: [recipesObserver, stepsObserver, ingredientsObserver])
-
+        
     }
     
     deinit {

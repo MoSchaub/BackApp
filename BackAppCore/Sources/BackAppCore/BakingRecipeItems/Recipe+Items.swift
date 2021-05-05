@@ -28,8 +28,7 @@ public extension Recipe {
     
     func controlStripItems(creating: Bool) -> [Item] {
         let appData = BackAppData()
-        let steps = appData.steps(with: self.id)
-        let infoStripItem = InfoStripItem(stepCount: steps.count, minuteCount: totalDuration(steps: steps), ingredientCount: appData.numberOfAllIngredients(for: self.id))
+        let infoStripItem = InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id), formattedDuration: appData.formattedTotalDurationHours(for: self.id), doughYield: appData.formattedTotalDoughYield(for: self.id))
         return creating ? [infoStripItem] : [infoStripItem, DetailItem(name: Strings.startRecipe)]
     }
     

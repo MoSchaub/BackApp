@@ -8,34 +8,12 @@
 import BakingRecipeFoundation
 import Sqlable
 import BakingRecipeStrings
-import Combine
 import NotificationCenter
 
 public extension Notification.Name {
     static var recipesChanged: Notification.Name {
         return Notification.Name.init(rawValue: "recipesChanged")
     }
-}
-
-
-@available(iOS 13.0, *)
-public extension BackAppData {
-    #if canImport(Combine)
-    func getRecipes(favouritesOnly: Bool = false) -> Future<[Recipe], Error> {
-        Future { promise in
-            do {
-                var statement = Recipe.read().orderBy(Recipe.number)
-                if favouritesOnly {
-                    statement = statement.filter(Recipe.isFavorite == true)
-                }
-                let recipes = try statement.run(self.database)
-                promise(.success(recipes))
-            } catch {
-                promise(.failure(error))
-            }
-        }
-    }
-    #endif
 }
 
 
@@ -53,7 +31,7 @@ public extension BackAppData {
     }
     
     func moveRecipe(from source: Int, to destination: Int) {
-    
+        
         var recipeIds = allRecipes.map { $0.id }
         
         let removedObject = recipeIds.remove(at: source)
@@ -101,10 +79,50 @@ public extension BackAppData {
         }
     }
     
+    /// totalAmount of all ingredients in the recipe
+    private func totalAmount(for recipeId: Int) -> Double {
+        var summ: Double = 0
+        // iterate through all non substeps cause totalMass also uses the substeps
+        _ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id)}
+        return summ
+    }
+    
+    /// total formatted amount of all ingredients in a given recipe
+    func totalFormattedAmount(for recipeId: Int) -> String {
+        MassFormatter.formattedMass(for: self.totalAmount(for: recipeId))
+    }
+    
+    /// dough Yield (waterSum/flourSum) for a given Recipe
+    private func totalDoughYield(for recipeId: Int) -> Double {
+        var flourSum = 0.0
+        _ = self.notSubsteps(for: recipeId).map { flourSum += self.flourMass(for: $0.id)}
+        
+        var waterSum = 0.0
+        _ = self.notSubsteps(for: recipeId).map { waterSum += self.waterMass(for: $0.id)}
+        
+        guard flourSum != 0 else {
+            return 0
+        }
+        
+        return waterSum/flourSum
+    }
+    
+    /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points
+    func formattedTotalDoughYield(for recipeId: Int) -> String {
+        String(format: "%.2f", totalDoughYield(for: recipeId))
+    }
+    
     ///formatted total duration in the right unit
     func formattedTotalDuration(for recipeId: Int) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             recipe.totalDuration(steps: steps(with: recipeId)).formattedDuration
+        }
+    }
+    
+    ///formatted total duration in hours
+    func formattedTotalDurationHours(for recipeId: Int) -> String {
+        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
+            return(recipe.totalDuration(steps: steps(with: recipeId)).hours * 60).formattedDuration
         }
     }
     

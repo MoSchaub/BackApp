@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Moritz Schaub on 05.10.20.
 //
@@ -13,30 +13,27 @@ import BackAppCore
 public class InfoStripCell: CustomCell {
     
     struct InfoStrip: View {
-        @Environment(\.colorScheme) var colorScheme
         
-        var minuteCount: Int
-        var ingredientCount: Int
-        var stepCount: Int
+        var weighIn: String
+        var formattedDuration: String
+        var doughYield: String
         
         var body: some View {
             HStack{
+                VStack {
+                    Text(formattedDuration)
+                    Text(Strings.duration).secondary()
+                }
+                Spacer()
+                VStack{
+                    Text(weighIn)
+                    Text(Strings.weighIn).secondary()
+                }
                 Spacer()
                 VStack {
-                    Text(String(minuteCount))
-                    Text(Strings.minutes).secondary()
+                    Text(doughYield)
+                    Text(Strings.doughYield).secondary()
                 }
-                Spacer()
-                VStack{
-                    Text(String(ingredientCount))
-                    Text(Strings.ingredients).secondary()
-                }
-                Spacer()
-                VStack{
-                    Text(String(stepCount))
-                    Text(Strings.steps).secondary()
-                }
-                Spacer()
             }
             .foregroundColor(Color(UIColor.primaryCellTextColor!))
             .padding()
@@ -46,10 +43,11 @@ public class InfoStripCell: CustomCell {
     
     public func setUpCell(for item: InfoStripItem) {
         selectionStyle = .none
-        let hostingController = UIHostingController(rootView: InfoStrip(minuteCount: item.minuteCount, ingredientCount: item.ingredientCount, stepCount: item.stepCount))
-
+        let hostingController = UIHostingController(rootView: InfoStrip(weighIn: item.weighIn, formattedDuration: item.formattedDuration, doughYield: item.doughYield))
+        
         addSubview(hostingController.view)
         hostingController.view.fillSuperview()
     }
-
+    
 }
+

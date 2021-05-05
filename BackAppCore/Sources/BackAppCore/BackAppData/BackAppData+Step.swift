@@ -96,4 +96,16 @@ public extension BackAppData {
         }
     }
     
+    func flourMass(for stepId: Int) -> Double {
+        findStepAndReturnAttribute(for: stepId, failValue: 0) { step in
+            step.flourMass(db: database)
+        }
+    }
+    
+    func waterMass(for stepId: Int) -> Double {
+        findStepAndReturnAttribute(for: stepId, failValue: 0) { step in
+            step.waterMass(db: database)
+        }
+    }
+    
 }

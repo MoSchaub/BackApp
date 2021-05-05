@@ -41,14 +41,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         
         ///get items for recipes
         func getRecipesItems(favouritesOnly: Bool = false) -> [RecipeItem] {
-            var items = [RecipeItem]() //helper var to return the values
-            
-            appData.getRecipes(favouritesOnly: favouritesOnly)
-                .sink(receiveCompletion: fetchDataCompletionHandler(completion:)) { [self] recipes in
-                    items = recipes.map { appData.recipeItem(for: $0) }
-                }.store(in: &tokens)
-            
-            return items
+            appData.getRecipesItems(favouritesOnly: favouritesOnly)
         }
         
         /// moving recipes from source to destination

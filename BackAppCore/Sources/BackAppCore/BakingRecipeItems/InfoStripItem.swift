@@ -7,14 +7,14 @@
 //
 
 public class InfoStripItem: Item {
-    public var stepCount: Int
-    public var minuteCount: Int
-    public var ingredientCount: Int
+    public var weighIn: String
+    public var formattedDuration: String
+    public var doughYield: String
     
-    public init(stepCount: Int, minuteCount: Int, ingredientCount: Int) {
-        self.stepCount = stepCount
-        self.minuteCount = minuteCount
-        self.ingredientCount = ingredientCount
+    public init(weighIn: String, formattedDuration: String, doughYield: String) {
+        self.weighIn = weighIn
+        self.formattedDuration = formattedDuration
+        self.doughYield = doughYield
         super.init()
     }
 }
