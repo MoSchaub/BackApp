@@ -35,6 +35,10 @@ class ScheduleFormViewController: UITableViewController {
 
 extension ScheduleFormViewController {
     override func viewDidLoad() {
+        
+        //set date to now
+        self.recipe.date = Date()
+        
         super.viewDidLoad()
         registerCells()
         updateTableView()

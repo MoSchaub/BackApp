@@ -94,19 +94,17 @@ public extension Ingredient {
     
     ///amount of the ingredient formatted with the right unit
     var formattedAmount: String{
-        MassFormatter.formattedMass(for: self.mass)
+        self.mass.formattedMass
     }
     
-    /// updates the amount
+    /// formatts the amount (used to update the amount)
     mutating func formatted(rest: String) -> String{
-        let previousFactor = MassFormatter.massFactor(from: rest)
-        self.mass *= previousFactor
         return self.formattedAmount
     }
     
     ///amount of the ingredient formatted with the right unit and scaled with the scale Factor provided by the recipe
     func scaledFormattedAmount(with factor: Double) -> String{
-        MassFormatter.formattedMass(for: self.mass * factor)
+        (self.mass * factor).formattedMass
     }
     
     var massCProduct: Double {

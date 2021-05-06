@@ -122,7 +122,7 @@ public extension Step {
     
     /// the mass of all Ingredients and Substeps to this step in a given database
     func totalMass(db: SqliteDatabase) -> Double{
-        var mass = 0.0
+        var mass: Double = 0
         
         for ingredient in ingredients(db: db) {
             mass += ingredient.mass
@@ -136,7 +136,7 @@ public extension Step {
     
     /// the mass of all ingredients and substeps formatted with the right unit
     func totalFormattedMass(db: SqliteDatabase) -> String {
-        MassFormatter.formattedMass(for: self.totalMass(db: db))
+        self.totalMass(db: db).formattedMass
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
@@ -229,7 +229,7 @@ public extension Step {
         
         for ingredient in ingredients(db: db){
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? String(self.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, db: db) ) + "° C" : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? self.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, db: db).formattedTemp : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in substeps(db: db){

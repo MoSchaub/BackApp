@@ -89,7 +89,7 @@ public extension BackAppData {
     
     /// total formatted amount of all ingredients in a given recipe
     func totalFormattedAmount(for recipeId: Int) -> String {
-        MassFormatter.formattedMass(for: self.totalAmount(for: recipeId), short: true)
+        self.totalAmount(for: recipeId).formattedMass
     }
     
     /// dough Yield (waterSum/flourSum) for a given Recipe
