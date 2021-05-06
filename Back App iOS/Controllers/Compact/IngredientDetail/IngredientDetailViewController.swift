@@ -11,7 +11,6 @@ import BackAppCore
 import BakingRecipeFoundation
 import BakingRecipeCells
 import BakingRecipeStrings
-import BakingRecipeSections
 
 class IngredientDetailViewController: UITableViewController {
     

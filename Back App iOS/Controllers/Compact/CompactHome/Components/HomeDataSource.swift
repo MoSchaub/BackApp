@@ -9,7 +9,6 @@
 import UIKit
 import BackAppCore
 import BakingRecipeStrings
-import BakingRecipeSections
 import BakingRecipeCells
 import BakingRecipeFoundation
 import Combine

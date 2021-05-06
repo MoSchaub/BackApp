@@ -21,7 +21,6 @@
 		CD3148AA259BBB1B000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD3148A9259BBB1B000FAB6F /* Colors.xcassets */; };
 		CD3148B4259BBBC7000FAB6F /* dark.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD31489C259BBB0F000FAB6F /* dark.bundle */; };
 		CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFE225960DFA00F352E9 /* BakingRecipeCells */; };
-		CD38FFF5259617C300F352E9 /* BakingRecipeSections in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFF4259617C300F352E9 /* BakingRecipeSections */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
@@ -121,7 +120,6 @@
 
 /* Begin PBXFileReference section */
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		CD285D31258E440C00813A4C /* BakingRecipeSections */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeSections; sourceTree = "<group>"; };
 		CD285D3C258E44E900813A4C /* BakingRecipeCells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeCells; sourceTree = "<group>"; };
 		CD285D47258E474000813A4C /* BakingRecipeUIFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeUIFoundation; sourceTree = "<group>"; };
 		CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -220,7 +218,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */,
-				CD38FFF5259617C300F352E9 /* BakingRecipeSections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,7 +291,6 @@
 			children = (
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD285D3C258E44E900813A4C /* BakingRecipeCells */,
-				CD285D31258E440C00813A4C /* BakingRecipeSections */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
 				CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */,
@@ -634,7 +630,6 @@
 			name = "Back App iOS";
 			packageProductDependencies = (
 				CD38FFE225960DFA00F352E9 /* BakingRecipeCells */,
-				CD38FFF4259617C300F352E9 /* BakingRecipeSections */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -1052,6 +1047,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1060,6 +1056,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1073,6 +1070,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1081,6 +1079,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1218,7 +1217,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1243,7 +1242,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1383,10 +1382,6 @@
 		CD38FFE225960DFA00F352E9 /* BakingRecipeCells */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BakingRecipeCells;
-		};
-		CD38FFF4259617C300F352E9 /* BakingRecipeSections */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BakingRecipeSections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

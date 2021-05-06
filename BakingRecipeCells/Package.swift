@@ -17,7 +17,6 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        //.package(name: "BakingRecipeItems", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeItems"),
         .package(name: "BakingRecipeFoundation", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeFoundation"),
         .package(name: "BakingRecipeUIFoundation", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeUIFoundation"),
         .package(url: "https://github.com/CombineCommunity/CombineCocoa.git", from: "0.2.1")

@@ -88,7 +88,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         // delete the substep
         appTables.children(matching: .button)["Edit"].tap()
-        appTables.buttons["Delete Sub2, 1.0 Kg 20.0 °C"].tap()
+        appTables.buttons["Delete Sub2, 1000.0 g 20.0 °C"].tap()
         appTables.buttons["Delete"].tap()
         appTables.children(matching: .button)["Done"].tap()
         
