@@ -126,7 +126,7 @@ private extension CompactHomeViewController {
        }
     
     @objc private func navigateToSettings() {
-        let vc = SettingsViewController()
+        let vc = SettingsViewController(appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)

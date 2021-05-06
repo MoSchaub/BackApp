@@ -65,7 +65,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         self.viewModel = ViewModel(appData: appData)
         
         super.init(tableView: tableView) { (_, _, recipeItem) -> UITableViewCell? in
-            return RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, id: recipeItem.id, reuseIdentifier: Strings.recipeCell)
+            return RecipeCell(name: recipeItem.text, minuteLabel: recipeItem.minuteLabel, imageData: recipeItem.imageData, id: recipeItem.id, appData: appData , reuseIdentifier: Strings.recipeCell)
         }
         
         // set animation

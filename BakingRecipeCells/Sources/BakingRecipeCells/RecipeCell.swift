@@ -18,7 +18,7 @@ public enum SqlableError: Error {
 
 public class RecipeCell: CustomCell {
     class ViewModel {
-        var appData = BackAppData()
+        var appData: BackAppData
     
         
         //delete the recipe
@@ -51,6 +51,10 @@ public class RecipeCell: CustomCell {
             
             return Just(nil)
         }
+        
+        init(appData: BackAppData) {
+            self.appData = appData
+        }
     }
     
     
@@ -63,12 +67,12 @@ public class RecipeCell: CustomCell {
     
     lazy var imageAccessory = makeImageAccesory()
 
-    public init(name: String, minuteLabel: String, imageData: Data?, id: Int, reuseIdentifier: String?) {
+    public init(name: String, minuteLabel: String, imageData: Data?, id: Int, appData: BackAppData , reuseIdentifier: String?) {
         self.name = name
         self.minuteLabel = minuteLabel
         self.imageData = imageData
         self.id = id
-        self.viewModel = ViewModel()
+        self.viewModel = ViewModel(appData: appData)
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setup()
     }

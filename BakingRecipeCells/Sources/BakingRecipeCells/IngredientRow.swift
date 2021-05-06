@@ -16,7 +16,7 @@ struct IngredientRow: View {
     let ingredient: Ingredient
     let roomTemp: Double
     let kneadingHeating: Double
-    let appData = BackAppData()
+    let appData: BackAppData
     
     var body: some View {
         HStack {

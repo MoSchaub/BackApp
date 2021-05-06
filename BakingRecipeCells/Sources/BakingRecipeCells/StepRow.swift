@@ -15,7 +15,7 @@ public struct StepRow: View {
     let step: Step
     let roomTemp = Standarts.roomTemp
     let kneadingHeating = Standarts.kneadingHeating
-    let appData = BackAppData()
+    let appData: BackAppData
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -31,7 +31,7 @@ public struct StepRow: View {
             }
             
             ForEach(appData.ingredients(with: step.id)) { ingredient in
-                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating)
+                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, appData: appData)
             }
             
             ForEach(appData.substeps(for: step.id)) { substep in
@@ -54,8 +54,9 @@ public struct StepRow: View {
         .padding(.trailing)
     }
     
-    public init(step: Step) {
+    public init(step: Step, appData: BackAppData) {
         self.step = step
+        self.appData = appData
     }
 }
 //

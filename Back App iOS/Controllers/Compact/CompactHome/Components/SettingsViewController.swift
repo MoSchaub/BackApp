@@ -22,18 +22,21 @@ class SettingsViewController: UITableViewController {
     
     private var roomTempPickerShown = false
     
+    private var appData: BackAppData
+    
     /// storage for cancellable tokens
     private var tokens = Set<AnyCancellable>()
     
     
     //MARK: Initializer
     
-    init() {
+    init(appData: BackAppData) {
+        self.appData = appData
         super.init(style: .insetGrouped)
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     deinit {
@@ -145,7 +148,6 @@ extension SettingsViewController {
     }
     
     @objc private func exportAllRecipes(sender: UIView) {
-        let appData = BackAppData()
         let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         
         ac.popoverPresentationController?.sourceView = sender

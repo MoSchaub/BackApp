@@ -361,7 +361,7 @@ private extension StepDetailViewController {
         
         // MARK: Creating Cells
 
-        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep })) { (tableView, indexPath, item) -> UITableViewCell? in
+        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep }), appData: appData) { (tableView, indexPath, item) -> UITableViewCell? in
             if let textFieldItem = item as? TextFieldItem {
                 // notes or name
                 
@@ -453,7 +453,7 @@ private extension StepDetailViewController {
         // notesTextFieldItem
         let notesItem = TextFieldItem(text: step.notes)
 
-        let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step)) }
+        let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step, appData: appData)) }
         let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: $0.id) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
@@ -519,8 +519,8 @@ private extension StepDetailViewController {
 }
 
 fileprivate extension Ingredient {
-    func detailLabel(for step: Step) -> String {
-        self.formattedAmount + " " + (self.type == .bulkLiquid ? BackAppData().temperature(for: self, roomTemp: Standarts.roomTemp).formattedTemp : "")
+    func detailLabel(for step: Step, appData: BackAppData) -> String {
+        self.formattedAmount + " " + (self.type == .bulkLiquid ? appData.temperature(for: self, roomTemp: Standarts.roomTemp).formattedTemp : "")
     }
 }
 
@@ -528,11 +528,12 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     
     @Binding var step: Step
     
-    private lazy var appData = BackAppData()
+    private var appData: BackAppData
     
-    init(tableView: UITableView, step: Binding<Step>,
+    init(tableView: UITableView, step: Binding<Step>, appData: BackAppData,
          cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
         self._step = step
+        self.appData = appData
         super.init(tableView: tableView, cellProvider: cellProvider)
     }
     

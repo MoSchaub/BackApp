@@ -94,7 +94,7 @@ private extension ScheduleViewController {
         
         snapshot.appendSections(sections) //append sections
         for section in sections {
-            snapshot.appendItems([recipe.allReoderedStepItems[section]], toSection: section)
+            snapshot.appendItems([recipe.allReoderedStepItems(appData: appData)[section]], toSection: section)
         }
         self.dataSource.apply(snapshot, animatingDifferences: animated)
     }

@@ -45,7 +45,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell
             } else if let stepItem = item as? StepItem {
-                let stepCell = StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell)
+                let stepCell = StepCell(step: stepItem.step, appData: appData, reuseIdentifier: Strings.stepCell)
                 return stepCell
             } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
                 cell.textLabel?.text = detailItem.text
@@ -86,6 +86,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
         }
     }
     
+    /// move steps
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let steps = appData.steps(with: recipe.id)
         guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
@@ -104,9 +105,9 @@ extension RecipeDetailDataSource {
         snapshot.appendSections(RecipeDetailSection.allCases)
         snapshot.appendItems([recipe.nameItem()], toSection: .name)
         snapshot.appendItems([recipe.imageItem], toSection: .imageControlStrip)
-        snapshot.appendItems(recipe.controlStripItems(creating: self.creating), toSection: .imageControlStrip)
+        snapshot.appendItems(recipe.controlStripItems(creating: self.creating, appData: appData), toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
-        snapshot.appendItems(recipe.stepItems, toSection: .steps)
+        snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
         snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         apply(snapshot, animatingDifferences: animated)
