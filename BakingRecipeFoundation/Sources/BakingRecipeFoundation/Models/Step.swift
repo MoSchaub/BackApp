@@ -134,9 +134,9 @@ public extension Step {
         return mass
     }
     
-    /// the mass of all ingredients and substeps formatted with the right unit
-    func totalFormattedMass(db: SqliteDatabase) -> String {
-        self.totalMass(db: db).formattedMass
+    /// the mass of all ingredients and substeps formatted with the right unit scaled with factor
+    func totalFormattedMass(db: SqliteDatabase, factor: Double = 1.0) -> String {
+        (self.totalMass(db: db) * factor).formattedMass
     }
     
     /// temperature for bulk liquids so the step has the right Temperature

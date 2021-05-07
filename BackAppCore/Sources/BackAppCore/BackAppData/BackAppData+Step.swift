@@ -82,9 +82,9 @@ public extension BackAppData {
     }
     
     /// the mass of all ingredients and substeps of a step formatted with the right unit
-    func totalFormattedMass(for stepId: Int) -> String {
+    func totalFormattedMass(for stepId: Int, factor: Double = 1) -> String {
         findStepAndReturnAttribute(for: stepId, failValue: "") { step in
-            step.totalFormattedMass(db: database)
+            step.totalFormattedMass(db: database, factor: factor)
         }
     }
     
