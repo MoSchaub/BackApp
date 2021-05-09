@@ -12,8 +12,9 @@ import BakingRecipeStrings
 
 public extension BackAppData {
     
+    /// opens the data at a specified url and tries to import it as a recipe, sets alertTitle and Message
     func open(_ url: URL) {
-        let loaded = url.loadData()
+        let loaded = url.loadData() //gets the data from the file at url
         
         if let loadedData = loaded.data {
             if importData(loadedData) {
@@ -30,12 +31,12 @@ public extension BackAppData {
         }
     }
     
+    /// imports data containing recipes into the database
+    /// - Returns: wether the import succeeded
     func importData(_ data: Data) -> Bool {
-        if let json = try? JSON(data: data) {
-
-            if let recipesJson = json[CodingKeys.recipes.rawValue].array {
-                _ = recipesJson.map { decodeAndImportRecipe(from: $0)}
-            }
+        //make json from data and ensure it contains the coding keys
+        if let json = try? JSON(data: data), let recipesJson = json[CodingKeys.recipes.rawValue].array {
+            _ = recipesJson.map { decodeAndImportRecipe(from: $0)} //decode and import
             return true
         } else {
             return false
