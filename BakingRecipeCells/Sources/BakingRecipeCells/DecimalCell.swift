@@ -52,12 +52,16 @@ public class DecimalCell: CustomCell {
         let textField = UITextField(frame: .zero)
         
         textField.delegate = self
-        textField.addTarget(self, action: #selector(editingchange), for: .editingChanged)
-        textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
-        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
+        textField.addTarget(self, action: #selector(editingchange), for: .editingChanged) //updates the text while editing
+        textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd) //updates the text when finished editing
+        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone)) // add toolbar to keyboard with done button to finish editing
         
+        textField.keyboardType = .decimalPad //set keyboard type to decimalpad because the user should be only enter decimals
+        
+        //colors
         textField.tintColor = .tintColor
         textField.textColor = .primaryCellTextColor
+        //set placeholder text and its color. color has to be changed cause it should use light mode colors in dark mode and dark mode colors in light mode. textColor of placeholder text can't be set but by using an attributed String
         textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
         return textField
@@ -90,7 +94,7 @@ private extension DecimalCell {
     
     @objc private func updateText() {
         // This is the only place we update `value`.
-        if let newValue = formatter.number(from: self.textField.text ?? "")?.intValue {
+        if let newValue = formatter.number(from: self.textField.text ?? "")?.doubleValue {
             self.textField.text = String(newValue)
             self.value = Decimal(newValue)
         } else {
@@ -117,11 +121,14 @@ private extension DecimalCell {
 
 extension DecimalCell: UITextFieldDelegate {
     
+    /// ensures that the endEditing methods are called on return
+    /// - NOTE: This only applies when using a different keyboard cause there is no enter key on the .decimalPad
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.textField.endEditing(true)
         return false
     }
     
+    /// delete the textFields contents when editing did begin so the placeholder can be shown as it provides information to the user what purpose the textField serves
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = nil
     }
