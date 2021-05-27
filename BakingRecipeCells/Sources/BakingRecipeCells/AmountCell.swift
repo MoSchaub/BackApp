@@ -32,11 +32,13 @@ public class AmountCell: TextFieldCell {
     private func setUpBoth(format: @escaping (String) -> String ) {
         selectionStyle = .none
         textChanged = { text in
-            self.textField.text = format(text)
+            DispatchQueue.main.async { //force the ui update to the main thread
+                self.textField.text = format(text)
+            }
         }
     }
     
-    public override func setTextFieldBehavior() {
+    internal override func setTextFieldBehavior() {
         textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
     }
     

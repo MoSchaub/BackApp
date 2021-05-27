@@ -160,20 +160,29 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
 // MARK: - DataSource
 
 private extension RecipeDetailViewController {
+    /// create the dataSource for this VC and provide the recipe and various update fuctions
     private func makeDataSource() -> RecipeDetailDataSource {
-        RecipeDetailDataSource(recipe: Binding(get: {
-            return self.recipe
-        }, set: { newValue in
-            self.recipe = newValue
-        }), creating: creating, appData: appData, tableView: tableView, nameChanged: { name in
-            self.recipe.name = name
-        }, formatAmount: { timesText in
-            guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
-            self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
-            return self.recipe.timesText
-        }, updateInfo: { info in
-            self.recipe.info = info
-        })
+        RecipeDetailDataSource(
+            recipe: Binding(get: {
+                return self.recipe
+            }, set: { newValue in
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.recipe = newValue
+                }
+            }),
+            creating: creating, appData: appData, tableView: tableView,
+            nameChanged: { newName in
+                self.recipe.name = newName
+            },
+            formatAmount: { timesText in
+                guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
+                self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
+                return self.recipe.timesText
+            },
+            updateInfo: { newInfo in
+                    self.recipe.info = newInfo
+            }
+        )
     }
 }
 

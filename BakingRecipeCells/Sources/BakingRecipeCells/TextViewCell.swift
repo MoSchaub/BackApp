@@ -67,15 +67,19 @@ private extension TextViewCell {
     
     private func setText(starting: Bool = false) {
         if !starting, textContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [
-                NSAttributedString.Key.foregroundColor : UIColor.secondaryLabel,
-                NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .body)
-            ])
-            textView.attributedText = attributedPlaceholder
-            textView.textColor = .secondaryCellTextColor
+            DispatchQueue.main.async { // modifing ui so this needs to be on the main thread
+                let attributedPlaceholder = NSAttributedString(string: self.placeholder, attributes: [
+                    NSAttributedString.Key.foregroundColor : UIColor.secondaryLabel,
+                    NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .body)
+                ])
+                self.textView.attributedText = attributedPlaceholder
+                self.textView.textColor = .secondaryCellTextColor
+            }
         } else {
-            textView.text = textContent
-            textView.textColor =  .primaryCellTextColor
+            DispatchQueue.main.async { //also main thread cause modifing ui
+                self.textView.text = self.textContent
+                self.textView.textColor =  .primaryCellTextColor
+            }
         }
     }
     
@@ -110,13 +114,14 @@ private extension TextViewCell {
 
 extension TextViewCell: UITextViewDelegate {
     
-    public func textViewDidChange(_ textView: UITextView) {
-        self.textContent = textView.text
-    }
-    
+    ///update the textContent and setupLinkDetection
     public func textViewDidEndEditing(_ textView: UITextView) {
-        setUpLinkDetection()
-        setText()
+        let textViewText = textView.text
+        self.setUpLinkDetection()
+        DispatchQueue.global(qos: .userInitiated).async { // perform the update asyncronously
+            self.textContent = textViewText ?? ""
+            self.setText()
+        }
     }
     
     public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {

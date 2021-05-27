@@ -360,62 +360,67 @@ private extension StepDetailViewController {
         }
         
         // MARK: Creating Cells
-
-        return StepDetailDataSource(tableView: tableView, step: Binding(get: { self.step }, set: { newStep in  self.step = newStep }), appData: appData) { (tableView, indexPath, item) -> UITableViewCell? in
-            if let textFieldItem = item as? TextFieldItem {
-                // notes or name
-                
-                if indexPath.section == StepDetailSection.name.rawValue, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell{
-                    //name
-                    cell.textField.text = textFieldItem.text
-                    cell.textField.placeholder = Strings.name
-                    cell.textChanged = { text in
-                        self.step.name = text
-                    }
-                    return cell
-                } else {
-                    // notes
-                    return TextViewCell(
-                        textContent: Binding(get: { self.step.notes }, set: { newText in  self.step.notes = newText }),
-                        placeholder: Strings.notes,
-                        reuseIdentifier: Strings.notesCell
-                    )
-                }
-            } else if let detailItem = item as? DetailItem {
-                if indexPath.section == StepDetailSection.durationTemp.rawValue {
-                    //duration or temp
-                    if detailItem.text == Strings.duration {
-                        //duration
-                        let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
-                        return cell
-                    } else {
-                        //temp
-                        let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
-                        cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
-                        return cell
-                    }
-                } else if indexPath.section == StepDetailSection.ingredients.rawValue {
-                    if detailItem is IngredientItem{
-                        //ingredient
-                        return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.ingredientCell, with: detailItem)
-                    } else if detailItem is SubstepItem {
-                        // substep
-                        return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.substepCell, with: detailItem)
-                    } else  {
-                        // add ingredient
-                        return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
-                    }
-                }
-            } else if self.datePickerShown, indexPath.row == 1{
-                return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
-            } else if self.tempPickerShown, indexPath.row > 1, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
-                cell.delegate = self
-                //TempPickerCell(temp: Binding(get: { self.step.temperature ?? Standarts.roomTemp}, set: { self.step.temperature = $0; self.updateList(animated: false) }), reuseIdentifier: Strings.tempPickerCell)
-                return cell
-            }
-            return CustomCell()
-        }
+        
+        return StepDetailDataSource(tableView: tableView, appData: appData,
+                                    step: Binding(get: {
+                                        self.step
+                                    }, set: { newStep in
+                                        self.step = newStep
+                                    }),
+                                    cellProvider: { (tableView, indexPath, item) -> UITableViewCell? in
+                                        if let textFieldItem = item as? TextFieldItem {
+                                            // notes or name
+                                            
+                                            if indexPath.section == StepDetailSection.name.rawValue, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell{
+                                                //name
+                                                cell.textField.text = textFieldItem.text
+                                                cell.textField.placeholder = Strings.name
+                                                cell.textChanged = { text in
+                                                    self.step.name = text
+                                                }
+                                                return cell
+                                            } else {
+                                                // notes
+                                                return TextViewCell(
+                                                    textContent: Binding(get: { self.step.notes }, set: { newText in  self.step.notes = newText }),
+                                                    placeholder: Strings.notes,
+                                                    reuseIdentifier: Strings.notesCell
+                                                )
+                                            }
+                                        } else if let detailItem = item as? DetailItem {
+                                            if indexPath.section == StepDetailSection.durationTemp.rawValue {
+                                                //duration or temp
+                                                if detailItem.text == Strings.duration {
+                                                    //duration
+                                                    let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
+                                                    cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
+                                                    return cell
+                                                } else {
+                                                    //temp
+                                                    let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
+                                                    cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
+                                                    return cell
+                                                }
+                                            } else if indexPath.section == StepDetailSection.ingredients.rawValue {
+                                                if detailItem is IngredientItem{
+                                                    //ingredient
+                                                    return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.ingredientCell, with: detailItem)
+                                                } else if detailItem is SubstepItem {
+                                                    // substep
+                                                    return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.substepCell, with: detailItem)
+                                                } else  {
+                                                    // add ingredient
+                                                    return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
+                                                }
+                                            }
+                                        } else if self.datePickerShown, indexPath.row == 1{
+                                            return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
+                                        } else if self.tempPickerShown, indexPath.row > 1, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
+                                            cell.delegate = self
+                                            return cell
+                                        }
+                                        return CustomCell()
+                                    })
     }
 }
 
@@ -530,7 +535,7 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
     
     private var appData: BackAppData
     
-    init(tableView: UITableView, step: Binding<Step>, appData: BackAppData,
+    init(tableView: UITableView, appData: BackAppData, step: Binding<Step>,
          cellProvider: @escaping UITableViewDiffableDataSource<StepDetailSection, Item>.CellProvider) {
         self._step = step
         self.appData = appData

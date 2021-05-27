@@ -75,11 +75,13 @@ private extension IngredientDetailViewController {
     
     /// sets up navigation bar title and items
     private func setupNavigationBar() {
-        //title
-        self.title = ingredient.formattedName
-        
-        //large Title
-        navigationController?.navigationBar.prefersLargeTitles = true
+        DispatchQueue.main.async { //needs to be on main thread cause ui can only be changed on main thread
+            //title
+            self.title = self.ingredient.formattedName
+            
+            //large Title
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
     }
     
     /// adds the ingredient and pops the top view controller on the navigation stack
