@@ -28,9 +28,10 @@ public class TextFieldCell: CustomCell {
         configureTextField()
     }
     
-    public func setTextFieldBehavior() {
+    /// sets the behavior for updating: only calls update Text when editingDidEnd
+    /// - Note: internal because its needs to be overwritten in a subclass
+    internal func setTextFieldBehavior() {
         textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
-        textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
     }
     
     deinit {
@@ -79,9 +80,11 @@ private extension TextFieldCell {
 
 extension TextFieldCell: UITextFieldDelegate {
     
-    @objc public func updateText() {
+    @objc internal func updateText() {
         if let textChanged = textChanged, let text = textField.text {
-            textChanged(text)
+            DispatchQueue.global(qos: .userInitiated).async { //force away from main thread to not interrupt the ux
+                textChanged(text)
+            }
         }
     }
     

@@ -161,7 +161,7 @@ private extension ScheduleViewController {
                     Spacer()
                     Text(substep.formattedTemp(roomTemp: self.roomTemp))
                     Spacer()
-                    Text(self.appData.totalFormattedMass(for: substep.id))
+                    Text(self.appData.totalFormattedMass(for: substep.id, factor: self.factor))
                 }
             }
             
