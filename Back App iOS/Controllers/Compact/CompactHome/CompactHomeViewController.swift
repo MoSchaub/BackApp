@@ -69,9 +69,14 @@ class CompactHomeViewController: UITableViewController {
         configureNavigationBar()
         dataSource.update(animated: true)
         
-        //attack publisher for navbar reload
+        //attach publisher for navbar reload
         NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
             self.configureNavigationBar()
+        }.store(in: &tokens)
+        
+        //attach publisher for alert
+        NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
+            self.presentImportAlert()
         }.store(in: &tokens)
     }
 
@@ -89,17 +94,39 @@ private extension CompactHomeViewController {
     // MARK: - NavigationBar
     
     @objc private func configureNavigationBar() {
-        title = Strings.recipes
-        navigationController?.navigationBar.prefersLargeTitles = true
-       
-        let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(navigateToSettings))
-        let editButtonItem = self.editButtonItem
-        editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
-        navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
-        
-        let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
-        let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.doc"), style: .plain, target: self, action: #selector(openImportFilePopover))
-        navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+        DispatchQueue.main.async { //force to main thread since ui is updated
+            self.title = Strings.recipes
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            
+            let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
+            let editButtonItem = self.editButtonItem
+            editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
+            self.isEditing = false 
+            self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
+            
+            let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
+            let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
+            self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+        }
+    }
+    
+    // MARK: - Input Alert
+    
+    ///present the inputAlert
+    private func presentImportAlert() {
+        DispatchQueue.main.async { //force to main thread since this is ui code
+            
+            //create the alert
+            let alert = UIAlertController(title: self.appData.inputAlertTitle, message: self.appData.inputAlertMessage, preferredStyle: .alert)
+            
+            //add the "ok" action/option/button
+            alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
+                alert.dismiss(animated: true)
+            }))
+            
+            //finally present it
+            self.present(alert, animated: true)
+        }
     }
     
     ///present popover for creating new recipe
@@ -211,13 +238,6 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         
         //update cells
         self.dataSource.update(animated: true)
-        
-        //alert
-        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
-            alert.dismiss(animated: true)
-        }))
-        
-        present(alert, animated: true)
     }
+    
 }

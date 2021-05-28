@@ -9,7 +9,10 @@ import Sqlable
 import Foundation
 import BakingRecipeFoundation
 
-
+/// global variable that determines if either recipes are beeing imported, deleted, or defavourized
+/// disables automatic updates while this is true
+/// also used for ensuring only one thread is modifing the database
+public var databaseAutoUpdatesDisabled: Bool = false
 
 public class BackAppData {
     
@@ -50,13 +53,13 @@ public class BackAppData {
             NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
         }
         let stepsObserver = database.observe(on: Step.self) { _ in
-            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
-        }
-        let ingredientsObserver = database.observe(on: Ingredient.self) { _ in
-            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
+            if !databaseAutoUpdatesDisabled {
+                ///this needs to be sometimes disabled cause otherwise it causes ram overflows and ui interruptions
+                NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
+            }
         }
         
-        observerIds.append(contentsOf: [recipesObserver, stepsObserver, ingredientsObserver])
+        observerIds.append(contentsOf: [recipesObserver, stepsObserver])
         
     }
     
