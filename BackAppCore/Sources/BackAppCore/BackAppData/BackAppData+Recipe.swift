@@ -22,32 +22,16 @@ public extension BackAppData {
     
     /// all Recipes in the database
     var allRecipes: [Recipe] {
-        (try? Recipe.read().orderBy(Recipe.number, .asc).run(database)) ?? []
+        self.allObjects(type: Recipe.self)
     }
     
     /// all favorited recipes in the database
     var favorites: [Recipe] {
-        (try? Recipe.read().filter(Recipe.isFavorite == true).run(database)) ?? []
+        self.allObjects(type: Recipe.self, filter: Recipe.isFavorite == true)
     }
     
     func moveRecipe(from source: Int, to destination: Int) {
-        
-        var recipeIds = allRecipes.map { $0.id }
-        
-        let removedObject = recipeIds.remove(at: source)
-        recipeIds.insert(removedObject, at: destination)
-        
-        var number = 0
-        for id in recipeIds {
-            
-            //database operations need to be run from the main thread
-            DispatchQueue.main.async {
-                var object = self.object(with: id, of: Recipe.self)!
-                object.number = number
-                number += 1
-                _ = self.update(object)
-            }
-        }
+        self.moveObject(in: allRecipes, from: source, to: destination)
     }
 }
 

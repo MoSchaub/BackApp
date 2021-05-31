@@ -12,6 +12,8 @@ import Sqlable
 public protocol BakingRecipeSqlable: Sqlable, Identifiable, Codable, Hashable {
     var id: Int { get set }
     var name: String { get set }
+    var number: Int {get set}
     static var id: Column { get }
     static var name: Column { get }
+    static var number: Column { get }
 }

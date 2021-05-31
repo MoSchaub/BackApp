@@ -293,7 +293,10 @@ class Back_App_iOSUITests: XCTestCase {
         
         for substep in step.subSteps {
             appTables.staticTexts["add Ingredient"].tap()
+            
+            sleep(100)
             app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
+            sleep(100)
             app.sheets["select Step"].scrollViews.otherElements.buttons[substep.formattedName].tap()
             
             appTables.cells.staticTexts[substep.name].firstMatch.tap()

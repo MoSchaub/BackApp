@@ -7,6 +7,8 @@
 //
 
 import XCTest
+@testable import Back_App
+import BackAppCore
 
 class Back_App_iOSTests: XCTestCase {
 

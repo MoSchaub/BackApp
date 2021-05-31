@@ -154,4 +154,33 @@ public class BackAppData {
         ((try? T.read().filter(T.id == id).run(database)) ?? []).first
     }
     
+    /// all Objects of a specified type in the database
+    public func allObjects<Object:BakingRecipeSqlable>(type: Object.Type, filter: Expression? = nil) -> [Object] {
+        if let expression = filter {
+            return (try? Object.read().filter(expression).orderBy(Object.number, .asc).run(database)) ?? []
+        } else {
+            return  (try? Object.read().orderBy(Object.number, .asc).run(database)) ?? []
+        }
+    }
+    
+    
+    public func moveObject<T: BakingRecipeSqlable>(in array: [T] ,from source: Int, to destination: Int) {
+        var objectIds = array.map { $0.id }
+        
+        let removedObject = objectIds.remove(at: source)
+        objectIds.insert(removedObject, at: destination)
+        
+        var number = 0
+        for id in objectIds {
+            
+            //database operations need to be run from the main thread
+            DispatchQueue.main.async {
+                var object = self.object(with: id, of: T.self)!
+                object.number = number
+                number += 1
+                _ = self.update(object)
+            }
+        }
+    }
+    
 }

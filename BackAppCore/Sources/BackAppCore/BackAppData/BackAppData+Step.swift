@@ -12,18 +12,18 @@ public extension BackAppData {
     
     ///all steps in the database
     var allSteps: [Step] {
-        (try? Step.read().run(database)) ?? []
+        self.allObjects(type: Step.self)
     }
     
     ///all steps in a recipe
     func steps(with recipeId: Int) -> [Step] {
-        (try? Step.read().filter(.equalsValue(Step.recipeId, recipeId)).orderBy(Step.number, .asc).run(database)) ?? []
+        self.allObjects(type: Step.self, filter: .equalsValue(Step.recipeId, recipeId))
     }
     
     func stepsWithIngredientsOrSupersteps(in recipeId: Int, without stepId: Int) -> [Step] {
         let stepIdsOfIngredients = allIngredients.map { $0.stepId }
         
-        let substeps =  allSteps.filter({ $0.superStepId != nil } )
+        let substeps = allObjects(type: Step.self, filter: Step.superStepId != Null())
         let superstepIds = substeps.map { $0.superStepId! }
         
         let stepIdsWithIngredientsOrSubsteps: Set<Int> = Set(stepIdsOfIngredients + superstepIds).filter({ $0 != stepId })
@@ -32,18 +32,7 @@ public extension BackAppData {
     }
     
     func moveStep(with recipeId: Int, from source: Int, to destination: Int) {
-        var stepIds = reorderedSteps(for: recipeId).map { $0.id }
-        
-        let removedObject = stepIds.remove(at: source)
-        stepIds.insert(removedObject, at: destination)
-        
-        var number = 0
-        _ = stepIds.map {
-            var object = self.object(with: $0, of: Step.self)!
-            object.number = number
-            number += 1
-            _ = self.update(object)
-        }
+        self.moveObject(in: reorderedSteps(for: recipeId), from: source, to: destination)
     }
     
 }
