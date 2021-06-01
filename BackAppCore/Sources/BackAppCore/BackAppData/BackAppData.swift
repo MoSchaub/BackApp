@@ -34,7 +34,7 @@ public class BackAppData {
         /// create new database or use the existing one if it exist in the documents directory
         do {
             if debug {
-                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/debug.sqlite")
+                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/db.sqlite")
             }
             self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
         } catch {
@@ -155,7 +155,7 @@ public class BackAppData {
     }
     
     /// all Objects of a specified type in the database
-    public func allObjects<Object:BakingRecipeSqlable>(type: Object.Type, filter: Expression? = nil) -> [Object] {
+    public func allObjects<Object:BakingRecipeSqlable>(of type: Object.Type = Object.self, filter: Expression? = nil) -> [Object] {
         if let expression = filter {
             return (try? Object.read().filter(expression).orderBy(Object.number, .asc).run(database)) ?? []
         } else {

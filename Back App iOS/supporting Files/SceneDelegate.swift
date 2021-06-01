@@ -37,15 +37,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         // open file in app
-        let _ = URLContexts.map({ self.appData.open($0.url)})
-        compactHomeVC.dataSource.update(animated: true)
-        
-        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        
-        compactHomeVC.present(alert, animated: true)
+        let urls = URLContexts.map { $0.url}
+        for url in urls {
+            appData.open(url)
+        }
     }
 
 }

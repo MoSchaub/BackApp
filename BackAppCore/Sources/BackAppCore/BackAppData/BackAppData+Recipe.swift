@@ -22,12 +22,12 @@ public extension BackAppData {
     
     /// all Recipes in the database
     var allRecipes: [Recipe] {
-        self.allObjects(type: Recipe.self)
+        self.allObjects()
     }
     
     /// all favorited recipes in the database
     var favorites: [Recipe] {
-        self.allObjects(type: Recipe.self, filter: Recipe.isFavorite == true)
+        self.allObjects(filter: Recipe.isFavorite == true)
     }
     
     func moveRecipe(from source: Int, to destination: Int) {

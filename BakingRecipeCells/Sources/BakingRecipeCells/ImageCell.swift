@@ -13,7 +13,7 @@ public class ImageCell: CustomCell {
      public init(reuseIdentifier: String?, data: Data?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         if let data = data {
-            let image = UIImage(data: data) ?? Images.largePhoto
+            let image = UIImage(data: data, scale: 0.0001) ?? Images.largePhoto
             imageView?.image = image
             imageView?.contentMode = .scaleAspectFill
         } else {

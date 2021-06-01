@@ -49,7 +49,7 @@ private extension RecipeCell {
         guard let imageData = imageData else {
             return nil
         }
-        guard let image = UIImage(data: imageData) else {
+        guard let image = UIImage(data: imageData, scale: 0.0001) else {
             return nil
         }
         let height = self.bounds.height

@@ -10,11 +10,11 @@ import BakingRecipeFoundation
 public extension BackAppData {
     
     var allIngredients: [Ingredient] {
-        allObjects(type: Ingredient.self)
+        allObjects()
     }
     
     func ingredients(with stepId: Int) -> [Ingredient] {
-        allObjects(type: Ingredient.self, filter: .equalsValue(Ingredient.stepId, stepId))
+        allObjects(filter: .equalsValue(Ingredient.stepId, stepId))
     }
     
     func moveIngredient(with stepId: Int, from source: Int, to destination: Int) {

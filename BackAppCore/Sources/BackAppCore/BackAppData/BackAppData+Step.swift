@@ -12,23 +12,31 @@ public extension BackAppData {
     
     ///all steps in the database
     var allSteps: [Step] {
-        self.allObjects(type: Step.self)
+        self.allObjects()
     }
     
     ///all steps in a recipe
     func steps(with recipeId: Int) -> [Step] {
-        self.allObjects(type: Step.self, filter: .equalsValue(Step.recipeId, recipeId))
+        self.allObjects(filter: .equalsValue(Step.recipeId, recipeId))
     }
     
     func stepsWithIngredientsOrSupersteps(in recipeId: Int, without stepId: Int) -> [Step] {
+        ///get the step ids that contain ingredients
+        /// - NOTE:  a step can appear multiple times
         let stepIdsOfIngredients = allIngredients.map { $0.stepId }
         
-        let substeps = allObjects(type: Step.self, filter: Step.superStepId != Null())
+        //let substeps = allObjects(type: Step.self, filter: Step.superStepId != Null())
+        ///get all thes step ids that have substeps
+        /// step ids can appear multiple times
+        let substeps = steps(with: recipeId).filter {$0.superStepId != nil}
         let superstepIds = substeps.map { $0.superStepId! }
         
-        let stepIdsWithIngredientsOrSubsteps: Set<Int> = Set(stepIdsOfIngredients + superstepIds).filter({ $0 != stepId })
+        //put them together and make them unique with a set and filter out the current step and steps of other recipes
+        let stepIdsWithIngredientsOrSubsteps: Set<Int> = Set(stepIdsOfIngredients + superstepIds).filter({ $0 != stepId }).filter { id in  self.steps(with: recipeId).map{ step in step.id}.contains(id)}
+        //convert the ids to steps
+        let stepsWithIngredientsOrSubsteps = stepIdsWithIngredientsOrSubsteps.map { id in self.steps(with: recipeId).first(where: { step in step.id == id})!}
         
-        return stepIdsWithIngredientsOrSubsteps.map { object(with: $0, of: Step.self)!}.filter({ $0.recipeId == recipeId })
+        return stepsWithIngredientsOrSubsteps
     }
     
     func moveStep(with recipeId: Int, from source: Int, to destination: Int) {
