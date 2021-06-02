@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import SQLite3
-import Sqlable
 
 public enum Difficulty: Int, CaseIterable, Codable {
     case easy = 0
