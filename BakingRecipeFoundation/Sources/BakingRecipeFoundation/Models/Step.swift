@@ -10,7 +10,7 @@ import Foundation
 import BakingRecipeStrings
 import GRDB
 
-public struct Step: Equatable, Encodable {
+public struct Step: BakingRecipeRecord {
     
     /// unique id of the step
     ///optional so that you can instantiate a record before it gets inserted and gains an id (by `didInsert(with:for:)`)
@@ -52,7 +52,7 @@ public struct Step: Equatable, Encodable {
     
 }
 
-//MARK: -Formatted Properties
+//MARK: - Formatted Properties
 public extension Step {
     
     /// duration of the step formatted with the right unit
@@ -72,10 +72,10 @@ public extension Step {
     }
 }
 
-//MARK: -SQL
+//MARK: - SQL
 
 //MARK: SQL generation
-extension Step: TableRecord {
+public extension Step {
     /// define the table columns
     enum Columns {
         static let id = Column(CodingKeys.id)
@@ -89,7 +89,7 @@ extension Step: TableRecord {
     }
     
     /// Arange the selected columns and lock their order
-    public static let databaseSelection: [SQLSelectable] = [
+    static let databaseSelection: [SQLSelectable] = [
         Columns.id,
         Columns.name,
         Columns.duration,
@@ -102,9 +102,9 @@ extension Step: TableRecord {
 }
 
 //MARK: SQL Fetching
-extension Step: FetchableRecord {
+public extension Step {
     ///creates a record from a database row
-    public init(row: Row) {
+    init(row: Row) {
         // For high performance, use numeric indexes that match the
         /// order of `Step.databaseSelection`
         id = row[0]
@@ -119,15 +119,14 @@ extension Step: FetchableRecord {
 }
 
 //MARK: SQL Persistence methods
-extension Step: MutablePersistableRecord {
+public extension Step {
     /// Update auto-increment id upon succesfull insertion
-    mutating public func didInsert(with rowID: Int64, for column: String?) {
+    mutating func didInsert(with rowID: Int64, for column: String?) {
         id = rowID
     }
 }
 
-//TODO: - cascade delete,
-//TODO: - step database requests
+//TODO: cascade delete
 
 ///MARK: SQL Requests
 extension DerivableRequest where RowDecoder == Step {
@@ -149,6 +148,11 @@ extension DerivableRequest where RowDecoder == Step {
             .order(Step.Columns.duration.desc)
     }
     
+    public func filterNotSubsteps(with recipeId: Int64) -> Self {
+        filter(by: recipeId)
+            .filter(Step.Columns.superStepId == nil)
+    }
+    
     func filter(by recipeId: Int64) -> Self {
         filter(Step.Columns.recipeId == recipeId) /// filter recipeid
     }
@@ -161,7 +165,7 @@ extension Step {
     static let substeps = hasMany(Step.self, key: "substeps")
     static let superStep = belongsTo(Step.self, key: "superStep")
     
-    //static let recipeId = belongsTo(Recipe.self)
+    static let recipe = belongsTo(Recipe.self)
 }
 
 ///MARK: - Association methods

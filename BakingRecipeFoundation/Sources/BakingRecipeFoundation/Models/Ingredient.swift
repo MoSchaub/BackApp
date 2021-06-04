@@ -11,7 +11,7 @@ import BakingRecipeStrings
 import GRDB
 
 ///Ingredient in the Recipe
-public struct Ingredient: Equatable, Encodable {
+public struct Ingredient: BakingRecipeRecord {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
@@ -129,7 +129,7 @@ public extension Ingredient {
 }
 
 // SQL generation
-extension Ingredient: TableRecord {
+public extension Ingredient {
     /// the table columns
     enum Columns{
         static let id = Column(CodingKeys.id)
@@ -142,7 +142,7 @@ extension Ingredient: TableRecord {
     }
     
     /// Arange the seleted columns and lock their order
-    public static let databaseSelection: [SQLSelectable] = [
+    static let databaseSelection: [SQLSelectable] = [
         Columns.id,
         Columns.name,
         Columns.temperature,
@@ -154,9 +154,9 @@ extension Ingredient: TableRecord {
 }
 
 // Fetching methods
-extension Ingredient: FetchableRecord {
+public extension Ingredient {
     /// creates a record from a database row
-    public init(row: Row) {
+    init(row: Row) {
         /// For high performance, use numeric indexes that match the
         /// order of `Ingredient.databaseSelection`
         id = row[0]
@@ -170,9 +170,9 @@ extension Ingredient: FetchableRecord {
 }
 
 // Persistence methods
-extension Ingredient: MutablePersistableRecord {
+public extension Ingredient {
     
-    public func encode(to container: inout PersistenceContainer) {
+    func encode(to container: inout PersistenceContainer) {
         container[Columns.id] = id
         container[Columns.name] = name
         container[Columns.temperature] = temperature
@@ -183,7 +183,7 @@ extension Ingredient: MutablePersistableRecord {
     }
     
     /// Update auto-increment id upon successful insertion
-    mutating public func didInsert(with rowID: Int64, for column: String?) {
+    mutating func didInsert(with rowID: Int64, for column: String?) {
         id = rowID
     }
     
@@ -192,7 +192,7 @@ extension Ingredient: MutablePersistableRecord {
 // MARK: - Ingredient Database Requests
 
 /// Define some ingredient requests used by the application.
-extension DerivableRequest where RowDecoder == Ingredient {
+public extension DerivableRequest where RowDecoder == Ingredient {
     // A request of ingredients with a stepId ordered by number in ascending order.
     ///
     /// For example:
