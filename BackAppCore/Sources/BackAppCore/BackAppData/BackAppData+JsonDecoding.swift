@@ -16,26 +16,30 @@ public extension Notification.Name {
     static var alertShouldBePresented = Self.init(rawValue: "alertShouldBePresented")
 }
 
+///the title of an alert displayed in the ui
+public var inputAlertTitle = ""
+
+///the alert message for the same alert
+public var inputAlertMessage = ""
+
 public extension BackAppData {
     
     /// opens the data at a specified url and tries to import it as a recipe, sets alertTitle and Message
     func open(_ url: URL) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            if !databaseAutoUpdatesDisabled {
-                databaseAutoUpdatesDisabled = true
+//        DispatchQueue.global(qos: .userInitiated).async {
                 let loaded = url.loadData() //gets the data from the file at url
                 
                 if let loadedData = loaded.data { //make sure the data is succesfully loaded
                     if self.importData(loadedData) { //import the data into the internal database
                         
                         //set succes
-                        self.inputAlertTitle = Strings.success
-                        self.inputAlertTitle = Strings.recipesImported
+                        inputAlertTitle = Strings.success
+                        inputAlertTitle = Strings.recipesImported
                     } else {
                         
                         //send error message
-                        self.inputAlertTitle = Strings.Alert_Error
-                        self.inputAlertMessage = "" //TODO: add Error message like "error importing recipes"
+                        inputAlertTitle = Strings.Alert_Error
+                        inputAlertMessage = "" //TODO: add Error message like "error importing recipes"
                     }
                 }
                 
@@ -48,10 +52,7 @@ public extension BackAppData {
                 // make sure the last one displays the correct time since the updates are disabled
                 NotificationCenter.default.post(name: .recipesChanged, object: nil)
                 
-                //reenable the updates
-                databaseAutoUpdatesDisabled = false
-            }
-        }
+//        }
     }
     
     /// imports data containing recipes into the database
@@ -67,9 +68,8 @@ public extension BackAppData {
     }
     
     private func decodeAndImportRecipe(from json: JSON) {
-        let newId = self.newId(for: Recipe.self)
         
-        var recipe = Recipe(id: newId, number: 0)
+        var recipe = Recipe(number: 0)
         
         recipe.name = json[CodingKeys.name.rawValue].stringValue
         
@@ -88,18 +88,17 @@ public extension BackAppData {
         recipe.number = json[CodingKeys.number.rawValue].intValue
         
         //add the recipe
-        if insert(recipe), let stepsJson = json[CodingKeys.steps.rawValue].array {
+        save(&recipe)
+        if let stepsJson = json[CodingKeys.steps.rawValue].array {
             //decode and import the steps
-            _ = stepsJson.map { decodeAndImportStep(from: $0, with: newId, and: nil) }
+            _ = stepsJson.map { decodeAndImportStep(from: $0, with: recipe.id!, and: nil) }
         }
         
     }
     
-    private func decodeAndImportStep(from json: JSON, with recipeId: Int, and superstepId: Int?) {
+    private func decodeAndImportStep(from json: JSON, with recipeId: Int64, and superstepId: Int64?) {
 
-        let newId = self.newId(for: Step.self)
-
-        var step = Step(id: newId, recipeId: recipeId, number: 0)
+        var step = Step(recipeId: recipeId, number: 0)
 
         step.superStepId = superstepId
 
@@ -118,30 +117,27 @@ public extension BackAppData {
         }
         
         //insert into the database
-        if insert(step) {
+        save(&step)
         
-            //substeps
-            if let substepsJson = json[CodingKeys.substeps.rawValue].array {
-                
-                //do the same thing to the substeps
-                _ = substepsJson.map { decodeAndImportStep(from: $0, with: recipeId, and: step.id) }
-            }
+        //substeps
+        //substeps
+        if let substepsJson = json[CodingKeys.substeps.rawValue].array {
             
-            //ingredients
-            if let ingredientsJson = json[CodingKeys.ingredients.rawValue].array {
-                
-                //import the ingredients used in this step
-                _ = ingredientsJson.map { decodeAndImportIngredient(from: $0, with: step.id)  }
-            }
+            //do the same thing to the substeps
+            _ = substepsJson.map { decodeAndImportStep(from: $0, with: recipeId, and: step.id) }
+        }
         
+        //ingredients
+        if let ingredientsJson = json[CodingKeys.ingredients.rawValue].array {
+            
+            //import the ingredients used in this step
+            _ = ingredientsJson.map { decodeAndImportIngredient(from: $0, with: step.id!)  }
         }
     }
     
-    private func decodeAndImportIngredient(from json: JSON, with stepId: Int) {
+    private func decodeAndImportIngredient(from json: JSON, with stepId: Int64) {
         
-        let newId = self.newId(for: Ingredient.self)
-        
-        var ingredient = Ingredient(stepId: stepId, id: newId, number: 0)
+        var ingredient = Ingredient(stepId: stepId, number: 0)
         
         ingredient.name = json[CodingKeys.name.rawValue].stringValue
         
@@ -149,7 +145,7 @@ public extension BackAppData {
         
         ingredient.number = json[CodingKeys.number.rawValue].intValue
         
-        if let temperature = json[CodingKeys.temperature.rawValue].int {
+        if let temperature = json[CodingKeys.temperature.rawValue].double {
             ingredient.temperature = temperature
         }
         
@@ -157,7 +153,7 @@ public extension BackAppData {
         ingredient.type = Ingredient.Style(rawValue: typeDouble) ?? .other
         
         //insert it
-        _ = insert(ingredient)
+        save(&ingredient)
     }
     
 }

@@ -42,9 +42,9 @@ public struct Ingredient: BakingRecipeRecord {
             }
         }
         
-        public func massOfSelfIngredients(in step: Step, db: Database) -> Double {
+        public func massOfSelfIngredients(in step: Step, reader: DatabaseReader) -> Double {
             var mass = 0.0
-            _ = step.ingredients(db: db).filter { $0.type == self }.map { mass += $0.mass}
+            _ = step.ingredients(reader: reader).filter { $0.type == self }.map { mass += $0.mass}
             return mass
         }
     }
@@ -59,7 +59,7 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// temp the ingredient should have
     /// - NOTE: The temperature only has a value if the ingredient is a bulkLiquid
-    public var temperature: Int?
+    public var temperature: Double?
     
     /// mass of the ingredient
     public var mass: Double
@@ -132,13 +132,13 @@ public extension Ingredient {
 public extension Ingredient {
     /// the table columns
     enum Columns{
-        static let id = Column(CodingKeys.id)
-        static let name = Column(CodingKeys.name)
-        static let temperature = Column(CodingKeys.temperature)
-        static let mass = Column(CodingKeys.mass)
-        static let c = Column(CodingKeys.c)
-        static let stepId = Column(CodingKeys.stepId)
-        static let number = Column(CodingKeys.number)
+        public static let id = Column(CodingKeys.id)
+        public static let name = Column(CodingKeys.name)
+        public static let temperature = Column(CodingKeys.temperature)
+        public static let mass = Column(CodingKeys.mass)
+        public static let c = Column(CodingKeys.c)
+        public static let stepId = Column(CodingKeys.stepId)
+        public static let number = Column(CodingKeys.number)
     }
     
     /// Arange the seleted columns and lock their order
@@ -192,7 +192,7 @@ public extension Ingredient {
 // MARK: - Ingredient Database Requests
 
 /// Define some ingredient requests used by the application.
-public extension DerivableRequest where RowDecoder == Ingredient {
+extension DerivableRequest where RowDecoder == Ingredient {
     // A request of ingredients with a stepId ordered by number in ascending order.
     ///
     /// For example:
@@ -200,9 +200,17 @@ public extension DerivableRequest where RowDecoder == Ingredient {
     ///     let ingredients: [Ingredient] = try dbWriter.read { db in
     ///         try Ingredient.all().orderedByNumber().fetchAll(db)
     ///     }
-    func orderedByNumber(with stepId: Int64) -> Self {
-        filter(Ingredient.Columns.stepId == stepId) /// filter stepid
+    public func orderedByNumber(with stepId: Int64) -> Self {
+        filter(by: stepId)/// filter stepid
             .order(Ingredient.Columns.number) // sort by number in ascending order (asc is the default)
-            
     }
+    
+    public func filter(by stepId: Int64) -> Self {
+        filter(Ingredient.Columns.stepId == stepId) /// filter stepId
+    }
+}
+
+//MARK: - Associations
+public extension Ingredient {
+    static let step = belongsTo(Step.self)
 }

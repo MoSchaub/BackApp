@@ -59,7 +59,7 @@ public struct Recipe: BakingRecipeRecord {
     }
     
     /// formatted text for times
-    var timesText: String{
+    public var timesText: String{
         get{
             if self.times != nil {
                 return times!.description + " " +
@@ -137,16 +137,16 @@ public extension Recipe {
     
     /// define the table columns
     enum Columns {
-        static let id = Column(CodingKeys.id)
-        static let name = Column(CodingKeys.name)
-        static let info = Column(CodingKeys.info)
-        static let isFavorite = Column(CodingKeys.isFavorite)
-        static let difficulty = Column(CodingKeys.difficulty)
-        static let inverted = Column(CodingKeys.inverted)
-        static let times = Column(CodingKeys.times)
-        static let date = Column(CodingKeys.date)
-        static let imageData = Column(CodingKeys.imageData)
-        static let number = Column(CodingKeys.number)
+        public static let id = Column(CodingKeys.id)
+        public static let name = Column(CodingKeys.name)
+        public static let info = Column(CodingKeys.info)
+        public static let isFavorite = Column(CodingKeys.isFavorite)
+        public static let difficulty = Column(CodingKeys.difficulty)
+        public static let inverted = Column(CodingKeys.inverted)
+        public static let times = Column(CodingKeys.times)
+        public static let date = Column(CodingKeys.date)
+        public static let imageData = Column(CodingKeys.imageData)
+        public static let number = Column(CodingKeys.number)
     }
     
     /// Arange the selected columns and lock their order
@@ -175,7 +175,7 @@ public extension Recipe {
         name = row[1]
         info = row[2]
         isFavorite = row[3]
-        difficulty = row[4]
+        difficulty = Difficulty(rawValue: row[4]) ?? Difficulty.easy
         inverted = row[5]
         times = row[6]
         date = row[7]
@@ -232,8 +232,10 @@ public extension Recipe {
 public extension Recipe {
     
     /// steps of the recipe
-    private func steps(db: Database) -> [Step] {
-        (try? Step.all().orderedByNumber(with: self.id!).fetchAll(db)) ?? []
+    private func steps(reader: DatabaseReader) -> [Step] {
+        (try? reader.read { db in
+            try? Step.all().orderedByNumber(with: self.id!).fetchAll(db)
+        }) ?? []
     }
     
     /// total duration of all the steps
@@ -246,26 +248,26 @@ public extension Recipe {
     }
     
     ///starting date
-    func startDate(db: Database) -> Date {
+    func startDate(reader: DatabaseReader) -> Date {
         if !inverted {
             return date
         } else {
-            return date.addingTimeInterval(TimeInterval(-(totalDuration(steps: steps(db: db)) * 60)))
+            return date.addingTimeInterval(TimeInterval(-(totalDuration(steps: steps(reader: reader)) * 60)))
         }
     }
     
     ///end date
-    func endDate(db: Database) -> Date {
+    func endDate(reader: DatabaseReader) -> Date {
         if inverted {
             return date
         } else {
-            return date.addingTimeInterval(TimeInterval(totalDuration(steps: steps(db: db)) * 60))
+            return date.addingTimeInterval(TimeInterval(totalDuration(steps: steps(reader: reader)) * 60))
         }
     }
     
     /// the startDateText for a given Step in this recipe
-    func formattedStartDate(for item: Step, db: Database) -> String {
-        let datesDict = startDatesDictionary(db: db)
+    func formattedStartDate(for item: Step, reader: DatabaseReader) -> String {
+        let datesDict = startDatesDictionary(reader: reader)
         if let date = datesDict[item] {
             return dateFormatter.string(from: date)
         }
@@ -273,11 +275,11 @@ public extension Recipe {
     }
     
     ///dictonary with the step and the corresponding startdate
-    private func startDatesDictionary(db: Database) -> [Step : Date]{
+    private func startDatesDictionary(reader: DatabaseReader) -> [Step : Date]{
         var dict = [Step : Date]()
-        var h = startDate(db: db)
-        for step in self.notSubsteps(db: db) {
-            let stepDates = startDates(for: step, h: h, db: db)
+        var h = startDate(reader: reader)
+        for step in self.notSubsteps(reader: reader) {
+            let stepDates = startDates(for: step, h: h, reader: reader)
             dict.append(contentsOf: stepDates.dict)
             h = stepDates.h
             
@@ -287,19 +289,19 @@ public extension Recipe {
     }
     
     ///Tuple with a start date and a startDates dictionary
-    private func startDates(for step: Step, h: Date, db: Database) -> (h: Date, dict: [Step : Date]) {
+    private func startDates(for step: Step, h: Date, reader: DatabaseReader) -> (h: Date, dict: [Step : Date]) {
         var dict = [Step : Date]()
         var h = h
-        var sortedSubs = step.sortedSubsteps(db: db)
+        var sortedSubs = step.sortedSubsteps(reader: reader)
         if let first = sortedSubs.first { //get the longest sub
             sortedSubs.removeFirst() //remove so it does not get used twice
-            let firstDates = startDates(for: first, h: h, db: db)
+            let firstDates = startDates(for: first, h: h, reader: reader)
             dict.append(contentsOf: firstDates.dict)
             h = firstDates.h
             
             let subEndDate = h.addingTimeInterval(first.duration) //data when all substebs of the step should end
             for sub in sortedSubs {
-                let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-(sub.duration)), db: db)
+                let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-(sub.duration)), reader: reader)
                 dict.append(contentsOf: subDates.dict)
             }
             
@@ -311,16 +313,18 @@ public extension Recipe {
     }
     
     /// steps that are no substeps of any other step
-    func notSubsteps(db: Database) -> [Step] {
-        (try? Step.all().filterNotSubsteps(with: self.id!).fetchAll(db)) ?? []
+    func notSubsteps(reader: DatabaseReader) -> [Step] {
+        (try? reader.read { db in
+            try? Step.all().filterNotSubsteps(with: self.id!).fetchAll(db)
+        }) ?? []
     }
     
     //reorderSteps to make sense
-    func reorderedSteps(db: Database) -> [Step] {
+    func reorderedSteps(writer: DatabaseWriter) -> [Step] {
         var steps = [Step]()
         var number = 0
-        for step in self.notSubsteps(db: db) {
-            let stepReodereredSteps = step.stepsForReodering(db: db, number: number)
+        for step in self.notSubsteps(reader: writer) {
+            let stepReodereredSteps = step.stepsForReodering(writer: writer, number: number)
             steps.append(contentsOf: stepReodereredSteps.steps)
             
             number = stepReodereredSteps.number
@@ -331,15 +335,15 @@ public extension Recipe {
     }
     
     ///text for exporting
-    func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, db: Database) -> String {
-        var h = startDate(db: db)
+    func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String {
+        var h = startDate(reader: reader)
         var text = ""
         
-        for step in notSubsteps(db: db) {
-            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, db: db)
+        for step in notSubsteps(reader: reader) {
+            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
             h = h.addingTimeInterval(step.duration)
         }
-        text += "Fertig: \(dateFormatter.string(from: endDate(db: db)))"
+        text += "Fertig: \(dateFormatter.string(from: endDate(reader: reader)))"
         return text
     }
 

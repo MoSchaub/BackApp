@@ -38,7 +38,7 @@ public extension BackAppData {
     
     //encodes recipes with its steps and ingredients to a .bakingAppRecipeFile
     func exportRecipesToFile(recipes: [Recipe]) -> URL {
-        let recipesJSON = recipes.map { encodeRecipeToJson(with: $0.id) }
+        let recipesJSON = recipes.map { encodeRecipeToJson(with: $0.id!) }
         
         let json: JSON = [
             CodingKeys.recipes.rawValue:recipesJSON
@@ -58,12 +58,12 @@ public extension BackAppData {
         return url
     }
     
-    private func encodeRecipeToJson(with id: Int) -> JSON {
-        guard let recipe = object(with: id, of: Recipe.self) else {
+    private func encodeRecipeToJson(with id: Int64) -> JSON {
+        guard let recipe = record(with: id, of: Recipe.self) else {
             return JSON()
         }
         
-        let steps = self.notSubsteps(for: id).map { encodeStepToJson(with: $0.id)}
+        let steps = self.notSubsteps(for: id).map { encodeStepToJson(with: $0.id!)}
         
         var json: JSON = [
             CodingKeys.name.rawValue:recipe.name,
@@ -85,14 +85,14 @@ public extension BackAppData {
         return json
     }
     
-    private func encodeStepToJson(with id: Int) -> JSON {
+    private func encodeStepToJson(with id: Int64) -> JSON {
         
-        guard let step = object(with: id, of: Step.self) else {
+        guard let step = record(with: id, of: Step.self) else {
             return JSON()
         }
         
-        let ingredients = self.ingredients(with: step.id).map { encodeIngredientToJson(with: $0.id) }
-        let substeps = self.substeps(for: step.id).map { encodeStepToJson(with: $0.id) }
+        let ingredients = self.ingredients(with: step.id!).map { encodeIngredientToJson(with: $0.id!) }
+        let substeps = self.sortedSubsteps(for: step.id!)
         
         
         var json: JSON = [
@@ -113,9 +113,9 @@ public extension BackAppData {
         return json
     }
     
-    private func encodeIngredientToJson(with id: Int) -> JSON {
+    private func encodeIngredientToJson(with id: Int64) -> JSON {
 
-        guard let ingredient = object(with: id, of: Ingredient.self) else {
+        guard let ingredient = record(with: id, of: Ingredient.self) else {
             return JSON()
         }
         
@@ -127,7 +127,7 @@ public extension BackAppData {
         ]
         
         if let temperature = ingredient.temperature {
-            json[CodingKeys.temperature.rawValue].int = temperature
+            json[CodingKeys.temperature.rawValue].double = temperature
         }
         
         return json

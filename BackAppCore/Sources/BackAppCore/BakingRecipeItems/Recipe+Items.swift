@@ -27,18 +27,18 @@ public extension Recipe {
     }
     
     func controlStripItems(creating: Bool, appData: BackAppData) -> [Item] {
-        let infoStripItem = InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id), formattedDuration: appData.formattedTotalDurationHours(for: self.id), doughYield: appData.formattedTotalDoughYield(for: self.id))
+        let infoStripItem = InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
         return creating ? [infoStripItem] : [infoStripItem, DetailItem(name: Strings.startRecipe)]
     }
     
     func stepItems(appData: BackAppData) -> [StepItem] {
-        let steps = appData.reorderedSteps(for: self.id)
-        return steps.map({ StepItem(id: $0.id, step: $0)})
+        let steps = appData.reorderedSteps(for: self.id!)
+        return steps.map({ StepItem(id: $0.id!, step: $0)})
     }
     
     
     /// items for all steps in right order
     func allReoderedStepItems(appData: BackAppData) -> [StepItem] {
-        appData.reorderedSteps(for: self.id).map({ StepItem(id: $0.id, step: $0)})
+        appData.reorderedSteps(for: self.id!).map({ StepItem(id: $0.id!, step: $0)})
     }
 }

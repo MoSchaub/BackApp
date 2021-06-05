@@ -9,7 +9,7 @@
 import Foundation
 import GRDB
 
-public enum Difficulty: Int, CaseIterable, Codable, DatabaseValueConvertible  {
+public enum Difficulty: Int, CaseIterable, Codable {
     case easy = 0
     case medium = 1
     case hard = 2

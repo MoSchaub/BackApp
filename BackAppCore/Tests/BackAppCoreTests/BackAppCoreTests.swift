@@ -1,66 +1,156 @@
 import XCTest
 @testable import BackAppCore
 @testable import BakingRecipeFoundation
+@testable import GRDB
 
 final class BackAppCoreTests: XCTestCase {
     
-    func testInsertingExample() {
+    override func setUp() {
+        let appData = BackAppData.shared
+        try! appData.deleteAll(of: Recipe.self)
+        
+    }
+    
+    func testRecipeDatabaseSchema() throws {
+        // Given an empty database
+        let dbQueue = DatabaseQueue()
+        
+        // When we instantiate an BackAppData
+        _ = try BackAppData(dbQueue)
+        
+        // Then the recipe table exists with its columns
+        try dbQueue.read { db in
+            try XCTAssert(db.tableExists("Recipe"))
+            let columns = try db.columns(in: "Recipe")
+            let columnNames = Set(columns.map { $0.name })
+            XCTAssertEqual(columnNames, ["id", "name", "info", "isFavorite", "difficulty", "inverted", "times", "date", "imageData", "number"])
+        }
+    }
+    
+    func testStepDatabaseSchema() throws {
+        // Given an empty database
+        let dbQueue = DatabaseQueue()
+        
+        // When we instantiate an BackAppData
+        _ = try BackAppData(dbQueue)
+        
+        // Then the step table exists with its columns
+        try dbQueue.read { db in
+            try XCTAssert(db.tableExists("Step"))
+            let columns = try db.columns(in: "Step")
+            let columnNames = Set(columns.map { $0.name })
+            XCTAssertEqual(columnNames, ["id", "name", "duration", "temperature", "notes", "recipeId", "superStepId", "number"])
+        }
+    }
+    
+    func testIngredientDatabaseSchema() throws {
+        // Given an empty database
+        let dbQueue = DatabaseQueue()
+        
+        // When we instantiate an BackAppData
+        _ = try BackAppData(dbQueue)
+        
+        // Then the ingredient table exists with its columns
+        try dbQueue.read { db in
+            try XCTAssert(db.tableExists("ingredient"))
+            let columns = try db.columns(in: "Ingredient")
+            let columnNames = Set(columns.map { $0.name })
+            XCTAssertEqual(columnNames, ["id", "name", "temperature", "mass", "c", "stepId", "number"])
+        }
+    }
+    
+    
+    
+    func testInsertingExample() throws {
         let recipeExample = Recipe.example
         var recipe = recipeExample.recipe
+        let appData = BackAppData.shared
         
-        let appData = BackAppData(debug: true)
+        appData.save(&recipe)
+        try XCTAssertTrue(appData.databaseReader.read(recipe.exists))
         
+        let id = recipe.id!
         
-        recipe.id = appData.newId(for: Recipe.self)
+        let stepIngredients = recipeExample.stepIngredients
         
-        XCTAssertTrue(appData.insert(recipe))
-        
-        XCTAssertTrue(appData.object(with: recipe.id, of: Recipe.self) != nil)
-        
-        let stepsIngredients = recipeExample.stepIngredients
-        
-        _ = stepsIngredients.map { insert(stepIngredients: $0, recipeId: recipe.id)}
-        
-        return 
+        _ = try stepIngredients.map {
+            var step = $0.step
+            step.recipeId = id
+            appData.save(&step)
+            try XCTAssertTrue(appData.databaseReader.read(step.exists))
+            
+            let stepId = step.id!
+            
+            for ingredient in $0.ingredients {
+                var ingredient = ingredient
+                ingredient.stepId = stepId
+                appData.save(&ingredient)
+                try XCTAssert(appData.databaseReader.read(ingredient.exists))
+            }
+        }
     }
     
-    func insert(stepIngredients: (step: Step, ingredients: [Ingredient]), recipeId: Int) {
-
-        let appData = BackAppData()
-
-        var step = stepIngredients.step
-        step.recipeId = recipeId
-
-        step.id = appData.newId(for: Step.self)
-
-        XCTAssertTrue(appData.insert(step))
-
-        XCTAssertTrue(appData.object(with: step.id, of: Step.self) != nil)
-        XCTAssertTrue(appData.object(with: step.id, of: Step.self)! == step)
-
-        _ = stepIngredients.ingredients.map { insert(ingredient: $0, with: step.id) }
+    func testUpdatingExample() throws {
+        try testInsertingExample()
+        
+        let appData = BackAppData.shared
+        
+        let recipeExample = Recipe.example
+        
+        var recipe = appData.allRecords(of: Recipe.self).first(where: { $0.name == recipeExample.recipe.name })!
+        
+        recipe.difficulty = .medium
+        
+        appData.save(&recipe)
+        
+        XCTAssert(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
+        
+        _ = try recipeExample.stepIngredients.map { try update(stepIngredients: $0, recipeId: recipe.id!)}
     }
     
-    func insert(ingredient: Ingredient, with stepId: Int) {
-        let appData = BackAppData()
-
-        var ingredient = ingredient
-
-        ingredient.id = appData.newId(for: Ingredient.self)
-        ingredient.stepId = stepId
-
-        XCTAssert(appData.insert(ingredient))
+    
+    func update(stepIngredients: (step: Step, ingredients: [Ingredient]), recipeId: Int64) throws {
         
-        XCTAssert(appData.object(with: ingredient.id, of: Ingredient.self) != nil)
-        XCTAssert(appData.object(with: ingredient.id, of: Ingredient.self)! == ingredient)
-        return
+        let appData = BackAppData.shared
+        
+        var step = try appData.databaseReader.read { db in
+            try Step.all().filter(by: recipeId).filter( Step.Columns.name == stepIngredients.step.name ).fetchOne(db)
+        }
+        
+        XCTAssert(step != nil)
+        
+        step!.duration = 10000
+        
+        appData.save(&step!)
+        
+        XCTAssert(appData.record(with: step!.id!, of: Step.self)!.duration == 10000)
+        
+        _ = try stepIngredients.ingredients.map { try update(ingredient: $0, with: step!.id!)}
     }
     
-    func testExportingAndImporting() {
+    func update(ingredient: Ingredient, with stepId: Int64) throws {
         
-        var appData = BackAppData()
+        let appData = BackAppData.shared
         
-        self.testInsertingExample()
+        var ingredient = try appData.databaseReader.read { db in
+            try Ingredient.all().filter(by: stepId).fetchOne(db)
+        }
+        
+        XCTAssert(ingredient != nil)
+        
+        ingredient!.mass += 1
+        
+        appData.save(&ingredient!)
+        //XCTAssert(appData.update(ingredient!))
+        
+        XCTAssert(appData.record(with: ingredient!.id!, of: Ingredient.self)!.mass == ingredient!.mass)
+    }
+
+    
+    func testExportingAndImporting() throws{
+        try self.testInsertingExample()
+        
+        let appData = BackAppData.shared
         
         let recipes = appData.allRecipes
         let steps = appData.allSteps
@@ -68,7 +158,7 @@ final class BackAppCoreTests: XCTestCase {
         
         let url = appData.exportAllRecipesToFile()
         
-        appData = BackAppData(debug: true)
+        try appData.deleteAll(of: Recipe.self)
         
         appData.open(url)
         
@@ -84,82 +174,64 @@ final class BackAppCoreTests: XCTestCase {
             XCTAssert(appData.allIngredients.first(where: { $0.name == ingredient.name }) != nil)
         }
     }
-    
-    func testUpdatingExample() {
-        testInsertingExample()
+
+
+    func testDeletingExample() throws {
+        try testInsertingExample()
         
-        let appData = BackAppData()
-        
-        let recipeExample = Recipe.example
-        
-        var recipe = appData.allRecipes.first(where: { $0.name == recipeExample.recipe.name })
-        
-        XCTAssert(recipe != nil)
-    
-        recipe!.difficulty = .medium
-        
-        XCTAssert(appData.update(recipe!))
-        
-        XCTAssert(appData.object(with: recipe!.id, of: Recipe.self)!.difficulty == .medium)
-        
-        _ = recipeExample.stepIngredients.map { update(stepIngredients: $0, recipeId: recipe!.id)}
-    }
-    
-    func update(stepIngredients: (step: Step, ingredients: [Ingredient]), recipeId: Int) {
-        
-        let appData = BackAppData()
-        
-        var step = appData.steps(with: recipeId).first(where: { $0.name == stepIngredients.step.name })
-        
-        XCTAssert(step != nil)
-        
-        step!.duration = 10000
-        
-        XCTAssert(appData.update(step!))
-        
-        XCTAssert(appData.object(with: step!.id, of: Step.self)!.duration == 10000)
-        
-        _ = stepIngredients.ingredients.map { update(ingredient: $0, with: step!.id)}
-    }
-    
-    func update(ingredient: Ingredient, with stepId: Int) {
-        
-        let appData = BackAppData()
-        
-        var ingredient = appData.ingredients(with: stepId).first(where: { $0.name == ingredient.name })
-        
-        ingredient?.mass += 1
-        
-        XCTAssert(appData.update(ingredient!))
-        
-        XCTAssert(appData.object(with: ingredient!.id, of: Ingredient.self)!.mass == ingredient!.mass)
-    }
-    
-    func testDeletingExample() {
-        testInsertingExample()
-        
-        let appData = BackAppData()
+        let appData = BackAppData.shared
         
         let recipeExample = Recipe.example
         
-        let recipe = appData.allRecipes.first(where: { $0.name == recipeExample.recipe.name })
-        let recipeId = recipe!.id
-        
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
+        }
         XCTAssert(recipe != nil)
+        let recipeId = recipe!.id!
         
-        let stepIds = appData.steps(with: recipeId).map { $0.id }
+        let stepIds = try appData.databaseReader.read { db in
+            try Step.all().filter(by: recipeId).fetchAll(db).map { $0.id! }
+        }
         
         XCTAssert(appData.delete(recipe!))
         
-        XCTAssertFalse(appData.object(with: recipeId, of: Recipe.self) != nil)
-        XCTAssertTrue(appData.steps(with: recipeId).isEmpty)
-        _ = stepIds.map {
-            XCTAssertTrue(appData.ingredients(with: $0).isEmpty)
+        XCTAssertFalse(appData.record(with: recipeId, of: Recipe.self) != nil)
+        let steps = try appData.databaseReader.read { db in
+            try Step.all().filter(by: recipeId).fetchAll(db)
+        }
+        XCTAssertTrue(steps.isEmpty)
+        _ = try stepIds.map { stepId in
+            let ingredients = try appData.databaseReader.read { db in
+                try Ingredient.all().filter(by: stepId).fetchAll(db)
+            }
+            XCTAssertTrue(ingredients.isEmpty)
         }
         
     }
     
+    func testNumberOfAllIngredients() throws {
+        try testInsertingExample()
+        
+        let appData = BackAppData.shared
+        
+        let recipeExample = Recipe.example
+        
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil)
+        let recipeId = recipe!.id!
+        
+        
+        
+        XCTAssert(appData.numberOfAllIngredients(for: recipeId) == 5)
+
+    }
+    
     static var allTests = [
+        ("testRecipeDatabaseSchema", testRecipeDatabaseSchema(BackAppCoreTests())),
+        ("testStepDatabaseSchema", testStepDatabaseSchema(BackAppCoreTests())),
+        ("testIngredientDatabaseSchema",testIngredientDatabaseSchema(BackAppCoreTests())),
         ("testInsertingExample", testInsertingExample(BackAppCoreTests())),
         ("testExportingAndImporting", testExportingAndImporting(BackAppCoreTests())),
         ("testUpdatingExample", testUpdatingExample(BackAppCoreTests())),
