@@ -90,6 +90,71 @@ final class BackAppCoreTests: XCTestCase {
         }
     }
     
+    func testInsertingComplexRecipe() throws {
+        let complexRecipe = Recipe.complexExample(number: 0)
+        var recipe = complexRecipe.recipe
+        let appData = BackAppData.shared
+        
+        appData.save(&recipe)
+        try XCTAssert(appData.databaseReader.read(recipe.exists))
+        
+        let recipeId = recipe.id!
+        
+        let stepIngredients = complexRecipe.stepIngredients
+        
+        var previousStepId: Int64?
+        
+        _ = try stepIngredients.map {
+            var step = $0.step
+            step.recipeId = recipeId
+            
+            if step.superStepId != nil, let previousStepId = previousStepId {
+                step.superStepId = previousStepId
+            }
+            appData.save(&step)
+            
+            try XCTAssertTrue(appData.databaseReader.read(step.exists))
+            
+            let stepId = step.id!
+            previousStepId = stepId
+            
+            for ingredient in $0.ingredients {
+                var ingredient = ingredient
+                ingredient.stepId = stepId
+                appData.save(&ingredient)
+                try XCTAssert(appData.databaseReader.read(ingredient.exists))
+            }
+        }
+    }
+    
+    func insertExampleRecipeAndGetId() throws -> Int64 {
+        try testInsertingExample()
+        
+        let appData = BackAppData.shared
+        
+        let recipeExample = Recipe.example
+        
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil)
+        return recipe!.id!
+    }
+    
+    func insertComplexRecipeAndGetId() throws -> Int64 {
+        try testInsertingComplexRecipe()
+        
+        let appData = BackAppData.shared
+        
+        let complexRecipeExample = Recipe.complexExample(number: 0)
+        
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == complexRecipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil)
+        return recipe!.id!
+    }
+    
     func testUpdatingExample() throws {
         try testInsertingExample()
         
@@ -106,6 +171,24 @@ final class BackAppCoreTests: XCTestCase {
         XCTAssert(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
         
         _ = try recipeExample.stepIngredients.map { try update(stepIngredients: $0, recipeId: recipe.id!)}
+    }
+    
+    func testUpdatingComplexRecipe() throws {
+        try testInsertingComplexRecipe()
+        
+        let appData = BackAppData.shared
+        
+        let complexRecipeExample = Recipe.complexExample(number: 0)
+        
+        var recipe = appData.allRecords(of: Recipe.self).first(where: { $0.name == complexRecipeExample.recipe.name })!
+        
+        recipe.difficulty = .medium
+        
+        appData.save(&recipe)
+        
+        XCTAssert(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
+        
+        _ = try complexRecipeExample.stepIngredients.map { try update(stepIngredients: $0, recipeId: recipe.id!)}
     }
     
     
@@ -210,22 +293,50 @@ final class BackAppCoreTests: XCTestCase {
     }
     
     func testNumberOfAllIngredients() throws {
-        try testInsertingExample()
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.numberOfAllIngredients(for: recipeId) == 5)
         
-        let appData = BackAppData.shared
+        let complexId = try insertComplexRecipeAndGetId()
+        XCTAssert(BackAppData.shared.numberOfAllIngredients(for: complexId) == 4)
+    }
+    
+    func testTotalDurationOfRecipe() throws {
         
-        let recipeExample = Recipe.example
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.totalDuration(for: recipeId) == 20)
         
-        let recipe = try appData.databaseReader.read { db in
-            try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
-        }
-        XCTAssert(recipe != nil)
-        let recipeId = recipe!.id!
+        let complexId = try insertComplexRecipeAndGetId()
+        XCTAssert(BackAppData.shared.totalDuration(for: complexId) == 31)
+    }
+    
+    func testFormattedTotalDurationOfRecipe() throws {
         
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.formattedTotalDuration(for: recipeId) == "20 minutes")
         
+        let complexId = try insertComplexRecipeAndGetId()
+        XCTAssert(BackAppData.shared.formattedTotalDuration(for: complexId) == "31 minutes")
+    }
+    
+    func testTotalFormattedAmountOfRecipe() throws {
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.totalFormattedAmount(for: recipeId) == "245.0 g")
         
-        XCTAssert(appData.numberOfAllIngredients(for: recipeId) == 5)
-
+        let complexId = try insertComplexRecipeAndGetId()
+        XCTAssert(BackAppData.shared.totalFormattedAmount(for: complexId) == "600.0 g")
+    }
+    
+    func testFormattedTotalDoughYield() throws {
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: recipeId) == "80.00")
+        
+        let complexId = try insertComplexRecipeAndGetId()
+        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: complexId) == "50.00")
+    }
+    
+    func testText() throws {
+        let recipeId = try insertExampleRecipeAndGetId()
+        XCTAssert(BackAppData.shared.text(for: recipeId, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Mischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20.0° C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nFertig: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(BackAppData.shared.totalDuration(for: recipeId) * 60))))")
     }
     
     static var allTests = [
@@ -236,5 +347,7 @@ final class BackAppCoreTests: XCTestCase {
         ("testExportingAndImporting", testExportingAndImporting(BackAppCoreTests())),
         ("testUpdatingExample", testUpdatingExample(BackAppCoreTests())),
         ("testDeletingExample", testDeletingExample(BackAppCoreTests())),
+        ("testNumberOfAllIngredients",testNumberOfAllIngredients(BackAppCoreTests())),
+        ("testTotalDurationOfRecipe", testTotalDurationOfRecipe(BackAppCoreTests()))
     ]
 }

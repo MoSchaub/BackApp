@@ -110,14 +110,15 @@ public extension Recipe {
     
     static func complexExample(number: Int) -> (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
         let recipe = Recipe(name: "Komplexes Rezept", number: number)
-        let sub = Step(name: "Sauerteig", temperature: 30, recipeId: Int64(number), number: 0)
-        let mehl = Ingredient(stepId: 0, name: "Mehl", amount: 200, type: .flour, number: 0)
-        let wasser = Ingredient(stepId: 0, name: "Wasser", amount: 100, type: .bulkLiquid, number: 1)
-        let step = Step(name: "Hauptteig", duration: 1800, temperature: 26, recipeId: Int64(number), number: 1)
-        let mehl2 = Ingredient(stepId: 1, name: "Mehl", amount: 200, type: .flour, number: 0)
-        let wasser2 = Ingredient(stepId: 1, name: "Wasser", amount: 100, type: .bulkLiquid, number: 1)
+        var sub = Step(name: "Sauerteig", temperature: 30, recipeId: Int64(number), number: 1)
+        sub.superStepId = 1
+        let mehl = Ingredient(stepId: 1, name: "Mehl", amount: 200, type: .flour, number: 0)
+        let wasser = Ingredient(stepId: 1, name: "Wasser", amount: 100, type: .bulkLiquid, number: 1)
+        let step = Step(name: "Hauptteig", duration: 1800, temperature: 26, recipeId: Int64(number), number: 0)
+        let mehl2 = Ingredient(stepId: 0, name: "Mehl", amount: 200, type: .flour, number: 0)
+        let wasser2 = Ingredient(stepId: 0, name: "Wasser", amount: 100, type: .bulkLiquid, number: 1)
         
-        return (recipe, [(sub, [mehl, wasser]), (step, [mehl2, wasser2])])
+        return (recipe, [(step, [mehl2, wasser2]), (sub, [mehl, wasser])])
     }
     
     ///recipe prepared for exporting

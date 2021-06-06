@@ -241,26 +241,31 @@ public extension Step {
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
-    func temperature(for ingredient: Ingredient, roomTemp: Double, kneadingHeating: Double, reader: DatabaseReader) -> Double {
+    func temperature(roomTemp: Double, kneadingHeating: Double, reader: DatabaseReader) -> Double {
         
         var sumMassCProductAll = 0.0
         _ = ingredients(reader: reader).map { sumMassCProductAll += $0.massCProduct }
         _ = self.sortedSubsteps(reader: reader).map { sumMassCProductAll += $0.massCProduct(reader: reader)}
         
         var sumMassCTempProductRest = 0.0
-        _ = ingredients(reader: reader).filter { $0 != ingredient }.map { sumMassCTempProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
+        _ = ingredients(reader: reader).filter { $0.type != .bulkLiquid }.map { sumMassCTempProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
         _ = sortedSubsteps(reader: reader).map { sumMassCTempProductRest += $0.massCTempProduct(reader: reader, superTemp: self.temperature ?? roomTemp)}
         
-        let ingredientMassCProduct = ingredient.massCProduct
+        let bulkIngredients = ingredients(reader: reader).filter { $0.type == .bulkLiquid}
+        var bulkingredientsMassCProduct = 0.0
+        for bulkIngredient in bulkIngredients {
+            bulkingredientsMassCProduct += bulkIngredient.massCProduct
+        }
+        
         let roomTemp = Double(roomTemp)
         
         let temperature = (self.temperature ?? roomTemp) - kneadingHeating
         
-        guard ingredientMassCProduct != 0.0 else {
+        guard bulkingredientsMassCProduct != 0.0 else {
             return roomTemp
         }
         
-        return ((sumMassCProductAll * temperature) - sumMassCTempProductRest)/ingredientMassCProduct
+        return ((sumMassCProductAll * temperature) - sumMassCTempProductRest)/bulkingredientsMassCProduct
     }
     
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
@@ -330,11 +335,11 @@ public extension Step {
         
         for ingredient in ingredients(reader: reader){
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? self.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, reader: reader).formattedTemp : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? self.temperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, reader: reader).formattedTemp : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in sortedSubsteps(reader: reader){
-            let substepString = subStep.formattedName + ": " + "\(totalMass(reader: reader))" + "\(subStep.temperature ?? roomTemp)" + "° C\n"
+            let substepString = "\t" + subStep.formattedName + ": " + "\(totalMass(reader: reader).formattedMass) " + "\(subStep.temperature ?? roomTemp)" + "° C\n"
             text.append(substepString)
         }
         if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{

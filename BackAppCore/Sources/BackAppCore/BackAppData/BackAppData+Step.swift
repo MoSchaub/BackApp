@@ -83,7 +83,7 @@ public extension BackAppData {
     func temperature(for ingredient: Ingredient, roomTemp: Double) -> Double {
         let kneadingHeating = Standarts.kneadingHeatingEnabled ? Standarts.kneadingHeating : 0.0
         return findStepAndReturnAttribute(for: ingredient.stepId, failValue: 0) { step in
-            step.temperature(for: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, reader: databaseReader)
+            step.temperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, reader: databaseReader)
         }
     }
     

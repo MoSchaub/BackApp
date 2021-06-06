@@ -48,7 +48,7 @@ public extension BackAppData {
         return successCompletion(recipe)
     }
     
-    ///total duration of all steps
+    ///total duration of all steps in minutes
     func totalDuration(for recipeId: Int64) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
             return recipe.totalDuration(steps: steps(with: recipeId))
@@ -69,13 +69,13 @@ public extension BackAppData {
         _ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id!)}
         return summ
     }
-//
-    /// total formatted amount of all ingredients in a given recipe
+
+    /// total formatted amount of all ingredients in a given recipe in gramms
     func totalFormattedAmount(for recipeId: Int64) -> String {
         self.totalAmount(for: recipeId).formattedMass
     }
     
-    /// dough Yield (waterSum/flourSum) for a given Recipe
+    /// dough Yield (waterSum/flourSum) * 100 for a given Recipe
     private func totalDoughYield(for recipeId: Int64) -> Double {
         var flourSum = 0.0
         _ = self.notSubsteps(for: recipeId).map { flourSum += self.flourMass(for: $0.id!)}
@@ -87,13 +87,13 @@ public extension BackAppData {
             return 0
         }
 
-        return waterSum/flourSum
+        return (waterSum/flourSum) * 100
     }
-//
+
     /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points
     func formattedTotalDoughYield(for recipeId: Int64) -> String {
         String(format: "%.2f", totalDoughYield(for: recipeId))
-    }
+    } //tested
 
     ///formatted total duration in the right unit
     func formattedTotalDuration(for recipeId: Int64) -> String {
@@ -110,14 +110,14 @@ public extension BackAppData {
     }
 
     ///startDate formatted using the dateFormatter
-    func formattedStartDate(for recipeId: Int64) -> String {
+    private func formattedStartDate(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             return dateFormatter.string(from: recipe.startDate(reader: databaseReader))
         }
     }
 
     ///endDate formatted using the dateFormatter
-    func formattedEndDate(for recipeId: Int64) -> String {
+    private func formattedEndDate(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             return dateFormatter.string(from: recipe.endDate(reader: databaseReader))
         }
