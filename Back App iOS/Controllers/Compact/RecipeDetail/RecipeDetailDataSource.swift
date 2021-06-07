@@ -70,7 +70,7 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if let stepItem = itemIdentifier(for: indexPath) as? StepItem, let step = appData.object(with: stepItem.id, of: Step.self), step.superStepId == nil {
+        if let stepItem = itemIdentifier(for: indexPath) as? StepItem, let step = appData.record(with: Int64(stepItem.id), of: Step.self), step.superStepId == nil {
             return true
         }
         return false
@@ -81,20 +81,19 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
-                self.deleteStep(item.id)
+                self.deleteStep(Int64(item.id))
             }
         }
     }
     
     /// move steps
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let steps = appData.steps(with: recipe.id)
+        let steps = appData.steps(with: recipe.id!)
         guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
         guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
         guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
 
-        appData.moveStep(with: recipe.id, from: sourceIndexPath.row, to: destinationIndexPath.row)
-        update(animated: false)
+        appData.moveStep(with: recipe.id!, from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
 }
@@ -127,8 +126,8 @@ extension RecipeDetailDataSource {
         tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
     }
     
-    private func deleteStep(_ id: Int) {
-        if let step = appData.steps(with: recipe.id).first(where: { $0.id == id }) {
+    private func deleteStep(_ id: Int64) {
+        if let step = appData.steps(with: recipe.id!).first(where: { $0.id == id }) {
             _ = appData.delete(step)
         }
     }

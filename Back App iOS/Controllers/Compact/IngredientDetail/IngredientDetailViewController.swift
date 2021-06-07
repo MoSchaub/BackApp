@@ -191,6 +191,10 @@ private extension IngredientDetailViewController {
 extension IngredientDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if dataSource.itemIdentifier(for: indexPath) is DetailItem {
+            //ensure the ingredient amount is saved
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? TextFieldCell, cell.textField.isEditing {
+                cell.textField.endEditing(true)
+            }
             typeSectionExpanded ? collapseTypeSection() : expandTypeSection()
         } else if let textItem = dataSource.itemIdentifier(for: indexPath), typeSectionExpanded,
                   let index = Ingredient.Style.allCases.map({ $0.name}).firstIndex(of: textItem.text),

@@ -92,7 +92,7 @@ public extension BackAppData {
         }
         
         let ingredients = self.ingredients(with: step.id!).map { encodeIngredientToJson(with: $0.id!) }
-        let substeps = self.sortedSubsteps(for: step.id!)
+        let substeps = self.sortedSubsteps(for: step.id!).map { encodeStepToJson(with: $0.id!) }
         
         
         var json: JSON = [

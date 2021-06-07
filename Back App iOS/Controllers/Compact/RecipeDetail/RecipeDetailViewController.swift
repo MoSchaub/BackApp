@@ -27,20 +27,19 @@ class RecipeDetailViewController: UITableViewController {
     private var imagePickerController: UIImagePickerController?
     
     // id of the recipe for pulling the recipe from the database
-    private let recipeId: Int
+    private let recipeId: Int64
     
     // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
         get {
-            self.appData.object(with: recipeId)!
+            self.appData.record(with: recipeId) ?? Recipe.example.recipe
         }
         set {
             if newValue != self.recipe {
-                if self.appData.update(newValue) {
-                    self.setUpNavigationBar()
-                    if !self.recipeChanged, self.creating{
-                        self.recipeChanged = true
-                    }
+                appData.update(newValue)
+                self.setUpNavigationBar()
+                if !self.recipeChanged, self.creating{
+                    self.recipeChanged = true
                 }
             }
         }
@@ -56,7 +55,7 @@ class RecipeDetailViewController: UITableViewController {
     private var dismissDetail: (() -> ())?
     
     //initializer
-    init(recipeId: Int, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
+    init(recipeId: Int64, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
         self.creating = creating
         self.recipeId = recipeId
         self.appData = appData
@@ -295,7 +294,7 @@ extension RecipeDetailViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
-        let steps = appData.steps(with: recipe.id)
+        let steps = appData.steps(with: recipe.id!)
         return customHeader(enabled: !steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
 
@@ -310,7 +309,7 @@ extension RecipeDetailViewController {
             if item is ImageItem {
                 imageTapped(sender: indexPath)
             } else if let stepItem = item as? StepItem {
-                showStepDetail(id: stepItem.id)
+                showStepDetail(id: Int64(stepItem.id))
             } else if let detailItem = item as? DetailItem {
                 if detailItem.text == Strings.startRecipe {
                     startRecipe()
@@ -362,30 +361,25 @@ private extension RecipeDetailViewController {
     // changes the image of an recipe
     private func changeRecipeImage(to image: UIImage?) {
         self.recipe.imageData = image?.jpegData(compressionQuality: 0.3)
-        if self.appData.update(recipe) {
-            self.dataSource.update(animated: false)
-        } else {
-            print("Error changing recipe")
-        }
+        self.appData.update(recipe)
+        self.dataSource.update(animated: false)
     }
     
-    private func showStepDetail(id: Int?) {
-        var step = id == nil ? Step(id: 0, recipeId: self.recipe.id, number: 0) : appData.object(with: id!, of: Step.self)!
+    private func showStepDetail(id: Int64?) {
+        var step = id == nil ? Step(recipeId: self.recipe.id!, number: 0) : appData.record(with: id!, of: Step.self)!
 
         // insert the new step
         if id == nil {
-            //get a unique id
-            step.id = appData.newId(for: Step.self)
             
             step.number = (appData.notSubsteps(for: self.recipeId).last?.number ?? -1) + 1
 
             // insert it
-            guard appData.insert(step) else { return }
+            appData.save(&step)
                 
             self.recipeChanged = true
         }
         
-        let stepDetailVC = StepDetailViewController(stepId: step.id, appData: appData)
+        let stepDetailVC = StepDetailViewController(stepId: step.id!, appData: appData)
         
         //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)

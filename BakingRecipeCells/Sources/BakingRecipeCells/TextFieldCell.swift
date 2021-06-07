@@ -17,7 +17,7 @@ public class TextFieldCell: CustomCell {
     
     private var placeholder = "Placeholder"
     
-    private var tokens = Set<AnyCancellable>()
+    internal var tokens = Set<AnyCancellable>()
     
     /// method called when text changed
     public var textChanged: ((String) -> Void)?
@@ -32,6 +32,7 @@ public class TextFieldCell: CustomCell {
     /// - Note: internal because its needs to be overwritten in a subclass
     internal func setTextFieldBehavior() {
         textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
+        textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
     }
     
     deinit {
@@ -81,8 +82,11 @@ private extension TextFieldCell {
 extension TextFieldCell: UITextFieldDelegate {
     
     @objc internal func updateText() {
-        if let textChanged = textChanged, let text = textField.text {//force away from main thread to not interrupt the ux
+        let textFieldText = textField.text
+        DispatchQueue.global(qos: .background).async {
+            if let textChanged = self.textChanged, let text = textFieldText {//force away from main thread to not interrupt the ux
                 textChanged(text)
+            }
         }
     }
     

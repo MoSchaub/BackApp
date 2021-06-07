@@ -10,6 +10,8 @@ import Foundation
 import BakingRecipeFoundation
 import BakingRecipeStrings
 
+public var databaseAutoUpdatesDisabled = false
+
 ///Notifications for triggering events in the ui
 public extension Notification.Name {
     static var homeNavBarShouldReload = Self.init(rawValue: "homeNavBarShouldReload")
@@ -26,33 +28,34 @@ public extension BackAppData {
     
     /// opens the data at a specified url and tries to import it as a recipe, sets alertTitle and Message
     func open(_ url: URL) {
-//        DispatchQueue.global(qos: .userInitiated).async {
-                let loaded = url.loadData() //gets the data from the file at url
-                
-                if let loadedData = loaded.data { //make sure the data is succesfully loaded
-                    if self.importData(loadedData) { //import the data into the internal database
-                        
-                        //set succes
-                        inputAlertTitle = Strings.success
-                        inputAlertTitle = Strings.recipesImported
-                    } else {
-                        
-                        //send error message
-                        inputAlertTitle = Strings.Alert_Error
-                        inputAlertMessage = "" //TODO: add Error message like "error importing recipes"
-                    }
+        DispatchQueue.global(qos: .background).async {
+            databaseAutoUpdatesDisabled = true
+            let loaded = url.loadData() //gets the data from the file at url
+            
+            if let loadedData = loaded.data { //make sure the data is succesfully loaded
+                if self.importData(loadedData) { //import the data into the internal database
+                    
+                    //set succes
+                    inputAlertTitle = Strings.success
+                    inputAlertTitle = Strings.recipesImported
+                } else {
+                    
+                    //send error message
+                    inputAlertTitle = Strings.Alert_Error
+                    inputAlertMessage = "" //TODO: add Error message like "error importing recipes"
                 }
-                
-                // reload the navbar since the updates are disabled
-                NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
-                
-                // present the alert when it is done
-                NotificationCenter.default.post(name: .alertShouldBePresented, object: nil)
-                
-                // make sure the last one displays the correct time since the updates are disabled
-                NotificationCenter.default.post(name: .recipesChanged, object: nil)
-                
-//        }
+            }
+            
+            // reload the navbar since the updates are disabled
+            NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
+            
+            // present the alert when it is done
+            NotificationCenter.default.post(name: .alertShouldBePresented, object: nil)
+            
+            // make sure the last one displays the correct time since the updates are disabled
+            NotificationCenter.default.post(name: .recipesChanged, object: nil)
+            databaseAutoUpdatesDisabled = false
+        }
     }
     
     /// imports data containing recipes into the database

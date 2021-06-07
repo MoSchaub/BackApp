@@ -149,11 +149,11 @@ extension DerivableRequest where RowDecoder == Step {
     }
     
     public func filterNotSubsteps(with recipeId: Int64) -> Self {
-        filter(by: recipeId)
+        orderedByNumber(with: recipeId)
             .filter(Step.Columns.superStepId == nil)
     }
     
-    func filter(by recipeId: Int64) -> Self {
+    private func filter(by recipeId: Int64) -> Self {
         filter(Step.Columns.recipeId == recipeId) /// filter recipeid
     }
 }

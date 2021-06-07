@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
-    let appData = BackAppData()
+    let appData = BackAppData.shared
     lazy var compactHomeVC = CompactHomeViewController(appData: appData)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

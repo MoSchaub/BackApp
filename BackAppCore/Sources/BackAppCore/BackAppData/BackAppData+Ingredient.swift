@@ -15,7 +15,7 @@ public extension BackAppData {
     
     func ingredients(with stepId: Int64) -> [Ingredient] {
         (try? self.databaseReader.read { db in
-           try? Ingredient.all().filter(by: stepId).fetchAll(db)
+            try? Ingredient.all().orderedByNumber(with: stepId).fetchAll(db)
         }) ?? []
     }
     

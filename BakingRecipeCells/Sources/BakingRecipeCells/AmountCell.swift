@@ -39,7 +39,7 @@ public class AmountCell: TextFieldCell {
     }
     
     internal override func setTextFieldBehavior() {
-        textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
+        textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
     }
     
 }

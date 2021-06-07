@@ -21,7 +21,9 @@ public extension BackAppData {
     
     /// all Recipes in the database
     var allRecipes: [Recipe] {
-        self.allRecords()
+        (try? self.databaseReader.read { db in
+            try? Recipe.all().orderedByNumber.fetchAll(db)
+        }) ?? []
     }
     
     /// all favorited recipes in the database

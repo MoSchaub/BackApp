@@ -205,7 +205,7 @@ extension DerivableRequest where RowDecoder == Ingredient {
             .order(Ingredient.Columns.number) // sort by number in ascending order (asc is the default)
     }
     
-    public func filter(by stepId: Int64) -> Self {
+    private func filter(by stepId: Int64) -> Self {
         filter(Ingredient.Columns.stepId == stepId) /// filter stepId
     }
 }

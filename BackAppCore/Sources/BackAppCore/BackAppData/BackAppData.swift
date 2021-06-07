@@ -36,12 +36,6 @@ public struct BackAppData {
     private var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         
-        #if DEBUG
-        // Speed up development by nuking the database when migrations change
-        // See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md#the-erasedatabaseonschemachange-option
-        migrator.eraseDatabaseOnSchemaChange = true
-        #endif
-        
         ///define the schema
         migrator.registerMigration("migration") { db in
             try db.create(table: "Recipe") { t in
@@ -54,7 +48,7 @@ public struct BackAppData {
                 t.column(Recipe.Columns.times.name, .real)
                 t.column(Recipe.Columns.date.name, .datetime).notNull().defaults(to: Date())
                 t.column(Recipe.Columns.imageData.name, .blob)
-                t.column(Recipe.Columns.number.name, .integer).notNull().indexed()
+                t.column(Recipe.Columns.number.name, .integer).notNull()
             }
             
             try db.create(table: "Step") { t in
@@ -65,7 +59,7 @@ public struct BackAppData {
                 t.column(Step.Columns.notes.name, .text).notNull().defaults(to: "")
                 t.column(Step.Columns.recipeId.name, .integer).references("Recipe", onDelete: .cascade)
                 t.column(Step.Columns.superStepId.name, .integer).references("Step")
-                t.column(Step.Columns.number.name, .integer).notNull().indexed()
+                t.column(Step.Columns.number.name, .integer).notNull()
             }
             
             try db.create(table: "Ingredient") { t in
@@ -75,7 +69,7 @@ public struct BackAppData {
                 t.column(Ingredient.Columns.mass.name, .double).notNull().defaults(to: 0)
                 t.column(Ingredient.Columns.c.name, .double)
                 t.column(Ingredient.Columns.stepId.name, .integer).references("Step", onDelete: .cascade)
-                t.column(Ingredient.Columns.number.name, .integer).notNull().indexed()
+                t.column(Ingredient.Columns.number.name, .integer).notNull()
             }
         }
         return migrator
@@ -97,9 +91,24 @@ public extension BackAppData {
         } catch {
             print(error.localizedDescription)
         }
+        
+        if record is Recipe, !databaseAutoUpdatesDisabled {
+            NotificationCenter.default.post(name: .recipesChanged, object: nil)
+        }
     }
     
-    /// Delete the specified record
+    /// updates a record
+    func update<T:BakingRecipeRecord>(_ record: T) {
+        do {
+            try dbWriter.write { db in
+                try record.update(db)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    /// delete the specified record and returns wether the deletion was succesfull
     func delete<T:BakingRecipeRecord>(_ record: T) -> Bool {
         do {
             return try dbWriter.write { db in
@@ -111,29 +120,31 @@ public extension BackAppData {
         }
     }
     
-    func deleteAll<T:BakingRecipeRecord>(of type: T.Type) throws {
+    internal func deleteAll<T:BakingRecipeRecord>(of type: T.Type) throws {
         _ = try dbWriter.write { db in
             try T.deleteAll(db)
         }
     }
     
-    func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
-        var recordIds = array.map { $0.id }
-        
-        let removedRecord = recordIds.remove(at: source)
-        recordIds.insert(removedRecord, at: destination)
-        
-        var number = 0
+    /// move Records (change their number) so their sorted order changes
+    internal func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
         DispatchQueue.global(qos: .background).async {
+            databaseAutoUpdatesDisabled = true
+            var recordIds = array.map { $0.id }
+            
+            let removedRecord = recordIds.remove(at: source)
+            recordIds.insert(removedRecord, at: destination)
+            
+            var number = 0
             for id in recordIds {
                 var record: T = self.record(with: id!)!
                 record.number = number
                 number += 1
                 self.save(&record)
             }
+            databaseAutoUpdatesDisabled = false
         }
     }
-    
 }
 
 
@@ -145,6 +156,7 @@ public extension BackAppData {
         dbWriter
     }
     
+    /// fetch a record from a database
     func record<T:BakingRecipeRecord>(with id: Int64, of type: T.Type = T.self) -> T? {
         return try? databaseReader.read { db in
             return try? T.all().filter(key: ["id":id]).fetchOne(db)

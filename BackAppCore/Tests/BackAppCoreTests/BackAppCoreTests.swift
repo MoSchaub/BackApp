@@ -197,7 +197,7 @@ final class BackAppCoreTests: XCTestCase {
         let appData = BackAppData.shared
         
         var step = try appData.databaseReader.read { db in
-            try Step.all().filter(by: recipeId).filter( Step.Columns.name == stepIngredients.step.name ).fetchOne(db)
+            try Step.all().orderedByNumber(with: recipeId).filter( Step.Columns.name == stepIngredients.step.name ).fetchOne(db)
         }
         
         XCTAssert(step != nil)
@@ -216,7 +216,7 @@ final class BackAppCoreTests: XCTestCase {
         let appData = BackAppData.shared
         
         var ingredient = try appData.databaseReader.read { db in
-            try Ingredient.all().filter(by: stepId).fetchOne(db)
+            try Ingredient.all().orderedByNumber(with: stepId).fetchOne(db)
         }
         
         XCTAssert(ingredient != nil)
@@ -232,6 +232,7 @@ final class BackAppCoreTests: XCTestCase {
     
     func testExportingAndImporting() throws{
         try self.testInsertingExample()
+        try self.testInsertingComplexRecipe()
         
         let appData = BackAppData.shared
         
@@ -244,6 +245,8 @@ final class BackAppCoreTests: XCTestCase {
         try appData.deleteAll(of: Recipe.self)
         
         appData.open(url)
+        
+        sleep(1)
         
         for recipe in recipes {
             XCTAssert(appData.allRecipes.first(where: { $0.name == recipe.name }) != nil)
@@ -273,19 +276,19 @@ final class BackAppCoreTests: XCTestCase {
         let recipeId = recipe!.id!
         
         let stepIds = try appData.databaseReader.read { db in
-            try Step.all().filter(by: recipeId).fetchAll(db).map { $0.id! }
+            try Step.all().orderedByNumber(with: recipeId).fetchAll(db).map { $0.id! }
         }
         
         XCTAssert(appData.delete(recipe!))
         
         XCTAssertFalse(appData.record(with: recipeId, of: Recipe.self) != nil)
         let steps = try appData.databaseReader.read { db in
-            try Step.all().filter(by: recipeId).fetchAll(db)
+            try Step.all().orderedByNumber(with: recipeId).fetchAll(db)
         }
         XCTAssertTrue(steps.isEmpty)
         _ = try stepIds.map { stepId in
             let ingredients = try appData.databaseReader.read { db in
-                try Ingredient.all().filter(by: stepId).fetchAll(db)
+                try Ingredient.all().orderedByNumber(with: stepId).fetchAll(db)
             }
             XCTAssertTrue(ingredients.isEmpty)
         }
@@ -337,6 +340,25 @@ final class BackAppCoreTests: XCTestCase {
     func testText() throws {
         let recipeId = try insertExampleRecipeAndGetId()
         XCTAssert(BackAppData.shared.text(for: recipeId, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Mischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20.0° C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nFertig: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(BackAppData.shared.totalDuration(for: recipeId) * 60))))")
+    }
+    
+    func testMovingRecords() throws {
+        let recipeId = try insertExampleRecipeAndGetId()
+        try testInsertingComplexRecipe()
+        let appData = BackAppData.shared
+        
+        appData.moveStep(with: recipeId, from: 1, to: 0)
+        sleep(1)
+        XCTAssert(appData.reorderedSteps(for: recipeId).first!.formattedName == "Backen")
+        
+        let stepId = appData.reorderedSteps(for: recipeId).first(where: { $0.formattedName == "Mischen"})!.id!
+        appData.moveIngredient(with: stepId, from: 1, to: 2)
+        sleep(1)
+        XCTAssert(appData.ingredients(with: stepId)[1].formattedName == "Olivenöl")
+        
+        appData.moveRecipe(from: 1, to: 0)
+        sleep(1)
+        XCTAssert(appData.allRecipes.first!.formattedName == "Komplexes Rezept")
     }
     
     static var allTests = [

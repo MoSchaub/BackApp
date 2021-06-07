@@ -18,19 +18,18 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Properties
     
-    private let stepId: Int
+    private let stepId: Int64
 
     /// the step whose details are shown
     private var step: Step {
         get {
-            return appData.object(with: stepId, of: Step.self)!
+            return appData.record(with: stepId, of: Step.self)!
         }
         
         set {
-            if self.appData.update(newValue) {
-                DispatchQueue.global(qos: .utility).async {
-                    self.setupNavigationBar()
-                }
+            self.appData.update(newValue)
+            DispatchQueue.global(qos: .utility).async {
+                self.setupNavigationBar()
             }
         }
     }
@@ -53,7 +52,7 @@ class StepDetailViewController: UITableViewController {
     
     // MARK: - Initalizers
     
-    init(stepId: Int, appData: BackAppData) {
+    init(stepId: Int64, appData: BackAppData) {
         self.appData = appData
         self.stepId = stepId
         super.init(style: .insetGrouped)
@@ -109,7 +108,7 @@ extension StepDetailViewController {
     }
     
     private func editButtonEnabled() -> Bool {
-        !appData.ingredients(with: step.id).isEmpty || !appData.substeps(for: step.id).isEmpty
+        !appData.ingredients(with: step.id!).isEmpty || !appData.sortedSubsteps(for: step.id!).isEmpty
     }
 
 }
@@ -183,7 +182,7 @@ extension StepDetailViewController {
         if item is IngredientItem {
 
             // navigate to existing ingredient
-            navigateToIngredientDetail(id: item.id)
+            navigateToIngredientDetail(id: Int64(item.id))
         } else if StepDetailSection.allCases[indexPath.section] == .ingredients, !(item is SubstepItem) { //add ingredient pressed
 
             //add ingredient or substep
@@ -211,7 +210,7 @@ extension StepDetailViewController {
             }
         } else if item is SubstepItem {
             
-            let stepDetailVC = StepDetailViewController(stepId: item.id, appData: appData)
+            let stepDetailVC = StepDetailViewController(stepId: Int64(item.id), appData: appData)
             
             //navigate to the controller
             navigationController?.pushViewController(stepDetailVC, animated: true)
@@ -247,9 +246,8 @@ extension StepDetailViewController {
                 var newSubstep = possibleSubstep
                 newSubstep.superStepId = self.step.id
                 
-                if self.appData.update(newSubstep) {
-                    self.updateList(animated: false)
-                }
+                self.appData.update(newSubstep)
+                self.updateList(animated: false)
             }))
         }
         
@@ -263,21 +261,19 @@ private extension StepDetailViewController {
     
     /// navigate to an ingredient with a given id
     /// - Note: if id is nil it creates a new one
-    private func navigateToIngredientDetail(id: Int?) {
-        let newId = appData.newId(for: Ingredient.self)
+    private func navigateToIngredientDetail(id: Int64?) {
         
         let newNumber = (appData.ingredients(with: self.stepId).last?.number ?? -1) + 1
         
-        let ingredient = id == nil ? Ingredient(stepId: self.stepId, id: newId, name: "", amount: 0, type: .other, number: newNumber) : appData.object(with: id!, of: Ingredient.self)!
+        var ingredient = id == nil ? Ingredient(stepId: self.stepId, name: "", amount: 0, type: .other, number: newNumber) : appData.record(with: id!, of: Ingredient.self)!
 
         if id == nil {
-            guard appData.insert(ingredient) else { return }
+            appData.save(&ingredient)
         }
         let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
-            if self.appData.update(newValue) {
-                DispatchQueue.main.async {
-                    self.updateList(animated: false)
-                }
+            self.appData.update(newValue)
+            DispatchQueue.main.async {
+                self.updateList(animated: false)
             }
         }
         navigationController?.pushViewController(vc, animated: true)
@@ -458,8 +454,8 @@ private extension StepDetailViewController {
         // notesTextFieldItem
         let notesItem = TextFieldItem(text: step.notes)
 
-        let ingredientItems = appData.ingredients(with: step.id).map{ IngredientItem(id: $0.id, name: $0.name, detailLabel: $0.detailLabel(for: step, appData: appData)) }
-        let substepItems = appData.substeps(for: step.id).map { SubstepItem(id: $0.id, name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: $0.id) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
+        let ingredientItems = appData.ingredients(with: step.id!).map{ IngredientItem(id: Int($0.id!), name: $0.name, detailLabel: $0.detailLabel(for: step, appData: appData)) }
+        let substepItems = appData.sortedSubsteps(for: step.id!).map { SubstepItem(id: Int($0.id!), name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: $0.id!) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
         // create the snapshot
@@ -560,7 +556,7 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
             snapshot.deleteItems([item])
             
             apply(snapshot, animatingDifferences: true) {
-                if let ingredient = self.appData.object(with: item.id, of: Ingredient.self) {
+                if let ingredient = self.appData.record(with: Int64(item.id), of: Ingredient.self) {
                     _ = self.appData.delete(ingredient)
                 }
             }
@@ -571,9 +567,9 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
             snapshot.deleteItems([item])
             
             apply(snapshot, animatingDifferences: true) {
-                if var substep = self.appData.object(with: item.id, of: Step.self) {
+                if var substep = self.appData.record(with: Int64(item.id), of: Step.self) {
                     substep.superStepId = nil
-                    _ = self.appData.update(substep)
+                    self.appData.update(substep)
                 }
             }
         }
@@ -593,7 +589,7 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
         guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { updateList(); return }
         guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { updateList(); return }
 
-        appData.moveIngredient(with: step.id, from: sourceIndexPath.row, to: destinationIndexPath.row)
+        appData.moveIngredient(with: step.id!, from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
     private func updateList() {

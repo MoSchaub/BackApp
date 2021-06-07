@@ -12,6 +12,7 @@ import BakingRecipeCells
 
 import BakingRecipeFoundation
 import BackAppCore
+import GRDB
 
 import Combine
 
@@ -35,14 +36,10 @@ class HomeDataViewModel {
     }
     
     /// tell the appData to delete the recipe wtih a specified id
-    private func deleteRecipe(with id: Int) {
-        /// `databaseAutoUpdatesDisabled` is to ensure that not 2 operations are performed simultaneously
-        ///  which could crash the app since the database can only be accessed from one thread at a time
-        if !databaseAutoUpdatesDisabled {
-            databaseAutoUpdatesDisabled = true
+    private func deleteRecipe(with id: Int64) {
             
             //ensure the recipe exits and get the recipe with the specified id
-            guard let recipe = self.appData.object(with: id, of: Recipe.self) else {
+            guard let recipe = self.appData.record(with: id, of: Recipe.self) else {
                 print("Error fetching recipe with id \(id)")
                 return
             }
@@ -52,40 +49,28 @@ class HomeDataViewModel {
                 print("Error deleting recipe with id \(id)")
                 return
             }
-            
-            databaseAutoUpdatesDisabled = false
-            
-            ///reload the navbar since deleting the recipe could result in `appData.allRecipes` being empty
-            ///the navbar would not automatically update since `databaseAutoUpdatesDisabled` is true and
-            ///this could lead to ui bugs in the navbar e. g. an not disabled editButton
-            NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
-        }
+        
+        //update
+        NotificationCenter.default.post(name: .recipesChanged, object: nil)
+        NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
     }
     
     ///tell the appData to favourite a recipe with a specified id
     /// - Note: mainly used for `isFavourite = false`
-    private func toggleFavoriteRecipe(with id: Int) {
+    private func toggleFavoriteRecipe(with id: Int64) {
         
-        /// `databaseAutoUpdatesDisabled` is to ensure that not 2 operations are performed simultaneously
-        ///  which could crash the app since the database can only be accessed from one thread at a time
-        if !databaseAutoUpdatesDisabled {
-            databaseAutoUpdatesDisabled = true
-            
-            //get the recipe and ensure it exists
-            guard var recipe = self.appData.object(with: id, of: Recipe.self) else {
-                print("Error fetching recipe with id \(id)")
-                return
-            }
-            
-            recipe.isFavorite.toggle()
-            
-            guard self.appData.update(recipe) else {
-                print("Error updating recipe with id \(id)")
-                return
-            }
-            
-            databaseAutoUpdatesDisabled = false
+        //get the recipe and ensure it exists
+        guard var recipe = self.appData.record(with: id, of: Recipe.self) else {
+            print("Error fetching recipe with id \(id)")
+            return
         }
+        
+        recipe.isFavorite.toggle()
+        
+        appData.save(&recipe)
+        
+        //update
+        NotificationCenter.default.post(name: .recipesChanged, object: nil)
     }
     
     func updatedSnapshot() -> NSDiffableDataSourceSnapshot<HomeSection, RecipeItem> {
@@ -122,27 +107,22 @@ class HomeDataViewModel {
             
             //toggle favourite
             DispatchQueue.global(qos: .userInteractive).async { // different thread to not interrupt the ui
-                self.toggleFavoriteRecipe(with: item.id)
+                self.toggleFavoriteRecipe(with: Int64(item.id))
             }
         } else {
             
             //delete the recipe
             DispatchQueue.global(qos: .userInteractive).async { // different thread to not interrupt the ui
-                self.deleteRecipe(with: item.id)
+                self.deleteRecipe(with: Int64(item.id))
             }
         }
     }
     
-    func move(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, numberOfSections: Int, reset: @escaping () -> Void ,completion: @escaping () -> Void ) {
+    func move(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, numberOfSections: Int, reset: @escaping () -> Void) {
         guard destinationIndexPath.row < getRecipeItems().count else { reset(); return }
         guard destinationIndexPath.section == 0 && numberOfSections == 1 || destinationIndexPath.section == 1 && numberOfSections == 2 else { reset(); return}
         guard getRecipeItems().count > sourceIndexPath.row else { reset(); return }
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
+        self.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
     func canEditRow(item: RecipeItem?) -> Bool {
@@ -195,20 +175,22 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         // add publisher to update when the database changes
         NotificationCenter.default.publisher(for: Notification.Name.recipesChanged)
             .sink { _ in
-                self.update(animated: true)
+                self.update(animated: false)
             }
             .store(in: &tokens)
     }
     
     ///refetches the data and renders the sections and items
     func update(animated: Bool = true) {
-        
-        let snapshot = viewModel.updatedSnapshot()
-        
-        //force the main thread since UITableView should be updated from the main thread
-        DispatchQueue.main.async {
-            // apply the changes
-            self.apply(snapshot, animatingDifferences: animated)
+        DispatchQueue.global(qos: .background).async {
+            
+            let snapshot = self.viewModel.updatedSnapshot()
+            
+            //force the main thread since UITableView should be updated from the main thread
+            DispatchQueue.main.async {
+                // apply the changes
+                self.apply(snapshot, animatingDifferences: animated)
+            }
         }
     }
     
@@ -226,13 +208,16 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
     /// enable deleting recipes
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         viewModel.commitEditingStyle(editingStyle: editingStyle, indexPath: indexPath, numberOfSections: tableView.numberOfSections, item: self.itemIdentifier(for: indexPath))
+        if let item = self.itemIdentifier(for: indexPath) {
+            var snapshot = self.snapshot()
+            snapshot.deleteItems([item])
+            self.apply(snapshot, animatingDifferences: false)
+        }
     }
     
     /// moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        viewModel.move(from: sourceIndexPath, to: destinationIndexPath, numberOfSections: snapshot().numberOfSections, reset: {self.reset()}) {
-            self.update(animated: false)
-        }
+        viewModel.move(from: sourceIndexPath, to: destinationIndexPath, numberOfSections: snapshot().numberOfSections, reset: {self.reset()})
     }
     
     //wether a row can be deleted or not
