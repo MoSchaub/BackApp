@@ -587,7 +587,13 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
 
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard (itemIdentifier(for: sourceIndexPath) as? IngredientItem) != nil else { updateList(); return }
-        guard (itemIdentifier(for: destinationIndexPath) as? IngredientItem) != nil else { updateList(); return }
+        guard StepDetailSection.allCases[destinationIndexPath.section] == .ingredients else { updateList(); return }
+        let ingredients = appData.ingredients(with: step.id!)
+        let subCount = appData.sortedSubsteps(for: step.id!).count
+        let destination = destinationIndexPath.row - subCount
+        let source = sourceIndexPath.row - subCount
+        guard destination < ingredients.count else { updateList(); return }
+        guard ingredients.count > source else { updateList(); return }
 
         appData.moveIngredient(with: step.id!, from: sourceIndexPath.row, to: destinationIndexPath.row)
     }

@@ -77,6 +77,9 @@ class CompactHomeViewController: UITableViewController {
         NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
             self.presentImportAlert()
         }.store(in: &tokens)
+        
+        //ask for room temp
+        presentRoomTempSheet()
     }
     
     override func loadView() {
@@ -115,9 +118,30 @@ private extension CompactHomeViewController {
             self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
             
             let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
-            let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
+            let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
             self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
         }
+    }
+    
+    // MARK: - Room Temp Sheet
+    private func presentRoomTempSheet() {
+        let roomtempBinding = Binding {
+            return Standarts.roomTemp
+        } set: {
+            Standarts.roomTemp = $0
+        }
+        
+        let vc = UIHostingController(rootView: RoomTempPickerSheet(roomTemp: Binding { return 0.0} set: { _ in}, dissmiss: {}))
+        
+        let sheet = RoomTempPickerSheet(roomTemp: roomtempBinding) {
+            vc.dismiss(animated: true)
+        }
+        
+        vc.rootView = sheet
+        
+        vc.modalPresentationStyle = .popover
+        
+        present(vc, animated: true)
     }
     
     // MARK: - Input Alert

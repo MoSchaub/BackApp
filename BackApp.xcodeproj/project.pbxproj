@@ -22,6 +22,7 @@
 		CD3148B4259BBBC7000FAB6F /* dark.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD31489C259BBB0F000FAB6F /* dark.bundle */; };
 		CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFE225960DFA00F352E9 /* BakingRecipeCells */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
+		CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
@@ -136,6 +137,7 @@
 		CD31489E259BBB0F000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD3148A9259BBB1B000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
+		CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempPickerSheet.swift; sourceTree = "<group>"; };
 		CD59040724E2CF4F008A0E6E /* Push Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Push Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD59040824E2CF4F008A0E6E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
@@ -511,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */,
+				CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */,
 				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
 				CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */,
@@ -811,6 +814,7 @@
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
 				CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */,
 				CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */,
+				CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */,
 				CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
@@ -1047,7 +1051,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1070,7 +1074,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1217,7 +1221,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1242,7 +1246,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;

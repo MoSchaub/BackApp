@@ -28,6 +28,7 @@ class CompactHomeTests: XCTestCase {
     
     func testChangingRoomTempature() throws {
         app.launch()
+        app.swipeDown()
         
         settingsButton.tap()
         
@@ -42,6 +43,7 @@ class CompactHomeTests: XCTestCase {
         app.terminate()
 
         app.launch()
+        app.swipeDown()
         
         settingsButton.tap()
         
@@ -56,6 +58,7 @@ class CompactHomeTests: XCTestCase {
     
     func testNavigatingToAboutScreen() throws {
         app.launch()
+        app.swipeDown()
 
         settingsButton.tap()
         
@@ -68,6 +71,8 @@ class CompactHomeTests: XCTestCase {
     func testDeletingRecipe() throws {
         if app.tables.staticTexts[Recipe.example.name].exists {
             app.launch()
+            app.swipeDown()
+            
             try! delete(recipeName: Recipe.example.name)
         }
     }
