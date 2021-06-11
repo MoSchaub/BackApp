@@ -29,6 +29,8 @@ public class AmountCell: TextFieldCell {
         self.textChanged!(textField.text ?? "" )
     }
     
+    public var amountEditingDidEnd: (() -> Void)?
+    
     private func setUpBoth(format: @escaping (String) -> String ) {
         selectionStyle = .none
         textChanged = { text in
@@ -39,7 +41,14 @@ public class AmountCell: TextFieldCell {
     }
     
     internal override func setTextFieldBehavior() {
-        textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
+        textField.controlEventPublisher(for: .editingDidEnd).sink { _ in
+            self.updateText {
+                if let amountEditingDidEnd = self.amountEditingDidEnd {
+                    amountEditingDidEnd()
+                }
+            }
+        }.store(in: &tokens)
+       
     }
     
 }

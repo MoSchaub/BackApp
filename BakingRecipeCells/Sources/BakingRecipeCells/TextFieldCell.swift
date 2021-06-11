@@ -81,11 +81,14 @@ private extension TextFieldCell {
 
 extension TextFieldCell: UITextFieldDelegate {
     
-    @objc internal func updateText() {
+    @objc internal func updateText(completion: (() -> ())? = nil ) {
         let textFieldText = textField.text
         DispatchQueue.global(qos: .background).async {
             if let textChanged = self.textChanged, let text = textFieldText {//force away from main thread to not interrupt the ux
                 textChanged(text)
+                if let completion = completion {
+                    completion()
+                }
             }
         }
     }

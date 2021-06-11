@@ -55,7 +55,11 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// name of the ingredient
     ///- NOTE: Should only be used when the name is modified. Use formattedNameInstead
-    public var name: String
+    public var name: String {
+        didSet {
+            autoDetectIngredientType()
+        }
+    }
     
     /// temp the ingredient should have
     /// - NOTE: The temperature only has a value if the ingredient is a bulkLiquid
@@ -72,6 +76,32 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// the number in a step used for sorting the ingredient
     public var number: Int
+    
+}
+
+// MARK: - Auto ingredient type detection
+private extension Ingredient {
+    
+    mutating func autoDetectIngredientType() {
+        if Locale.current.languageCode == "de" { //only german locale at first
+            let flourStrings = ["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM"]
+            let bulkLiquidStrings = ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft"]
+            
+            for flourString in flourStrings {
+                if self.name.contains(flourString) {
+                    self.type = .flour
+                    return
+                }
+            }
+            
+            for bulkLiquidString in bulkLiquidStrings {
+                if self.name.contains(bulkLiquidString) {
+                    self.type = .bulkLiquid
+                    return
+                }
+            }
+        }
+    }
     
 }
 

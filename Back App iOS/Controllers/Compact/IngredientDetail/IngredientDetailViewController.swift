@@ -128,6 +128,7 @@ private extension IngredientDetailViewController {
                 return cell
             } else if textItem is AmountItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell {
                 cell.setUp(with: self.ingredient, format: format)
+                cell.amountEditingDidEnd = { self.updateList(animated: false)}
                 return cell
             } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
                 cell.textLabel?.text = detailItem.text
