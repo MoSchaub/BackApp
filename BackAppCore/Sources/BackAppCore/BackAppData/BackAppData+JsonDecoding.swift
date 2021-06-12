@@ -123,7 +123,6 @@ public extension BackAppData {
         save(&step)
         
         //substeps
-        //substeps
         if let substepsJson = json[CodingKeys.substeps.rawValue].array {
             
             //do the same thing to the substeps

@@ -339,6 +339,7 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
         
+        sleep(1)
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }
     

@@ -21,8 +21,9 @@ public class TimePickerCell: CustomCell {
         set {
             var newStep = appData.record(with: stepId, of: Step.self)!
             newStep.duration = newValue
-            self.appData.save(&newStep)
-            NotificationCenter.default.post(Notification(name: .init(rawValue: "stepChanged")))
+            self.appData.update(newStep) { _ in
+                NotificationCenter.default.post(Notification(name: .init(rawValue: "stepChanged")))
+            }
         }
     }
     

@@ -26,6 +26,11 @@ public extension Recipe {
         InfoItem(text: self.info)
     }
     
+    ///create an RecipeItem from an recipe
+    func item(steps: [Step]) -> RecipeItem {
+        return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(steps: steps).formattedDuration)
+    }
+    
     func controlStripItems(creating: Bool, appData: BackAppData) -> [Item] {
         let infoStripItem = InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
         return creating ? [infoStripItem] : [infoStripItem, DetailItem(name: Strings.startRecipe)]
@@ -35,8 +40,7 @@ public extension Recipe {
         let steps = appData.reorderedSteps(for: self.id!)
         return steps.map({ StepItem(id: $0.id!, step: $0)})
     }
-    
-    
+
     /// items for all steps in right order
     func allReoderedStepItems(appData: BackAppData) -> [StepItem] {
         appData.reorderedSteps(for: self.id!).map({ StepItem(id: $0.id!, step: $0)})

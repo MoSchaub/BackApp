@@ -26,8 +26,12 @@ class HomeDataViewModel {
     }
     
     /// fetch recipeItems
-    private func getRecipeItems(favouritesOnly: Bool = false) -> [RecipeItem] {
-        appData.getRecipesItems(favouritesOnly: favouritesOnly)
+    private func getRecipeItems(favoritesCompletion: @escaping ([RecipeItem]) -> Void, normalCompletion: @escaping ([RecipeItem]) -> Void, updateCompletion: @escaping () -> Void) {
+        if !appData.favorites.isEmpty {
+            favoritesCompletion(appData.favorites.map { $0.item(steps: appData.steps(with: $0.id!))})
+        }
+        normalCompletion(appData.allRecipes.map { $0.item(steps: appData.steps(with: $0.id!))})
+        updateCompletion()
     }
     
     ///moving recipes from source to destination
@@ -67,27 +71,27 @@ class HomeDataViewModel {
         
         recipe.isFavorite.toggle()
         
-        appData.save(&recipe)
-        
-        //update
-        NotificationCenter.default.post(name: .recipesChanged, object: nil)
+        appData.update(recipe) { _ in
+            
+            //update
+            NotificationCenter.default.post(name: .recipesChanged, object: nil)
+        }
     }
     
-    func updatedSnapshot() -> NSDiffableDataSourceSnapshot<HomeSection, RecipeItem> {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>()
-        
-        //append sections and items
-        if !getRecipeItems(favouritesOnly: true).isEmpty {
-            // case 1 favorites and all recipes
-            snapshot.appendSections(HomeSection.allCases)
-            snapshot.appendItems(getRecipeItems(favouritesOnly: true), toSection: .favourites)
-            snapshot.appendItems(getRecipeItems(), toSection: .recipes)
-        } else {
-            //case 2 only all recipes
-            snapshot.appendSections([HomeSection.recipes])
-            snapshot.appendItems(getRecipeItems(), toSection: .recipes)
+    func updateSnapshot(completion: @escaping (NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>) -> Void)  {
+        DispatchQueue.global(qos: .background).async {
+            var snapshot = NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>()
+            
+            self.getRecipeItems(favoritesCompletion: { favoriteItems in
+                snapshot.appendSections([.favourites])
+                snapshot.appendItems(favoriteItems, toSection: .favourites)
+            }, normalCompletion: { recipeItems in
+                snapshot.appendSections([.recipes])
+                snapshot.appendItems(recipeItems, toSection: .recipes)
+            }, updateCompletion: {
+                completion(snapshot)
+            })
         }
-        return snapshot
     }
     
     
@@ -118,10 +122,10 @@ class HomeDataViewModel {
         }
     }
     
-    func move(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, numberOfSections: Int, reset: @escaping () -> Void) {
-        guard destinationIndexPath.row < getRecipeItems().count else { reset(); return }
-        guard destinationIndexPath.section == 0 && numberOfSections == 1 || destinationIndexPath.section == 1 && numberOfSections == 2 else { reset(); return}
-        guard getRecipeItems().count > sourceIndexPath.row else { reset(); return }
+    func move(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, snapshot: NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>, reset: @escaping () -> Void) {
+        guard destinationIndexPath.row < snapshot.numberOfItems(inSection: .recipes) else { reset(); return }
+        guard destinationIndexPath.section == 0 && snapshot.numberOfSections == 1 || destinationIndexPath.section == 1 && snapshot.numberOfSections == 2 else { reset(); return}
+        guard snapshot.numberOfItems(inSection: .recipes) > sourceIndexPath.row else { reset(); return }
         self.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
@@ -132,11 +136,7 @@ class HomeDataViewModel {
     }
     
     func canMoveRow(at indexPath: IndexPath) -> Bool {
-        if getRecipeItems(favouritesOnly: true).isEmpty {
-            return true
-        } else {
-            return indexPath.section == HomeSection.recipes.rawValue
-        }
+        return indexPath.section == HomeSection.recipes.rawValue
     }
     
     func headerTitle(section: Int, numberOfSections: Int) -> String? {
@@ -182,13 +182,8 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
     
     ///refetches the data and renders the sections and items
     func update(animated: Bool = true) {
-        DispatchQueue.global(qos: .background).async {
-            
-            let snapshot = self.viewModel.updatedSnapshot()
-            
-            //force the main thread since UITableView should be updated from the main thread
-            DispatchQueue.main.async {
-                // apply the changes
+        self.viewModel.updateSnapshot { snapshot in
+            DispatchQueue.main.async { //force the main thread since UITableView should be updated from the main thread
                 self.apply(snapshot, animatingDifferences: animated)
             }
         }
@@ -217,7 +212,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
     
     /// moving recipes
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        viewModel.move(from: sourceIndexPath, to: destinationIndexPath, numberOfSections: snapshot().numberOfSections, reset: {self.reset()})
+        viewModel.move(from: sourceIndexPath, to: destinationIndexPath, snapshot: snapshot(), reset: {self.reset()})
     }
     
     //wether a row can be deleted or not

@@ -27,8 +27,7 @@ class StepDetailViewController: UITableViewController {
         }
         
         set {
-            self.appData.update(newValue)
-            DispatchQueue.global(qos: .utility).async {
+            self.appData.update(newValue) { _ in
                 self.setupNavigationBar()
             }
         }
@@ -246,8 +245,9 @@ extension StepDetailViewController {
                 var newSubstep = possibleSubstep
                 newSubstep.superStepId = self.step.id
                 
-                self.appData.update(newSubstep)
-                self.updateList(animated: false)
+                self.appData.update(newSubstep) { _ in
+                    self.updateList(animated: false)
+                }
             }))
         }
         

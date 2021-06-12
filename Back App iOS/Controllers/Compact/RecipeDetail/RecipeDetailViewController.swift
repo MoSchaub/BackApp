@@ -36,10 +36,11 @@ class RecipeDetailViewController: UITableViewController {
         }
         set {
             if newValue != self.recipe {
-                appData.update(newValue)
-                self.setUpNavigationBar()
-                if !self.recipeChanged, self.creating{
-                    self.recipeChanged = true
+                appData.update(newValue) { _ in
+                    self.setUpNavigationBar()
+                    if !self.recipeChanged, self.creating{
+                        self.recipeChanged = true
+                    }
                 }
             }
         }
@@ -361,8 +362,7 @@ private extension RecipeDetailViewController {
     // changes the image of an recipe
     private func changeRecipeImage(to image: UIImage?) {
         self.recipe.imageData = image?.jpegData(compressionQuality: 0.3)
-        self.appData.update(recipe)
-        self.dataSource.update(animated: false)
+        self.appData.update(recipe) { _ in self.dataSource.update(animated: false) }
     }
     
     private func showStepDetail(id: Int64?) {

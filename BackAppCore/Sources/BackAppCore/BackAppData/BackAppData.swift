@@ -90,6 +90,7 @@ public extension BackAppData {
             }
         } catch {
             print(error.localizedDescription)
+            return
         }
         
         if record is Recipe, !databaseAutoUpdatesDisabled {
@@ -98,13 +99,20 @@ public extension BackAppData {
     }
     
     /// updates a record
-    func update<T:BakingRecipeRecord>(_ record: T) {
+    func update<T:BakingRecipeRecord>(_ record: T, completion: ((Error?) -> Void)? = nil) {
         do {
             try dbWriter.write { db in
                 try record.update(db)
             }
+            if let completion = completion {
+                completion(nil)
+            }
+            //completion(nil)
         } catch {
             print(error.localizedDescription)
+            if let completion = completion {
+                completion(error)
+            }
         }
     }
     
