@@ -8,10 +8,10 @@
 
 import Foundation
 import BakingRecipeStrings
-import Sqlable
+import GRDB
 
 ///Ingredient in the Recipe
-public struct Ingredient: Equatable, BakingRecipeSqlable {
+public struct Ingredient: BakingRecipeRecord {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
@@ -42,23 +42,28 @@ public struct Ingredient: Equatable, BakingRecipeSqlable {
             }
         }
         
-        public func massOfSelfIngredients(in step: Step, db: SqliteDatabase) -> Double {
+        public func massOfSelfIngredients(in step: Step, reader: DatabaseReader) -> Double {
             var mass = 0.0
-            _ = step.ingredients(db: db).filter { $0.type == self }.map { mass += $0.mass}
+            _ = step.ingredients(reader: reader).filter { $0.type == self }.map { mass += $0.mass}
             return mass
         }
     }
     
     ///id of the ingredient, is counted up incrementally
-    public var id: Int
+    ///optional so that you can instantiate a record before it gets inserted and gains an id (by `didInsert(with:for:)`)
+    public var id: Int64?
     
     /// name of the ingredient
     ///- NOTE: Should only be used when the name is modified. Use formattedNameInstead
-    public var name: String
+    public var name: String {
+        didSet {
+            autoDetectIngredientType()
+        }
+    }
     
     /// temp the ingredient should have
     /// - NOTE: The temperature only has a value if the ingredient is a bulkLiquid
-    public var temperature: Int?
+    public var temperature: Double?
     
     /// mass of the ingredient
     public var mass: Double
@@ -67,10 +72,36 @@ public struct Ingredient: Equatable, BakingRecipeSqlable {
     private var c: Double
     
     /// the id of the step the ingredient is used for
-    public var stepId: Int
+    public var stepId: Int64
     
     /// the number in a step used for sorting the ingredient
     public var number: Int
+    
+}
+
+// MARK: - Auto ingredient type detection
+private extension Ingredient {
+    
+    mutating func autoDetectIngredientType() {
+        if Bundle.main.preferredLocalizations.first! == "de" { //only german locale at first
+            let flourStrings = ["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM"]
+            let bulkLiquidStrings = ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft"]
+            
+            for flourString in flourStrings {
+                if self.name.contains(flourString) {
+                    self.type = .flour
+                    return
+                }
+            }
+            
+            for bulkLiquidString in bulkLiquidStrings {
+                if self.name.contains(bulkLiquidString) {
+                    self.type = .bulkLiquid
+                    return
+                }
+            }
+        }
+    }
     
 }
 
@@ -117,8 +148,7 @@ public extension Ingredient {
     }
     
     //initializer
-    init(stepId: Int, id: Int, name: String = "", amount: Double = 0, type: Style = .other, number: Int) {
-        self.id = id
+    init(stepId: Int64, name: String = "", amount: Double = 0, type: Style = .other, number: Int) {
         self.name = name
         self.mass = amount
         self.c = type.rawValue
@@ -128,49 +158,89 @@ public extension Ingredient {
     
 }
 
-public extension Ingredient{
-    
-    // create columns for the sql database
-    static let id = Column("id", .integer, PrimaryKey(autoincrement: true))
-    static let name = Column("name", .text)
-    static let temperature = Column("temperature", .nullable(.integer))
-    static let mass = Column("mass", .real)
-    static let c = Column("c", .real)
-    static let stepId = Column("stepId", .integer, ForeignKey<Step>(onDelete: .cascade, onUpdate: .ignore))
-    static let number = Column("number", .integer)
-    static var tableLayout: [Column] = [id, name, temperature, mass, c, stepId, number]
-    
-    
-    //get values from columns
-    func valueForColumn(_ column: Column) -> SqlValue? {
-        switch column {
-        case Ingredient.id:
-            return self.id
-        case Ingredient.name:
-            return self.name
-        case Ingredient.temperature:
-            return self.temperature == nil ? Null() : self.temperature!
-        case Ingredient.mass:
-            return self.mass
-        case Ingredient.c:
-            return self.c
-        case Ingredient.stepId:
-            return self.stepId
-        case Ingredient.number:
-            return self.number
-        default:
-            return nil
-        }
+// SQL generation
+public extension Ingredient {
+    /// the table columns
+    enum Columns{
+        public static let id = Column(CodingKeys.id)
+        public static let name = Column(CodingKeys.name)
+        public static let temperature = Column(CodingKeys.temperature)
+        public static let mass = Column(CodingKeys.mass)
+        public static let c = Column(CodingKeys.c)
+        public static let stepId = Column(CodingKeys.stepId)
+        public static let number = Column(CodingKeys.number)
     }
     
-    // init ingredient from database
-    init(row: ReadRow) throws {
-        stepId = try row.get(Ingredient.stepId)
-        id = try row.get(Ingredient.id)
-        name = try row.get(Ingredient.name)
-        temperature = try? row.get(Ingredient.temperature)
-        mass = try row.get(Ingredient.mass)
-        c = try row.get(Ingredient.c) ?? Style.other.rawValue
-        number = try row.get(Ingredient.number)
+    /// Arange the seleted columns and lock their order
+    static let databaseSelection: [SQLSelectable] = [
+        Columns.id,
+        Columns.name,
+        Columns.temperature,
+        Columns.mass,
+        Columns.c,
+        Columns.stepId,
+        Columns.number
+    ]
+}
+
+// Fetching methods
+public extension Ingredient {
+    /// creates a record from a database row
+    init(row: Row) {
+        /// For high performance, use numeric indexes that match the
+        /// order of `Ingredient.databaseSelection`
+        id = row[0]
+        name = row[1]
+        temperature = row[2]
+        mass = row[3]
+        c = row[4]
+        stepId = row[5]
+        number = row[6]
     }
+}
+
+// Persistence methods
+public extension Ingredient {
+    
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.id] = id
+        container[Columns.name] = name
+        container[Columns.temperature] = temperature
+        container[Columns.mass] = mass
+        container[Columns.c] = c
+        container[Columns.stepId] = stepId
+        container[Columns.number] = number
+    }
+    
+    /// Update auto-increment id upon successful insertion
+    mutating func didInsert(with rowID: Int64, for column: String?) {
+        id = rowID
+    }
+    
+}
+
+// MARK: - Ingredient Database Requests
+
+/// Define some ingredient requests used by the application.
+extension DerivableRequest where RowDecoder == Ingredient {
+    // A request of ingredients with a stepId ordered by number in ascending order.
+    ///
+    /// For example:
+    ///
+    ///     let ingredients: [Ingredient] = try dbWriter.read { db in
+    ///         try Ingredient.all().orderedByNumber().fetchAll(db)
+    ///     }
+    public func orderedByNumber(with stepId: Int64) -> Self {
+        filter(by: stepId)/// filter stepid
+            .order(Ingredient.Columns.number) // sort by number in ascending order (asc is the default)
+    }
+    
+    private func filter(by stepId: Int64) -> Self {
+        filter(Ingredient.Columns.stepId == stepId) /// filter stepId
+    }
+}
+
+//MARK: - Associations
+public extension Ingredient {
+    static let step = belongsTo(Step.self)
 }

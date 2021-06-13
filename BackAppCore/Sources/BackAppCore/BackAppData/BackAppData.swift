@@ -5,150 +5,174 @@
 //  Created by Moritz Schaub on 21.12.20.
 //
 
-import Sqlable
+import GRDB
 import Foundation
 import BakingRecipeFoundation
 
+public extension Database.ColumnType {
+    static let real = Database.ColumnType.init(rawValue: "REAL")
+}
 
-
-public class BackAppData {
+public struct BackAppData {
     
-    private(set) internal var database: SqliteDatabase
     
-    private static func documentsPath() -> String {
-        FileManager.default.documentsDirectory.path
+    /// Creates an `BackAppData`, and make sure the database schema is ready.
+    init(_ dbWriter: DatabaseWriter) throws {
+        self.dbWriter = dbWriter
+        try migrator.migrate(dbWriter)
     }
     
-    ///the title of an alert displayed in the ui
-    public var inputAlertTitle = ""
+    /// Provides access to the database.
+    ///
+    /// Application can use a `DatabasePool`, while SwiftUI previews and tests
+    /// can use a fast in-memory `DatabaseQueue`.
+    ///
+    /// See https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections
+    internal let dbWriter: DatabaseWriter
     
-    ///the alert message for the same alert
-    public var inputAlertMessage = ""
-    
-    private var observerIds = [String]()
-    
-    public init(debug: Bool = false) {
-        /// create new database or use the existing one if it exist in the documents directory
-        do {
-            if debug {
-                _ = try? SqliteDatabase.deleteDatabase(at: Self.documentsPath() + "/debug.sqlite")
-            }
-            self.database = try SqliteDatabase(filepath: Self.documentsPath() + "/db.sqlite")
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+    /// The DatabaseMigrator that defines the database schema.
+    ///
+    /// See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md
+    private var migrator: DatabaseMigrator {
+        var migrator = DatabaseMigrator()
         
+        ///define the schema
+        migrator.registerMigration("migration") { db in
+            try db.create(table: "Recipe") { t in
+                t.autoIncrementedPrimaryKey(Recipe.Columns.id.name)
+                t.column(Recipe.Columns.name.name, .text).notNull().defaults(to: "")
+                t.column(Recipe.Columns.info.name, .text).notNull().defaults(to: "")
+                t.column(Recipe.Columns.isFavorite.name, .boolean).notNull().defaults(to: false)
+                t.column(Recipe.Columns.difficulty.name, .integer ).notNull().defaults(to: 0)
+                t.column(Recipe.Columns.inverted.name, .boolean).notNull().defaults(to: false)
+                t.column(Recipe.Columns.times.name, .real)
+                t.column(Recipe.Columns.date.name, .datetime).notNull().defaults(to: Date())
+                t.column(Recipe.Columns.imageData.name, .blob)
+                t.column(Recipe.Columns.number.name, .integer).notNull()
+            }
+            
+            try db.create(table: "Step") { t in
+                t.autoIncrementedPrimaryKey(Step.Columns.id.name)
+                t.column(Step.Columns.name.name, .text).notNull().defaults(to: "")
+                t.column(Step.Columns.duration.name, .double).notNull().defaults(to: 60)
+                t.column(Step.Columns.temperature.name, .double)
+                t.column(Step.Columns.notes.name, .text).notNull().defaults(to: "")
+                t.column(Step.Columns.recipeId.name, .integer).references("Recipe", onDelete: .cascade)
+                t.column(Step.Columns.superStepId.name, .integer).references("Step")
+                t.column(Step.Columns.number.name, .integer).notNull()
+            }
+            
+            try db.create(table: "Ingredient") { t in
+                t.autoIncrementedPrimaryKey(Ingredient.Columns.id.name)
+                t.column(Ingredient.Columns.name.name, .text).notNull().defaults(to: "")
+                t.column(Ingredient.Columns.temperature.name, .double)
+                t.column(Ingredient.Columns.mass.name, .double).notNull().defaults(to: 0)
+                t.column(Ingredient.Columns.c.name, .double)
+                t.column(Ingredient.Columns.stepId.name, .integer).references("Step", onDelete: .cascade)
+                t.column(Ingredient.Columns.number.name, .integer).notNull()
+            }
+        }
+        return migrator
+    }
+}
+
+//TODO: Testing funcs
+
+// MARK: - Database Access: Writes
+public extension BackAppData {
+    
+    /// Saves (inserts or updates) a record. When the method returns, the
+    /// record is present in the database, and its id is not nil.
+    func save<T:BakingRecipeRecord>(_ record: inout T) {
         do {
-            try database.createTable(Recipe.self)
-            try database.createTable(Step.self)
-            try database.createTable(Ingredient.self)
+            try dbWriter.write { db in
+                return try record.save(db)
+            }
         } catch {
             print(error.localizedDescription)
+            return
         }
         
-        let recipesObserver = database.observe(on: Recipe.self) { _ in
-            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
-        }
-        let stepsObserver = database.observe(on: Step.self) { _ in
-            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
-        }
-        let ingredientsObserver = database.observe(on: Ingredient.self) { _ in
-            NotificationCenter.default.post(Notification(name: Notification.Name.recipesChanged))
-        }
-        
-        observerIds.append(contentsOf: [recipesObserver, stepsObserver, ingredientsObserver])
-        
-    }
-    
-    deinit {
-        for id in observerIds {
-            database.removeObserver(id)
+        if record is Recipe, !databaseAutoUpdatesDisabled {
+            NotificationCenter.default.post(name: .recipesChanged, object: nil)
         }
     }
     
-    //MARK: - CUD Operations
-    //C: Create, U: Update, D: Delete
-    
-    ///helper method for cud operations
-    internal func objectsNotEmpty<T: BakingRecipeSqlable>(with objectId: Int, on type: T.Type = T.self) -> Bool {
-        guard let results = try? T.read().filter(T.id == objectId).run(database) else {
-            return false
-        }
-        
-        return !results.isEmpty
-    }
-    
-    ///generates a unique id for a new object in the database
-    public func newId<T: BakingRecipeSqlable>(for type: T.Type) -> Int {
-        var id = 0
-        while objectsNotEmpty(with: id, on: type) {
-            id = Int.random(in: 0..<Int.max)
-        }
-        return id
-    }
-    
-    ///inserts a given object into the database
-    ///if it already exists nothing happens
-    /// - returns: wether  it succeded
-    public func insert<T:BakingRecipeSqlable>(_ object: T) -> Bool {
-        if objectsNotEmpty(with: object.id, on: T.self) {
-            //the object already exists: Do nothing!
-            return false
-        } else {
-            //object does not exist yet: Try inserting it!
-            do {
-                
-                try object.insert().run(database)
-            } catch {
-                print(error.localizedDescription)
-                return false
+    /// updates a record
+    func update<T:BakingRecipeRecord>(_ record: T, completion: ((Error?) -> Void)? = nil) {
+        do {
+            try dbWriter.write { db in
+                try record.update(db)
             }
-            
-            //success
-            return true
+            if let completion = completion {
+                completion(nil)
+            }
+            //completion(nil)
+        } catch {
+            print(error.localizedDescription)
+            if let completion = completion {
+                completion(error)
+            }
         }
     }
     
-    ///updates object in the database if it does not exists it gets inserted
-    public func update<T:BakingRecipeSqlable>(_ object: T) -> Bool {
-        if objectsNotEmpty(with: object.id, on: T.self) {
-            //found the object in the database: Try updating it!
-            do {
-                try object.update().run(database)
-            } catch {
-                print(error.localizedDescription)
-                return false
+    /// delete the specified record and returns wether the deletion was succesfull
+    func delete<T:BakingRecipeRecord>(_ record: T) -> Bool {
+        do {
+            return try dbWriter.write { db in
+                try T.deleteOne(db, key: ["id" : record.id])
             }
-            
-            //succes
-            return true
-        } else {
-            //the object does not exist: Insert it!
-            return self.insert(object)
-        }
-    }
-    
-    ///deletes an object if present from the database
-    public func delete<T:BakingRecipeSqlable>(_ object: T) -> Bool {
-        if objectsNotEmpty(with: object.id, on: T.self) {
-            //found the object in the database: Try deleting it!
-            do {
-                try object.delete().run(database)
-            } catch {
-                print(error.localizedDescription)
-                return false
-            }
-            
-            //succes
-            return true
-        } else {
-            //the object does not exist: Do nothing!
+        } catch {
+            print(error.localizedDescription)
             return false
         }
     }
     
-    public func object<T:BakingRecipeSqlable>(with id: Int, of Type: T.Type = T.self) -> T? {
-        ((try? T.read().filter(T.id == id).run(database)) ?? []).first
+    internal func deleteAll<T:BakingRecipeRecord>(of type: T.Type) throws {
+        _ = try dbWriter.write { db in
+            try T.deleteAll(db)
+        }
     }
     
+    /// move Records (change their number) so their sorted order changes
+    internal func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
+        DispatchQueue.global(qos: .background).async {
+            databaseAutoUpdatesDisabled = true
+            var recordIds = array.map { $0.id }
+            
+            let removedRecord = recordIds.remove(at: source)
+            recordIds.insert(removedRecord, at: destination)
+            
+            var number = 0
+            for id in recordIds {
+                var record: T = self.record(with: id!)!
+                record.number = number
+                number += 1
+                self.save(&record)
+            }
+            databaseAutoUpdatesDisabled = false
+        }
+    }
+}
+
+
+// MARK: - Database Access: Reads
+
+public extension BackAppData {
+    /// Provides a read-only access to the database
+    var databaseReader: DatabaseReader {
+        dbWriter
+    }
+    
+    /// fetch a record from a database
+    func record<T:BakingRecipeRecord>(with id: Int64, of type: T.Type = T.self) -> T? {
+        return try? databaseReader.read { db in
+            return try? T.all().filter(key: ["id":id]).fetchOne(db)
+        }
+    }
+    
+    /// all Records of a specified type in the database
+    func allRecords<T:BakingRecipeRecord>(of type: T.Type = T.self) -> [T] {
+        (try? databaseReader.read { try? T.fetchAll($0)}) ?? []
+    }
 }

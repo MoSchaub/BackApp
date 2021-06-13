@@ -16,13 +16,14 @@ public class TimePickerCell: CustomCell {
     ///currently selected duration
     private var time: TimeInterval {
         get {
-            return appData.object(with: stepId, of: Step.self)!.duration
+            return appData.record(with: stepId, of: Step.self)!.duration
         }
         set {
-            var newStep = appData.object(with: stepId, of: Step.self)!
+            var newStep = appData.record(with: stepId, of: Step.self)!
             newStep.duration = newValue
-            _ = self.appData.update(newStep)
-            NotificationCenter.default.post(Notification(name: .init(rawValue: "stepChanged")))
+            self.appData.update(newStep) { _ in
+                NotificationCenter.default.post(Notification(name: .init(rawValue: "stepChanged")))
+            }
         }
     }
     
@@ -50,14 +51,14 @@ public class TimePickerCell: CustomCell {
     }
     
     ///the id of the step whose duration is modified
-    private var stepId: Int
+    private var stepId: Int64
     
     private var appData: BackAppData
     
     /// the datePicker displayed in the cell
     internal lazy var datePicker = UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
     
-    public init(stepId: Int, appData: BackAppData, reuseIdentifier: String?) {
+    public init(stepId: Int64, appData: BackAppData, reuseIdentifier: String?) {
         self.stepId = stepId
         self.appData = appData
         super.init(style: .default, reuseIdentifier: reuseIdentifier)

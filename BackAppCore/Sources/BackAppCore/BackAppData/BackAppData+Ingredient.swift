@@ -10,27 +10,17 @@ import BakingRecipeFoundation
 public extension BackAppData {
     
     var allIngredients: [Ingredient] {
-        (try? Ingredient.read().run(database)) ?? []
+        allRecords()
     }
     
-    func ingredients(with stepId: Int) -> [Ingredient] {
-        (try? Ingredient.read().filter(.equalsValue(Ingredient.stepId, stepId)).orderBy(Ingredient.number, .asc) .run(database)) ?? []
+    func ingredients(with stepId: Int64) -> [Ingredient] {
+        (try? self.databaseReader.read { db in
+            try? Ingredient.all().orderedByNumber(with: stepId).fetchAll(db)
+        }) ?? []
     }
     
-    func moveIngredient(with stepId: Int, from source: Int, to destination: Int) {
-        
-        var ingredientIdsArray = ingredients(with: stepId).map { $0.id }
-        let removedObject = ingredientIdsArray.remove(at: source)
-        ingredientIdsArray.insert(removedObject, at: destination)
-        
-        var number = 0
-        for id in ingredientIdsArray {
-            var object = self.object(with: id, of: Ingredient.self)!
-            object.number = number
-            number += 1
-            _ = self.update(object)
-        }
-        
+    func moveIngredient(with stepId: Int64, from source: Int, to destination: Int) {
+        self.moveRecord(in: ingredients(with: stepId), from: source, to: destination)
     }
     
 }

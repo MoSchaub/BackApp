@@ -48,6 +48,7 @@ class Back_App_iOSUITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
+
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         print("error")
@@ -65,6 +66,7 @@ class Back_App_iOSUITests: XCTestCase {
         let subs = [sub1, sub2, sub3]
         
         app.launch()
+        app.swipeDown()
         
         addButton.tap()
         
@@ -105,6 +107,7 @@ class Back_App_iOSUITests: XCTestCase {
     
     func testAddingRecipeStepUpdateBug() {
         app.launch()
+        app.swipeDown()
         
         addButton.tap()
         
@@ -127,13 +130,14 @@ class Back_App_iOSUITests: XCTestCase {
     
     func testAddingIngredientBug() throws {
         app.launch()
+        app.swipeDown()
         
         addButton.tap()
         
         appTables.staticTexts["add Step"].tap()
         
         appTables.staticTexts["add Ingredient"].tap()
-        
+        sleep(1)
         nameTextField.tap()
         nameTextField.typeText("test")
         
@@ -152,6 +156,7 @@ class Back_App_iOSUITests: XCTestCase {
     
     func testIngredientMassTextConvertBug() {
         app.launch()
+        app.swipeDown()
         
         addButton.tap()
         
@@ -161,6 +166,8 @@ class Back_App_iOSUITests: XCTestCase {
         
         nameTextField.tap()
         nameTextField.typeText("test")
+        
+        doneButton.tap()
         
         let amountTextField = appTables.textFields["amount in gramms"]
         amountTextField.tap()
@@ -177,10 +184,9 @@ class Back_App_iOSUITests: XCTestCase {
         app.terminate()
         
         app.launch()
+        app.swipeDown()
         
         try! delete(recipeName: Recipe(name: "unnamed recipe", brotValues: []).formattedName)
-        
-        
         
     }
     
@@ -194,6 +200,7 @@ class Back_App_iOSUITests: XCTestCase {
         let returnButton = app.buttons["Return"]
         
         app.launch()
+        app.swipeDown()
         addButton.tap()
         
         // name
@@ -219,6 +226,7 @@ class Back_App_iOSUITests: XCTestCase {
         app.terminate()
 
         app.launch()
+        app.swipeDown()
         
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
     }
@@ -293,7 +301,10 @@ class Back_App_iOSUITests: XCTestCase {
         
         for substep in step.subSteps {
             appTables.staticTexts["add Ingredient"].tap()
+            
+            sleep(5)
             app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
+            sleep(5)
             app.sheets["select Step"].scrollViews.otherElements.buttons[substep.formattedName].tap()
             
             appTables.cells.staticTexts[substep.name].firstMatch.tap()
@@ -311,7 +322,8 @@ class Back_App_iOSUITests: XCTestCase {
     func testChangingRecipeExample() throws {
 
         app.launch()
-
+        app.swipeDown()
+        
         appTables.staticTexts[Recipe.example.name].tap()
         
         let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
@@ -327,11 +339,14 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
         
+        sleep(1)
         XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
     }
     
     func testInEditingDissmissCrash() throws {
         app.launch()
+        app.swipeDown()
+        
         addButton.tap()
         nameTextField.tap()
         app.navigationBars.firstMatch.buttons["Cancel"].tap()

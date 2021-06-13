@@ -10,7 +10,6 @@ import SwiftUI
 import MobileCoreServices
 import BackAppCore
 import BakingRecipeStrings
-import BakingRecipeCells
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
 import Combine
@@ -67,12 +66,30 @@ class CompactHomeViewController: UITableViewController {
         super.viewDidLoad()
         registerCells()
         configureNavigationBar()
-        dataSource.update(animated: true)
         
-        //attack publisher for navbar reload
+        //attach publisher for navbar reload
         NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
             self.configureNavigationBar()
         }.store(in: &tokens)
+        
+        //attach publisher for alert
+        NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
+            self.presentImportAlert()
+        }.store(in: &tokens)
+        
+        //ask for room temp
+        presentRoomTempSheet()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        dataSource.update(animated: false)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        dataSource.update(animated: false)
     }
 
 }
@@ -89,34 +106,75 @@ private extension CompactHomeViewController {
     // MARK: - NavigationBar
     
     @objc private func configureNavigationBar() {
-        title = Strings.recipes
-        navigationController?.navigationBar.prefersLargeTitles = true
-       
-        let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(navigateToSettings))
-        let editButtonItem = self.editButtonItem
-        editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
-        navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
+        DispatchQueue.main.async { //force to main thread since ui is updated
+            self.title = Strings.recipes
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            
+            let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
+            let editButtonItem = self.editButtonItem
+            editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
+            self.isEditing = false 
+            self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
+            
+            let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
+            let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
+            self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+        }
+    }
+    
+    // MARK: - Room Temp Sheet
+    private func presentRoomTempSheet() {
+        let roomtempBinding = Binding {
+            return Standarts.roomTemp
+        } set: {
+            Standarts.roomTemp = $0
+        }
         
-        let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentAddRecipePopover))
-        let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.doc"), style: .plain, target: self, action: #selector(openImportFilePopover))
-        navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+        let vc = UIHostingController(rootView: RoomTempPickerSheet(roomTemp: Binding { return 0.0} set: { _ in}, dissmiss: {}))
+        
+        let sheet = RoomTempPickerSheet(roomTemp: roomtempBinding) {
+            vc.dismiss(animated: true)
+        }
+        
+        vc.rootView = sheet
+        
+        vc.modalPresentationStyle = .popover
+        
+        present(vc, animated: true)
+    }
+    
+    // MARK: - Input Alert
+    
+    ///present the inputAlert
+    private func presentImportAlert() {
+        DispatchQueue.main.async { //force to main thread since this is ui code
+            
+            //create the alert
+            let alert = UIAlertController(title: inputAlertTitle, message: inputAlertMessage, preferredStyle: .alert)
+            
+            //add the "ok" action/option/button
+            alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
+                alert.dismiss(animated: true)
+            }))
+            
+            //finally present it
+            self.present(alert, animated: true)
+        }
     }
     
     ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         
-        let uniqueId = self.appData.newId(for: Recipe.self)
-        
         let newNumber = (appData.allRecipes.last?.number ?? -1) + 1
         
         // the new fresh recipe
-        let recipe = Recipe.init(id: uniqueId, number: newNumber)
+        var recipe = Recipe.init(number: newNumber)
         
         // insert the new recipe
-        guard appData.insert(recipe) else { return }
+        appData.save(&recipe)
         
         // create the vc
-        let vc = RecipeDetailViewController(recipeId: uniqueId, creating: true, appData: appData)
+        let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -158,13 +216,13 @@ extension CompactHomeViewController {
     // MARK: - Cell Selection
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard !pressed else { return }
-        pressed = true
-        guard let recipeItem = dataSource.itemIdentifier(for: indexPath) else { return}
-        
-        navigateToRecipe(recipeItem: recipeItem)
-        
-        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.35) {
+        DispatchQueue.global(qos: .utility).async {
+            guard !self.pressed else { return }
+            self.pressed = true
+            guard let recipeItem = self.dataSource.itemIdentifier(for: indexPath) else { return}
+            
+            self.navigateToRecipe(recipeItem: recipeItem)
+            
             self.pressed = false
         }
     }
@@ -172,22 +230,24 @@ extension CompactHomeViewController {
     private func navigateToRecipe(recipeItem: RecipeItem) {
         
         // get the recipe from the database
-        if let recipe = appData.object(with: recipeItem.id, of: Recipe.self) {
+        if let recipe = appData.record(with: Int64(recipeItem.id), of: Recipe.self) {
             
-            //create the vc
-            let vc = RecipeDetailViewController(recipeId: recipe.id, creating: false, appData: appData) {
-                //dismiss detail
-                if self.splitViewController?.isCollapsed ?? false {
-                    //nosplitVc visible
-                    self.navigationController?.popViewController(animated: true)
-                } else {
-                    //splitVc visible
-                    _ = self.splitViewController?.viewControllers.popLast()
+            DispatchQueue.main.async {
+                //create the vc
+                let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: false, appData: self.appData) {
+                    //dismiss detail
+                    if self.splitViewController?.isCollapsed ?? false {
+                        //nosplitVc visible
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        //splitVc visible
+                        _ = self.splitViewController?.viewControllers.popLast()
+                    }
                 }
+                //push to the view controller
+                let nv = UINavigationController(rootViewController: vc)
+                self.splitViewController?.showDetailViewController(nv, sender: self)
             }
-            
-            //push to the view controller
-            splitViewController?.showDetailViewController(UINavigationController(rootViewController: vc), sender: self)
         }
     }
     
@@ -211,13 +271,6 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         
         //update cells
         self.dataSource.update(animated: true)
-        
-        //alert
-        let alert = UIAlertController(title: appData.inputAlertTitle, message: appData.inputAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
-            alert.dismiss(animated: true)
-        }))
-        
-        present(alert, animated: true)
     }
+    
 }

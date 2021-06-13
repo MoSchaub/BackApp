@@ -10,7 +10,6 @@ import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
-import BakingRecipeCells
 
 class ScheduleViewController: UITableViewController {
     // - MARK: - Properties
@@ -71,7 +70,7 @@ private extension ScheduleViewController {
     // - MARK: - Data Source
     private func makeDataSource() -> UITableViewDiffableDataSource<Int, StepItem> {
         UITableViewDiffableDataSource<Int, StepItem>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
-            if let step = self.appData.object(with: item.id, of: Step.self) {
+            if let step = self.appData.record(with: Int64(item.id), of: Step.self) {
                 let cell = CustomCell()
                 
                 let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
@@ -88,7 +87,7 @@ private extension ScheduleViewController {
     // - MARK: - Snapshot
     private func updateList(animated: Bool = true) {
         var sections = [Int]()
-        let _ = appData.reorderedSteps(for: self.recipe.id).enumerated().map { sections.append($0.offset)} //get a section for each step
+        let _ = appData.reorderedSteps(for: self.recipe.id!).enumerated().map { sections.append($0.offset)} //get a section for each step
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, StepItem>() // create the snapshot
         
@@ -104,7 +103,7 @@ private extension ScheduleViewController {
 private extension ScheduleViewController {
     @objc private func shareText(sender: UIBarButtonItem) {
         
-        let textToShare = appData.text(for: recipe.id, roomTemp: roomTemp, scaleFactor: factor, kneadingHeating: Standarts.kneadingHeating) //get the text to share
+        let textToShare = appData.text(for: recipe.id!, roomTemp: roomTemp, scaleFactor: factor, kneadingHeating: Standarts.kneadingHeating) //get the text to share
         
         let vc = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil) //share the text
         vc.popoverPresentationController?.barButtonItem = sender
@@ -145,23 +144,23 @@ private extension ScheduleViewController {
                     Text(step.formattedName)
                         .font(.headline)
                     Spacer()
-                    Text(appData.formattedStartDate(for: step, with: recipe.id))
+                    Text(appData.formattedStartDate(for: step, with: recipe.id!))
                 }
                 Text("\(step.formattedDuration), \(step.formattedTemp(roomTemp: roomTemp))").secondary()
             }
             
-            ForEach(appData.ingredients(with: step.id)){ ingredient in
+            ForEach(appData.ingredients(with: step.id!)){ ingredient in
                 self.customIngredientRow(ingredient: ingredient, step: step)
                     .padding(.vertical, 5)
             }
             
-            ForEach(appData.substeps(for: step.id)) { substep in
+            ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
                 HStack {
                     Text(substep.formattedName)
                     Spacer()
                     Text(substep.formattedTemp(roomTemp: self.roomTemp))
                     Spacer()
-                    Text(self.appData.totalFormattedMass(for: substep.id, factor: self.factor))
+                    Text(self.appData.totalFormattedMass(for: substep.id!, factor: self.factor))
                 }
             }
             

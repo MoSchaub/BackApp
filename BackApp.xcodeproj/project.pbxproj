@@ -11,6 +11,26 @@
 		CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B4248BDA3000D11DD3 /* NeomorphicToggleStyle.swift */; };
 		CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F999248BDA3000D11DD3 /* DecimalField.swift */; };
 		CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9A7248BDA3000D11DD3 /* MODatePicker.swift */; };
+		CD232E4926740CD500E528BB /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3726740CD400E528BB /* SwitchCell.swift */; };
+		CD232E4A26740CD500E528BB /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3826740CD400E528BB /* RecipeCell.swift */; };
+		CD232E4B26740CD500E528BB /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3926740CD400E528BB /* ImageCell.swift */; };
+		CD232E4C26740CD500E528BB /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3A26740CD400E528BB /* DetailCell.swift */; };
+		CD232E4D26740CD500E528BB /* AmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3B26740CD500E528BB /* AmountCell.swift */; };
+		CD232E4E26740CD500E528BB /* DecimalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3C26740CD500E528BB /* DecimalCell.swift */; };
+		CD232E4F26740CD500E528BB /* TextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3D26740CD500E528BB /* TextViewCell.swift */; };
+		CD232E5026740CD500E528BB /* TextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3E26740CD500E528BB /* TextFieldCell.swift */; };
+		CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3F26740CD500E528BB /* IngredientRow.swift */; };
+		CD232E5226740CD500E528BB /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4026740CD500E528BB /* CustomCell.swift */; };
+		CD232E5326740CD500E528BB /* StepCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4126740CD500E528BB /* StepCell.swift */; };
+		CD232E5426740CD500E528BB /* TimePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4226740CD500E528BB /* TimePickerCell.swift */; };
+		CD232E5526740CD500E528BB /* KneadingHeatingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4326740CD500E528BB /* KneadingHeatingCell.swift */; };
+		CD232E5626740CD500E528BB /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4426740CD500E528BB /* SubtitleCell.swift */; };
+		CD232E5726740CD500E528BB /* TempPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4526740CD500E528BB /* TempPickerCell.swift */; };
+		CD232E5826740CD500E528BB /* InfoStripCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4626740CD500E528BB /* InfoStripCell.swift */; };
+		CD232E5926740CD500E528BB /* StepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4726740CD500E528BB /* StepRow.swift */; };
+		CD232E5A26740CD500E528BB /* DatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E4826740CD500E528BB /* DatePickerCell.swift */; };
+		CD232E6026740D4E00E528BB /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD232E5F26740D4E00E528BB /* CombineCocoa */; };
+		CD232E6226740D7100E528BB /* BakingRecipeUIFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = CD232E6126740D7100E528BB /* BakingRecipeUIFoundation */; };
 		CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
@@ -20,8 +40,8 @@
 		CD314887259B894A000FAB6F /* light.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD314871259B8878000FAB6F /* light.bundle */; };
 		CD3148AA259BBB1B000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD3148A9259BBB1B000FAB6F /* Colors.xcassets */; };
 		CD3148B4259BBBC7000FAB6F /* dark.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD31489C259BBB0F000FAB6F /* dark.bundle */; };
-		CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */ = {isa = PBXBuildFile; productRef = CD38FFE225960DFA00F352E9 /* BakingRecipeCells */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
+		CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
@@ -120,7 +140,24 @@
 
 /* Begin PBXFileReference section */
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		CD285D3C258E44E900813A4C /* BakingRecipeCells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeCells; sourceTree = "<group>"; };
+		CD232E3726740CD400E528BB /* SwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
+		CD232E3826740CD400E528BB /* RecipeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
+		CD232E3926740CD400E528BB /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		CD232E3A26740CD400E528BB /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
+		CD232E3B26740CD500E528BB /* AmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountCell.swift; sourceTree = "<group>"; };
+		CD232E3C26740CD500E528BB /* DecimalCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalCell.swift; sourceTree = "<group>"; };
+		CD232E3D26740CD500E528BB /* TextViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewCell.swift; sourceTree = "<group>"; };
+		CD232E3E26740CD500E528BB /* TextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCell.swift; sourceTree = "<group>"; };
+		CD232E3F26740CD500E528BB /* IngredientRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
+		CD232E4026740CD500E528BB /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		CD232E4126740CD500E528BB /* StepCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepCell.swift; sourceTree = "<group>"; };
+		CD232E4226740CD500E528BB /* TimePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerCell.swift; sourceTree = "<group>"; };
+		CD232E4326740CD500E528BB /* KneadingHeatingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KneadingHeatingCell.swift; sourceTree = "<group>"; };
+		CD232E4426740CD500E528BB /* SubtitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleCell.swift; sourceTree = "<group>"; };
+		CD232E4526740CD500E528BB /* TempPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempPickerCell.swift; sourceTree = "<group>"; };
+		CD232E4626740CD500E528BB /* InfoStripCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoStripCell.swift; sourceTree = "<group>"; };
+		CD232E4726740CD500E528BB /* StepRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepRow.swift; sourceTree = "<group>"; };
+		CD232E4826740CD500E528BB /* DatePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerCell.swift; sourceTree = "<group>"; };
 		CD285D47258E474000813A4C /* BakingRecipeUIFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeUIFoundation; sourceTree = "<group>"; };
 		CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +173,7 @@
 		CD31489E259BBB0F000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD3148A9259BBB1B000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
+		CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempPickerSheet.swift; sourceTree = "<group>"; };
 		CD59040724E2CF4F008A0E6E /* Push Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Push Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD59040824E2CF4F008A0E6E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
@@ -217,7 +255,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD38FFE325960DFA00F352E9 /* BakingRecipeCells in Frameworks */,
+				CD232E6026740D4E00E528BB /* CombineCocoa in Frameworks */,
+				CD232E6226740D7100E528BB /* BakingRecipeUIFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +270,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD232E3626740CAA00E528BB /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				CD232E3B26740CD500E528BB /* AmountCell.swift */,
+				CD232E4026740CD500E528BB /* CustomCell.swift */,
+				CD232E4826740CD500E528BB /* DatePickerCell.swift */,
+				CD232E3C26740CD500E528BB /* DecimalCell.swift */,
+				CD232E3A26740CD400E528BB /* DetailCell.swift */,
+				CD232E3926740CD400E528BB /* ImageCell.swift */,
+				CD232E4626740CD500E528BB /* InfoStripCell.swift */,
+				CD232E3F26740CD500E528BB /* IngredientRow.swift */,
+				CD232E4326740CD500E528BB /* KneadingHeatingCell.swift */,
+				CD232E3826740CD400E528BB /* RecipeCell.swift */,
+				CD232E4126740CD500E528BB /* StepCell.swift */,
+				CD232E4726740CD500E528BB /* StepRow.swift */,
+				CD232E4426740CD500E528BB /* SubtitleCell.swift */,
+				CD232E3726740CD400E528BB /* SwitchCell.swift */,
+				CD232E4526740CD500E528BB /* TempPickerCell.swift */,
+				CD232E3E26740CD500E528BB /* TextFieldCell.swift */,
+				CD232E3D26740CD500E528BB /* TextViewCell.swift */,
+				CD232E4226740CD500E528BB /* TimePickerCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		CD2BCE5424AE72CB00B868D7 /* Back App iOSTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,7 +354,6 @@
 			isa = PBXGroup;
 			children = (
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
-				CD285D3C258E44E900813A4C /* BakingRecipeCells */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
 				CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */,
@@ -432,6 +495,7 @@
 			children = (
 				CD7691BB24EEAB6600BAB383 /* Back App.entitlements */,
 				CDBDCF9C24A553BF00121F98 /* supporting Files */,
+				CD232E3626740CAA00E528BB /* Cells */,
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
 				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
@@ -511,6 +575,7 @@
 			isa = PBXGroup;
 			children = (
 				CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */,
+				CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */,
 				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
 				CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */,
@@ -629,7 +694,8 @@
 			);
 			name = "Back App iOS";
 			packageProductDependencies = (
-				CD38FFE225960DFA00F352E9 /* BakingRecipeCells */,
+				CD232E5F26740D4E00E528BB /* CombineCocoa */,
+				CD232E6126740D7100E528BB /* BakingRecipeUIFoundation */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -699,6 +765,7 @@
 			);
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
+				CD232E5E26740D4E00E528BB /* XCRemoteSwiftPackageReference "CombineCocoa" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -801,22 +868,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD232E5826740CD500E528BB /* InfoStripCell.swift in Sources */,
 				CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */,
 				CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */,
 				CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */,
 				CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
+				CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */,
 				CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
+				CD232E5526740CD500E528BB /* KneadingHeatingCell.swift in Sources */,
 				CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */,
 				CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */,
+				CD232E5326740CD500E528BB /* StepCell.swift in Sources */,
+				CD232E5626740CD500E528BB /* SubtitleCell.swift in Sources */,
+				CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */,
 				CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */,
 				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
+				CD232E5726740CD500E528BB /* TempPickerCell.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
+				CD232E4C26740CD500E528BB /* DetailCell.swift in Sources */,
 				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
 				CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */,
+				CD232E4F26740CD500E528BB /* TextViewCell.swift in Sources */,
+				CD232E5A26740CD500E528BB /* DatePickerCell.swift in Sources */,
+				CD232E5026740CD500E528BB /* TextFieldCell.swift in Sources */,
+				CD232E4D26740CD500E528BB /* AmountCell.swift in Sources */,
+				CD232E5226740CD500E528BB /* CustomCell.swift in Sources */,
+				CD232E4A26740CD500E528BB /* RecipeCell.swift in Sources */,
+				CD232E4926740CD500E528BB /* SwitchCell.swift in Sources */,
+				CD232E4E26740CD500E528BB /* DecimalCell.swift in Sources */,
+				CD232E4B26740CD500E528BB /* ImageCell.swift in Sources */,
+				CD232E5926740CD500E528BB /* StepRow.swift in Sources */,
+				CD232E5426740CD500E528BB /* TimePickerCell.swift in Sources */,
 				CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */,
 				CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */,
 				CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */,
@@ -1047,7 +1133,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1070,7 +1156,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1217,7 +1303,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1242,7 +1328,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1378,10 +1464,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		CD232E5E26740D4E00E528BB /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		CD38FFE225960DFA00F352E9 /* BakingRecipeCells */ = {
+		CD232E5F26740D4E00E528BB /* CombineCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = BakingRecipeCells;
+			package = CD232E5E26740D4E00E528BB /* XCRemoteSwiftPackageReference "CombineCocoa" */;
+			productName = CombineCocoa;
+		};
+		CD232E6126740D7100E528BB /* BakingRecipeUIFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BakingRecipeUIFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

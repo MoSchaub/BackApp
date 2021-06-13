@@ -118,10 +118,8 @@ extension TextViewCell: UITextViewDelegate {
     public func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
         self.setUpLinkDetection()
-        DispatchQueue.global(qos: .userInitiated).async { // perform the update asyncronously
-            self.textContent = textViewText ?? ""
-            self.setText()
-        }
+        self.textContent = textViewText ?? ""
+        self.setText()
     }
     
     public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {

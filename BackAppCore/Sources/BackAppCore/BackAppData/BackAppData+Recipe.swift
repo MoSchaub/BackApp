@@ -6,7 +6,6 @@
 //
 
 import BakingRecipeFoundation
-import Sqlable
 import BakingRecipeStrings
 import NotificationCenter
 
@@ -22,32 +21,20 @@ public extension BackAppData {
     
     /// all Recipes in the database
     var allRecipes: [Recipe] {
-        (try? Recipe.read().orderBy(Recipe.number, .asc).run(database)) ?? []
+        (try? self.databaseReader.read { db in
+            try? Recipe.all().orderedByNumber.fetchAll(db)
+        }) ?? []
     }
     
     /// all favorited recipes in the database
     var favorites: [Recipe] {
-        (try? Recipe.read().filter(Recipe.isFavorite == true).run(database)) ?? []
+        (try? self.databaseReader.read { db in
+            try? Recipe.all().filterFavorites.fetchAll(db)
+        }) ?? []
     }
     
     func moveRecipe(from source: Int, to destination: Int) {
-        
-        var recipeIds = allRecipes.map { $0.id }
-        
-        let removedObject = recipeIds.remove(at: source)
-        recipeIds.insert(removedObject, at: destination)
-        
-        var number = 0
-        for id in recipeIds {
-            
-            //database operations need to be run from the main thread
-            DispatchQueue.main.async {
-                var object = self.object(with: id, of: Recipe.self)!
-                object.number = number
-                number += 1
-                _ = self.update(object)
-            }
-        }
+        self.moveRecord(in: allRecipes, from: source, to: destination)
     }
 }
 
@@ -55,7 +42,7 @@ public extension BackAppData {
 public extension BackAppData {
     
     ///func to reduce code
-    private func findRecipeAndReturnAttribute<T>(for recipeId: Int, failValue: T, successCompletion: ((Recipe) -> T) ) -> T {
+    private func findRecipeAndReturnAttribute<T>(for recipeId: Int64, failValue: T, successCompletion: ((Recipe) -> T) ) -> T {
         guard let recipe = self.allRecipes.first(where: { $0.id == recipeId }) else {
             return failValue
         }
@@ -63,85 +50,88 @@ public extension BackAppData {
         return successCompletion(recipe)
     }
     
-    ///total duration of all steps
-    func totalDuration(for recipeId: Int) -> Int {
+    ///total duration of all steps in minutes
+    func totalDuration(for recipeId: Int64) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
             return recipe.totalDuration(steps: steps(with: recipeId))
         }
     }
     
     ///count of all ingredients used in the recipe
-    func numberOfAllIngredients(for recipeId: Int) -> Int {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
-            var counter = 0
-            _ = steps(with: recipeId).map { counter += (try? Ingredient.count().filter(Ingredient.stepId == $0.id).run(database)) ?? 0 }
-            return counter
-        }
+    func numberOfAllIngredients(for recipeId: Int64) -> Int {
+        (try? databaseReader.read { db in
+            try Int.fetchOne(db, sql: "SELECT COUNT( DISTINCT INGREDIENT.ID) FROM INGREDIENT LEFT JOIN STEP ON INGREDIENT.STEPID = STEP.ID WHERE STEP.ID IN (SELECT STEP.ID FROM STEP WHERE STEP.RECIPEID = \(recipeId))")
+        }) ?? 0
     }
     
     /// totalAmount of all ingredients in the recipe
-    private func totalAmount(for recipeId: Int) -> Double {
+    private func totalAmount(for recipeId: Int64) -> Double {
         var summ: Double = 0
         // iterate through all non substeps cause totalMass also uses the substeps
-        _ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id)}
+        _ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id!)}
         return summ
     }
-    
-    /// total formatted amount of all ingredients in a given recipe
-    func totalFormattedAmount(for recipeId: Int) -> String {
+
+    /// total formatted amount of all ingredients in a given recipe in gramms
+    func totalFormattedAmount(for recipeId: Int64) -> String {
         self.totalAmount(for: recipeId).formattedMass
     }
     
-    /// dough Yield (waterSum/flourSum) for a given Recipe
-    private func totalDoughYield(for recipeId: Int) -> Double {
+    /// dough Yield (waterSum/flourSum) * 100 + 100 for a given Recipe if locale == "de"
+    private func totalDoughYield(for recipeId: Int64) -> Double {
+        
         var flourSum = 0.0
-        _ = self.notSubsteps(for: recipeId).map { flourSum += self.flourMass(for: $0.id)}
-        
+        _ = self.notSubsteps(for: recipeId).map { flourSum += self.flourMass(for: $0.id!)}
+
         var waterSum = 0.0
-        _ = self.notSubsteps(for: recipeId).map { waterSum += self.waterMass(for: $0.id)}
-        
+        _ = self.notSubsteps(for: recipeId).map { waterSum += self.waterMass(for: $0.id!)}
+
         guard flourSum != 0 else {
             return 0
         }
-        
-        return waterSum/flourSum
+
+        if Bundle.main.preferredLocalizations.first! == "de" {
+            return (waterSum/flourSum) * 100 + 100
+        } else {
+            return (waterSum/flourSum)
+        }
     }
-    
+
     /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points
-    func formattedTotalDoughYield(for recipeId: Int) -> String {
+    func formattedTotalDoughYield(for recipeId: Int64) -> String {
         String(format: "%.2f", totalDoughYield(for: recipeId))
-    }
-    
+    } //tested
+
     ///formatted total duration in the right unit
-    func formattedTotalDuration(for recipeId: Int) -> String {
+    func formattedTotalDuration(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             recipe.totalDuration(steps: steps(with: recipeId)).formattedDuration
         }
     }
-    
+
     ///formatted total duration in hours
-    func formattedTotalDurationHours(for recipeId: Int) -> String {
+    func formattedTotalDurationHours(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             return(recipe.totalDuration(steps: steps(with: recipeId)).hours * 60).formattedDuration
         }
     }
-    
+
     ///startDate formatted using the dateFormatter
-    func formattedStartDate(for recipeId: Int) -> String {
+    private func formattedStartDate(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return dateFormatter.string(from: recipe.startDate(db: database))
+            return dateFormatter.string(from: recipe.startDate(reader: databaseReader))
         }
     }
-    
+
     ///endDate formatted using the dateFormatter
-    func formattedEndDate(for recipeId: Int) -> String {
+    private func formattedEndDate(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return dateFormatter.string(from: recipe.endDate(db: database))
+            return dateFormatter.string(from: recipe.endDate(reader: databaseReader))
         }
     }
-    
+
     ///formatted Datetext including start and end Text e. g. “Start: 01.01. 1970 18:00”
-    func formattedDate(for recipeId: Int) -> String {
+    func formattedDate(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             if recipe.inverted {
                 return "\(Strings.end) \(formattedEndDate(for: recipeId))"
@@ -150,37 +140,37 @@ public extension BackAppData {
             }
         }
     }
-    
+
     ///combination of formattedEndDate and formattedStartDate
-    func formattedStartBisEnde(for recipeId: Int) -> String {
+    func formattedStartBisEnde(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             return "\(self.formattedStartDate(for: recipeId)) bis \n\(self.formattedEndDate(for: recipeId))"
         }
     }
-    
+
     ///text for exporting
-    func text(for recipeId: Int, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double) -> String {
+    func text(for recipeId: Int64, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return recipe.text(roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, db: database)
+            return recipe.text(roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: databaseReader)
         }
     }
-    
+
     ///steps that are no substeps of any other step
-    func notSubsteps(for recipeId: Int) -> [Step] {
+    func notSubsteps(for recipeId: Int64) -> [Step] {
         findRecipeAndReturnAttribute(for: recipeId, failValue: []) { recipe in
-            recipe.notSubsteps(db: database)
+            recipe.notSubsteps(reader: databaseReader)
         }
     }
-    
-    func reorderedSteps(for recipeId: Int) -> [Step] {
+
+    func reorderedSteps(for recipeId: Int64) -> [Step] {
         findRecipeAndReturnAttribute(for: recipeId, failValue: []) { recipe in
-            recipe.reorderedSteps(db: database)
+            recipe.reorderedSteps(writer: self.dbWriter)
         }
     }
-    
-    func formattedStartDate(for item: Step, with recipeId: Int) -> String {
+
+    func formattedStartDate(for item: Step, with recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            recipe.formattedStartDate(for: item, db: database)
+            recipe.formattedStartDate(for: item, reader: databaseReader)
         }
     }
 }

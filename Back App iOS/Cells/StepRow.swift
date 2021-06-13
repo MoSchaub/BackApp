@@ -29,21 +29,18 @@ public struct StepRow: View {
                 Spacer()
                 Text(step.formattedDuration).secondary()
             }
-            
-            ForEach(appData.ingredients(with: step.id)) { ingredient in
-                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, appData: appData)
-            }
-            
-            ForEach(appData.substeps(for: step.id)) { substep in
+            ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
                 HStack {
                     Text(substep.formattedName)
                     Spacer()
                     Text(substep.formattedTemp(roomTemp: roomTemp))
                     Spacer()
-                    Text(appData.totalFormattedMass(for: substep.id))
+                    Text(appData.totalFormattedMass(for: substep.id!))
                 }
             }
-            
+            ForEach(appData.ingredients(with: step.id!)) { ingredient in
+                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, appData: appData)
+            }
             HStack {
                 Text(step.notes)
                 Spacer()

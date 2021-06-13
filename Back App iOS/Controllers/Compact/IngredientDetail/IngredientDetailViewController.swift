@@ -9,7 +9,6 @@
 import UIKit
 import BackAppCore
 import BakingRecipeFoundation
-import BakingRecipeCells
 import BakingRecipeStrings
 
 class IngredientDetailViewController: UITableViewController {
@@ -128,6 +127,11 @@ private extension IngredientDetailViewController {
                 return cell
             } else if textItem is AmountItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell {
                 cell.setUp(with: self.ingredient, format: format)
+                cell.amountEditingDidEnd = {
+                    DispatchQueue.main.async {
+                        self.updateList(animated: false)
+                    }
+                }
                 return cell
             } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
                 cell.textLabel?.text = detailItem.text
@@ -191,6 +195,10 @@ private extension IngredientDetailViewController {
 extension IngredientDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if dataSource.itemIdentifier(for: indexPath) is DetailItem {
+            //ensure the ingredient amount is saved
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? TextFieldCell, cell.textField.isEditing {
+                cell.textField.endEditing(true)
+            }
             typeSectionExpanded ? collapseTypeSection() : expandTypeSection()
         } else if let textItem = dataSource.itemIdentifier(for: indexPath), typeSectionExpanded,
                   let index = Ingredient.Style.allCases.map({ $0.name}).firstIndex(of: textItem.text),

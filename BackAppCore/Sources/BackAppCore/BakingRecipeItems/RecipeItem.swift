@@ -12,9 +12,9 @@ public class RecipeItem: TextItem {
     public var imageData: Data?
     public var minuteLabel: String
     
-    public init(id: Int, name: String, imageData: Data?, minuteLabel: String) {
+    public init(id: Int64, name: String, imageData: Data?, minuteLabel: String) {
         self.imageData = imageData
         self.minuteLabel = minuteLabel
-        super.init(id: id, text: name)
+        super.init(id: Int(id), text: name)
     }
 }
