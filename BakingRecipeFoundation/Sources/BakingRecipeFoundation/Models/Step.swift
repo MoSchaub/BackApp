@@ -283,6 +283,8 @@ public extension Step {
     /// total mass of flour in the step
     func flourMass(reader: DatabaseReader) -> Double {
         var mass = Ingredient.Style.flour.massOfSelfIngredients(in: self, reader: reader)
+        mass += Ingredient.Style.ta150.massOfSelfIngredients(in: self, reader: reader) * 2/3 //ta150 is 1/3 water and 2/3 flour
+        mass += Ingredient.Style.ta200.massOfSelfIngredients(in: self, reader: reader) * 1/2 //ta200 is half water and half flour
         _ = sortedSubsteps(reader: reader).map { mass += $0.flourMass(reader: reader) }
         return mass
     }
@@ -290,6 +292,8 @@ public extension Step {
     /// total mass of water in the step
     func waterMass(reader: DatabaseReader) -> Double {
         var mass = Ingredient.Style.bulkLiquid.massOfSelfIngredients(in: self, reader: reader)
+        mass += Ingredient.Style.ta150.massOfSelfIngredients(in: self, reader: reader) * 1/3 //ta150 is 1/3 water and 2/3 flour
+        mass += Ingredient.Style.ta200.massOfSelfIngredients(in: self, reader: reader) * 1/2 //ta200 is half water and half flour
         _ = sortedSubsteps(reader: reader).map { mass += $0.waterMass(reader: reader) }
         return mass
     }

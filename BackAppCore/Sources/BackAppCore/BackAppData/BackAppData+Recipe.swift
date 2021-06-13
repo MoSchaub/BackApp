@@ -77,8 +77,9 @@ public extension BackAppData {
         self.totalAmount(for: recipeId).formattedMass
     }
     
-    /// dough Yield (waterSum/flourSum) * 100 for a given Recipe
+    /// dough Yield (waterSum/flourSum) * 100 + 100 for a given Recipe if locale == "de"
     private func totalDoughYield(for recipeId: Int64) -> Double {
+        
         var flourSum = 0.0
         _ = self.notSubsteps(for: recipeId).map { flourSum += self.flourMass(for: $0.id!)}
 
@@ -89,7 +90,11 @@ public extension BackAppData {
             return 0
         }
 
-        return (waterSum/flourSum) * 100
+        if Bundle.main.preferredLocalizations.first! == "de" {
+            return (waterSum/flourSum) * 100 + 100
+        } else {
+            return (waterSum/flourSum)
+        }
     }
 
     /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points

@@ -331,10 +331,10 @@ final class BackAppCoreTests: XCTestCase {
     
     func testFormattedTotalDoughYield() throws {
         let recipeId = try insertExampleRecipeAndGetId()
-        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: recipeId) == "80.00")
+        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: recipeId) == "190.91")
         
         let complexId = try insertComplexRecipeAndGetId()
-        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: complexId) == "50.00")
+        XCTAssert(BackAppData.shared.formattedTotalDoughYield(for: complexId) == "150.00")
     }
     
     func testText() throws {

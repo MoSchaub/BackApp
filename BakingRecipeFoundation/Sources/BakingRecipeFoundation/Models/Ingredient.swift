@@ -83,7 +83,7 @@ public struct Ingredient: BakingRecipeRecord {
 private extension Ingredient {
     
     mutating func autoDetectIngredientType() {
-        if Locale.current.languageCode == "de" { //only german locale at first
+        if Bundle.main.preferredLocalizations.first! == "de" { //only german locale at first
             let flourStrings = ["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM"]
             let bulkLiquidStrings = ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft"]
             

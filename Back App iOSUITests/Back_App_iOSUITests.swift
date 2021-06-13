@@ -137,7 +137,7 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.staticTexts["add Step"].tap()
         
         appTables.staticTexts["add Ingredient"].tap()
-        
+        sleep(1)
         nameTextField.tap()
         nameTextField.typeText("test")
         
