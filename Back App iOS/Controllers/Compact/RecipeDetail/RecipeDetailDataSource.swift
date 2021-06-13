@@ -10,7 +10,6 @@ import SwiftUI
 import BackAppCore
 import BakingRecipeFoundation
 import BakingRecipeStrings
-import BakingRecipeCells
 import BackAppCore
 
 class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {

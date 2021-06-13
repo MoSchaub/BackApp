@@ -9,7 +9,6 @@
 import UIKit
 import BackAppCore
 import BakingRecipeFoundation
-import BakingRecipeCells
 import BakingRecipeStrings
 
 class IngredientDetailViewController: UITableViewController {

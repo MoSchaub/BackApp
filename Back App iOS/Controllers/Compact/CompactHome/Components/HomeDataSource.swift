@@ -8,7 +8,6 @@
 
 import UIKit
 import BakingRecipeStrings
-import BakingRecipeCells
 
 import BakingRecipeFoundation
 import BackAppCore

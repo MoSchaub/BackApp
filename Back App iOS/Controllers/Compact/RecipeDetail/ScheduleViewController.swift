@@ -10,7 +10,6 @@ import UIKit
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
-import BakingRecipeCells
 
 class ScheduleViewController: UITableViewController {
     // - MARK: - Properties

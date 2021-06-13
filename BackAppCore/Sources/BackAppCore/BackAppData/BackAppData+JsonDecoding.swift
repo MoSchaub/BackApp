@@ -86,7 +86,9 @@ public extension BackAppData {
         recipe.times = Decimal(json[CodingKeys.times.rawValue].doubleValue)
         
         let imageString = json[CodingKeys.imageData.rawValue].stringValue
-        recipe.imageData = Data(base64Encoded: imageString)
+        if imageString != "" {
+            recipe.imageData = Data(base64Encoded: imageString)
+        }
         
         recipe.number = json[CodingKeys.number.rawValue].intValue
         

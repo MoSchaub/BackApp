@@ -10,7 +10,6 @@ import SwiftUI
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
 import BakingRecipeStrings
-import BakingRecipeCells
 import BackAppCore
 
 class RecipeDetailViewController: UITableViewController {
