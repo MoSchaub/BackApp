@@ -77,8 +77,10 @@ class CompactHomeViewController: UITableViewController {
             self.presentImportAlert()
         }.store(in: &tokens)
         
+        #if !targetEnvironment(simulator)
         //ask for room temp
         presentRoomTempSheet()
+        #endif
     }
     
     override func loadView() {
