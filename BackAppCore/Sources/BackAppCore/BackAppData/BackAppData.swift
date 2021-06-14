@@ -107,7 +107,6 @@ public extension BackAppData {
             if let completion = completion {
                 completion(nil)
             }
-            //completion(nil)
         } catch {
             print(error.localizedDescription)
             if let completion = completion {

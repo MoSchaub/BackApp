@@ -19,6 +19,9 @@ class RecipeDetailViewController: UITableViewController {
     // class for managing table creation and updates
     private lazy var dataSource = makeDataSource()
     
+    // queue for performing image compression
+    private lazy var compressionQueue = OperationQueue()
+    
     //interface object for the database
     private var appData: BackAppData
     
@@ -73,7 +76,6 @@ class RecipeDetailViewController: UITableViewController {
 extension RecipeDetailViewController {
     override func loadView() {
         super.loadView()
-        setUpNavigationBar()
         self.title = self.recipe.formattedName
     }
     override func viewDidLoad() {
@@ -92,7 +94,9 @@ extension RecipeDetailViewController {
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 250
-        self.setUpNavigationBar()
+        DispatchQueue.global(qos: .background).async {
+            self.setUpNavigationBar()
+        }
     }
     
 }
@@ -346,6 +350,7 @@ private extension RecipeDetailViewController {
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
             self.changeRecipeImage(to: nil)
         }))
+        
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.cellForRow(at: indexPath)?.isSelected = false
@@ -360,8 +365,16 @@ private extension RecipeDetailViewController {
     
     // changes the image of an recipe
     private func changeRecipeImage(to image: UIImage?) {
-        self.recipe.imageData = image?.jpegData(compressionQuality: 0.3)
-        self.appData.update(recipe) { _ in self.dataSource.update(animated: false) }
+        compressionQueue.cancelAllOperations()
+        compressionQueue.addOperation {
+            do {
+                self.recipe.imageData  = try image?.heicData(compressionQuality: 0.3)
+                
+                self.appData.update(self.recipe) { _ in self.dataSource.update(animated: false)}
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     private func showStepDetail(id: Int64?) {
