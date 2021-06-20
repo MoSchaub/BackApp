@@ -338,7 +338,11 @@ public extension Recipe {
     ///text for exporting
     func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String {
         var h = startDate(reader: reader)
-        var text = ""
+        var text = self.formattedName
+        text += " "
+        
+        text += timesText
+        text += "\n"
         
         for step in notSubsteps(reader: reader) {
             text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)

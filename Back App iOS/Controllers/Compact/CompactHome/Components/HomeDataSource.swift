@@ -135,7 +135,11 @@ class HomeDataViewModel {
     }
     
     func canMoveRow(at indexPath: IndexPath) -> Bool {
-        return indexPath.section == HomeSection.recipes.rawValue
+        if appData.favorites.isEmpty {
+            return true
+        } else {
+            return indexPath.section == HomeSection.recipes.rawValue
+        }
     }
     
     func headerTitle(section: Int, numberOfSections: Int) -> String? {

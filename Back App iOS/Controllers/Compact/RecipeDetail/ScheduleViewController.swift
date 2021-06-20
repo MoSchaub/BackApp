@@ -61,7 +61,9 @@ private extension ScheduleViewController {
     
     // - MARK: - NavigationBar
     private func setUpNavigationBar() {
-        title = recipe.formattedName + " - Zeitplan"
+        title = recipe.formattedName + " - \(Strings.schedule) "
+        navigationItem.prompt = self.times!.description + " " + Strings.pieces
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .action, target: self, action: #selector(shareText))
     }
 }
@@ -84,18 +86,24 @@ private extension ScheduleViewController {
         }
     }
     
-    // - MARK: - Snapshot
-    private func updateList(animated: Bool = true) {
+    private func createUpdatedSnapshot(completion: @escaping (NSDiffableDataSourceSnapshot<Int, StepItem>) -> Void ) {
         var sections = [Int]()
-        let _ = appData.reorderedSteps(for: self.recipe.id!).enumerated().map { sections.append($0.offset)} //get a section for each step
+        let _ = self.appData.reorderedSteps(for: self.recipe.id!).enumerated().map { sections.append($0.offset)} //get a section for each step
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, StepItem>() // create the snapshot
         
         snapshot.appendSections(sections) //append sections
         for section in sections {
-            snapshot.appendItems([recipe.allReoderedStepItems(appData: appData)[section]], toSection: section)
+            snapshot.appendItems([self.recipe.allReoderedStepItems(appData: self.appData)[section]], toSection: section)
         }
-        self.dataSource.apply(snapshot, animatingDifferences: animated)
+        completion(snapshot)
+    }
+    
+    // - MARK: - Snapshot
+    private func updateList(animated: Bool = true) {
+        self.createUpdatedSnapshot { snapshot in
+            self.dataSource.apply(snapshot, animatingDifferences: animated)
+        }
     }
 }
 

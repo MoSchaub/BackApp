@@ -95,10 +95,10 @@ private extension DecimalCell {
     @objc private func updateText() {
         // This is the only place we update `value`.
         if let newValue = formatter.number(from: self.textField.text ?? "")?.doubleValue {
-            self.textField.text = String(newValue)
             self.value = Decimal(newValue)
+            self.textField.text = formatter.string(from: NSNumber(value: newValue))! + " " + Strings.pieces
         } else {
-            self.textField.text = formatter.string(for: delegate?.standardValue(in: self))!
+            self.textField.text = formatter.string(for: delegate?.standardValue(in: self))! + " " + Strings.pieces
         }
     }
     
@@ -131,5 +131,13 @@ extension DecimalCell: UITextFieldDelegate {
     /// delete the textFields contents when editing did begin so the placeholder can be shown as it provides information to the user what purpose the textField serves
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = nil
+    }
+    
+    public func pressOk() {
+        self.tapDone(sender: self.textField)
+    }
+    
+    public var textFieldIsFirstResponder: Bool {
+        self.textField.isFirstResponder
     }
 }

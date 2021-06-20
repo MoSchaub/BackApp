@@ -63,10 +63,14 @@ private extension ScheduleFormViewController {
     
     private func setUpNavigationBar() {
         title = recipe.formattedName
+        navigationItem.prompt = Strings.createSchedule
         navigationItem.rightBarButtonItem = .init(title: "OK", style: .plain, target: self, action: #selector(proceedToScheduleView))
     }
     
     @objc private func proceedToScheduleView() {
+        if let decimalCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DecimalCell, decimalCell.textFieldIsFirstResponder {
+            decimalCell.pressOk()
+        }
         navigationController?.pushViewController(ScheduleViewController(recipe: self.recipe, roomTemp: Standarts.roomTemp, times: self.times, appData: appData), animated: true)
     }
     

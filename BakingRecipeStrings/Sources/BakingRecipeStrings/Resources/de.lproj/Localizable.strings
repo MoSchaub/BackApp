@@ -66,6 +66,9 @@
 "bulkLiquid" = "Schüttflüssigkeit";
 
 
+"createSchedule" = "Zeitplan erstellen";
+
+
 "dark" = "dunkel";
 
 
@@ -187,6 +190,9 @@
 
 
 "roomTemperature" = "Raumtemperatur";
+
+
+"schedule" = "Zeitplan";
 
 
 "scheduleFormErrorMessage" = "Bitte gebe die gewünschte Menge an";
