@@ -66,6 +66,9 @@
 "bulkLiquid" = "bulk liquid";
 
 
+"createSchedule" = "create schedule";
+
+
 "dark" = "dark";
 
 /*  */
@@ -187,6 +190,9 @@
 
 
 "roomTemperature" = "room temperature";
+
+
+"schedule" = "schedule";
 
 
 "scheduleFormErrorMessage" = "Please enter the amount you wish to make";

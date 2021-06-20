@@ -100,6 +100,8 @@ public struct Strings {
     public static var weighIn = NSLocalizedString("weighIn", bundle: .module, comment: "")
     public static var doughYield = NSLocalizedString("doughYield", bundle: .module, comment: "")
     public static var roomTempQuestionLabel = NSLocalizedString("roomTempQuestionLabel", bundle: .module, comment: "")
+    public static var schedule = NSLocalizedString("schedule", bundle: .module, comment: "")
+    public static var createSchedule = NSLocalizedString("createSchedule", bundle: .module, comment: "")
     
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
