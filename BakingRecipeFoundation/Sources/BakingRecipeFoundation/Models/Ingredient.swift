@@ -85,7 +85,7 @@ private extension Ingredient {
     mutating func autoDetectIngredientType() {
         if Bundle.main.preferredLocalizations.first! == "de" { //only german locale at first
             let flourStrings = ["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM"]
-            let bulkLiquidStrings = ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft"]
+            let bulkLiquidStrings = ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft", " ei", " Ei"]
             
             for flourString in flourStrings {
                 if self.name.contains(flourString) {

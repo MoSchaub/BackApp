@@ -135,7 +135,7 @@ public extension BackAppData {
     
     /// move Records (change their number) so their sorted order changes
     internal func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             databaseAutoUpdatesDisabled = true
             var recordIds = array.map { $0.id }
             
@@ -145,9 +145,11 @@ public extension BackAppData {
             var number = 0
             for id in recordIds {
                 var record: T = self.record(with: id!)!
-                record.number = number
+                if record.number != number {
+                    record.number = number
+                    self.save(&record)
+                }
                 number += 1
-                self.save(&record)
             }
             databaseAutoUpdatesDisabled = false
         }

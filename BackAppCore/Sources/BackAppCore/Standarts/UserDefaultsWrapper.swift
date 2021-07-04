@@ -19,6 +19,7 @@ public struct UserDefaultsWrapper<T> {
         case kneadingHeatingEnabled
         case kneadingHeating
         case theme
+        case newUser
     }
     
     private let key: Key

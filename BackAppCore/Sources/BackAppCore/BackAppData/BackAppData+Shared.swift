@@ -37,10 +37,12 @@ extension BackAppData {
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)
             
-            //TODO: Prepare the database with test fixtures if requested
-//            if CommandLine.arguments.contains("-fixedTestData") {
-//                try appDatabase.createPlayersForUITests()
-//            }
+            // adds to examples for new users when the user is new
+            if Standarts.newUser, appData.allRecipes.isEmpty {
+                let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!//url(forResource: nil, withExtension: "bakingAppRecipe")
+                _ = urls.map { appData.open($0)}
+                Standarts.newUser = false
+            }
             
             return appData
         } catch {
