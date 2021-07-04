@@ -1,5 +1,5 @@
 //
-//  RecipeDetailViewController.swift
+//  EditRecipeViewController.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 25.06.20.
@@ -12,7 +12,7 @@ import BakingRecipeUIFoundation
 import BakingRecipeStrings
 import BackAppCore
 
-class RecipeDetailViewController: UITableViewController {
+class EditRecipeViewController: UITableViewController {
     
     // MARK: Properties
     
@@ -73,7 +73,7 @@ class RecipeDetailViewController: UITableViewController {
 
 // MARK: - Update and Load View
 
-extension RecipeDetailViewController {
+extension EditRecipeViewController {
     override func loadView() {
         super.loadView()
         self.title = self.recipe.formattedName
@@ -101,7 +101,7 @@ extension RecipeDetailViewController {
     
 }
 
-extension RecipeDetailViewController: UISplitViewControllerDelegate {
+extension EditRecipeViewController: UISplitViewControllerDelegate {
     func splitViewControllerDidExpand(_ svc: UISplitViewController) {
         self.setUpNavigationBar()
     }
@@ -113,7 +113,7 @@ extension RecipeDetailViewController: UISplitViewControllerDelegate {
 
 // MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
 
-extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
+extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
         handleCancelButtonPress()
@@ -162,10 +162,10 @@ extension RecipeDetailViewController: UIAdaptivePresentationControllerDelegate {
 
 // MARK: - DataSource
 
-private extension RecipeDetailViewController {
+private extension EditRecipeViewController {
     /// create the dataSource for this VC and provide the recipe and various update fuctions
-    private func makeDataSource() -> RecipeDetailDataSource {
-        RecipeDetailDataSource(
+    private func makeDataSource() -> EditRecipeDataSource {
+        EditRecipeDataSource(
             recipe: Binding(get: {
                 return self.recipe
             }, set: { newValue in
@@ -173,7 +173,7 @@ private extension RecipeDetailViewController {
                     self.recipe = newValue
                 }
             }),
-            creating: creating, appData: appData, tableView: tableView,
+            appData: appData, tableView: tableView,
             nameChanged: { newName in
                 self.recipe.name = newName
             },
@@ -191,7 +191,7 @@ private extension RecipeDetailViewController {
 
 // MARK: - NavigationBar
 
-private extension RecipeDetailViewController {
+private extension EditRecipeViewController {
     private func setUpNavigationBar() {
         
         if creating {
@@ -251,7 +251,7 @@ private extension RecipeDetailViewController {
 
 // MARK: helpers for navbarItems
 
-private extension RecipeDetailViewController {
+private extension EditRecipeViewController {
     
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
         recipe.isFavorite.toggle()
@@ -294,7 +294,7 @@ private extension RecipeDetailViewController {
 }
 
 
-extension RecipeDetailViewController {
+extension EditRecipeViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
@@ -307,7 +307,7 @@ extension RecipeDetailViewController {
 
 // MARK: - Cell Selection
 
-extension RecipeDetailViewController {
+extension EditRecipeViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = dataSource.itemIdentifier(for: indexPath) {
             if item is ImageItem {
@@ -315,9 +315,7 @@ extension RecipeDetailViewController {
             } else if let stepItem = item as? StepItem {
                 showStepDetail(id: Int64(stepItem.id))
             } else if let detailItem = item as? DetailItem {
-                if detailItem.text == Strings.startRecipe {
-                    startRecipe()
-                } else if detailItem.text == Strings.addStep {
+                if detailItem.text == Strings.addStep {
                     showStepDetail(id: nil)
                 }
             }
@@ -325,7 +323,7 @@ extension RecipeDetailViewController {
     }
 }
 
-private extension RecipeDetailViewController {
+private extension EditRecipeViewController {
     private func imageTapped(sender: IndexPath) {
         if imagePickerController != nil {
             imagePickerController?.delegate = nil
@@ -396,20 +394,9 @@ private extension RecipeDetailViewController {
         //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)
     }
-    
-    private func startRecipe() {
-        let recipeBinding = Binding(get: {
-            return self.recipe
-        }) { (newValue) in
-            self.recipe = newValue
-        }
-        let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
-
-        navigationController?.pushViewController(scheduleForm, animated: true)
-    }
 }
 
-extension RecipeDetailViewController {
+extension EditRecipeViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let _ = dataSource.itemIdentifier(for: indexPath) as? InfoItem {
             return 80
@@ -420,7 +407,7 @@ extension RecipeDetailViewController {
     }
 }
 
-extension RecipeDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension EditRecipeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {
         controller.delegate = self
         controller.sourceType = source

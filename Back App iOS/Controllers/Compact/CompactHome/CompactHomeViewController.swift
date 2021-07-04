@@ -176,7 +176,7 @@ private extension CompactHomeViewController {
         appData.save(&recipe)
         
         // create the vc
-        let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: true, appData: appData)
+        let vc = EditRecipeViewController(recipeId: recipe.id!, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -236,7 +236,7 @@ extension CompactHomeViewController {
             
             DispatchQueue.main.async {
                 //create the vc
-                let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: false, appData: self.appData) {
+                let editVC = EditRecipeViewController(recipeId: recipe.id!, creating: false, appData: self.appData){
                     //dismiss detail
                     if self.splitViewController?.isCollapsed ?? false {
                         //nosplitVc visible
@@ -246,6 +246,9 @@ extension CompactHomeViewController {
                         _ = self.splitViewController?.viewControllers.popLast()
                     }
                 }
+                
+                let vc = RecipeViewController(recipe: recipe, appData: self.appData, editRecipeViewController: editVC)
+
                 //push to the view controller
                 let nv = UINavigationController(rootViewController: vc)
                 self.splitViewController?.showDetailViewController(nv, sender: self)

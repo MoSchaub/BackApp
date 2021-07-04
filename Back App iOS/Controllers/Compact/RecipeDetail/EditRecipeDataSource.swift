@@ -1,5 +1,5 @@
 //
-//  RecipeDetailDataSource.swift
+//  EditRecipeDataSource.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 11.08.20.
@@ -12,15 +12,13 @@ import BakingRecipeFoundation
 import BakingRecipeStrings
 import BackAppCore
 
-class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
+class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
     
     @Binding var recipe: Recipe
-    let creating: Bool
     let appData: BackAppData
     
-    init(recipe: Binding<Recipe>, creating: Bool, appData: BackAppData ,tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String), updateInfo: @escaping (String) -> () ) {
+    init(recipe: Binding<Recipe>, appData: BackAppData ,tableView: UITableView, nameChanged: @escaping (String) -> (), formatAmount: @escaping (String) -> (String), updateInfo: @escaping (String) -> () ) {
         self._recipe = recipe
-        self.creating = creating
         self.appData = appData
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             //let color = UIColor.cellBackgroundColor
@@ -97,13 +95,12 @@ class RecipeDetailDataSource: UITableViewDiffableDataSource<RecipeDetailSection,
     
 }
 
-extension RecipeDetailDataSource {
+extension EditRecipeDataSource {
     func update(animated: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
         snapshot.appendSections(RecipeDetailSection.allCases)
         snapshot.appendItems([recipe.nameItem()], toSection: .name)
-        snapshot.appendItems([recipe.imageItem], toSection: .imageControlStrip)
-        snapshot.appendItems(recipe.controlStripItems(creating: self.creating, appData: appData), toSection: .imageControlStrip)
+        snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
         snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
         snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)

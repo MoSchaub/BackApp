@@ -19,9 +19,13 @@ public class TextViewCell: CustomCell {
     /// textView
     private var textView = UITextView()
     
-    public init(textContent: Binding<String>, placeholder: String, reuseIdentifier: String?) {
+    ///wether the textView should be editable
+    private var editMode: Bool
+    
+    public init(textContent: Binding<String>, placeholder: String, reuseIdentifier: String?, editMode: Bool = true) {
         self._textContent = textContent
         self.placeholder = placeholder
+        self.editMode = editMode
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
     }
     
@@ -45,11 +49,15 @@ private extension TextViewCell {
         textView.delegate = self
         textView.accessibilityIdentifier = placeholder
         
-        textView.addDoneButton(target: self, selector: #selector(tapDone))
+        if editMode {
+            textView.addDoneButton(target: self, selector: #selector(tapDone))
+        }
         
         setUpLinkDetection()
         
-        addTextFieldGestureRecognizer()
+        if editMode {
+            addTextFieldGestureRecognizer()
+        }
         
         setUpCellDesign()
         

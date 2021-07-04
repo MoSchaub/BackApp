@@ -325,6 +325,7 @@ class Back_App_iOSUITests: XCTestCase {
         app.swipeDown()
         
         appTables.staticTexts[Recipe.example.name].tap()
+        navigationBar.buttons["Edit"].tap()
         
         let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
         staticText.tap()
@@ -334,7 +335,9 @@ class Back_App_iOSUITests: XCTestCase {
         
         
         app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
-        
+
+        let schnittbrTchenNavigationBar = XCUIApplication().navigationBars.firstMatch
+        schnittbrTchenNavigationBar.buttons.firstMatch.tap()
         XCTAssertTrue(appTables.cells.staticTexts["18 minutes"].exists)
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()

@@ -40,12 +40,13 @@
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
 		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* RecipeDetailDataSource.swift */; };
+		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
 		CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD6F748B2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748A2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe */; };
 		CD6F748D2691D1D800BCFC3E /* Vorlage.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */; };
 		CD6F748F2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */; };
+		CD6FD71126921D0800ACDE85 /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */; };
 		CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CD9B3CE9253CE6D000132CA9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD9B3CE7253CE6D000132CA9 /* Localizable.strings */; };
@@ -62,7 +63,7 @@
 		CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */; };
 		CDB20D5E2544E6FD00311A06 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		CDBB2841267683DB009CAD1A /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CDBB2840267683DB009CAD1A /* CombineCocoa */; };
-		CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */; };
+		CDBDCF9B24A553A300121F98 /* EditRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* EditRecipeViewController.swift */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 /* End PBXBuildFile section */
@@ -147,7 +148,7 @@
 		CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		CD59041024E2CF4F008A0E6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CD59041224E2CF4F008A0E6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD663F6724E2A0FE008F9A09 /* RecipeDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailDataSource.swift; sourceTree = "<group>"; };
+		CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeDataSource.swift; sourceTree = "<group>"; };
 		CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDataSource.swift; sourceTree = "<group>"; };
 		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD68D46624AC5CBD000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -155,6 +156,7 @@
 		CD6F748A2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Hefezopf.bakingAppRecipe; sourceTree = "<group>"; };
 		CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vorlage.bakingAppRecipe; sourceTree = "<group>"; };
 		CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Schnittbrötchen.bakingAppRecipe"; sourceTree = "<group>"; };
+		CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
 		CD7691BB24EEAB6600BAB383 /* Back App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Back App.entitlements"; sourceTree = "<group>"; };
 		CD76F999248BDA3000D11DD3 /* DecimalField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalField.swift; sourceTree = "<group>"; };
@@ -198,7 +200,7 @@
 		CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactHomeTests.swift; sourceTree = "<group>"; };
 		CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PrivacyPolicy.txt; sourceTree = "<group>"; };
 		CDB5EE50246BDF6900E35376 /* BackAppImpressum.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackAppImpressum.txt; sourceTree = "<group>"; };
-		CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
+		CDBDCF9A24A553A300121F98 /* EditRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewController.swift; sourceTree = "<group>"; };
 		CDDFC21E2591087B00B497AE /* BackAppCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppCore; sourceTree = "<group>"; };
 		CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
@@ -429,8 +431,9 @@
 		CD8101F924A9F381000C0220 /* RecipeDetail */ = {
 			isa = PBXGroup;
 			children = (
-				CDBDCF9A24A553A300121F98 /* RecipeDetailViewController.swift */,
-				CD663F6724E2A0FE008F9A09 /* RecipeDetailDataSource.swift */,
+				CDBDCF9A24A553A300121F98 /* EditRecipeViewController.swift */,
+				CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */,
+				CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */,
 				CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */,
 				CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */,
 			);
@@ -739,7 +742,8 @@
 				CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
 				CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */,
-				CD663F6824E2A0FE008F9A09 /* RecipeDetailDataSource.swift in Sources */,
+				CD6FD71126921D0800ACDE85 /* RecipeViewController.swift in Sources */,
+				CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */,
 				CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
 				CD232E5526740CD500E528BB /* KneadingHeatingCell.swift in Sources */,
@@ -749,7 +753,7 @@
 				CD232E5626740CD500E528BB /* SubtitleCell.swift in Sources */,
 				CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */,
 				CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */,
-				CDBDCF9B24A553A300121F98 /* RecipeDetailViewController.swift in Sources */,
+				CDBDCF9B24A553A300121F98 /* EditRecipeViewController.swift in Sources */,
 				CD232E5726740CD500E528BB /* TempPickerCell.swift in Sources */,
 				CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */,
 				CD232E4C26740CD500E528BB /* DetailCell.swift in Sources */,
@@ -880,7 +884,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -889,7 +893,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = "1.0 beta 2";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -903,7 +907,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -912,7 +916,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = "1.0 beta 2";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1050,7 +1054,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1058,7 +1062,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = "1.0 beta 2";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				SUPPORTS_MACCATALYST = NO;
@@ -1075,7 +1079,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1083,7 +1087,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = "1.0 beta 2";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				SUPPORTS_MACCATALYST = NO;
