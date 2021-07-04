@@ -33,12 +33,6 @@
 		CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */; };
 		CD29972324A9E53300759EBA /* bread.png in Resources */ = {isa = PBXBuildFile; fileRef = CD75BFC824629961005C902A /* bread.png */; };
 		CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */; };
-		CD314861259B7BEB000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD314860259B7BEB000FAB6F /* Colors.xcassets */; };
-		CD314869259B7E65000FAB6F /* auto.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD314855259B7BC9000FAB6F /* auto.bundle */; };
-		CD31487E259B888F000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD31487D259B888F000FAB6F /* Colors.xcassets */; };
-		CD314887259B894A000FAB6F /* light.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD314871259B8878000FAB6F /* light.bundle */; };
-		CD3148AA259BBB1B000FAB6F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD3148A9259BBB1B000FAB6F /* Colors.xcassets */; };
-		CD3148B4259BBBC7000FAB6F /* dark.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD31489C259BBB0F000FAB6F /* dark.bundle */; };
 		CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */; };
 		CD4224BA26724ED600BFCC5A /* RoomTempPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */; };
 		CD59040924E2CF4F008A0E6E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040824E2CF4F008A0E6E /* UserNotifications.framework */; };
@@ -77,27 +71,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = CDA7EE2824A67DBD00763E21;
 			remoteInfo = "Back App iOS";
-		};
-		CD314867259B7E4C000FAB6F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD6A9A042340252400748249 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CD314854259B7BC9000FAB6F;
-			remoteInfo = auto;
-		};
-		CD314885259B8940000FAB6F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD6A9A042340252400748249 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CD314870259B8878000FAB6F;
-			remoteInfo = light;
-		};
-		CD3148B2259BBBB8000FAB6F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD6A9A042340252400748249 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CD31489B259BBB0F000FAB6F;
-			remoteInfo = dark;
 		};
 		CD59041324E2CF4F008A0E6E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -163,15 +136,6 @@
 		CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2BCE5524AE72CB00B868D7 /* Back_App_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSTests.swift; sourceTree = "<group>"; };
 		CD2BCE5724AE72CB00B868D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD314855259B7BC9000FAB6F /* auto.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = auto.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD314857259B7BC9000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD314860259B7BEB000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
-		CD314871259B8878000FAB6F /* light.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = light.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD314873259B8878000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD31487D259B888F000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
-		CD31489C259BBB0F000FAB6F /* dark.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dark.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD31489E259BBB0F000FAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD3148A9259BBB1B000FAB6F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		CD399ACF24AA3F1200232F90 /* IngredientDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientDetailViewController.swift; sourceTree = "<group>"; };
 		CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTempPickerSheet.swift; sourceTree = "<group>"; };
 		CD59040724E2CF4F008A0E6E /* Push Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Push Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -313,33 +277,6 @@
 			path = CompactHome;
 			sourceTree = "<group>";
 		};
-		CD314856259B7BC9000FAB6F /* auto */ = {
-			isa = PBXGroup;
-			children = (
-				CD314857259B7BC9000FAB6F /* Info.plist */,
-				CD314860259B7BEB000FAB6F /* Colors.xcassets */,
-			);
-			path = auto;
-			sourceTree = "<group>";
-		};
-		CD314872259B8878000FAB6F /* light */ = {
-			isa = PBXGroup;
-			children = (
-				CD314873259B8878000FAB6F /* Info.plist */,
-				CD31487D259B888F000FAB6F /* Colors.xcassets */,
-			);
-			path = light;
-			sourceTree = "<group>";
-		};
-		CD31489D259BBB0F000FAB6F /* dark */ = {
-			isa = PBXGroup;
-			children = (
-				CD31489E259BBB0F000FAB6F /* Info.plist */,
-				CD3148A9259BBB1B000FAB6F /* Colors.xcassets */,
-			);
-			path = dark;
-			sourceTree = "<group>";
-		};
 		CD59040C24E2CF4F008A0E6E /* Push Notification */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,9 +301,6 @@
 				CDA7EE4124A67DC200763E21 /* Back App iOSUITests */,
 				CD2BCE5424AE72CB00B868D7 /* Back App iOSTests */,
 				CD59040C24E2CF4F008A0E6E /* Push Notification */,
-				CD314856259B7BC9000FAB6F /* auto */,
-				CD314872259B8878000FAB6F /* light */,
-				CD31489D259BBB0F000FAB6F /* dark */,
 				CD6A9A0D2340252400748249 /* Products */,
 				CDB5EE1A246B3A9400E35376 /* Frameworks */,
 			);
@@ -379,9 +313,6 @@
 				CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */,
 				CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */,
 				CD59040724E2CF4F008A0E6E /* Push Notification.appex */,
-				CD314855259B7BC9000FAB6F /* auto.bundle */,
-				CD314871259B8878000FAB6F /* light.bundle */,
-				CD31489C259BBB0F000FAB6F /* dark.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -612,51 +543,6 @@
 			productReference = CD2BCE5324AE72CB00B868D7 /* Back App iOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		CD314854259B7BC9000FAB6F /* auto */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CD31485A259B7BC9000FAB6F /* Build configuration list for PBXNativeTarget "auto" */;
-			buildPhases = (
-				CD314853259B7BC9000FAB6F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = auto;
-			productName = auto;
-			productReference = CD314855259B7BC9000FAB6F /* auto.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
-		CD314870259B8878000FAB6F /* light */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CD314874259B8878000FAB6F /* Build configuration list for PBXNativeTarget "light" */;
-			buildPhases = (
-				CD31486F259B8878000FAB6F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = light;
-			productName = light;
-			productReference = CD314871259B8878000FAB6F /* light.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
-		CD31489B259BBB0F000FAB6F /* dark */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CD31489F259BBB0F000FAB6F /* Build configuration list for PBXNativeTarget "dark" */;
-			buildPhases = (
-				CD31489A259BBB0F000FAB6F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = dark;
-			productName = dark;
-			productReference = CD31489C259BBB0F000FAB6F /* dark.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
 		CD59040624E2CF4F008A0E6E /* Push Notification */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD59041924E2CF4F008A0E6E /* Build configuration list for PBXNativeTarget "Push Notification" */;
@@ -687,9 +573,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CD3148B3259BBBB8000FAB6F /* PBXTargetDependency */,
-				CD314886259B8940000FAB6F /* PBXTargetDependency */,
-				CD314868259B7E4C000FAB6F /* PBXTargetDependency */,
 				CD59041424E2CF4F008A0E6E /* PBXTargetDependency */,
 			);
 			name = "Back App iOS";
@@ -733,15 +616,6 @@
 						CreatedOnToolsVersion = 11.5;
 						TestTargetID = CDA7EE2824A67DBD00763E21;
 					};
-					CD314854259B7BC9000FAB6F = {
-						CreatedOnToolsVersion = 12.3;
-					};
-					CD314870259B8878000FAB6F = {
-						CreatedOnToolsVersion = 12.3;
-					};
-					CD31489B259BBB0F000FAB6F = {
-						CreatedOnToolsVersion = 12.3;
-					};
 					CD59040624E2CF4F008A0E6E = {
 						CreatedOnToolsVersion = 11.6;
 					};
@@ -775,9 +649,6 @@
 				CDA7EE3D24A67DC200763E21 /* Back App iOSUITests */,
 				CD2BCE5224AE72CB00B868D7 /* Back App iOSTests */,
 				CD59040624E2CF4F008A0E6E /* Push Notification */,
-				CD314854259B7BC9000FAB6F /* auto */,
-				CD314870259B8878000FAB6F /* light */,
-				CD31489B259BBB0F000FAB6F /* dark */,
 			);
 		};
 /* End PBXProject section */
@@ -787,30 +658,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CD314853259B7BC9000FAB6F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CD314861259B7BEB000FAB6F /* Colors.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CD31486F259B8878000FAB6F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CD31487E259B888F000FAB6F /* Colors.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CD31489A259BBB0F000FAB6F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CD3148AA259BBB1B000FAB6F /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -826,9 +673,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD3148B4259BBBC7000FAB6F /* dark.bundle in Resources */,
-				CD314887259B894A000FAB6F /* light.bundle in Resources */,
-				CD314869259B7E65000FAB6F /* auto.bundle in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
@@ -927,21 +771,6 @@
 			target = CDA7EE2824A67DBD00763E21 /* Back App iOS */;
 			targetProxy = CD2BCE5824AE72CB00B868D7 /* PBXContainerItemProxy */;
 		};
-		CD314868259B7E4C000FAB6F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CD314854259B7BC9000FAB6F /* auto */;
-			targetProxy = CD314867259B7E4C000FAB6F /* PBXContainerItemProxy */;
-		};
-		CD314886259B8940000FAB6F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CD314870259B8878000FAB6F /* light */;
-			targetProxy = CD314885259B8940000FAB6F /* PBXContainerItemProxy */;
-		};
-		CD3148B3259BBBB8000FAB6F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CD31489B259BBB0F000FAB6F /* dark */;
-			targetProxy = CD3148B2259BBBB8000FAB6F /* PBXContainerItemProxy */;
-		};
 		CD59041424E2CF4F008A0E6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -1027,113 +856,11 @@
 			};
 			name = Release;
 		};
-		CD314858259B7BC9000FAB6F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = auto/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.auto;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		CD314859259B7BC9000FAB6F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = auto/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.auto;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
-		CD314875259B8878000FAB6F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = light/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.light;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		CD314876259B8878000FAB6F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = light/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.light;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
-		CD3148A0259BBB0F000FAB6F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = dark/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.dark;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		CD3148A1259BBB0F000FAB6F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
-				INFOPLIST_FILE = dark/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.moritzschaub.dark;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
 		CD59041724E2CF4F008A0E6E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1156,7 +883,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1303,7 +1030,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1314,9 +1041,9 @@
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1328,7 +1055,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1339,9 +1066,9 @@
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1395,33 +1122,6 @@
 			buildConfigurations = (
 				CD2BCE5A24AE72CB00B868D7 /* Debug */,
 				CD2BCE5B24AE72CB00B868D7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CD31485A259B7BC9000FAB6F /* Build configuration list for PBXNativeTarget "auto" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CD314858259B7BC9000FAB6F /* Debug */,
-				CD314859259B7BC9000FAB6F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CD314874259B8878000FAB6F /* Build configuration list for PBXNativeTarget "light" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CD314875259B8878000FAB6F /* Debug */,
-				CD314876259B8878000FAB6F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CD31489F259BBB0F000FAB6F /* Build configuration list for PBXNativeTarget "dark" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CD3148A0259BBB0F000FAB6F /* Debug */,
-				CD3148A1259BBB0F000FAB6F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

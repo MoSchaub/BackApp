@@ -9,8 +9,6 @@ import UIKit
 
 public final class ThemeManager {
     
-    private static let defaultThemeName = Theme.Style.auto
-    
     public static let `default` = ThemeManager()
     
     private var currentTheme: Theme {
@@ -20,24 +18,14 @@ public final class ThemeManager {
     }
     
     init() {
-        do {
-            self.currentTheme = try Theme(style: ThemeManager.defaultThemeName)
-            registerAppearance()
-        } catch {
-            fatalError(String(describing: error))
-        }
+        self.currentTheme = Theme()
+        registerAppearance()
     }
     
     private func registerAppearance() {
         UIWindow.appearance().backgroundColor = currentTheme.backgroundColor
         UIWindow.appearance().tintColor = currentTheme.tintColor
-
-        if currentTheme.style == .light {
-            UIWindow.appearance().overrideUserInterfaceStyle = .light
-        } else if currentTheme.style == .dark {
-            UIWindow.appearance().overrideUserInterfaceStyle = .dark
-        }
-
+        
         UITableView.appearance().backgroundColor = currentTheme.backgroundColor
 
         UITableViewCell.appearance().backgroundColor = currentTheme.backgroundColor
