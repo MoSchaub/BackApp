@@ -86,6 +86,7 @@ private extension RecipeViewController {
         tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
         tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
         tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.textCell)
     }
     
     func setUpNavigationBar() {
@@ -97,8 +98,11 @@ private extension RecipeViewController {
     }
 }
 
+//MARK: - Datasource and Snapshot
 
 private extension RecipeViewController {
+    
+    ///create the dataSource and create cells from the items
     func makeDataSource() -> DataSource {
         DataSource(tableView: tableView) { tableView, indexPath, item in
             if let imageItem = item as? ImageItem {
@@ -118,18 +122,24 @@ private extension RecipeViewController {
                 return TextViewCell(textContent: Binding(get: {
                     infoItem.text
                 }, set: { _ in }), placeholder: "", reuseIdentifier: Strings.infoCell, editMode: false)
+            } else if let textItem = item as? TextItem, let textCell = tableView.dequeueReusableCell(withIdentifier: Strings.textCell, for: indexPath) as? CustomCell {
+                textCell.textLabel?.text = textItem.text
+                return textCell
             }
             return CustomCell()
         }
     }
-    
+    /// create items, build a snapshot with them and apply the snapshot
+    ///- Parameter animated: wether the differences should be animated
     func updateDataSource(animated: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.imageControlStrip, .steps, .info])
         
         let imageItem = ImageItem(imageData: recipe.imageData)
         let startRecipeItem = DetailItem(name: Strings.startRecipe)
-        snapshot.appendItems([imageItem, startRecipeItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
+        let infoStripItem = recipe.infoStripItem(appData: appData)
+        let timesItem = TextItem(text: recipe.timesTextWithIndivialMass(with: appData.totalAmount(for: recipeId))) // eg. 11 pieces à 12 g each
+        snapshot.appendItems([imageItem, startRecipeItem, infoStripItem, timesItem], toSection: .imageControlStrip)
         
         snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
         

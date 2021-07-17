@@ -137,4 +137,5 @@ public struct Strings {
     public static let kneadingHeatingCell = "kneadingHeating"
     public static let apperanceCell = "appearance"
     public static let languageCell = "language"
+    public static let textCell = "text"
 }

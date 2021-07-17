@@ -77,6 +77,12 @@ public struct Recipe: BakingRecipeRecord {
         }
     }
     
+    /// timesText + indivialMass given a total Mass, e. g. 12 pieces, 11 g each
+    public func timesTextWithIndivialMass(with totalMass: Double) -> String {
+        
+        return self.timesText + (Bundle.main.preferredLocalizations.first! == "de" ? " à " : ", " ) + (totalMass/Double(self.times!.description)!).formattedMass + (Bundle.main.preferredLocalizations.first! == "en" ? " each" : "")
+    }
+    
     /// scale the times text with a factor
     private func timesTextScaled(with factor: Double) -> String {
         if self.times != nil {
