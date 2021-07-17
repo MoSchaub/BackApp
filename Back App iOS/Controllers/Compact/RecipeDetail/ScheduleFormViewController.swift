@@ -18,7 +18,7 @@ class ScheduleFormViewController: UITableViewController {
     var times: Decimal?
     private var appData: BackAppData
     
-    private lazy var dataSource = makeDataSource()
+    private(set) lazy var dataSource = makeDataSource()
 
     init(recipe: Binding<Recipe>, appData: BackAppData) {
         self._recipe = recipe
@@ -36,7 +36,7 @@ class ScheduleFormViewController: UITableViewController {
 }
 
 extension ScheduleFormViewController {
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
         updateTableView()
@@ -73,7 +73,7 @@ private extension ScheduleFormViewController {
     }
 }
 
-private extension ScheduleFormViewController {
+internal extension ScheduleFormViewController {
     //create the cells
     private func makeDataSource() -> UITableViewDiffableDataSource<ScheduleFormSection, Item> {
         ScheduleFormDataSource(
@@ -115,7 +115,7 @@ private extension ScheduleFormViewController {
         return picker
     }
     
-    @objc private func didSelectOption(sender: UISegmentedControl) {
+    @objc internal func didSelectOption(sender: UISegmentedControl) {
         recipe.inverted = sender.selectedSegmentIndex == 0 ? false : true
         
         var snapshot = dataSource.snapshot()
@@ -134,6 +134,15 @@ private extension ScheduleFormViewController {
         snapshot.appendItems([dateItem, pickerItem], toSection: .datepicker)
         
         self.dataSource.apply(snapshot)
+    }
+}
+
+extension ScheduleFormViewController {
+    // header color
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? UITableViewHeaderFooterView {
+            header.textLabel?.textColor = .secondaryTextColor!
+        }
     }
 }
 
