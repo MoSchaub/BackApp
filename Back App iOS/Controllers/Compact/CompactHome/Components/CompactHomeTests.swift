@@ -69,12 +69,12 @@ class CompactHomeTests: XCTestCase {
     }
     
     func testDeletingRecipe() throws {
-        if app.tables.staticTexts[Recipe.example.name].exists {
-            app.launch()
-            app.swipeDown()
-            
-            try! delete(recipeName: Recipe.example.name)
-        }
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launchArguments.append("-includeTestingRecipe")
+        argumentApp.launch()
+        
+        try! delete(recipeName: Recipe.example.name)
     }
 
 }

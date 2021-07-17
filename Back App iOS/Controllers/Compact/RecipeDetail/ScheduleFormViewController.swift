@@ -25,6 +25,9 @@ class ScheduleFormViewController: UITableViewController {
         self.times = recipe.wrappedValue.times
         self.appData = appData
         super.init(style: .insetGrouped)
+        
+        //set date to now
+        self.recipe.date = Date()
     }
     
     required init?(coder: NSCoder) {
@@ -34,24 +37,14 @@ class ScheduleFormViewController: UITableViewController {
 
 extension ScheduleFormViewController {
     override func viewDidLoad() {
-        
-        //set date to now
-        self.recipe.date = Date()
-        
         super.viewDidLoad()
         registerCells()
         updateTableView()
         setUpNavigationBar()
         self.tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
         
         navigationController?.setToolbarHidden(true, animated: false)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        
-        tableView.rowHeight = UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

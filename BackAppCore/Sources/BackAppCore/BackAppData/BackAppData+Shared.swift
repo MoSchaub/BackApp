@@ -7,6 +7,7 @@
 
 import GRDB
 import Foundation
+import BakingRecipeFoundation
 
 extension BackAppData {
     public static let shared = makeShared()
@@ -42,6 +43,32 @@ extension BackAppData {
                 let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!//url(forResource: nil, withExtension: "bakingAppRecipe")
                 _ = urls.map { appData.open($0)}
                 Standarts.newUser = false
+            }
+            
+            // Support for tests: add standart recipe to database if requested
+            if CommandLine.arguments.contains("-includeTestingRecipe") {
+                let recipeExample = Recipe.example
+                var recipe = recipeExample.recipe
+                
+                appData.save(&recipe)
+                
+                let id = recipe.id!
+                
+                let stepIngredients = recipeExample.stepIngredients
+                
+                _ = stepIngredients.map {
+                    var step = $0.step
+                    step.recipeId = id
+                    appData.save(&step)
+                    
+                    let stepId = step.id!
+                    
+                    for ingredient in $0.ingredients {
+                        var ingredient = ingredient
+                        ingredient.stepId = stepId
+                        appData.save(&ingredient)
+                    }
+                }
             }
             
             return appData

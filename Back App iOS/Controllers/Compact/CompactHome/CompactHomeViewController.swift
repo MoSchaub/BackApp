@@ -247,7 +247,7 @@ extension CompactHomeViewController {
                     }
                 }
                 
-                let vc = RecipeViewController(recipe: recipe, appData: self.appData, editRecipeViewController: editVC)
+                let vc = RecipeViewController(recipeId: recipe.id!, appData: self.appData, editRecipeViewController: editVC)
 
                 //push to the view controller
                 let nv = UINavigationController(rootViewController: vc)

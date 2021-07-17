@@ -17,8 +17,11 @@ fileprivate typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
 class RecipeViewController: UITableViewController {
     
-    /// the recipe that is shown
-    private var recipe: Recipe
+    // id of the recipe for pulling the recipe from the database
+    private let recipeId: Int64
+    
+    // the recipe that is shown will be pulled from the database when the view appears or loads
+    private var recipe: Recipe!
     
     //interface object for the database
     private var appData: BackAppData
@@ -29,8 +32,8 @@ class RecipeViewController: UITableViewController {
     
     private var editVC: EditRecipeViewController
     
-    public init(recipe: Recipe, appData: BackAppData, editRecipeViewController: EditRecipeViewController ) {
-        self.recipe = recipe
+    public init(recipeId: Int64, appData: BackAppData, editRecipeViewController: EditRecipeViewController ) {
+        self.recipeId = recipeId
         self.appData = appData
         self.editVC = editRecipeViewController
         super.init(style: .insetGrouped)
@@ -44,6 +47,7 @@ class RecipeViewController: UITableViewController {
 extension RecipeViewController {
     override func loadView() {
         super.loadView()
+        self.recipe =  appData.record(with: recipeId, of: Recipe.self)!
         self.title = self.recipe.formattedName
     }
     override func viewDidLoad() {
@@ -54,6 +58,7 @@ extension RecipeViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.recipe =  appData.record(with: recipeId, of: Recipe.self)!
         updateDataSource(animated: false)
         
         tableView.rowHeight = UITableView.automaticDimension
@@ -150,9 +155,10 @@ extension RecipeViewController {
 private extension RecipeViewController {
     private func startRecipe() {
         let recipeBinding = Binding(get: {
-            return self.recipe
+            return self.appData.record(with: self.recipeId, of: Recipe.self)!
         }) { (newValue) in
-            self.recipe = newValue
+            //here I need to modify the recipe
+            self.appData.update(newValue)
         }
         let scheduleForm = ScheduleFormViewController(recipe: recipeBinding, appData: appData)
         

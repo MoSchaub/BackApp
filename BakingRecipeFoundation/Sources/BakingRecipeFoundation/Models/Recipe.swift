@@ -77,6 +77,16 @@ public struct Recipe: BakingRecipeRecord {
         }
     }
     
+    /// scale the times text with a factor
+    private func timesTextScaled(with factor: Double) -> String {
+        if self.times != nil {
+            let times = self.times! * Decimal(factor)
+            return times.description + " " +
+                (times.description == "1" ? Strings.piece : Strings.pieces)
+        } else {
+            return "1 " + Strings.piece
+        }
+    }
 }
 
 ///date formatter with custom dateFormat
@@ -251,18 +261,18 @@ public extension Recipe {
     ///starting date
     func startDate(reader: DatabaseReader) -> Date {
         if !inverted {
-            return date
+            return self.date
         } else {
-            return date.addingTimeInterval(TimeInterval(-(totalDuration(steps: steps(reader: reader)) * 60)))
+            return self.date.addingTimeInterval(TimeInterval(-(totalDuration(steps: self.steps(reader: reader)) * 60)))
         }
     }
     
     ///end date
     func endDate(reader: DatabaseReader) -> Date {
         if inverted {
-            return date
+            return self.date
         } else {
-            return date.addingTimeInterval(TimeInterval(totalDuration(steps: steps(reader: reader)) * 60))
+            return self.date.addingTimeInterval(TimeInterval(totalDuration(steps: self.steps(reader: reader)) * 60))
         }
     }
     
@@ -341,7 +351,8 @@ public extension Recipe {
         var text = self.formattedName
         text += " "
         
-        text += timesText
+        // timesText needs to be scaled since the text can be requested for 12 pieces when times is only 10 so you need to adjust times with a scaleFactor
+        text += timesTextScaled(with: scaleFactor)
         text += "\n"
         
         for step in notSubsteps(reader: reader) {
