@@ -184,7 +184,9 @@ private extension RecipeViewController {
         
         snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
         
-        snapshot.appendItems([recipe.infoItem], toSection: .info)
+        if recipe.info != "" {
+            snapshot.appendItems([recipe.infoItem], toSection: .info)
+        }
         
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
