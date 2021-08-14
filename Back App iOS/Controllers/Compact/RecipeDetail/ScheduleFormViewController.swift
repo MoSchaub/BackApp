@@ -13,11 +13,11 @@ import BackAppCore
 import BakingRecipeUIFoundation
 
 class ScheduleFormViewController: UITableViewController {
-    
+
     @Binding private var recipe: Recipe
     var times: Decimal?
     private var appData: BackAppData
-    
+
     private(set) lazy var dataSource = makeDataSource()
 
     init(recipe: Binding<Recipe>, appData: BackAppData) {
@@ -25,11 +25,11 @@ class ScheduleFormViewController: UITableViewController {
         self.times = recipe.wrappedValue.times
         self.appData = appData
         super.init(style: .insetGrouped)
-        
+
         //set date to now
         self.recipe.date = Date()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError(Strings.init_coder_not_implemented)
     }
@@ -43,10 +43,10 @@ extension ScheduleFormViewController {
         setUpNavigationBar()
         self.tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        
+
         navigationController?.setToolbarHidden(true, animated: false)
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         section == 0 ? "Menge" : ""
     }
@@ -103,21 +103,21 @@ internal extension ScheduleFormViewController {
     private func makePicker() -> UISegmentedControl{
         let picker = UISegmentedControl(items: [Strings.start, Strings.end])
         picker.backgroundColor = UIColor.cellBackgroundColor
-        
+
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primaryCellTextColor!]
         picker.setTitleTextAttributes(titleTextAttributes, for: .selected)
         picker.setTitleTextAttributes(titleTextAttributes, for: .normal)
-        
+
         picker.selectedSegmentTintColor = .secondaryCellTextColor
-        
+
         picker.selectedSegmentIndex = recipe.inverted ? 1 : 0
         picker.addTarget(self, action: #selector(didSelectOption), for: .valueChanged)
         return picker
     }
     
-    @objc internal func didSelectOption(sender: UISegmentedControl) {
+    @objc func didSelectOption(sender: UISegmentedControl) {
         recipe.inverted = sender.selectedSegmentIndex == 0 ? false : true
-        
+
         var snapshot = dataSource.snapshot()
         snapshot.reloadSections([.datepicker])
         

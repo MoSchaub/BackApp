@@ -23,30 +23,51 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
         super.init(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             //let color = UIColor.cellBackgroundColor
             if let _ = item as? TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.textFieldCell, for: indexPath) as? TextFieldCell {
+
+                // name textField cell
                 cell.textField.text = recipe.wrappedValue.name
                 cell.textField.attributedPlaceholder = NSAttributedString(string: Strings.name, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
                 cell.selectionStyle = .none
                 cell.textChanged = nameChanged
                 return cell
-            } else if let imageItem = item as? ImageItem{
+            } else if let imageItem = item as? ImageItem {
+
+                // image cell
                 let imageCell = ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
                 return imageCell
-            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell{
+            } else if let _ = item as? AmountItem, let amountCell = tableView.dequeueReusableCell(withIdentifier: Strings.amountCell, for: indexPath) as? AmountCell {
+
+                // timesText cell e. g. 10 pieces
                 amountCell.setUp(with: recipe.wrappedValue.timesText, format: formatAmount)
                 return amountCell
             } else if item is InfoItem {
+
+                // info TextView cell
                 return TextViewCell(textContent: Binding(get: {
                     return recipe.wrappedValue.info
                 }, set: updateInfo), placeholder: Strings.info, reuseIdentifier: Strings.infoCell)
             } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripCell {
+
+                // infoStrip cell
                 infoStripCell.setUpCell(for: stripItem)
                 return infoStripCell
             } else if let stepItem = item as? StepItem {
+
+                // steps
                 let stepCell = StepCell(step: stepItem.step, appData: appData, reuseIdentifier: Strings.stepCell)
                 return stepCell
             } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
+
+                // addStep Cell
                 cell.textLabel?.text = detailItem.text
                 cell.accessoryType = .disclosureIndicator
+
+                // gray out the text if editMode enabled
+                if tableView.isEditing {
+                    cell.textLabel?.textColor = UIColor.secondaryCellTextColor
+                } else {
+                    cell.textLabel?.textColor = UIColor.primaryCellTextColor
+                }
                 return cell
             }
             return UITableViewCell()
