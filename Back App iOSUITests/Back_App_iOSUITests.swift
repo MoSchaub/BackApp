@@ -33,7 +33,11 @@ var returnButton: XCUIElement {
 }
 
 var doneButton: XCUIElement {
-    app.toolbars.firstMatch.buttons["Done"]
+    toolbar.buttons["Done"]
+}
+
+var toolbar: XCUIElement {
+    app.toolbars.firstMatch
 }
 
 class Back_App_iOSUITests: XCTestCase {
@@ -215,7 +219,7 @@ class Back_App_iOSUITests: XCTestCase {
         for step in recipe.steps {
             try addStep(step: step, recipeName: recipe.formattedName)
         }
-        
+
         app.navigationBars[recipe.name].buttons["Save"].tap()
         
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
@@ -310,9 +314,9 @@ class Back_App_iOSUITests: XCTestCase {
             navigationBar.buttons[step.name].tap()
             //TODO test the tapping all the substeps
         }
-        
-        app.navigationBars[step.formattedName].buttons[recipeName].tap()
-        
+
+        app.navigationBars[step.formattedName].buttons.firstMatch.tap()
+
         XCTAssertTrue(appTables.staticTexts[step.name].exists)
     }
     
@@ -323,8 +327,8 @@ class Back_App_iOSUITests: XCTestCase {
         argumentApp.launch()
 
         appTables.staticTexts[Recipe.example.name].tap()
-        navigationBar.buttons["Edit"].tap()
-        
+        toolbar.buttons["Edit"].tap()
+
         let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
         staticText.tap()
         staticText.tap()
@@ -332,7 +336,7 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.cells.pickerWheels["2 minutes"].adjust(toPickerWheelValue: "\(18) minutes")
         
         
-        app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
+        app.navigationBars["Mischen"].buttons.firstMatch.tap()
 
         let schnittbrTchenNavigationBar = XCUIApplication().navigationBars.firstMatch
         schnittbrTchenNavigationBar.buttons.firstMatch.tap()

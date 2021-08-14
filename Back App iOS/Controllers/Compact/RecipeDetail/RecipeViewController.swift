@@ -54,6 +54,9 @@ extension RecipeViewController {
         super.viewDidLoad()
         registerCells()
         self.tableView.separatorStyle = .none
+
+        //declare conformance for landscape mode on large iphones and ipads
+        self.splitViewController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,11 +93,49 @@ private extension RecipeViewController {
     }
     
     func setUpNavigationBar() {
+        /// share item to share the recipe as a file
+        let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
+
+        /// favourite item to add  the recipe to the favorites
+        let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+
+        /// edit item to navigate to editRecipeVC
+        let edit =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editRecipe))
+
+        setUp3BarButtonItems(item1: share, item2: favourite, item3: edit)
+
         DispatchQueue.main.async {
-            
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.editRecipe))
+            //title in any case
             self.title = self.recipe.formattedName
         }
+    }
+}
+
+// MARK: Conformance to UISplitViewControllerDelegate
+extension RecipeViewController: UISplitViewControllerDelegate {
+    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
+        // reload the navbar to switch between showing the toolbar and not showing the toolbar
+        self.setUpNavigationBar()
+    }
+
+    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
+        // reload the navbar to switch between showing the toolbar and not showing the toolbar
+        self.setUpNavigationBar()
+    }
+}
+
+// MARK: helpers for navbarItems
+
+private extension RecipeViewController {
+
+    @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
+        recipe.isFavorite.toggle()
+    }
+
+    @objc private func shareRecipeFile(sender: UIBarButtonItem) {
+        let vc = UIActivityViewController(activityItems: [appData.exportRecipesToFile(recipes: [self.recipe])], applicationActivities: nil)
+        vc.popoverPresentationController?.barButtonItem = sender
+        present(vc, animated: true)
     }
 }
 

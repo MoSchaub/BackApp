@@ -202,37 +202,26 @@ private extension EditRecipeViewController {
                 
             }
         } else {
-            
-            //create the items
-            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+
+            /// share item to share the recipe as a file
             let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
+
+            /// favourite item to add  the recipe to the favorites
+            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+
+            /// delete item; deletes the recipe and dissmisses
             let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
-            
-            DispatchQueue.main.async {
-                if UITraitCollection.current.horizontalSizeClass == .regular {
-                    //navbar f
-                    self.navigationItem.rightBarButtonItems = [favourite, delete]
-                    self.navigationItem.leftBarButtonItem = share
-                    
-                    self.navigationController?.setToolbarHidden(true, animated: true)
-                } else {
-                    
-                    self.navigationItem.rightBarButtonItems = []
-                    self.navigationItem.leftBarButtonItems = []
-                    
-                    // flexible space item
-                    let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-                    
-                    //create the toolbar
-                    self.navigationController?.setToolbarHidden(false, animated: true)
-                    self.setToolbarItems([share, flexible, favourite, flexible, delete], animated: true)
-                }
-            }
+
+            setUp3BarButtonItems(item1: share, item2: favourite, item3: delete)
+
+
         }
+
         DispatchQueue.main.async {
+            // set the title
             self.title = self.recipe.formattedName
         }
-            
+
     }
     
     // MARK: Cell registration
@@ -266,7 +255,7 @@ private extension EditRecipeViewController {
     @objc private func cancel() {
         handleCancelButtonPress()
     }
-    
+
     @objc private func deletePressed(sender: UIBarButtonItem) {
         let sheet = UIAlertController(preferredStyle: .actionSheet)
         
