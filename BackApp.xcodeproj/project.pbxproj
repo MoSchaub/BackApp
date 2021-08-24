@@ -47,6 +47,7 @@
 		CD6F748D2691D1D800BCFC3E /* Vorlage.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */; };
 		CD6F748F2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */; };
 		CD6FD71126921D0800ACDE85 /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */; };
+		CD75653326D571190049B574 /* SubstepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD75653226D571190049B574 /* SubstepRow.swift */; };
 		CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CD9B3CE9253CE6D000132CA9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD9B3CE7253CE6D000132CA9 /* Localizable.strings */; };
@@ -158,6 +159,7 @@
 		CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vorlage.bakingAppRecipe; sourceTree = "<group>"; };
 		CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Schnittbrötchen.bakingAppRecipe"; sourceTree = "<group>"; };
 		CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
+		CD75653226D571190049B574 /* SubstepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstepRow.swift; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
 		CD7691BB24EEAB6600BAB383 /* Back App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Back App.entitlements"; sourceTree = "<group>"; };
 		CD76F999248BDA3000D11DD3 /* DecimalField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalField.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				CD232E3826740CD400E528BB /* RecipeCell.swift */,
 				CD232E4126740CD500E528BB /* StepCell.swift */,
 				CD232E4726740CD500E528BB /* StepRow.swift */,
+				CD75653226D571190049B574 /* SubstepRow.swift */,
 				CD232E4426740CD500E528BB /* SubtitleCell.swift */,
 				CD232E3726740CD400E528BB /* SwitchCell.swift */,
 				CD232E4526740CD500E528BB /* TempPickerCell.swift */,
@@ -748,6 +751,7 @@
 				CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */,
 				CD6FD71126921D0800ACDE85 /* RecipeViewController.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */,
+				CD75653326D571190049B574 /* SubstepRow.swift in Sources */,
 				CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */,
 				CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */,
 				CD232E5526740CD500E528BB /* KneadingHeatingCell.swift in Sources */,
@@ -888,7 +892,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -911,7 +915,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1058,7 +1062,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1083,7 +1087,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;

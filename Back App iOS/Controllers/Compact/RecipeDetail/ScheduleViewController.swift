@@ -130,20 +130,6 @@ private extension ScheduleViewController {
 // - MARK: - SwiftUI Views
 import SwiftUI
 private extension ScheduleViewController {
-    private func customIngredientRow(ingredient: Ingredient, step: Step) -> some View{
-        HStack {
-            Text(ingredient.name)
-            Spacer()
-            if ingredient.type == .bulkLiquid{
-                Text(appData.temperature(for: ingredient, roomTemp: roomTemp).formattedTemp)
-                Spacer()
-            } else{
-                EmptyView()
-            }
-            Text(ingredient.scaledFormattedAmount(with: self.factor))
-        }
-        .foregroundColor(Color(UIColor.primaryCellTextColor!))
-    }
     
     private func customStepRow(step: Step) -> some View {
         VStack{
@@ -156,22 +142,9 @@ private extension ScheduleViewController {
                 }
                 Text("\(step.formattedDuration), \(step.formattedTemp(roomTemp: roomTemp))").secondary()
             }
-            
-            ForEach(appData.ingredients(with: step.id!)){ ingredient in
-                self.customIngredientRow(ingredient: ingredient, step: step)
-                    .padding(.vertical, 5)
-            }
-            
-            ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
-                HStack {
-                    Text(substep.formattedName)
-                    Spacer()
-                    Text(substep.formattedTemp(roomTemp: self.roomTemp))
-                    Spacer()
-                    Text(self.appData.totalFormattedMass(for: substep.id!, factor: self.factor))
-                }
-            }
-            
+
+            substepIngredientRows(for: step, with: self.appData, scaleFactor: self.factor)
+
             HStack {
                 Text(step.notes)
                 Spacer()

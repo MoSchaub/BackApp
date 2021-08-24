@@ -10,11 +10,26 @@ import SwiftUI
 import BakingRecipeFoundation
 import BackAppCore
 
+@ViewBuilder
+public func substepIngredientRows(for step: Step, with appData: BackAppData, scaleFactor: Double? = nil) -> some View {
+    ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
+        SubstepRow(substep: substep, appData: appData)
+
+    }
+    ForEach(appData.ingredients(with: step.id!)) { ingredient in
+        if let scaleFactor = scaleFactor {
+            IngredientRow(ingredient: ingredient, appData: appData, scaleFactor: scaleFactor)
+            .padding(.vertical, 5)
+        } else {
+            IngredientRow(ingredient: ingredient, appData: appData, scaleFactor: nil)
+        }
+    }
+}
+
 public struct StepRow: View {
-    
+
     let step: Step
     let roomTemp = Standarts.roomTemp
-    let kneadingHeating = Standarts.kneadingHeating
     let appData: BackAppData
     
     @Environment(\.colorScheme) var colorScheme
@@ -29,18 +44,7 @@ public struct StepRow: View {
                 Spacer()
                 Text(step.formattedDuration).secondary()
             }
-            ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
-                HStack {
-                    Text(substep.formattedName)
-                    Spacer()
-                    Text(substep.formattedTemp(roomTemp: roomTemp))
-                    Spacer()
-                    Text(appData.totalFormattedMass(for: substep.id!))
-                }
-            }
-            ForEach(appData.ingredients(with: step.id!)) { ingredient in
-                IngredientRow(ingredient: ingredient, roomTemp: roomTemp, kneadingHeating: kneadingHeating, appData: appData)
-            }
+            substepIngredientRows(for: step, with: appData)
             HStack {
                 Text(step.notes)
                 Spacer()

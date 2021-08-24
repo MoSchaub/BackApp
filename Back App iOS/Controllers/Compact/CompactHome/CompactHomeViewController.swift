@@ -77,7 +77,7 @@ class CompactHomeViewController: UITableViewController {
             self.presentImportAlert()
         }.store(in: &tokens)
         
-        #if !targetEnvironment(simulator)
+        #if !DEBUG
         //ask for room temp
         presentRoomTempSheet()
         #endif
@@ -137,10 +137,11 @@ private extension CompactHomeViewController {
         let sheet = RoomTempPickerSheet(roomTemp: roomtempBinding) {
             vc.dismiss(animated: true)
         }
-        
+
         vc.rootView = sheet
-        
-        vc.modalPresentationStyle = .popover
+
+        // set the presentation style to automatic so it also works on regular horizontal size class aka mostly ipad
+        vc.modalPresentationStyle = .automatic
         
         present(vc, animated: true)
     }

@@ -14,9 +14,10 @@ import BackAppCore
 struct IngredientRow: View {
     
     let ingredient: Ingredient
-    let roomTemp: Double
-    let kneadingHeating: Double
+    let roomTemp: Double = Standarts.roomTemp
+    let kneadingHeating: Double = Standarts.kneadingHeating
     let appData: BackAppData
+    let scaleFactor: Double?
     
     var body: some View {
         HStack {
@@ -28,7 +29,7 @@ struct IngredientRow: View {
             } else{
                 EmptyView()
             }
-            Text(ingredient.formattedAmount).lineLimit(1)
+            Text(ingredient.scaledFormattedAmount(with: scaleFactor ?? 1)).lineLimit(1)
         }
         .foregroundColor(Color(UIColor.primaryCellTextColor!))
     }
