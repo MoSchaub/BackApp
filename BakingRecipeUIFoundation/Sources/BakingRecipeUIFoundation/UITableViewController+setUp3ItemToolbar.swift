@@ -1,5 +1,5 @@
 //
-//  UITableViewController+Additions.swift
+//  UITableViewController+setUp3ButtonToolbar.swift
 //  
 //
 //  Created by Moritz Schaub on 14.08.21.
@@ -8,9 +8,8 @@
 import UIKit
 
 public extension UITableViewController {
-    func setUp3BarButtonItems(item1: UIBarButtonItem, item2: UIBarButtonItem, item3: UIBarButtonItem) {
-        /// flexible space item used as a spacer
-        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    func setUp3ItemToolbar(item1: UIBarButtonItem, item2: UIBarButtonItem, item3: UIBarButtonItem) {
+
 
         DispatchQueue.main.async {
             // put the buttons in the appropriate bar and show the right bar and hide the other one
@@ -32,7 +31,7 @@ public extension UITableViewController {
                 self.navigationController?.setToolbarHidden(false, animated: true)
 
                 //fill the toolbar with buttons
-                self.setToolbarItems([item1, flexible, item2, flexible, item3], animated: true)
+                self.setToolbarItems([item1, .flexible, item2, .flexible, item3], animated: true)
             }
         }
     }

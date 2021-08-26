@@ -212,7 +212,7 @@ private extension EditRecipeViewController {
             /// delete item; deletes the recipe and dissmisses
             let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
 
-            setUp3BarButtonItems(item1: share, item2: favourite, item3: delete)
+            setUp3ItemToolbar(item1: share, item2: favourite, item3: delete)
 
 
         }

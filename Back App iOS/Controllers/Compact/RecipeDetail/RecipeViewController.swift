@@ -102,7 +102,7 @@ private extension RecipeViewController {
         /// edit item to navigate to editRecipeVC
         let edit =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editRecipe))
 
-        setUp3BarButtonItems(item1: share, item2: favourite, item3: edit)
+        setUp3ItemToolbar(item1: share, item2: favourite, item3: edit)
 
         DispatchQueue.main.async {
             //title in any case
@@ -160,9 +160,7 @@ private extension RecipeViewController {
                 let stepCell = StepCell(step: stepItem.step, appData: self.appData, reuseIdentifier: Strings.stepCell, editMode: false)
                 return stepCell
             } else if let infoItem = item as? InfoItem {
-                return TextViewCell(textContent: Binding(get: {
-                    infoItem.text
-                }, set: { _ in }), placeholder: "", reuseIdentifier: Strings.infoCell, editMode: false)
+                return TextViewCell(textContent: .constant(infoItem.text), placeholder: "", reuseIdentifier: Strings.infoCell, isEditable: false)
             } else if let textItem = item as? TextItem, let textCell = tableView.dequeueReusableCell(withIdentifier: Strings.textCell, for: indexPath) as? CustomCell {
                 textCell.textLabel?.text = textItem.text
                 return textCell

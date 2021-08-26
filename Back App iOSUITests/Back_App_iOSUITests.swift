@@ -274,27 +274,28 @@ class Back_App_iOSUITests: XCTestCase {
     
     func addStep(step: Step, recipeName: String) throws {
         appTables.staticTexts["add Step"].tap()
-        
+
         // name
         nameTextField.tap()
         nameTextField.typeText(step.name)
         returnButton.tap()
-        
+
+
         // notes
-        let notesField = appTables.textViews["notes"].firstMatch
-        
+        let notesField = appTables.textViews.firstMatch
+
         notesField.tap()
         notesField.typeText(step.notes)
         
-        let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+        let doneButton = app.toolbars.firstMatch.buttons["Done"]
         doneButton.tap()
-        
+
         // duration
         XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
         if step.time != 60 {
             XCUIApplication().tables.pickerWheels["one minute"].adjust(toPickerWheelValue: "\(Int(step.time/60)) minutes")
         }
-        
+
         // ingredients
         for ingredient in step.ingredients {
             addIngredient(ingredient: ingredient, stepName: step.formattedName)
