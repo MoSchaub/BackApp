@@ -15,6 +15,7 @@ public struct SubstepRow: View {
     let substep: Step
     let appData: BackAppData
     let roomTemp = Standarts.roomTemp
+    let scaleFactor: Double
 
     public var body: some View {
         HStack {
@@ -22,7 +23,7 @@ public struct SubstepRow: View {
             Spacer()
             Text(substep.formattedTemp(roomTemp: roomTemp))
             Spacer()
-            Text(appData.totalFormattedMass(for: substep.id!))
+            Text(appData.totalFormattedMass(for: substep.id!, factor: scaleFactor))
         }
     }
 }

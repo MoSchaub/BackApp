@@ -13,7 +13,7 @@ import BackAppCore
 @ViewBuilder
 public func substepIngredientRows(for step: Step, with appData: BackAppData, scaleFactor: Double? = nil) -> some View {
     ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
-        SubstepRow(substep: substep, appData: appData)
+        SubstepRow(substep: substep, appData: appData, scaleFactor: scaleFactor ?? 1)
 
     }
     ForEach(appData.ingredients(with: step.id!)) { ingredient in
