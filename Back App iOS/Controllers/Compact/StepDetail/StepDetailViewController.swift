@@ -45,7 +45,7 @@ class StepDetailViewController: UITableViewController {
     
     ///wether the tempPicker is shown
     private var tempPickerShown: Bool {
-        self.dataSource.itemIdentifier(for: IndexPath(row: self.datePickerShown ? 3 : 2, section: StepDetailSection.durationTemp.rawValue)) != nil
+        !(self.dataSource.itemIdentifier(for: IndexPath(row: datePickerShown ? 3 : 2, section: StepDetailSection.durationTemp.rawValue)) is DetailItem)
     }
     
     // MARK: - Initalizers
@@ -152,6 +152,7 @@ private extension StepDetailViewController {
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.addIngredientCell) // add ingredient
         tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.substepCell) // substep
         tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell) // ingredients
+        tableView.register(SwitchCell.self, forCellReuseIdentifier: Strings.kneadingStepCell) // isKneadingStep
     }
     
 }
@@ -313,7 +314,9 @@ private extension StepDetailViewController {
         if tempPickerShown {
             
             var snapshot = dataSource.snapshot()
-            snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).last(where: { !($0 is DetailItem) })!])
+
+            let indexOfItemToDelete = snapshot.itemIdentifiers(inSection: .durationTemp).count - 2
+            snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp)[indexOfItemToDelete]])
             self.dataSource.apply(snapshot, animatingDifferences: false)
             
             reloadDurationTempSection()
@@ -390,11 +393,18 @@ private extension StepDetailViewController {
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
                                                     cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
                                                     return cell
-                                                } else {
+                                                } else if detailItem.text == Strings.temperature {
                                                     //temp
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
                                                     cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
                                                     return cell
+                                                } else {
+                                                    // isKneadingStep switch cell
+                                                    if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell, let item = item as? TextItem {
+                                                        cell.delegate = self
+                                                        cell.textLabel?.text = item.text
+                                                        return cell
+                                                    }
                                                 }
                                             } else if indexPath.section == StepDetailSection.ingredients.rawValue {
                                                 if detailItem is IngredientItem{
@@ -417,6 +427,18 @@ private extension StepDetailViewController {
                                         return CustomCell()
                                     })
     }
+}
+
+extension StepDetailViewController: SwitchCellDelegate {
+    func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool) {
+        self.step.isKneadingStep = isOn
+    }
+
+    func switchValue(in cell: SwitchCell) -> Bool {
+        self.step.isKneadingStep
+    }
+
+
 }
 
 extension StepDetailViewController: TempPickerCellDelegate {
@@ -488,6 +510,8 @@ private extension StepDetailViewController {
         if tempPickerShown || shouldShowTempPicker {
             items.append(Item())
         }
+
+        items.append(kneadingStepSwitchItem)
         
         snapshot.appendItems(items, toSection: .durationTemp)
         
@@ -505,13 +529,17 @@ private extension StepDetailViewController {
     private var tempItem: DetailItem {
         DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.roomTemp))
     }
+
+    private var kneadingStepSwitchItem: DetailItem {
+        DetailItem(name: Strings.isKneadingStep)
+    }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
         
         var snapshot = snapshotBase()
         
         // durationTemp
-        snapshot.appendItems([durationItem, tempItem], toSection: .durationTemp)
+        snapshot.appendItems([durationItem, tempItem, kneadingStepSwitchItem], toSection: .durationTemp)
         
         return snapshot
     }

@@ -39,7 +39,7 @@ final class BackAppCoreTests: XCTestCase {
             try XCTAssert(db.tableExists("Step"))
             let columns = try db.columns(in: "Step")
             let columnNames = Set(columns.map { $0.name })
-            XCTAssertEqual(columnNames, ["id", "name", "duration", "temperature", "notes", "recipeId", "superStepId", "number"])
+            XCTAssertEqual(columnNames, ["id", "name", "duration", "isKneadingStep", "temperature", "notes", "recipeId", "superStepId", "number"])
         }
     }
     
@@ -64,23 +64,23 @@ final class BackAppCoreTests: XCTestCase {
     func testInsertingExample() throws {
         let recipeExample = Recipe.example
         var recipe = recipeExample.recipe
-        let appData = BackAppData.shared
-        
+        let appData = BackAppData.shared()
+
         appData.save(&recipe)
         try XCTAssertTrue(appData.databaseReader.read(recipe.exists))
-        
+
         let id = recipe.id!
-        
+
         let stepIngredients = recipeExample.stepIngredients
-        
+
         _ = try stepIngredients.map {
             var step = $0.step
             step.recipeId = id
             appData.save(&step)
             try XCTAssertTrue(appData.databaseReader.read(step.exists))
-            
+
             let stepId = step.id!
-            
+
             for ingredient in $0.ingredients {
                 var ingredient = ingredient
                 ingredient.stepId = stepId

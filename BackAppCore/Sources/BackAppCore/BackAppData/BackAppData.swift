@@ -72,6 +72,15 @@ public struct BackAppData {
                 t.column(Ingredient.Columns.number.name, .integer).notNull()
             }
         }
+
+        // second Migration
+        migrator.registerMigration("v2") { db in
+            try db.alter(table: "Step") { t in
+                t.add(column: Step.Columns.isKneadingStep.name, .boolean).notNull().defaults(to: false)
+            }
+        }
+
+
         return migrator
     }
 }
@@ -80,7 +89,7 @@ public struct BackAppData {
 
 // MARK: - Database Access: Writes
 public extension BackAppData {
-    
+
     /// Saves (inserts or updates) a record. When the method returns, the
     /// record is present in the database, and its id is not nil.
     func save<T:BakingRecipeRecord>(_ record: inout T) {

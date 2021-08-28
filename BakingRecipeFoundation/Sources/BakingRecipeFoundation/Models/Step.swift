@@ -29,6 +29,9 @@ public struct Step: BakingRecipeRecord {
     
     /// some notes you can attach
     public var notes: String = ""
+
+    /// wether the step is a kneading Step. This means that kneading Heating should be used for calculations
+    public var isKneadingStep: Bool
     
     /// the id of the recipe the step is in
     public var recipeId: Int64
@@ -40,11 +43,12 @@ public struct Step: BakingRecipeRecord {
     /// number of the step for sorting
     public var number: Int
     
-    public init(name: String = "", duration: TimeInterval = 60, temperature: Double? = nil, notes: String = "", recipeId: Int64, number: Int) {
+    public init(name: String = "", duration: TimeInterval = 60, temperature: Double? = nil, notes: String = "", isKneadingStep: Bool = false, recipeId: Int64, number: Int) {
         self.name = name
         self.duration = duration
         self.temperature = temperature
         self.notes = notes
+        self.isKneadingStep = false
         self.recipeId = recipeId
         self.superStepId = nil
         self.number = number
@@ -83,6 +87,7 @@ public extension Step {
         public static let duration = Column(CodingKeys.duration)
         public static let temperature = Column(CodingKeys.temperature)
         public static let notes = Column(CodingKeys.notes)
+        public static let isKneadingStep = Column(CodingKeys.isKneadingStep)
         public static let recipeId = Column(CodingKeys.recipeId)
         public static let superStepId = Column(CodingKeys.superStepId)
         public static let number = Column(CodingKeys.number)
@@ -97,7 +102,8 @@ public extension Step {
         Columns.notes,
         Columns.recipeId,
         Columns.superStepId,
-        Columns.number
+        Columns.number,
+        Columns.isKneadingStep
     ]
 }
 
@@ -115,6 +121,7 @@ public extension Step {
         recipeId = row[5]
         superStepId = row[6]
         number = row[7]
+        isKneadingStep = row[8] ?? false
     }
 }
 
@@ -260,7 +267,7 @@ public extension Step {
         
         let roomTemp = Double(roomTemp)
         
-        let temperature = (self.temperature ?? roomTemp) - kneadingHeating
+        let temperature = (self.temperature ?? roomTemp) - (isKneadingStep ? kneadingHeating : 0)
         
         guard bulkingredientsMassCProduct != 0.0 else {
             return roomTemp

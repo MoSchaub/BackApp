@@ -126,6 +126,9 @@
 "ingredients" = "ingredients";
 
 
+"isKneadingStep" = "kneading step";
+
+
 "kneadingHeatCellPlaceholder" = "kneading heating";
 
 

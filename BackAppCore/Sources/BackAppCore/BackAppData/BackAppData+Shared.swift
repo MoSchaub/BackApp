@@ -44,7 +44,7 @@ extension BackAppData {
             
             // adds to examples for new users when the user is new
             if Standarts.newUser, appData.allRecipes.isEmpty {
-                let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!//url(forResource: nil, withExtension: "bakingAppRecipe")
+                let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!
                 _ = urls.map { appData.open($0)}
                 Standarts.newUser = false
             }

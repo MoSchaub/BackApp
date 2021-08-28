@@ -15,7 +15,6 @@ struct IngredientRow: View {
     
     let ingredient: Ingredient
     let roomTemp: Double = Standarts.roomTemp
-    let kneadingHeating: Double = Standarts.kneadingHeating
     let appData: BackAppData
     let scaleFactor: Double?
     
@@ -24,7 +23,7 @@ struct IngredientRow: View {
             Text(ingredient.name).lineLimit(1)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text(String(format: "%.01f", appData.temperature(for: ingredient, roomTemp: roomTemp)) + "° C").lineLimit(1)
+                Text(appData.temperature(for: ingredient, roomTemp: roomTemp).formattedTemp).lineLimit(1)
                 Spacer()
             } else{
                 EmptyView()
