@@ -130,6 +130,8 @@ private extension RecipeViewController {
 
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
         recipe.isFavorite.toggle()
+        appData.save(&recipe)
+        setUpNavigationBar()
     }
 
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
