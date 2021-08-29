@@ -42,10 +42,11 @@ extension BackAppData {
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)
             
-            // adds to examples for new users when the user is new
-            if Standarts.newUser, appData.allRecipes.isEmpty {
-                let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!
-                _ = urls.map { appData.open($0)}
+            // adds to examples for new users when the user is new in the right language if it exists
+            if Standarts.newUser, appData.allRecipes.isEmpty, let subdir = Bundle.main.preferredLocalizations.first, let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) {
+
+                //filter the right files by the prefix which is eg. 1en
+                _ = urls.filter({ $0.description.prefix(3).contains(subdir)}).map { appData.open($0)}
                 Standarts.newUser = false
             }
             

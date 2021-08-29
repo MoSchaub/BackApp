@@ -43,12 +43,15 @@
 		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
 		CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
-		CD6F748B2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748A2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe */; };
-		CD6F748D2691D1D800BCFC3E /* Vorlage.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */; };
-		CD6F748F2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */; };
+		CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */; };
+		CD6F748D2691D1D800BCFC3E /* 3de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748C2691D1D800BCFC3E /* 3de.bakingAppRecipe */; };
+		CD6F748F2691EE6100BCFC3E /* 1de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748E2691EE6100BCFC3E /* 1de.bakingAppRecipe */; };
 		CD6FD71126921D0800ACDE85 /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */; };
 		CD75653326D571190049B574 /* SubstepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD75653226D571190049B574 /* SubstepRow.swift */; };
 		CD78EAAE250FE66C00E17DB0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */; };
+		CD87201726DBA74700C01DAE /* 2en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201426DBA74600C01DAE /* 2en.bakingAppRecipe */; };
+		CD87201826DBA74700C01DAE /* 1en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201526DBA74700C01DAE /* 1en.bakingAppRecipe */; };
+		CD87201926DBA74700C01DAE /* 3en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201626DBA74700C01DAE /* 3en.bakingAppRecipe */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CD9B3CE9253CE6D000132CA9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD9B3CE7253CE6D000132CA9 /* Localizable.strings */; };
 		CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B3CF3253CE6ED00132CA9 /* TestModels.swift */; };
@@ -155,9 +158,9 @@
 		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD68D46624AC5CBD000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD6A9A152340252600748249 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		CD6F748A2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Hefezopf.bakingAppRecipe; sourceTree = "<group>"; };
-		CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vorlage.bakingAppRecipe; sourceTree = "<group>"; };
-		CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Schnittbrötchen.bakingAppRecipe"; sourceTree = "<group>"; };
+		CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2de.bakingAppRecipe; sourceTree = "<group>"; };
+		CD6F748C2691D1D800BCFC3E /* 3de.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3de.bakingAppRecipe; sourceTree = "<group>"; };
+		CD6F748E2691EE6100BCFC3E /* 1de.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1de.bakingAppRecipe; sourceTree = "<group>"; };
 		CD6FD71026921D0800ACDE85 /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
 		CD75653226D571190049B574 /* SubstepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstepRow.swift; sourceTree = "<group>"; };
 		CD75BFC824629961005C902A /* bread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bread.png; sourceTree = "<group>"; };
@@ -184,6 +187,9 @@
 		CD76F9B8248BDA3000D11DD3 /* RecipeDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 		CD76F9B9248BDA3000D11DD3 /* ScheduleForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleForm.swift; sourceTree = "<group>"; };
 		CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		CD87201426DBA74600C01DAE /* 2en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2en.bakingAppRecipe; sourceTree = "<group>"; };
+		CD87201526DBA74700C01DAE /* 1en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1en.bakingAppRecipe; sourceTree = "<group>"; };
+		CD87201626DBA74700C01DAE /* 3en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3en.bakingAppRecipe; sourceTree = "<group>"; };
 		CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeStrings; sourceTree = "<group>"; };
 		CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeFoundation; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
@@ -333,9 +339,8 @@
 		CD6F74812691D18D00BCFC3E /* ExampleRecipeFiles */ = {
 			isa = PBXGroup;
 			children = (
-				CD6F748E2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe */,
-				CD6F748A2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe */,
-				CD6F748C2691D1D800BCFC3E /* Vorlage.bakingAppRecipe */,
+				CD87201326DBA73B00C01DAE /* en */,
+				CD87201226DBA73100C01DAE /* de */,
 			);
 			path = ExampleRecipeFiles;
 			sourceTree = SOURCE_ROOT;
@@ -443,6 +448,26 @@
 				CD78EAAD250FE66C00E17DB0 /* ScheduleViewController.swift */,
 			);
 			path = RecipeDetail;
+			sourceTree = "<group>";
+		};
+		CD87201226DBA73100C01DAE /* de */ = {
+			isa = PBXGroup;
+			children = (
+				CD6F748E2691EE6100BCFC3E /* 1de.bakingAppRecipe */,
+				CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */,
+				CD6F748C2691D1D800BCFC3E /* 3de.bakingAppRecipe */,
+			);
+			path = de;
+			sourceTree = "<group>";
+		};
+		CD87201326DBA73B00C01DAE /* en */ = {
+			isa = PBXGroup;
+			children = (
+				CD87201526DBA74700C01DAE /* 1en.bakingAppRecipe */,
+				CD87201626DBA74700C01DAE /* 3en.bakingAppRecipe */,
+				CD87201426DBA74600C01DAE /* 2en.bakingAppRecipe */,
+			);
+			path = en;
 			sourceTree = "<group>";
 		};
 		CDA7EE2A24A67DBD00763E21 /* Back App iOS */ = {
@@ -699,15 +724,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD6F748D2691D1D800BCFC3E /* Vorlage.bakingAppRecipe in Resources */,
+				CD6F748D2691D1D800BCFC3E /* 3de.bakingAppRecipe in Resources */,
+				CD87201726DBA74700C01DAE /* 2en.bakingAppRecipe in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CDE4E1A026C821020067FED4 /* Launch Screen.storyboard in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
-				CD6F748B2691D1C800BCFC3E /* Hefezopf.bakingAppRecipe in Resources */,
-				CD6F748F2691EE6100BCFC3E /* Schnittbrötchen.bakingAppRecipe in Resources */,
+				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
+				CD6F748F2691EE6100BCFC3E /* 1de.bakingAppRecipe in Resources */,
 				CDA7EE5824A67E7000763E21 /* Images.xcassets in Resources */,
+				CD87201826DBA74700C01DAE /* 1en.bakingAppRecipe in Resources */,
+				CD87201926DBA74700C01DAE /* 3en.bakingAppRecipe in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -892,7 +920,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -901,7 +929,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -915,7 +943,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -924,7 +952,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1062,7 +1090,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1070,10 +1098,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1087,7 +1115,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1095,10 +1123,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
