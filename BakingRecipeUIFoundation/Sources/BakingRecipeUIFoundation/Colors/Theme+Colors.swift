@@ -21,7 +21,7 @@ enum ColorKey: String {
 extension Theme {
     
     private func color(with key: ColorKey) -> UIColor? {
-        return UIColor(named: key.rawValue, in: bundle, compatibleWith: nil)
+        return UIColor(named: key.rawValue, in: Bundle.module, compatibleWith: nil)
     }
     
     var backgroundColor: UIColor? {
@@ -54,10 +54,6 @@ extension Theme {
     
     var tintColor: UIColor? {
         return color(with: .tint)
-    }
-    
-    public var statusBarStyle: UIStatusBarStyle {
-        return UIStatusBarStyle(rawValue: config.statusBarStyle) ?? .default
     }
     
 }

@@ -102,6 +102,7 @@ public struct Strings {
     public static var roomTempQuestionLabel = NSLocalizedString("roomTempQuestionLabel", bundle: .module, comment: "")
     public static var schedule = NSLocalizedString("schedule", bundle: .module, comment: "")
     public static var createSchedule = NSLocalizedString("createSchedule", bundle: .module, comment: "")
+    public static var isKneadingStep = NSLocalizedString("isKneadingStep", bundle: .module, comment: "")
     
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
@@ -137,4 +138,6 @@ public struct Strings {
     public static let kneadingHeatingCell = "kneadingHeating"
     public static let apperanceCell = "appearance"
     public static let languageCell = "language"
+    public static let textCell = "text"
+    public static let kneadingStepCell = "kneadingStep"
 }

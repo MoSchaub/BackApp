@@ -31,9 +31,10 @@ public extension Recipe {
         return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(steps: steps).formattedDuration)
     }
     
-    func controlStripItems(creating: Bool, appData: BackAppData) -> [Item] {
-        let infoStripItem = InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
-        return creating ? [infoStripItem] : [infoStripItem, DetailItem(name: Strings.startRecipe)]
+    /// an ``InfoStripItem`` with the recipes formatted Values
+    /// - Parameter appData: database interfacefor accessing the recipes formatted Values
+    func infoStripItem(appData: BackAppData) -> Item {
+        InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
     }
     
     func stepItems(appData: BackAppData) -> [StepItem] {

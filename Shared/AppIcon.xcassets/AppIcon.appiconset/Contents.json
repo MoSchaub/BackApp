@@ -67,7 +67,7 @@
       "size" : "60x60"
     },
     {
-      "filename" : "20.png",
+      "filename" : "20.jpg",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "20x20"
@@ -145,7 +145,7 @@
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "1024.png",
+      "filename" : "AppStore.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

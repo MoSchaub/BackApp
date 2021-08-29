@@ -65,7 +65,7 @@ public extension BackAppData {
     }
     
     /// totalAmount of all ingredients in the recipe
-    private func totalAmount(for recipeId: Int64) -> Double {
+    func totalAmount(for recipeId: Int64) -> Double {
         var summ: Double = 0
         // iterate through all non substeps cause totalMass also uses the substeps
         _ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id!)}

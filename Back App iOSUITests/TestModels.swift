@@ -505,7 +505,7 @@ public struct Recipe: Hashable, Codable, Identifiable{
         
         let backen = Step(name: "Backen", time: 18*60,notes: "170˚ C")
         
-        return Recipe(name: "Sauerteigcrack", brotValues: [schritt1, backen])
+        return Recipe(name: "Sauerteigcracker", brotValues: [schritt1, backen])
     }
     
     static public var complexExample: Recipe {

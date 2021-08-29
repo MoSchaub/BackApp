@@ -77,7 +77,7 @@ class CompactHomeViewController: UITableViewController {
             self.presentImportAlert()
         }.store(in: &tokens)
         
-        #if !targetEnvironment(simulator)
+        #if !DEBUG
         //ask for room temp
         presentRoomTempSheet()
         #endif
@@ -137,10 +137,11 @@ private extension CompactHomeViewController {
         let sheet = RoomTempPickerSheet(roomTemp: roomtempBinding) {
             vc.dismiss(animated: true)
         }
-        
+
         vc.rootView = sheet
-        
-        vc.modalPresentationStyle = .popover
+
+        // set the presentation style to automatic so it also works on regular horizontal size class aka mostly ipad
+        vc.modalPresentationStyle = .automatic
         
         present(vc, animated: true)
     }
@@ -176,7 +177,7 @@ private extension CompactHomeViewController {
         appData.save(&recipe)
         
         // create the vc
-        let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: true, appData: appData)
+        let vc = EditRecipeViewController(recipeId: recipe.id!, creating: true, appData: appData)
         
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
@@ -236,7 +237,7 @@ extension CompactHomeViewController {
             
             DispatchQueue.main.async {
                 //create the vc
-                let vc = RecipeDetailViewController(recipeId: recipe.id!, creating: false, appData: self.appData) {
+                let editVC = EditRecipeViewController(recipeId: recipe.id!, creating: false, appData: self.appData){
                     //dismiss detail
                     if self.splitViewController?.isCollapsed ?? false {
                         //nosplitVc visible
@@ -246,6 +247,9 @@ extension CompactHomeViewController {
                         _ = self.splitViewController?.viewControllers.popLast()
                     }
                 }
+                
+                let vc = RecipeViewController(recipeId: recipe.id!, appData: self.appData, editRecipeViewController: editVC)
+
                 //push to the view controller
                 let nv = UINavigationController(rootViewController: vc)
                 self.splitViewController?.showDetailViewController(nv, sender: self)

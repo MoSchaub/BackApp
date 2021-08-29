@@ -33,7 +33,11 @@ var returnButton: XCUIElement {
 }
 
 var doneButton: XCUIElement {
-    app.toolbars.firstMatch.buttons["Done"]
+    toolbar.buttons["Done"]
+}
+
+var toolbar: XCUIElement {
+    app.toolbars.firstMatch
 }
 
 class Back_App_iOSUITests: XCTestCase {
@@ -65,8 +69,10 @@ class Back_App_iOSUITests: XCTestCase {
         
         let subs = [sub1, sub2, sub3]
         
-        app.launch()
-        app.swipeDown()
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launchArguments.append("-includeTestingRecipe")
+        argumentApp.launch()
         
         addButton.tap()
         
@@ -80,8 +86,6 @@ class Back_App_iOSUITests: XCTestCase {
         removeSubstep(recipeName: recipeName)
         
         app.navigationBars[recipeName].buttons["Save"].tap()
-
-        try delete(recipeName: recipeName)
     }
     
     func removeSubstep(recipeName: String) {
@@ -106,8 +110,9 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testAddingRecipeStepUpdateBug() {
-        app.launch()
-        app.swipeDown()
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launch()
         
         addButton.tap()
         
@@ -129,8 +134,9 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testAddingIngredientBug() throws {
-        app.launch()
-        app.swipeDown()
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launch()
         
         addButton.tap()
         
@@ -155,8 +161,9 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func testIngredientMassTextConvertBug() {
-        app.launch()
-        app.swipeDown()
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launch()
         
         addButton.tap()
         
@@ -181,13 +188,6 @@ class Back_App_iOSUITests: XCTestCase {
                 
         XCTAssert(appTables.staticTexts["10.5 g "].firstMatch.exists)
         
-        app.terminate()
-        
-        app.launch()
-        app.swipeDown()
-        
-        try! delete(recipeName: Recipe(name: "unnamed recipe", brotValues: []).formattedName)
-        
     }
     
 
@@ -196,11 +196,12 @@ class Back_App_iOSUITests: XCTestCase {
         
         let recipe = Recipe.example
         
-        // UI tests must launch the application that they test.
         let returnButton = app.buttons["Return"]
         
-        app.launch()
-        app.swipeDown()
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launch()
+        
         addButton.tap()
         
         // name
@@ -218,7 +219,7 @@ class Back_App_iOSUITests: XCTestCase {
         for step in recipe.steps {
             try addStep(step: step, recipeName: recipe.formattedName)
         }
-        
+
         app.navigationBars[recipe.name].buttons["Save"].tap()
         
         XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
@@ -273,27 +274,28 @@ class Back_App_iOSUITests: XCTestCase {
     
     func addStep(step: Step, recipeName: String) throws {
         appTables.staticTexts["add Step"].tap()
-        
+
         // name
         nameTextField.tap()
         nameTextField.typeText(step.name)
         returnButton.tap()
-        
+
+
         // notes
-        let notesField = appTables.textViews["notes"].firstMatch
-        
+        let notesField = appTables.textViews.firstMatch
+
         notesField.tap()
         notesField.typeText(step.notes)
         
-        let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+        let doneButton = app.toolbars.firstMatch.buttons["Done"]
         doneButton.tap()
-        
+
         // duration
         XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
         if step.time != 60 {
             XCUIApplication().tables.pickerWheels["one minute"].adjust(toPickerWheelValue: "\(Int(step.time/60)) minutes")
         }
-        
+
         // ingredients
         for ingredient in step.ingredients {
             addIngredient(ingredient: ingredient, stepName: step.formattedName)
@@ -313,19 +315,21 @@ class Back_App_iOSUITests: XCTestCase {
             navigationBar.buttons[step.name].tap()
             //TODO test the tapping all the substeps
         }
-        
-        app.navigationBars[step.formattedName].buttons[recipeName].tap()
-        
+
+        app.navigationBars[step.formattedName].buttons.firstMatch.tap()
+
         XCTAssertTrue(appTables.staticTexts[step.name].exists)
     }
     
     func testChangingRecipeExample() throws {
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launchArguments.append("-includeTestingRecipe")
+        argumentApp.launch()
 
-        app.launch()
-        app.swipeDown()
-        
         appTables.staticTexts[Recipe.example.name].tap()
-        
+        toolbar.buttons["Edit"].tap()
+
         let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
         staticText.tap()
         staticText.tap()
@@ -333,8 +337,10 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.cells.pickerWheels["2 minutes"].adjust(toPickerWheelValue: "\(18) minutes")
         
         
-        app.navigationBars["Mischen"].buttons[Recipe.example.name].tap()
-        
+        app.navigationBars["Mischen"].buttons.firstMatch.tap()
+
+        let schnittbrTchenNavigationBar = XCUIApplication().navigationBars.firstMatch
+        schnittbrTchenNavigationBar.buttons.firstMatch.tap()
         XCTAssertTrue(appTables.cells.staticTexts["18 minutes"].exists)
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
@@ -351,4 +357,79 @@ class Back_App_iOSUITests: XCTestCase {
         nameTextField.tap()
         app.navigationBars.firstMatch.buttons["Cancel"].tap()
     }
+    
+    func setupScheduleTesting() {
+        let argumentApp = app
+        argumentApp.launchArguments.append("-reset")
+        argumentApp.launchArguments.append("-includeTestingRecipe")
+        argumentApp.launch()
+        
+        appTables.staticTexts[Recipe.example.name].tap()
+        appTables.staticTexts["start Recipe"].tap()
+    }
+
+    func testnormalSchedule() throws {
+        // noninverted current date original Times
+        setupScheduleTesting()
+        doneButton.tap()
+        navigationBar.buttons["OK"].tap()
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date())].exists)
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.steps.first!.time))].exists)
+    }
+    
+    func testScheduleInverted() throws {
+        // inverted currentDate originalTimes
+        setupScheduleTesting()
+        
+        let startDate = Date().addingTimeInterval(TimeInterval(-(Recipe.example.totalTime * 60)))
+        let backenDate = startDate.addingTimeInterval(Recipe.example.steps.first!.time)
+        
+        doneButton.tap()
+        appTables.segmentedControls.buttons["end"].tap()
+        navigationBar.buttons["OK"].tap()
+        
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: startDate)].exists)
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: backenDate)].exists)
+    }
+    
+    func testScheduleDiffrentDate() throws {
+        
+        // inverted diffrentDate originalTimes
+        setupScheduleTesting()
+        doneButton.tap()
+        
+        let customDateFormatter = DateFormatter()
+        customDateFormatter.dateFormat = "MMM d, y HH:mm"
+        let newDate = customDateFormatter.date(from: "Jul 10, 21 12:00")!
+        let daysSinceJuly10 = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
+        
+        
+        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "Jul 10")
+        appTables.segmentedControls.buttons["end"].tap()
+        navigationBar.buttons["OK"].tap()
+        
+        let startDate = Date().addingTimeInterval(-(daysSinceJuly10 * 3600 * 24))
+            .addingTimeInterval(TimeInterval(-(Recipe.example.totalTime * 60)))
+        let backenDate = startDate.addingTimeInterval(Recipe.example.steps.first!.time)
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: startDate)].exists)
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: backenDate)].exists)
+    }
+    
+    func testScheduleDiffrentTimes() throws {
+        //normal current Date diffrentTimes
+        setupScheduleTesting()
+        
+        let quantityTextField = appTables.textFields["Number of breads, rolls, etc."]
+        quantityTextField.tap()
+        quantityTextField.typeText("10")
+        doneButton.tap()
+        navigationBar.buttons["OK"].tap()
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date())].exists)
+        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.steps.first!.time))].exists)
+        XCTAssert(appTables.staticTexts["1200.0 g"].exists)
+        
+        
+    }
+    
+    
 }

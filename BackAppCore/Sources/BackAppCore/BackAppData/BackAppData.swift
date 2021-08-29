@@ -72,6 +72,15 @@ public struct BackAppData {
                 t.column(Ingredient.Columns.number.name, .integer).notNull()
             }
         }
+
+        // second Migration
+        migrator.registerMigration("v2") { db in
+            try db.alter(table: "Step") { t in
+                t.add(column: Step.Columns.isKneadingStep.name, .boolean).notNull().defaults(to: false)
+            }
+        }
+
+
         return migrator
     }
 }
@@ -80,7 +89,7 @@ public struct BackAppData {
 
 // MARK: - Database Access: Writes
 public extension BackAppData {
-    
+
     /// Saves (inserts or updates) a record. When the method returns, the
     /// record is present in the database, and its id is not nil.
     func save<T:BakingRecipeRecord>(_ record: inout T) {
@@ -135,7 +144,7 @@ public extension BackAppData {
     
     /// move Records (change their number) so their sorted order changes
     internal func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             databaseAutoUpdatesDisabled = true
             var recordIds = array.map { $0.id }
             
@@ -145,9 +154,11 @@ public extension BackAppData {
             var number = 0
             for id in recordIds {
                 var record: T = self.record(with: id!)!
-                record.number = number
+                if record.number != number {
+                    record.number = number
+                    self.save(&record)
+                }
                 number += 1
-                self.save(&record)
             }
             databaseAutoUpdatesDisabled = false
         }

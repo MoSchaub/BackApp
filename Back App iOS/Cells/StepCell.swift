@@ -13,9 +13,11 @@ public class StepCell: DetailCell {
     
     private var step: Step
     private var appData: BackAppData
+    private var editMode: Bool
     
-    public init(step: Step, appData: BackAppData ,reuseIdentifier: String?) {
+    public init(step: Step, appData: BackAppData, reuseIdentifier: String?, editMode: Bool = true) {
         self.step = step
+        self.editMode = editMode
         self.appData = appData
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setup()
@@ -27,6 +29,10 @@ public class StepCell: DetailCell {
     
     override func setup() {
         super.setup()
+        if !editMode {
+            self.accessoryType = .none
+            self.selectionStyle = .none
+        }
         
         let rootView = StepRow(step: step, appData: appData)
         let hostingController = UIHostingController(rootView: rootView)

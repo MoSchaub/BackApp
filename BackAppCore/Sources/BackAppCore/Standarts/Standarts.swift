@@ -43,6 +43,9 @@ public struct Standarts {
         }
     }
     
+    @UserDefaultsWrapper(key: .newUser, defaultValue: true)
+    static var newUser: Bool
+    
     #if canImport(Combine)
     @available(iOS 13.0, *)
     public static var standartsChangedPublisher = PassthroughSubject<standartsChangedKey, Never>()

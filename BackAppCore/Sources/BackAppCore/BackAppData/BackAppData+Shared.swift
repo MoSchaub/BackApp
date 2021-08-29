@@ -7,11 +7,16 @@
 
 import GRDB
 import Foundation
+import BakingRecipeFoundation
 
 extension BackAppData {
     public static let shared = makeShared()
     
-    private static func makeShared() -> BackAppData {
+    public static func shared(includeTestingRecipe: Bool = false) -> BackAppData {
+        return makeShared(includeTestingRecipe: includeTestingRecipe)
+    }
+    
+    private static func makeShared(includeTestingRecipe: Bool = false) -> BackAppData {
         do {
             // Pick a folder for storing the SQLite database, as well as
             // the various temporary files created during normal database
@@ -22,7 +27,7 @@ extension BackAppData {
                 .appendingPathComponent("database", isDirectory: true)
 
             // Support for tests: delete the database if requested
-            if CommandLine.arguments.contains("-reset") {
+            if CommandLine.arguments.contains("-reset") || includeTestingRecipe {
                 try? fileManager.removeItem(at: folderURL)
             }
             
@@ -37,10 +42,38 @@ extension BackAppData {
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)
             
-            //TODO: Prepare the database with test fixtures if requested
-//            if CommandLine.arguments.contains("-fixedTestData") {
-//                try appDatabase.createPlayersForUITests()
-//            }
+            // adds to examples for new users when the user is new
+            if Standarts.newUser, appData.allRecipes.isEmpty {
+                let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil)!
+                _ = urls.map { appData.open($0)}
+                Standarts.newUser = false
+            }
+            
+            // Support for tests: add standart recipe to database if requested
+            if CommandLine.arguments.contains("-includeTestingRecipe") || includeTestingRecipe {
+                let recipeExample = Recipe.example
+                var recipe = recipeExample.recipe
+                
+                appData.save(&recipe)
+                
+                let id = recipe.id!
+                
+                let stepIngredients = recipeExample.stepIngredients
+                
+                _ = stepIngredients.map {
+                    var step = $0.step
+                    step.recipeId = id
+                    appData.save(&step)
+                    
+                    let stepId = step.id!
+                    
+                    for ingredient in $0.ingredients {
+                        var ingredient = ingredient
+                        ingredient.stepId = stepId
+                        appData.save(&ingredient)
+                    }
+                }
+            }
             
             return appData
         } catch {
