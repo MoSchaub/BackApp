@@ -237,6 +237,20 @@ extension CompactHomeViewController {
             self.pressed = false
         }
     }
+
+    // create an editRecipeVC to navigate to
+    private func _editVC(recipeId: Int64) -> EditRecipeViewController {
+        EditRecipeViewController(recipeId: recipeId, creating: false, appData: self.appData){
+            //dismiss detail
+            if self.splitViewController?.isCollapsed ?? false {
+                //nosplitVc visible
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                //splitVc visible
+                NotificationCenter.default.post(name: .homeShouldPopSplitVC, object: nil)
+            }
+        }
+    }
     
     private func navigateToRecipe(recipeItem: RecipeItem) {
         
@@ -244,19 +258,8 @@ extension CompactHomeViewController {
         if let recipe = appData.record(with: Int64(recipeItem.id), of: Recipe.self) {
             
             DispatchQueue.main.async {
-                //create the vc
-                let editVC = EditRecipeViewController(recipeId: recipe.id!, creating: false, appData: self.appData){
-                    //dismiss detail
-                    if self.splitViewController?.isCollapsed ?? false {
-                        //nosplitVc visible
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        //splitVc visible
-                        _ = self.splitViewController?.viewControllers.popLast()
-                    }
-                }
                 
-                let vc = RecipeViewController(recipeId: recipe.id!, appData: self.appData, editRecipeViewController: editVC)
+                let vc = RecipeViewController(recipeId: recipe.id!, appData: self.appData, editRecipeViewController: self._editVC(recipeId: recipe.id!))
 
                 //push to the view controller
                 let nv = UINavigationController(rootViewController: vc)
@@ -277,29 +280,56 @@ extension Notification.Name {
     static var homeShouldPopSplitVC = Notification.Name.init("homeShouldPopSplitVC")
 }
 
-// MARK: - Context Menus
+// MARK: - Context Menu
 
 extension CompactHomeViewController {
+
+    /// creates a contextMenu for the recipe Cell
     private func contextMenu(for recipe: Recipe, at indexPath: IndexPath) -> UIContextMenuConfiguration {
         let actionProvider: UIContextMenuActionProvider = { (suggestedActions) in
 
+            // toggle favourite for the recipe
             let favourite = UIAction(title: recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite, image: UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")) { action in
                 var recipe = recipe
                 recipe.isFavorite.toggle()
                 self.appData.save(&recipe)
             }
 
+            // pull up the share recipe sheet
             let share = UIAction(title: Strings.share, image: UIImage(systemName: "square.and.arrow.up")) { action in
                 let vc = UIActivityViewController(activityItems: [self.appData.exportRecipesToFile(recipes: [recipe])], applicationActivities: nil)
                 vc.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: indexPath)
                 self.present(vc, animated: true)
             }
 
+            // delete the recipe
             let delete = UIAction(title: Strings.Alert_ActionDelete, image: UIImage(systemName: "trash"), attributes: .destructive ) { action in
                 self.dataSource.tableView(self.tableView, commit: .delete, forRowAt: indexPath)
             }
 
-            return UIMenu(title: recipe.name, children: [favourite, share, delete])
+            // jump to editRecipeVC
+            let edit = UIAction(title: Strings.EditButton_Edit, image: UIImage(systemName: "pencil")) { action in
+                let nv = UINavigationController(rootViewController: self._editVC(recipeId: recipe.id!))
+                self.splitViewController?.showDetailViewController(nv, sender: self)
+            }
+
+            // jump to scheduleForm
+            let start = UIAction(title: Strings.startRecipe, image: UIImage(systemName: "arrowtriangle.right")) { action in
+                let recipeBinding = Binding(get: {
+                    return self.appData.record(with: recipe.id!, of: Recipe.self)!
+                }) { (newValue) in
+                    //here I need to modify the recipe
+                    self.appData.update(newValue)
+                }
+
+                let scheduleFormVC = ScheduleFormViewController(recipe: recipeBinding, appData: self.appData)
+
+                let nv = UINavigationController(rootViewController: scheduleFormVC)
+
+                self.splitViewController?.showDetailViewController(nv, sender: self)
+            }
+
+            return UIMenu(title: recipe.name, children: [favourite, share, delete, edit, start])
         }
 
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: actionProvider)

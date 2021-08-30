@@ -198,7 +198,6 @@ extension RecipeViewController {
         
         if let detailItem = item as? DetailItem {
             if detailItem.text == Strings.startRecipe {
-                //TODO: Start recipe
                 startRecipe()
             }
         }
