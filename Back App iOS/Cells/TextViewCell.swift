@@ -128,18 +128,20 @@ private extension TextViewCell {
     /// sets the text for textView from textContent, the textColor and the font
     func setTextViewTextFromTextContent() {
         DispatchQueue.main.async {
-            if self.textContentEmpty && !self.textView.isFirstResponder {
-                self.textView.attributedText = NSAttributedString(string: self.placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
-            } else {
+            if !self.textContentEmpty {
                 self.textView.attributedText = NSAttributedString(string: self.textContent, attributes: [.foregroundColor : UIColor.primaryCellTextColor!])
             }
 
-            //font
             self.textView.font = UIFont.preferredFont(forTextStyle: .body)
+            self.textView.textColor = .primaryCellTextColor
+            self.textView.placeholder = self.placeholder
+            self.textView.placeholderColor = .secondaryCellTextColor
+
         }
     }
 }
 
+//MARK: - Link Detection and Editable
 private extension TextViewCell {
 
     func setupLinkDetection() {
@@ -150,16 +152,64 @@ private extension TextViewCell {
     private func addTextFieldGestureRecognizer() {
         let recognizer = UITapGestureRecognizer(
             target: self,
-            action: #selector(textViewTapped))
+            action: #selector(textViewDidTapped))
         recognizer.delegate = self
         recognizer.numberOfTapsRequired = 1
         textView.addGestureRecognizer(recognizer)
     }
 
-    @objc private func textViewTapped(_ aRecognizer: UITapGestureRecognizer?) {
-        textView.dataDetectorTypes = []
+
+    func placeCursor(_ myTextView: UITextView, _ location: CGPoint) {
+        // place the cursor on tap position
+        if let tapPosition = myTextView.closestPosition(to: location) {
+            let uiTextRange = myTextView.textRange(from: tapPosition, to: tapPosition)
+
+            if let start = uiTextRange?.start, let end = uiTextRange?.end {
+                let loc = myTextView.offset(from: myTextView.beginningOfDocument, to: tapPosition)
+                let length = myTextView.offset(from: start, to: end)
+                myTextView.selectedRange = NSMakeRange(loc, length)
+            }
+        }
+    }
+
+    func changeTextViewToNormalState() {
         textView.isEditable = true
+        textView.dataDetectorTypes = []
         textView.becomeFirstResponder()
+    }
+
+    @objc func textViewDidTapped(_ recognizer: UITapGestureRecognizer) {
+        guard let myTextView = recognizer.view as? UITextView else {
+            return
+        }
+        let layoutManager = myTextView.layoutManager
+        var location = recognizer.location(in: myTextView)
+        location.x -= myTextView.textContainerInset.left
+        location.y -= myTextView.textContainerInset.top
+
+        let glyphIndex: Int = myTextView.layoutManager.glyphIndex(for: location, in: myTextView.textContainer, fractionOfDistanceThroughGlyph: nil)
+        let glyphRect = layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphIndex, length: 1), in: myTextView.textContainer)
+
+        if glyphRect.contains(location) {
+            let characterIndex: Int = layoutManager.characterIndexForGlyph(at: glyphIndex)
+            let attributeName = NSAttributedString.Key.link
+            let attributeValue = myTextView.textStorage.attribute(attributeName, at: characterIndex, effectiveRange: nil)
+            if let url = attributeValue as? URL {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    print("There is a problem in your link.")
+                }
+            } else {
+                // place the cursor to tap position
+                placeCursor(myTextView, location)
+
+                // back to normal state
+                changeTextViewToNormalState()
+            }
+        } else {
+            changeTextViewToNormalState()
+        }
     }
 }
 
@@ -194,18 +244,20 @@ private extension TextViewCell {
 }
 
 private extension TextViewCell {
-    func textDidChange(from previousText: String) {
+    
+    func textDidChange(from previousText: String, previousCursorPosition: Int) {
         DispatchQueue.main.async {
             self.textContent = self.textView.text
-            self.setTextViewTextFromTextContent()
         }
 
         self.undoManager.registerUndo(withTarget: self) { target in
-            let currentPreviousText: String = self.textContent
+            let currentText: String = self.textContent
+            let currentCursorPosition = self.textView.getCursorPosition()
             DispatchQueue.main.async {
                 self.textView.text = previousText
+                self.textView.setCursor(to: previousCursorPosition)
             }
-            self.textDidChange(from: currentPreviousText)
+            self.textDidChange(from: currentText, previousCursorPosition: currentCursorPosition)
         }
 
         self.updateUndoRedoButtons()
@@ -216,7 +268,7 @@ extension TextViewCell: UITextViewDelegate {
 
     // update textContent if textView.text changes
     public func textViewDidChange(_ textView: UITextView) {
-        textDidChange(from: self.textContent)
+        textDidChange(from: self.textContent, previousCursorPosition: self.textView.getCursorPosition())
     }
 
 

@@ -35,7 +35,7 @@ class CompactHomeTests: XCTestCase {
         appTables.cells.staticTexts["room temperature"].tap()
         appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
         
-        app.navigationBars["Settings"].buttons["Done"].tap()
+        app.navigationBars["Settings"].buttons["Recipes"].tap()        
         
         settingsButton.tap()
         XCTAssertTrue(XCUIApplication().tables.staticTexts["30.0° C"].exists)
@@ -50,7 +50,7 @@ class CompactHomeTests: XCTestCase {
         appTables.cells.staticTexts["room temperature"].tap()
         
         appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "20")
-        app.navigationBars["Settings"].buttons["Done"].tap()
+        app.navigationBars["Settings"].buttons["Recipes"].tap()
         
         settingsButton.tap()
         XCTAssertTrue(XCUIApplication().tables.staticTexts["20.0° C"].exists)
