@@ -93,13 +93,7 @@ private extension SettingsViewController {
             //large Title
             self.navigationController!.navigationBar.prefersLargeTitles = true
             self.navigationController!.navigationItem.largeTitleDisplayMode = .always
-            
-            self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(self.dismis))
         }
-    }
-    
-    @objc private func dismis() {
-        self.dismiss(animated: true, completion: nil)
     }
     
 }

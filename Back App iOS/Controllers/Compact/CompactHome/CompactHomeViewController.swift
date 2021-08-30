@@ -40,7 +40,7 @@ class CompactHomeViewController: UITableViewController {
     
     /// set for storing publishers
     private var tokens = Set<AnyCancellable>()
-    
+
     // MARK: - Initializers
     
     init(appData: BackAppData) {
@@ -182,7 +182,7 @@ private extension CompactHomeViewController {
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
         nv.modalPresentationStyle = .fullScreen //to prevent data loss
-        
+
         present(nv, animated: true)
        }
     
@@ -192,7 +192,7 @@ private extension CompactHomeViewController {
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
         
-        present(nv, animated: true)
+        self.splitViewController?.showDetailViewController(nv, sender: self)
     }
     
     @objc private func openImportFilePopover() {
