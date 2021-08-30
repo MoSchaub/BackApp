@@ -36,6 +36,9 @@
 "about" = "über Back App";
 
 
+"addFavorite" = "Favorit";
+
+
 "addIngredient" = "Zutat hinzufügen";
 
 
@@ -189,6 +192,9 @@
 "recipesImported" = "Rezepte wurden importiert";
 
 
+"removeFavorite" = "kein Favorit";
+
+
 "roomTempQuestionLabel" = "aktuelle Raumtemperatur";
 
 
@@ -208,6 +214,9 @@
 
 
 "settings" = "Einstellungen";
+
+
+"share" = "Teilen";
 
 
 "start" = "Start";

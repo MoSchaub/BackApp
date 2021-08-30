@@ -36,6 +36,9 @@
 "about" = "about Baking App";
 
 
+"addFavorite" = "Favourite";
+
+
 "addIngredient" = "add Ingredient";
 
 
@@ -99,7 +102,7 @@
 "exportAll" = "export all recipes";
 
 
-"favorites" = "favorites";
+"favorites" = "Favourites";
 
 
 "flour" = "flour";
@@ -189,6 +192,9 @@
 "recipesImported" = "recipes have been imported";
 
 
+"removeFavorite" = "Unfavourite";
+
+
 "roomTempQuestionLabel" = "current room temperature";
 
 
@@ -208,6 +214,9 @@
 
 
 "settings" = "Settings";
+
+
+"share" = "Share";
 
 
 "start" = "start";

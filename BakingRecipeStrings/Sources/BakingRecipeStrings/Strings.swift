@@ -103,6 +103,9 @@ public struct Strings {
     public static var schedule = NSLocalizedString("schedule", bundle: .module, comment: "")
     public static var createSchedule = NSLocalizedString("createSchedule", bundle: .module, comment: "")
     public static var isKneadingStep = NSLocalizedString("isKneadingStep", bundle: .module, comment: "")
+    public static var share = NSLocalizedString("share", bundle: .module, comment: "")
+    public static var addFavorite = NSLocalizedString("addFavorite", bundle: .module, comment: "")
+    public static var removeFavorite = NSLocalizedString("removeFavorite", bundle: .module, comment: "")
     
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")

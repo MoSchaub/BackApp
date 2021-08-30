@@ -40,20 +40,21 @@ class HomeDataViewModel {
     
     /// tell the appData to delete the recipe wtih a specified id
     private func deleteRecipe(with id: Int64) {
-            
+
             //ensure the recipe exits and get the recipe with the specified id
             guard let recipe = self.appData.record(with: id, of: Recipe.self) else {
                 print("Error fetching recipe with id \(id)")
                 return
             }
-            
+
             //tell the appData to delete the recipe
             guard self.appData.delete(recipe) else {
                 print("Error deleting recipe with id \(id)")
                 return
             }
-        
+
         //update
+        NotificationCenter.default.post(name: .homeShouldPopSplitVC, object: nil)
         NotificationCenter.default.post(name: .recipesChanged, object: nil)
         NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
     }
@@ -74,6 +75,7 @@ class HomeDataViewModel {
             
             //update
             NotificationCenter.default.post(name: .recipesChanged, object: nil)
+            NotificationCenter.default.post(name: .homeShouldPopSplitVC, object: nil)
         }
     }
     

@@ -128,7 +128,13 @@ public extension BackAppData {
     func delete<T:BakingRecipeRecord>(_ record: T) -> Bool {
         do {
             return try dbWriter.write { db in
-                try T.deleteOne(db, key: ["id" : record.id])
+                let success = try T.deleteOne(db, key: ["id" : record.id])
+
+                if record is Recipe, !databaseAutoUpdatesDisabled {
+                    NotificationCenter.default.post(name: .recipesChanged, object: nil)
+                }
+
+                return success
             }
         } catch {
             print(error.localizedDescription)

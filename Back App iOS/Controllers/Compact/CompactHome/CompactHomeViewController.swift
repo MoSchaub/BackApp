@@ -76,6 +76,14 @@ class CompactHomeViewController: UITableViewController {
         NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
             self.presentImportAlert()
         }.store(in: &tokens)
+
+        NotificationCenter.default.publisher(for: .homeShouldPopSplitVC).sink { _ in
+            DispatchQueue.main.async {
+                if self.splitViewController?.viewControllers.count ?? 2 > 1 {
+                _ = self.splitViewController?.viewControllers.popLast()
+                }
+            }
+        }.store(in: &tokens)
         
         #if !DEBUG
         //ask for room temp
@@ -263,6 +271,45 @@ extension CompactHomeViewController {
         }
     }
     
+}
+
+extension Notification.Name {
+    static var homeShouldPopSplitVC = Notification.Name.init("homeShouldPopSplitVC")
+}
+
+// MARK: - Context Menus
+
+extension CompactHomeViewController {
+    private func contextMenu(for recipe: Recipe, at indexPath: IndexPath) -> UIContextMenuConfiguration {
+        let actionProvider: UIContextMenuActionProvider = { (suggestedActions) in
+
+            let favourite = UIAction(title: recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite, image: UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")) { action in
+                var recipe = recipe
+                recipe.isFavorite.toggle()
+                self.appData.save(&recipe)
+            }
+
+            let share = UIAction(title: Strings.share, image: UIImage(systemName: "square.and.arrow.up")) { action in
+                let vc = UIActivityViewController(activityItems: [self.appData.exportRecipesToFile(recipes: [recipe])], applicationActivities: nil)
+                vc.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: indexPath)
+                self.present(vc, animated: true)
+            }
+
+            let delete = UIAction(title: Strings.Alert_ActionDelete, image: UIImage(systemName: "trash"), attributes: .destructive ) { action in
+                self.dataSource.tableView(self.tableView, commit: .delete, forRowAt: indexPath)
+            }
+
+            return UIMenu(title: recipe.name, children: [favourite, share, delete])
+        }
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: actionProvider)
+    }
+
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        if let item = dataSource.itemIdentifier(for: indexPath), let recipe = appData.record(with: Int64(item.id), of: Recipe.self) {
+            return contextMenu(for: recipe, at: indexPath)
+        } else { return nil }
+    }
 }
 
 // MARK: - Document Picker
