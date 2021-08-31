@@ -180,7 +180,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         // add publisher to update when the database changes
         NotificationCenter.default.publisher(for: Notification.Name.recipesChanged)
             .sink { _ in
-                self.update(animated: false)
+                self.update(animated: true)
             }
             .store(in: &tokens)
     }

@@ -329,7 +329,7 @@ extension CompactHomeViewController {
                 self.splitViewController?.showDetailViewController(nv, sender: self)
             }
 
-            return UIMenu(title: recipe.name, children: [favourite, share, delete, edit, start])
+            return UIMenu(title: recipe.name, children: [start, edit, favourite, share, delete])
         }
 
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: actionProvider)
