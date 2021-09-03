@@ -256,10 +256,10 @@ public extension Recipe {
     }
     
     /// total duration of all the steps
-    func totalDuration(steps: [Step]) -> Int {
+    func totalDuration(reader: DatabaseReader) -> Int {
         var allTimes: Int = 0
-        for step in steps {
-            allTimes += Int(step.duration/60)
+        for step in self.notSubsteps(reader: reader) {
+            allTimes += Int(step.durationWithSubsteps(reader: reader)/60)
         }
         return allTimes
     }
@@ -269,7 +269,7 @@ public extension Recipe {
         if !inverted {
             return self.date
         } else {
-            return self.date.addingTimeInterval(TimeInterval(-(totalDuration(steps: self.steps(reader: reader)) * 60)))
+            return self.date.addingTimeInterval(TimeInterval(-(totalDuration(reader: reader) * 60)))
         }
     }
     
@@ -278,7 +278,7 @@ public extension Recipe {
         if inverted {
             return self.date
         } else {
-            return self.date.addingTimeInterval(TimeInterval(totalDuration(steps: self.steps(reader: reader)) * 60))
+            return self.date.addingTimeInterval(TimeInterval(totalDuration(reader: reader) * 60))
         }
     }
     
@@ -346,7 +346,6 @@ public extension Recipe {
             
             number = stepReodereredSteps.number
         }
-        steps = Array<Step>(Set(steps)) // make them unique
         steps.sort(by: { $0.number < $1.number })
         return steps
     }

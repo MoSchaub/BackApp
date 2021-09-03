@@ -27,9 +27,9 @@ class HomeDataViewModel {
     /// fetch recipeItems
     private func getRecipeItems(favoritesCompletion: @escaping ([RecipeItem]) -> Void, normalCompletion: @escaping ([RecipeItem]) -> Void, updateCompletion: @escaping () -> Void) {
         if !appData.favorites.isEmpty {
-            favoritesCompletion(appData.favorites.map { $0.item(steps: appData.steps(with: $0.id!))})
+            favoritesCompletion(appData.favorites.map { $0.item(steps: appData.steps(with: $0.id!), appData: appData)})
         }
-        normalCompletion(appData.allRecipes.map { $0.item(steps: appData.steps(with: $0.id!))})
+        normalCompletion(appData.allRecipes.map { $0.item(steps: appData.steps(with: $0.id!), appData: appData)})
         updateCompletion()
     }
     

@@ -432,6 +432,7 @@ private extension StepDetailViewController {
 extension StepDetailViewController: SwitchCellDelegate {
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool) {
         self.step.isKneadingStep = isOn
+        self.updateList(animated: false)
     }
 
     func switchValue(in cell: SwitchCell) -> Bool {

@@ -27,8 +27,8 @@ public extension Recipe {
     }
     
     ///create an RecipeItem from an recipe
-    func item(steps: [Step]) -> RecipeItem {
-        return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(steps: steps).formattedDuration)
+    func item(steps: [Step], appData: BackAppData) -> RecipeItem {
+        return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(reader: appData.databaseReader).formattedDuration)
     }
     
     /// an ``InfoStripItem`` with the recipes formatted Values

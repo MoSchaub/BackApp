@@ -201,21 +201,17 @@ public extension Step {
         var steps = [Step]()
         var number = number
         for sub in sortedSubsteps(reader: writer) {
-            var sub = sub
+            //first add the substeps of the substep
+            let subSubsForReodering = sub.stepsForReodering(writer: writer, number: number)
+            steps.append(contentsOf: subSubsForReodering.steps)
+            
+            //update the number
+            number = subSubsForReodering.number
 
-            sub.number = number
-            //update the new number to the database
-            try! writer.write { db in
-                try! sub.update(db)
-            }
+            //increase the number by one
             number += 1
-
-            let subStepsForReodering = sub.stepsForReodering(writer: writer, number: number + 1)
-
-            steps.append(contentsOf: subStepsForReodering.steps)
-
-            number = subStepsForReodering.number
         }
+        //add the step
         var step = self
 
         step.number = number
@@ -227,6 +223,12 @@ public extension Step {
         steps.append(step)
 
         return (steps, number)
+    }
+
+    /// the duration of this step and its substeps
+    /// - NOTE: This only counts the time of the longest substeps if there are multiple substeps because they will run in parallel
+    func durationWithSubsteps(reader: DatabaseReader) -> Double {
+        return self.duration + (self.sortedSubsteps(reader: reader).first?.durationWithSubsteps(reader: reader) ?? 0.0 )
     }
     
     /// the mass of all Ingredients and Substeps to this step in a given database

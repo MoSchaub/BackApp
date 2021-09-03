@@ -53,7 +53,7 @@ public extension BackAppData {
     ///total duration of all steps in minutes
     func totalDuration(for recipeId: Int64) -> Int {
         findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
-            return recipe.totalDuration(steps: steps(with: recipeId))
+            return recipe.totalDuration(reader: databaseReader)
         }
     }
     
@@ -105,14 +105,14 @@ public extension BackAppData {
     ///formatted total duration in the right unit
     func formattedTotalDuration(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            recipe.totalDuration(steps: steps(with: recipeId)).formattedDuration
+            recipe.totalDuration(reader: databaseReader).formattedDuration
         }
     }
 
     ///formatted total duration in hours
     func formattedTotalDurationHours(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return(recipe.totalDuration(steps: steps(with: recipeId)).hours * 60).formattedDuration
+            return(recipe.totalDuration(reader: databaseReader).hours * 60).formattedDuration
         }
     }
 
