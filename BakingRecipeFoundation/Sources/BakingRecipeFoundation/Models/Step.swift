@@ -85,6 +85,11 @@ public extension Step {
     func formattedTemp(roomTemp: Double) -> String{
         return String(format: "%.01f", self.temperature ?? roomTemp) + " °C"
     }
+
+    /// the end temp of the step in celsius
+    var formattedEndTemp: String {
+        self.endTemp?.formattedTemp ?? "error"
+    }
     
     /// name of the step
     ///- NOTE:should be used for displaying the name. For changing the name use name instead.

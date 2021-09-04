@@ -21,7 +21,7 @@ public struct SubstepRow: View {
         HStack {
             Text(substep.formattedName)
             Spacer()
-            Text(substep.formattedTemp(roomTemp: roomTemp))
+            Text(substep.endTempEnabled ? substep.formattedEndTemp : substep.formattedTemp(roomTemp: roomTemp))
             Spacer()
             Text(appData.totalFormattedMass(for: substep.id!, factor: scaleFactor))
         }
