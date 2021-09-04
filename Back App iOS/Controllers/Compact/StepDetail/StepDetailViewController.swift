@@ -402,8 +402,8 @@ private extension StepDetailViewController {
                                                 } else {
                                                     // isKneadingStep switch cell or endTemp switch cell
                                                     if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell {
-                                                        cell.delegate = self
                                                         cell.textLabel?.text = detailItem.text
+                                                        cell.delegate = self
                                                         return cell
                                                     }
                                                 }
@@ -422,12 +422,12 @@ private extension StepDetailViewController {
                                         } else if self.datePickerShown, indexPath.row == 1{
                                             return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
                                         } else if self.tempPickerShown, indexPath.row == (self.datePickerShown ? 2 : 3), let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
-                                            cell.delegate = self
                                             cell.id = "rt"
+                                            cell.delegate = self
                                             return cell
                                         } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.endTempCell, for: indexPath) as? TempPickerCell {
-                                            cell.delegate = self
                                             cell.id = "et"
+                                            cell.delegate = self
                                             return cell
                                         }
                                         return CustomCell()

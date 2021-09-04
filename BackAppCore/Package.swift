@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(name: "BakingRecipeFoundation", path: "/Users/moritzschaub/Developer/Swift/ios/BrotApp2/BakingRecipeFoundation"),
-        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "4.0.0")
+        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
