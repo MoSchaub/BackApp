@@ -153,6 +153,7 @@ private extension StepDetailViewController {
         tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.substepCell) // substep
         tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell) // ingredients
         tableView.register(SwitchCell.self, forCellReuseIdentifier: Strings.kneadingStepCell) // isKneadingStep
+        tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.endTempCell) //endTemp
     }
     
 }
@@ -315,7 +316,7 @@ private extension StepDetailViewController {
             
             var snapshot = dataSource.snapshot()
 
-            let indexOfItemToDelete = snapshot.itemIdentifiers(inSection: .durationTemp).count - 2
+            let indexOfItemToDelete = datePickerShown ? 3 : 2
             snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp)[indexOfItemToDelete]])
             self.dataSource.apply(snapshot, animatingDifferences: false)
             
@@ -399,10 +400,10 @@ private extension StepDetailViewController {
                                                     cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
                                                     return cell
                                                 } else {
-                                                    // isKneadingStep switch cell
-                                                    if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell, let item = item as? TextItem {
+                                                    // isKneadingStep switch cell or endTemp switch cell
+                                                    if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell {
                                                         cell.delegate = self
-                                                        cell.textLabel?.text = item.text
+                                                        cell.textLabel?.text = detailItem.text
                                                         return cell
                                                     }
                                                 }
@@ -420,8 +421,13 @@ private extension StepDetailViewController {
                                             }
                                         } else if self.datePickerShown, indexPath.row == 1{
                                             return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
-                                        } else if self.tempPickerShown, indexPath.row > 1, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
+                                        } else if self.tempPickerShown, indexPath.row == (self.datePickerShown ? 2 : 3), let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
                                             cell.delegate = self
+                                            cell.id = "rt"
+                                            return cell
+                                        } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.endTempCell, for: indexPath) as? TempPickerCell {
+                                            cell.delegate = self
+                                            cell.id = "et"
                                             return cell
                                         }
                                         return CustomCell()
@@ -431,12 +437,20 @@ private extension StepDetailViewController {
 
 extension StepDetailViewController: SwitchCellDelegate {
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool) {
-        self.step.isKneadingStep = isOn
+        if cell.textLabel!.text == Strings.endTemp {
+            self.step.endTempEnabled = isOn
+        } else {
+            self.step.isKneadingStep = isOn
+        }
         self.updateList(animated: false)
     }
 
     func switchValue(in cell: SwitchCell) -> Bool {
-        self.step.isKneadingStep
+        if cell.textLabel!.text == Strings.endTemp {
+            return self.step.endTempEnabled
+        } else {
+            return self.step.isKneadingStep
+        }
     }
 
 
@@ -444,11 +458,19 @@ extension StepDetailViewController: SwitchCellDelegate {
 
 extension StepDetailViewController: TempPickerCellDelegate {
     func startValue(for cell: TempPickerCell) -> Double {
-        self.step.temperature ?? Standarts.roomTemp
+        if cell.id == "rt" {
+            return self.step.temperature ?? Standarts.roomTemp
+        } else {
+            return self.step.endTemp!
+        }
     }
     
     func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double) {
-        self.step.temperature = value
+        if cell.id == "rt" {
+            self.step.temperature = value
+        } else if cell.id == "et" {
+            self.step.endTemp = value
+        }
         self.updateList(animated: false)
     }
     
@@ -512,6 +534,11 @@ private extension StepDetailViewController {
             items.append(Item())
         }
 
+        items.append(endTempSwitchItem)
+        if step.endTempEnabled {
+            items.append(Item())
+        }
+
         items.append(kneadingStepSwitchItem)
         
         snapshot.appendItems(items, toSection: .durationTemp)
@@ -534,13 +561,21 @@ private extension StepDetailViewController {
     private var kneadingStepSwitchItem: DetailItem {
         DetailItem(name: Strings.isKneadingStep)
     }
+
+    private var endTempSwitchItem: DetailItem {
+        DetailItem(name: Strings.endTemp)
+    }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
         
         var snapshot = snapshotBase()
         
         // durationTemp
-        snapshot.appendItems([durationItem, tempItem, kneadingStepSwitchItem], toSection: .durationTemp)
+        snapshot.appendItems([durationItem, tempItem, endTempSwitchItem, kneadingStepSwitchItem], toSection: .durationTemp)
+
+        if step.endTempEnabled {
+            snapshot.appendItems([Item()], toSection: .durationTemp)
+        }
         
         return snapshot
     }

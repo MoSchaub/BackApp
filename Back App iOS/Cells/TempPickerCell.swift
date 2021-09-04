@@ -17,6 +17,8 @@ public protocol TempPickerCellDelegate: AnyObject {
 }
 
 public class TempPickerCell: CustomCell {
+
+    public var id: String? = nil
     
     ///currently selected temperature
     private var temp: Double = 20.0 {

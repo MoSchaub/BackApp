@@ -32,6 +32,23 @@ public struct Step: BakingRecipeRecord {
 
     /// wether the step is a kneading Step. This means that kneading Heating should be used for calculations
     public var isKneadingStep: Bool
+
+    /// an optional endTemp that is used instead of the regular temp if the step is used as a substep
+    public var endTemp: Double? = nil
+
+    /// wether the endTemp is nil
+    public var endTempEnabled: Bool {
+        get {
+            endTemp != nil
+        }
+        set {
+            if newValue {
+                endTemp = (temperature != nil ? temperature : 20)
+            } else {
+                endTemp = nil
+            }
+        }
+    }
     
     /// the id of the recipe the step is in
     public var recipeId: Int64
@@ -88,6 +105,7 @@ public extension Step {
         public static let temperature = Column(CodingKeys.temperature)
         public static let notes = Column(CodingKeys.notes)
         public static let isKneadingStep = Column(CodingKeys.isKneadingStep)
+        public static let endTemp = Column(CodingKeys.endTemp)
         public static let recipeId = Column(CodingKeys.recipeId)
         public static let superStepId = Column(CodingKeys.superStepId)
         public static let number = Column(CodingKeys.number)
@@ -103,7 +121,8 @@ public extension Step {
         Columns.recipeId,
         Columns.superStepId,
         Columns.number,
-        Columns.isKneadingStep
+        Columns.isKneadingStep,
+        Columns.endTemp
     ]
 }
 
@@ -122,6 +141,7 @@ public extension Step {
         superStepId = row[6]
         number = row[7]
         isKneadingStep = row[8] ?? false
+        endTemp = row[9] ?? nil
     }
 }
 
@@ -133,9 +153,7 @@ public extension Step {
     }
 }
 
-//TODO: cascade delete
-
-///MARK: SQL Requests
+//MARK: SQL Requests
 extension DerivableRequest where RowDecoder == Step {
     // A request of steps with a recipeId ordered by number in ascending order.
     ///
@@ -176,7 +194,7 @@ extension Step {
     static let recipe = belongsTo(Recipe.self)
 }
 
-///MARK: - Association methods
+//MARK: - Association methods
 public extension Step {
     
     /// ingredients of the step
@@ -330,9 +348,10 @@ public extension Step {
     private func massCProduct(reader: DatabaseReader) -> Double {
         self.totalMass(reader: reader) * self.c(reader: reader)
     }
-    
+
+
     private func massCTempProduct(reader: DatabaseReader, superTemp: Double) -> Double {
-        let temp: Double = self.temperature ?? superTemp
+        let temp: Double = self.endTempEnabled ? self.endTemp! : self.temperature ?? superTemp
         return massCProduct(reader: reader) * temp
     }
     

@@ -39,7 +39,7 @@ final class BackAppCoreTests: XCTestCase {
             try XCTAssert(db.tableExists("Step"))
             let columns = try db.columns(in: "Step")
             let columnNames = Set(columns.map { $0.name })
-            XCTAssertEqual(columnNames, ["id", "name", "duration", "isKneadingStep", "temperature", "notes", "recipeId", "superStepId", "number"])
+            XCTAssertEqual(columnNames, ["id", "name", "duration", "isKneadingStep", "temperature", "notes", "recipeId", "superStepId", "number", "endTemp"])
         }
     }
     

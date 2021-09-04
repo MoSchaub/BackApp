@@ -106,6 +106,7 @@ public struct Strings {
     public static var share = NSLocalizedString("share", bundle: .module, comment: "")
     public static var addFavorite = NSLocalizedString("addFavorite", bundle: .module, comment: "")
     public static var removeFavorite = NSLocalizedString("removeFavorite", bundle: .module, comment: "")
+    public static var endTemp = NSLocalizedString("endTemp", bundle: .module, comment: "")
     
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
@@ -143,4 +144,5 @@ public struct Strings {
     public static let languageCell = "language"
     public static let textCell = "text"
     public static let kneadingStepCell = "kneadingStep"
+    public static let endTempCell = "endTempCell"
 }

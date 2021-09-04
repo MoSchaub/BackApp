@@ -80,6 +80,13 @@ public struct BackAppData {
             }
         }
 
+        //third Migration
+        migrator.registerMigration("v3") { db in
+            try db.alter(table: "Step", body: { alteration in
+                alteration.add(column: Step.Columns.endTemp.name, .double)
+            })
+        }
+
 
         return migrator
     }
