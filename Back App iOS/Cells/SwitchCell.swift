@@ -43,7 +43,7 @@ public class SwitchCell: CustomCell {
      - returns: An initialized `SwitchCell` object.
      */
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
         configure()
     }
     

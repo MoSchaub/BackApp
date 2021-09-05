@@ -47,6 +47,11 @@ class StepDetailViewController: UITableViewController {
     private var tempPickerShown: Bool {
         !(self.dataSource.itemIdentifier(for: IndexPath(row: datePickerShown ? 3 : 2, section: StepDetailSection.durationTemp.rawValue)) is DetailItem)
     }
+
+    //wether the endTempPicker is shown
+    private var endTempPickerShown: Bool {
+        !(self.dataSource.itemIdentifier(for: IndexPath(row: dataSource.snapshot().numberOfItems(inSection: .durationTemp) - 2, section: StepDetailSection.durationTemp.rawValue)) is DetailItem)
+    }
     
     // MARK: - Initalizers
     
@@ -202,11 +207,16 @@ extension StepDetailViewController {
             if item.text == Strings.duration {
 
                 //duration cell tapped now expand the datePickerCell
-                self.datePickerShown ? collapseDatePicker() : expandDatePicker(animated: false)
+                self.datePickerShown ? collapseDatePicker() : expandDatePicker()
             } else if item.text == Strings.temperature {
 
                 // temp cell tapped expand tempPicker Cell
-                self.tempPickerShown ? collapseTempPicker() : expandTempPicker(animated: false)
+                self.tempPickerShown ? collapseTempPicker() : expandTempPicker()
+            } else if item.text == Strings.endTemp, self.step.endTempEnabled {
+
+                // end temp cell tapped expand or collapse the endTempPicker
+                // nothing happens if endTemp is not enabled
+                self.endTempPickerShown ? collapseEndTempPicker() : expandEndTempPicker()
             }
         } else if item is SubstepItem {
             
@@ -284,52 +294,77 @@ private extension StepDetailViewController {
 
 // MARK: - Expanding Cells
 private extension StepDetailViewController {
-    
+
     // MARK: DatePicker
-    
+
     private func collapseDatePicker() {
         if datePickerShown {
-            
+
             var snapshot = dataSource.snapshot()
             snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp).first(where: { !($0 is DetailItem) })!])
             self.dataSource.apply(snapshot, animatingDifferences: false)
-            
+
             reloadDurationTempSection()
 
         }
     }
-    
-    private func expandDatePicker(animated: Bool) {
+
+    private func expandDatePicker() {
         if !datePickerShown {
-            
-            dataSource.apply(createUpdatedSnapshot(shouldShowDatePicker: true), animatingDifferences: animated)
-            
+
+            dataSource.apply(createUpdatedSnapshot(shouldShowDatePicker: true), animatingDifferences: false)
+
             reloadDurationTempSection()
         }
     }
-    
-    
+
+
     // MARK: TempPicker
-    
+
     private func collapseTempPicker() {
         if tempPickerShown {
-            
+
             var snapshot = dataSource.snapshot()
 
             let indexOfItemToDelete = datePickerShown ? 3 : 2
             snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp)[indexOfItemToDelete]])
             self.dataSource.apply(snapshot, animatingDifferences: false)
-            
+
             reloadDurationTempSection()
 
         }
     }
-    
-    private func expandTempPicker(animated: Bool) {
+
+    private func expandTempPicker() {
         if !tempPickerShown {
-            
-            dataSource.apply(createUpdatedSnapshot(shouldShowTempPicker: true), animatingDifferences: animated)
-            
+
+            dataSource.apply(createUpdatedSnapshot(shouldShowTempPicker: true), animatingDifferences: false)
+
+            reloadDurationTempSection()
+        }
+    }
+
+
+    // MARK: EndTempPicker
+
+    private func collapseEndTempPicker() {
+        if endTempPickerShown {
+
+            var snapshot = dataSource.snapshot()
+
+            let indexOfItemToDelete = snapshot.numberOfItems(inSection: .durationTemp) - 2
+            snapshot.deleteItems([snapshot.itemIdentifiers(inSection: .durationTemp)[indexOfItemToDelete]])
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+
+            reloadDurationTempSection()
+        }
+    }
+
+    private func expandEndTempPicker() {
+        if !endTempPickerShown {
+
+            dataSource.apply(createUpdatedSnapshot(shouldShowEndTempPicker: true), animatingDifferences: false)
+
             reloadDurationTempSection()
         }
     }
@@ -403,6 +438,10 @@ private extension StepDetailViewController {
                                                     // isKneadingStep switch cell or endTemp switch cell
                                                     if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell {
                                                         cell.textLabel?.text = detailItem.text
+                                                        cell.detailTextLabel?.text = detailItem.detailLabel
+                                                        if detailItem.text == Strings.endTemp {
+                                                            cell.detailTextLabel?.textColor = self.endTempPickerShown ? .tintColor : .secondaryCellTextColor
+                                                        }
                                                         cell.delegate = self
                                                         return cell
                                                     }
@@ -439,6 +478,9 @@ extension StepDetailViewController: SwitchCellDelegate {
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool) {
         if cell.textLabel!.text == Strings.endTemp {
             self.step.endTempEnabled = isOn
+            if isOn {
+                expandEndTempPicker()
+            }
         } else {
             self.step.isKneadingStep = isOn
         }
@@ -520,7 +562,7 @@ private extension StepDetailViewController {
         return snapshot
     }
     
-    private func createUpdatedSnapshot(shouldShowDatePicker: Bool = false, shouldShowTempPicker: Bool = false) -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
+    private func createUpdatedSnapshot(shouldShowDatePicker: Bool = false, shouldShowTempPicker: Bool = false, shouldShowEndTempPicker: Bool = false) -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
         var snapshot = snapshotBase()
         
         // durationTemp
@@ -535,7 +577,7 @@ private extension StepDetailViewController {
         }
 
         items.append(endTempSwitchItem)
-        if step.endTempEnabled {
+        if step.endTempEnabled && endTempPickerShown || shouldShowEndTempPicker {
             items.append(Item())
         }
 
@@ -563,7 +605,7 @@ private extension StepDetailViewController {
     }
 
     private var endTempSwitchItem: DetailItem {
-        DetailItem(name: Strings.endTemp)
+        DetailItem(name: Strings.endTemp, detailLabel: step.endTempEnabled ? step.formattedEndTemp : "")
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
