@@ -243,7 +243,8 @@ extension StepDetailViewController {
         
         //cancel
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
-            
+
+        alert.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: IndexPath(row: self.dataSource.snapshot().numberOfItems(inSection: .ingredients) - 1, section: StepDetailSection.ingredients.rawValue))
         present(alert, animated: true)
     }
     
@@ -263,6 +264,8 @@ extension StepDetailViewController {
         }
         
         actionSheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: nil))
+
+        actionSheet.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: IndexPath(row: self.dataSource.snapshot().numberOfItems(inSection: .ingredients) - 1, section: StepDetailSection.ingredients.rawValue))
         
         present(actionSheet, animated: true)
     }

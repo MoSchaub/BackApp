@@ -364,7 +364,7 @@ public extension Recipe {
             text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
             h = h.addingTimeInterval(step.duration)
         }
-        text += "Fertig: \(dateFormatter.string(from: endDate(reader: reader)))"
+        text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: endDate(reader: reader)))"
         return text
     }
 
