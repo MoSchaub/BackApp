@@ -421,11 +421,11 @@ private extension StepDetailViewController {
                                             }
                                         } else if self.datePickerShown, indexPath.row == 1{
                                             return TimePickerCell(stepId: self.stepId, appData: self.appData, reuseIdentifier: Strings.timePickerCell)
-                                        } else if self.tempPickerShown, indexPath.row == (self.datePickerShown ? 2 : 3), let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
+                                        } else if self.tempPickerShown, indexPath.row == (self.datePickerShown ? 3 : 2), let cell = tableView.dequeueReusableCell(withIdentifier: Strings.tempPickerCell, for: indexPath) as? TempPickerCell {
                                             cell.id = "rt"
                                             cell.delegate = self
                                             return cell
-                                        } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.endTempCell, for: indexPath) as? TempPickerCell {
+                                        } else if indexPath.row >= 3, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.endTempCell, for: indexPath) as? TempPickerCell {
                                             cell.id = "et"
                                             cell.delegate = self
                                             return cell
