@@ -280,6 +280,31 @@ extension Notification.Name {
     static var homeShouldPopSplitVC = Notification.Name.init("homeShouldPopSplitVC")
 }
 
+
+// MARK: - SwipeActions
+
+extension CompactHomeViewController {
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        // Get current state from data source
+        let isFavorite = dataSource.favorite(at: indexPath)
+
+        let title = isFavorite ? Strings.removeFavorite : Strings.addFavorite
+
+        let toggleFavAction = UIContextualAction(style: .normal, title: title,
+                                        handler: { (action, view, completionHandler) in
+                                            // Update data source when user taps action
+                                            self.dataSource.setFavorite(!isFavorite, at: indexPath)
+                                            completionHandler(true)
+                                        })
+
+        toggleFavAction.image = UIImage(systemName: isFavorite ? "star.slash" : "star")
+        toggleFavAction.backgroundColor = isFavorite ? .red : .systemYellow
+        return UISwipeActionsConfiguration(actions: [toggleFavAction])
+    }
+
+}
+
 // MARK: - Context Menu
 
 extension CompactHomeViewController {
@@ -290,9 +315,7 @@ extension CompactHomeViewController {
 
             // toggle favourite for the recipe
             let favourite = UIAction(title: recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite, image: UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")) { action in
-                var recipe = recipe
-                recipe.isFavorite.toggle()
-                self.appData.save(&recipe)
+                self.dataSource.deleteRecipe(at: indexPath)
             }
 
             // pull up the share recipe sheet
@@ -304,7 +327,7 @@ extension CompactHomeViewController {
 
             // delete the recipe
             let delete = UIAction(title: Strings.Alert_ActionDelete, image: UIImage(systemName: "trash"), attributes: .destructive ) { action in
-                self.dataSource.tableView(self.tableView, commit: .delete, forRowAt: indexPath)
+                self.dataSource.deleteRecipe(at: indexPath)
             }
 
             // jump to editRecipeVC
