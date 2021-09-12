@@ -6,7 +6,7 @@
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 import BakingRecipeStrings
 
 import BakingRecipeFoundation
@@ -135,6 +135,47 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         }
     }
 
+    public func addRecipe() -> Recipe {
+        // first create a new number by incrementing the last one since the recipes are sorted by their number
+        let newNumber = (appData.allRecipes.last?.number ?? -1) + 1
+
+        // create a fresh recipe this needs to be a var because the id is going to change after insert
+        var recipe = Recipe.init(number: newNumber)
+
+        //insert
+        appData.save(&recipe)
+
+        return recipe
+    }
+
+    public func exportAllRecipesToFile() -> URL {
+        appData.exportAllRecipesToFile()
+    }
+
+    public func share(_ recipe: Recipe) -> URL {
+        appData.exportRecipesToFile(recipes: [recipe])
+    }
+
+    func recipeBinding(with id: Int64) -> Binding<Recipe> {
+        Binding { self.appData.record(with: id)! } set: { self.appData.update($0)}
+    }
+
+
+    func recipe(from indexPath: IndexPath) -> Recipe? {
+        guard let id = fetchRecipeId(from: indexPath) else { return nil }
+        return appData.record(with: id)
+    }
+
+    func open(urls: [URL]) {
+        DispatchQueue.global(qos: .background).async {
+            //load recipes
+            for url in urls {
+                self.appData.open(url)
+            }
+
+            self.update(animated: true)
+        }
+    }
 
     
     /// enable deleting recipes

@@ -26,7 +26,7 @@ class CompactHomeViewController: UITableViewController {
     
     /// appData storage interface
     private var appData: BackAppData
-    
+
     /// wether a cell has been pressed
     private lazy var pressed = false
     
@@ -122,7 +122,7 @@ private extension CompactHomeViewController {
             
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
             let editButtonItem = self.editButtonItem
-            editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
+            editButtonItem.isEnabled = self.dataSource.snapshot().itemIdentifiers.isEmpty
             self.isEditing = false 
             self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
             
@@ -175,24 +175,15 @@ private extension CompactHomeViewController {
     
     ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
-        
-        let newNumber = (appData.allRecipes.last?.number ?? -1) + 1
-        
-        // the new fresh recipe
-        var recipe = Recipe.init(number: newNumber)
-        
-        // insert the new recipe
-        appData.save(&recipe)
-        
-        // create the vc
-        let vc = EditRecipeViewController(recipeId: recipe.id!, creating: true, appData: appData)
-        
-        // navigation Controller
-        let nv = UINavigationController(rootViewController: vc)
-        nv.modalPresentationStyle = .fullScreen //to prevent data loss
+        //create the vc
+        let editRecipeVC = EditRecipeViewController(recipeId: dataSource.addRecipe().id!, creating: true, appData: appData)
 
-        present(nv, animated: true)
-       }
+        //embed it in a navigation controller
+        let nc = UINavigationController(rootViewController: editRecipeVC)
+        nc.modalPresentationStyle = .fullScreen
+
+        present(nc, animated: true)
+    }
     
     @objc private func navigateToSettings() {
         let vc = SettingsViewController(appData: appData)
@@ -230,9 +221,9 @@ extension CompactHomeViewController {
         DispatchQueue.global(qos: .utility).async {
             guard !self.pressed else { return }
             self.pressed = true
-            guard let recipeItem = self.dataSource.itemIdentifier(for: indexPath) else { return}
+            guard let id = self.dataSource.itemIdentifier(for: indexPath)?.id else { return}
             
-            self.navigateToRecipe(recipeItem: recipeItem)
+            self.navigateToRecipe(recipeId: Int64(id))
             
             self.pressed = false
         }
@@ -252,19 +243,12 @@ extension CompactHomeViewController {
         }
     }
     
-    private func navigateToRecipe(recipeItem: RecipeItem) {
-        
-        // get the recipe from the database
-        if let recipe = appData.record(with: Int64(recipeItem.id), of: Recipe.self) {
-            
-            DispatchQueue.main.async {
-                
-                let vc = RecipeViewController(recipeId: recipe.id!, appData: self.appData, editRecipeViewController: self._editVC(recipeId: recipe.id!))
-
-                //push to the view controller
-                let nv = UINavigationController(rootViewController: vc)
-                self.splitViewController?.showDetailViewController(nv, sender: self)
-            }
+    private func navigateToRecipe(recipeId: Int64) {
+        DispatchQueue.main.async {
+            let recipeVC = RecipeViewController(recipeId: recipeId, appData: self.appData, editRecipeViewController: self._editVC(recipeId: recipeId))
+            //push to the view controller
+            let nc = UINavigationController(rootViewController: recipeVC)
+            self.splitViewController?.showDetailViewController(nc, sender: self)
         }
     }
     
@@ -320,7 +304,7 @@ extension CompactHomeViewController {
 
             // pull up the share recipe sheet
             let share = UIAction(title: Strings.share, image: UIImage(systemName: "square.and.arrow.up")) { action in
-                let vc = UIActivityViewController(activityItems: [self.appData.exportRecipesToFile(recipes: [recipe])], applicationActivities: nil)
+                let vc = UIActivityViewController(activityItems: [self.dataSource.share(recipe)], applicationActivities: nil)
                 vc.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: indexPath)
                 self.present(vc, animated: true)
             }
@@ -338,14 +322,8 @@ extension CompactHomeViewController {
 
             // jump to scheduleForm
             let start = UIAction(title: Strings.startRecipe, image: UIImage(systemName: "arrowtriangle.right")) { action in
-                let recipeBinding = Binding(get: {
-                    return self.appData.record(with: recipe.id!, of: Recipe.self)!
-                }) { (newValue) in
-                    //here I need to modify the recipe
-                    self.appData.update(newValue)
-                }
 
-                let scheduleFormVC = ScheduleFormViewController(recipe: recipeBinding, appData: self.appData)
+                let scheduleFormVC = ScheduleFormViewController(recipe: self.dataSource.recipeBinding(with: recipe.id!), appData: self.appData)
 
                 let nv = UINavigationController(rootViewController: scheduleFormVC)
 
@@ -359,7 +337,7 @@ extension CompactHomeViewController {
     }
 
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        if let item = dataSource.itemIdentifier(for: indexPath), let recipe = appData.record(with: Int64(item.id), of: Recipe.self) {
+        if let recipe = dataSource.recipe(from: indexPath) {
             return contextMenu(for: recipe, at: indexPath)
         } else { return nil }
     }
@@ -369,14 +347,7 @@ extension CompactHomeViewController {
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        
-        //load recipes
-        for url in urls {
-            appData.open(url)
-        }
-        
-        //update cells
-        self.dataSource.update(animated: true)
+        dataSource.open(urls: urls)
     }
     
 }
