@@ -32,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
         self.window = window
-        self.window!.tintColor = UIColor.tintColor
+        self.window!.tintColor = UIColor.baTintColor
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

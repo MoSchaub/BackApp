@@ -66,7 +66,7 @@ final class BackAppCoreTests: XCTestCase {
         var recipe = recipeExample.recipe
         let appData = BackAppData.shared()
 
-        appData.save(&recipe)
+        appData.insert(&recipe)
         try XCTAssertTrue(appData.databaseReader.read(recipe.exists))
 
         let id = recipe.id!
@@ -76,7 +76,7 @@ final class BackAppCoreTests: XCTestCase {
         _ = try stepIngredients.map {
             var step = $0.step
             step.recipeId = id
-            appData.save(&step)
+            appData.insert(&step)
             try XCTAssertTrue(appData.databaseReader.read(step.exists))
 
             let stepId = step.id!
@@ -84,7 +84,7 @@ final class BackAppCoreTests: XCTestCase {
             for ingredient in $0.ingredients {
                 var ingredient = ingredient
                 ingredient.stepId = stepId
-                appData.save(&ingredient)
+                appData.insert(&ingredient)
                 try XCTAssert(appData.databaseReader.read(ingredient.exists))
             }
         }
@@ -95,7 +95,7 @@ final class BackAppCoreTests: XCTestCase {
         var recipe = complexRecipe.recipe
         let appData = BackAppData.shared
         
-        appData.save(&recipe)
+        appData.insert(&recipe)
         try XCTAssert(appData.databaseReader.read(recipe.exists))
         
         let recipeId = recipe.id!
@@ -111,7 +111,7 @@ final class BackAppCoreTests: XCTestCase {
             if step.superStepId != nil, let previousStepId = previousStepId {
                 step.superStepId = previousStepId
             }
-            appData.save(&step)
+            appData.insert(&step)
             
             try XCTAssertTrue(appData.databaseReader.read(step.exists))
             
@@ -121,7 +121,7 @@ final class BackAppCoreTests: XCTestCase {
             for ingredient in $0.ingredients {
                 var ingredient = ingredient
                 ingredient.stepId = stepId
-                appData.save(&ingredient)
+                appData.insert(&ingredient)
                 try XCTAssert(appData.databaseReader.read(ingredient.exists))
             }
         }
@@ -166,7 +166,7 @@ final class BackAppCoreTests: XCTestCase {
         
         recipe.difficulty = .medium
         
-        appData.save(&recipe)
+        appData.update(recipe)
         
         XCTAssert(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
         
@@ -184,7 +184,7 @@ final class BackAppCoreTests: XCTestCase {
         
         recipe.difficulty = .medium
         
-        appData.save(&recipe)
+        appData.update(recipe)
         
         XCTAssert(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
         
@@ -204,8 +204,8 @@ final class BackAppCoreTests: XCTestCase {
         
         step!.duration = 10000
         
-        appData.save(&step!)
-        
+        appData.update(step!)
+
         XCTAssert(appData.record(with: step!.id!, of: Step.self)!.duration == 10000)
         
         _ = try stepIngredients.ingredients.map { try update(ingredient: $0, with: step!.id!)}
@@ -223,7 +223,7 @@ final class BackAppCoreTests: XCTestCase {
         
         ingredient!.mass += 1
         
-        appData.save(&ingredient!)
+        appData.update(ingredient!)
         //XCTAssert(appData.update(ingredient!))
         
         XCTAssert(appData.record(with: ingredient!.id!, of: Ingredient.self)!.mass == ingredient!.mass)

@@ -137,7 +137,7 @@ private extension IngredientDetailViewController {
                 cell.textLabel?.text = detailItem.text
                 cell.detailTextLabel?.text = detailItem.detailLabel
                 if self.typeSectionExpanded {
-                    cell.detailTextLabel?.textColor = .tintColor
+                    cell.detailTextLabel?.textColor = .baTintColor
                 } else {
                     cell.detailTextLabel?.textColor = .secondaryCellTextColor
                 }

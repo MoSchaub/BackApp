@@ -17,7 +17,7 @@ struct AssociatedKeys {
     
     static var selectedCellBackgroundColor: UIColor?
     
-    static var tintColor: UIColor?
+    static var baTintColor: UIColor?
     
     static var secondaryTextColor: UIColor?
 }
@@ -68,12 +68,12 @@ public extension UIColor {
         }
     }
     
-    static var tintColor: UIColor? {
+    static var baTintColor: UIColor? {
         get {
-            objc_getAssociatedObject(self, &AssociatedKeys.tintColor) as? UIColor
+            objc_getAssociatedObject(self, &AssociatedKeys.baTintColor) as? UIColor
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.tintColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.baTintColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }

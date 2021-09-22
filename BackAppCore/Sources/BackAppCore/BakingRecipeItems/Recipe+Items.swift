@@ -27,7 +27,7 @@ public extension Recipe {
     }
     
     ///create an RecipeItem from an recipe
-    func item(steps: [Step], appData: BackAppData) -> RecipeItem {
+    func item(appData: BackAppData) -> RecipeItem {
         return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(reader: appData.databaseReader).formattedDuration)
     }
     

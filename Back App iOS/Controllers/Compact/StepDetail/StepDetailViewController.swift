@@ -282,7 +282,7 @@ private extension StepDetailViewController {
         var ingredient = id == nil ? Ingredient(stepId: self.stepId, name: "", amount: 0, type: .other, number: newNumber) : appData.record(with: id!, of: Ingredient.self)!
 
         if id == nil {
-            appData.save(&ingredient)
+            appData.insert(&ingredient)
         }
         let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
             self.appData.update(newValue)
@@ -430,12 +430,12 @@ private extension StepDetailViewController {
                                                 if detailItem.text == Strings.duration {
                                                     //duration
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
-                                                    cell.detailTextLabel?.textColor = self.datePickerShown ? .tintColor : .secondaryCellTextColor
+                                                    cell.detailTextLabel?.textColor = self.datePickerShown ? .baTintColor : .secondaryCellTextColor
                                                     return cell
                                                 } else if detailItem.text == Strings.temperature {
                                                     //temp
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
-                                                    cell.detailTextLabel?.textColor = self.tempPickerShown ? .tintColor : .secondaryCellTextColor
+                                                    cell.detailTextLabel?.textColor = self.tempPickerShown ? .baTintColor : .secondaryCellTextColor
                                                     return cell
                                                 } else {
                                                     // isKneadingStep switch cell or endTemp switch cell
@@ -443,7 +443,7 @@ private extension StepDetailViewController {
                                                         cell.textLabel?.text = detailItem.text
                                                         cell.detailTextLabel?.text = detailItem.detailLabel
                                                         if detailItem.text == Strings.endTemp {
-                                                            cell.detailTextLabel?.textColor = self.endTempPickerShown ? .tintColor : .secondaryCellTextColor
+                                                            cell.detailTextLabel?.textColor = self.endTempPickerShown ? .baTintColor : .secondaryCellTextColor
                                                         }
                                                         cell.delegate = self
                                                         return cell

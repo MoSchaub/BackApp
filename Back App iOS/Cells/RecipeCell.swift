@@ -41,6 +41,18 @@ public class RecipeCell: CustomCell {
         self.accessoryView = imageAccessory
     }
 
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if isEditing, let reoderControlImageView = self.reorderControlImageView, let image = reoderControlImageView.image {
+            reoderControlImageView.image = image.withTintColor(.secondaryCellTextColor!)
+        }
+//        if isEditing, self.subviews.count > (imageData == nil ? 3 : 4), let editControl = self.subviews.last, let imageView = editControl.subviews.first as? UIImageView {
+//            //editControl.backgroundColor = .systemRed
+//            imageView.image = imageView.image?.withTintColor(.secondaryCellTextColor!)
+//        }
+    }
+
 
 }
 
@@ -62,5 +74,17 @@ private extension RecipeCell {
         imageView.layer.cornerRadius = 10.0
         
         return imageView
+    }
+}
+
+extension UITableViewCell {
+
+    var reorderControlImageView: UIImageView? {
+        let reorderControl = self.subviews.first { view -> Bool in
+            view.classForCoder.description() == "UITableViewCellReorderControl"
+        }
+        return reorderControl?.subviews.first { view -> Bool in
+            view is UIImageView
+        } as? UIImageView
     }
 }

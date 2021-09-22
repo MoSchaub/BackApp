@@ -52,7 +52,7 @@ public extension UIViewController {
     private func attributedTitleForEditButton(isEnabled: Bool = true) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font : UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: .current),
-            .foregroundColor : isEnabled ? UIColor.tintColor! : UIColor.secondaryLabel
+            .foregroundColor : isEnabled ? UIColor.baTintColor! : UIColor.secondaryLabel
         ]
         let titleString = isEditing ? Strings.EditButton_Done : Strings.EditButton_Edit
         return NSAttributedString(string: titleString, attributes: attributes)

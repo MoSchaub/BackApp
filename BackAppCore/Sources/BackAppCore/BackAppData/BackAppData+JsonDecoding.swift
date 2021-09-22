@@ -93,15 +93,14 @@ public extension BackAppData {
         recipe.number = json[CodingKeys.number.rawValue].intValue
         
         //add the recipe
-        save(&recipe)
+        insert(&recipe)
         if let stepsJson = json[CodingKeys.steps.rawValue].array {
             //decode and import the steps
             _ = stepsJson.map { decodeAndImportStep(from: $0, with: recipe.id!, and: nil) }
         }
-        
     }
     
-    private func decodeAndImportStep(from json: JSON, with recipeId: Int64, and superstepId: Int64?) {
+    private func decodeAndImportStep(from json: JSON, with recipeId: Int64, and superstepId: Int64?)  {
 
         var step = Step(recipeId: recipeId, number: 0)
 
@@ -122,24 +121,30 @@ public extension BackAppData {
         }
         
         //insert into the database
-        save(&step)
-        
+        insert(&step)
+
         //substeps
         if let substepsJson = json[CodingKeys.substeps.rawValue].array {
-            
+
             //do the same thing to the substeps
             _ = substepsJson.map { decodeAndImportStep(from: $0, with: recipeId, and: step.id) }
         }
-        
         //ingredients
         if let ingredientsJson = json[CodingKeys.ingredients.rawValue].array {
-            
+
             //import the ingredients used in this step
-            _ = ingredientsJson.map { decodeAndImportIngredient(from: $0, with: step.id!)  }
+            let ingredients = ingredientsJson.map { decodeAndImportIngredient(from: $0, with: step.id!)  }
+            try! dbWriter.write { db in
+                _ = ingredients.map {
+                    var ingredient = $0
+                    try! ingredient.insert(db)
+                }
+            }
+            NotificationCenter.default.post(name: .recipesChanged, object: nil)
         }
     }
     
-    private func decodeAndImportIngredient(from json: JSON, with stepId: Int64) {
+    private func decodeAndImportIngredient(from json: JSON, with stepId: Int64) -> Ingredient {
         
         var ingredient = Ingredient(stepId: stepId, number: 0)
         
@@ -156,8 +161,7 @@ public extension BackAppData {
         let typeDouble = json[CodingKeys.type.rawValue].doubleValue
         ingredient.type = Ingredient.Style(rawValue: typeDouble) ?? .other
         
-        //insert it
-        save(&ingredient)
+        return ingredient
     }
     
 }

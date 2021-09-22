@@ -278,7 +278,6 @@ private extension EditRecipeViewController {
     
     @objc private func dissmiss() {
         navigationController?.dismiss(animated: true, completion: nil)
-        NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
     }
 }
 
@@ -373,7 +372,7 @@ private extension EditRecipeViewController {
             step.number = (appData.notSubsteps(for: self.recipeId).last?.number ?? -1) + 1
 
             // insert it
-            appData.save(&step)
+            appData.insert(&step)
                 
             self.recipeChanged = true
         }

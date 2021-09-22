@@ -129,9 +129,7 @@ extension RecipeViewController: UISplitViewControllerDelegate {
 private extension RecipeViewController {
 
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
-        recipe.isFavorite.toggle()
-        appData.save(&recipe)
-        setUpNavigationBar()
+        appData.toggleFavorite(for: &recipe)
     }
 
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {

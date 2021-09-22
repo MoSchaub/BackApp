@@ -99,14 +99,19 @@ public extension BackAppData {
 
     /// Saves (inserts or updates) a record. When the method returns, the
     /// record is present in the database, and its id is not nil.
-    func save<T:BakingRecipeRecord>(_ record: inout T) {
+    func insert<T:BakingRecipeRecord>(_ record: inout T, completion: ((Error?) -> Void)? = nil) {
         do {
             try dbWriter.write { db in
-                return try record.save(db)
+                try record.save(db)
+            }
+            if let completion = completion {
+                completion(nil)
             }
         } catch {
             print(error.localizedDescription)
-            return
+            if let completion = completion {
+                completion(error)
+            }
         }
         
         if record is Recipe, !databaseAutoUpdatesDisabled {
@@ -148,6 +153,22 @@ public extension BackAppData {
             return false
         }
     }
+
+    internal func updateChanges<T:BakingRecipeRecord>(for record: inout T, changes: @escaping (inout T) -> Void) {
+        do {
+            try dbWriter.write { db in
+                _ = try record.updateChanges(db, with: changes)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    func toggleFavorite(for recipe: inout Recipe) {
+        updateChanges(for: &recipe) {
+            $0.isFavorite.toggle()
+        }
+    }
     
     internal func deleteAll<T:BakingRecipeRecord>(of type: T.Type) throws {
         _ = try dbWriter.write { db in
@@ -167,9 +188,8 @@ public extension BackAppData {
             var number = 0
             for id in recordIds {
                 var record: T = self.record(with: id!)!
-                if record.number != number {
+                self.updateChanges(for: &record) { record in
                     record.number = number
-                    self.save(&record)
                 }
                 number += 1
             }

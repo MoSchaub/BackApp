@@ -28,7 +28,7 @@ public class SubtitleCell: CustomCell {
         if let indicatorButton = self.allSubviews.compactMap({ $0 as? UIButton }).last {
             let image = indicatorButton.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
             indicatorButton.setBackgroundImage(image, for: .normal)
-            indicatorButton.tintColor = .tintColor
+            indicatorButton.tintColor = .baTintColor
         }
     }
     

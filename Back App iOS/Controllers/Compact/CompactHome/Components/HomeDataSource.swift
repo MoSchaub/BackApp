@@ -48,21 +48,31 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
     }
     
     ///refetches the data and renders the sections and items
-    func update(animated: Bool = true) {
+    func update(animated: Bool = true, searchText: String? = nil) {
         DispatchQueue.global(qos: .background).async {
+            var searchText = searchText
+            if searchText?.isEmpty ?? true {
+                searchText = nil
+            }
             var snapshot = NSDiffableDataSourceSnapshot<HomeSection, RecipeItem>()
             let appData = self.appData
 
-            if !appData.favorites.isEmpty {
+            if !appData.favorites.isEmpty && searchText == nil {
 
                 //favorites
-                let favoriteItems = appData.favorites.map { $0.item(steps: appData.steps(with: $0.id!), appData: appData)}
+                let favoriteItems = appData.favorites.map { $0.item(appData: appData) }
                 snapshot.appendSections([.favourites])
                 snapshot.appendItems(favoriteItems, toSection: .favourites)
             }
 
             //normal
-            let recipeItems = appData.allRecipes.map { $0.item(steps: appData.steps(with: $0.id!), appData: appData)}
+            let recipeItems: [RecipeItem]
+            if let searchText = searchText {
+                let filteredRecipes = appData.allRecipes.filter { $0.formattedName.localizedCaseInsensitiveContains(searchText) }
+                recipeItems = filteredRecipes.map { $0.item(appData: appData) }
+            } else {
+            recipeItems = appData.allRecipes.map { $0.item(appData: appData) }
+            }
             snapshot.appendSections([.recipes])
             snapshot.appendItems(recipeItems, toSection: .recipes)
 
@@ -143,7 +153,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
         var recipe = Recipe.init(number: newNumber)
 
         //insert
-        appData.save(&recipe)
+        appData.insert(&recipe)
 
         return recipe
     }
@@ -229,5 +239,15 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, RecipeItem> {
 
         return section.headerTitle(favouritesEmpty: snapshot().numberOfSections != 2)
     }
-    
+}
+
+//MARK: UISearchResults
+extension HomeDataSource: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.searchTextField.text {
+            self.update(animated: false, searchText: searchText)
+        } else {
+            self.update(animated: false)
+        }
+    }
 }

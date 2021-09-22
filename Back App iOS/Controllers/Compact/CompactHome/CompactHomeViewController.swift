@@ -32,6 +32,8 @@ class CompactHomeViewController: UITableViewController {
     
     /// for managing the theme
     private var themeManager: ThemeManager
+
+    private(set) lazy var searchController = makeSearchController()
     
     /// for picking documents
     private lazy var documentPicker = UIDocumentPickerViewController(
@@ -66,12 +68,12 @@ class CompactHomeViewController: UITableViewController {
         super.viewDidLoad()
         registerCells()
         configureNavigationBar()
-        
+
         //attach publisher for navbar reload
         NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
             self.configureNavigationBar()
         }.store(in: &tokens)
-        
+
         //attach publisher for alert
         NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
             self.presentImportAlert()
@@ -84,22 +86,23 @@ class CompactHomeViewController: UITableViewController {
                 }
             }
         }.store(in: &tokens)
-        
+
         #if !DEBUG
         //ask for room temp
         presentRoomTempSheet()
         #endif
     }
-    
+
     override func loadView() {
         super.loadView()
         dataSource.update(animated: false)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        dataSource.update(animated: false)
+
+        dataSource.update(animated: false, searchText: searchController.searchBar.searchTextField.text)
+        configureNavigationBar()
     }
 
 }
@@ -122,8 +125,8 @@ private extension CompactHomeViewController {
             
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
             let editButtonItem = self.editButtonItem
-            editButtonItem.isEnabled = self.dataSource.snapshot().itemIdentifiers.isEmpty
-            self.isEditing = false 
+            editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
+            self.isEditing = false
             self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
             
             let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
@@ -131,7 +134,7 @@ private extension CompactHomeViewController {
             self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
         }
     }
-    
+
     // MARK: - Room Temp Sheet
     private func presentRoomTempSheet() {
         let roomtempBinding = Binding {
@@ -299,7 +302,8 @@ extension CompactHomeViewController {
 
             // toggle favourite for the recipe
             let favourite = UIAction(title: recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite, image: UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")) { action in
-                self.dataSource.deleteRecipe(at: indexPath)
+                var recipe = recipe
+                self.appData.toggleFavorite(for: &recipe)
             }
 
             // pull up the share recipe sheet
@@ -350,4 +354,17 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
         dataSource.open(urls: urls)
     }
     
+}
+
+// MARK: - Search
+extension CompactHomeViewController {
+
+    func makeSearchController() -> UISearchController {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self.dataSource
+
+        searchController.obscuresBackgroundDuringPresentation = false
+        return searchController
+    }
+
 }

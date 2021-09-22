@@ -56,7 +56,7 @@ private extension TextFieldCell {
         textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         
         textField.textColor = .primaryCellTextColor
-        textField.tintColor = .tintColor
+        textField.tintColor = .baTintColor
         textField.placeholder = placeholder
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         

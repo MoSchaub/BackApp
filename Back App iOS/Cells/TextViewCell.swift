@@ -47,7 +47,7 @@ public class TextViewCell: CustomCell {
     /// button for stop editing the textView
     private lazy var doneButton: UIBarButtonItem = {
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        doneButton.tintColor = .tintColor
+        doneButton.tintColor = .baTintColor
         return doneButton
     }()
 
@@ -121,8 +121,8 @@ private extension TextViewCell {
         //background color
         self.textView.backgroundColor = UIColor.cellBackgroundColor
 
-        //tintColor
-        self.textView.tintColor = UIColor.tintColor
+        //baTintColor
+        self.textView.tintColor = UIColor.baTintColor
     }
 
     /// sets the text for textView from textContent, the textColor and the font

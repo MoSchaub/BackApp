@@ -181,7 +181,7 @@ extension SettingsViewController {
                         //roomtempCell
                         cell.textLabel?.text = item.text
                         
-                        cell.detailTextLabel?.attributedText = NSAttributedString(string: item.detailLabel, attributes: [.foregroundColor: self.roomTempPickerShown ? UIColor.tintColor! : UIColor.primaryCellTextColor!])
+                        cell.detailTextLabel?.attributedText = NSAttributedString(string: item.detailLabel, attributes: [.foregroundColor: self.roomTempPickerShown ? UIColor.baTintColor! : UIColor.primaryCellTextColor!])
                         
                         return cell
                     } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.switchCell) as? SwitchCell {

@@ -52,7 +52,7 @@ extension Theme {
         return color(with: .secondaryCellText)
     }
     
-    var tintColor: UIColor? {
+    var baTintColor: UIColor? {
         return color(with: .tint)
     }
     

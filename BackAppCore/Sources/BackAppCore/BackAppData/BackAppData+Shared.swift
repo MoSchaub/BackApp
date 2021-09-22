@@ -55,7 +55,7 @@ extension BackAppData {
                 let recipeExample = Recipe.example
                 var recipe = recipeExample.recipe
                 
-                appData.save(&recipe)
+                appData.insert(&recipe)
                 
                 let id = recipe.id!
                 
@@ -64,14 +64,14 @@ extension BackAppData {
                 _ = stepIngredients.map {
                     var step = $0.step
                     step.recipeId = id
-                    appData.save(&step)
+                    appData.insert(&step)
                     
                     let stepId = step.id!
                     
                     for ingredient in $0.ingredients {
                         var ingredient = ingredient
                         ingredient.stepId = stepId
-                        appData.save(&ingredient)
+                        appData.insert(&ingredient)
                     }
                 }
             }
