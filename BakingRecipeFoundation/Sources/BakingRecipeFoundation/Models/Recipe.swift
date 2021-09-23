@@ -247,14 +247,17 @@ public extension Recipe {
 
 //MARK: - Association methods
 public extension Recipe {
-    
+
+    var steps: QueryInterfaceRequest<Step> {
+        Step.all().orderedByNumber(with: self.id!)
+    }
     /// steps of the recipe
     private func steps(reader: DatabaseReader) -> [Step] {
         (try? reader.read { db in
-            try? Step.all().orderedByNumber(with: self.id!).fetchAll(db)
+            try? steps.fetchAll(db)
         }) ?? []
     }
-    
+
     /// total duration of all the steps
     func totalDuration(reader: DatabaseReader) -> Int {
         var allTimes: Int = 0

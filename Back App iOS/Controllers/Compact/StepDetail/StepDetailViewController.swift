@@ -665,7 +665,7 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
             
             apply(snapshot, animatingDifferences: true) {
                 if let ingredient = self.appData.record(with: Int64(item.id), of: Ingredient.self) {
-                    _ = self.appData.delete(ingredient)
+                    self.appData.delete(ingredient)
                 }
             }
         } else if item is SubstepItem {

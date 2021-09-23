@@ -279,7 +279,7 @@ final class BackAppCoreTests: XCTestCase {
             try Step.all().orderedByNumber(with: recipeId).fetchAll(db).map { $0.id! }
         }
         
-        XCTAssert(appData.delete(recipe!))
+        appData.delete(recipe!)
         
         XCTAssertFalse(appData.record(with: recipeId, of: Recipe.self) != nil)
         let steps = try appData.databaseReader.read { db in

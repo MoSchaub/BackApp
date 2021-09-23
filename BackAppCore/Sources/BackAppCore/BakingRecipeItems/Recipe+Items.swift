@@ -26,11 +26,6 @@ public extension Recipe {
         InfoItem(text: self.info)
     }
     
-    ///create an RecipeItem from an recipe
-    func item(appData: BackAppData) -> RecipeItem {
-        return RecipeItem(id: self.id!, name: self.formattedName, imageData: self.imageData, minuteLabel: self.totalDuration(reader: appData.databaseReader).formattedDuration)
-    }
-    
     /// an ``InfoStripItem`` with the recipes formatted Values
     /// - Parameter appData: database interfacefor accessing the recipes formatted Values
     func infoStripItem(appData: BackAppData) -> Item {

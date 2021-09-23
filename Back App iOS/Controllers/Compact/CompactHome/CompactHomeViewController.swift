@@ -67,7 +67,6 @@ class CompactHomeViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
-        configureNavigationBar()
 
         //attach publisher for navbar reload
         NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
@@ -87,6 +86,13 @@ class CompactHomeViewController: UITableViewController {
             }
         }.store(in: &tokens)
 
+        BackAppData.shared.recipeListPublisher
+            .sink(receiveCompletion: { _ in}) { recipeListItems in
+                self.editButtonItem.isEnabled = !recipeListItems.isEmpty
+                self.configureNavigationBar()
+            }
+            .store(in: &tokens)
+
         #if !DEBUG
         //ask for room temp
         presentRoomTempSheet()
@@ -95,18 +101,9 @@ class CompactHomeViewController: UITableViewController {
 
     override func loadView() {
         super.loadView()
-        dataSource.update(animated: false)
+        _ = dataSource
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        dataSource.update(animated: false, searchText: searchController.searchBar.searchTextField.text)
-        configureNavigationBar()
-    }
-
 }
-
 
 private extension CompactHomeViewController {
     
@@ -125,13 +122,13 @@ private extension CompactHomeViewController {
             
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
             let editButtonItem = self.editButtonItem
-            editButtonItem.isEnabled = !self.appData.allRecipes.isEmpty
-            self.isEditing = false
             self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
             
             let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
             let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
             self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+
+            self.navigationItem.searchController = self.searchController
         }
     }
 
@@ -179,7 +176,7 @@ private extension CompactHomeViewController {
     ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         //create the vc
-        let editRecipeVC = EditRecipeViewController(recipeId: dataSource.addRecipe().id!, creating: true, appData: appData)
+        let editRecipeVC = EditRecipeViewController(recipeId: try! appData.addBlankRecipe().id!, creating: true, appData: appData)
 
         //embed it in a navigation controller
         let nc = UINavigationController(rootViewController: editRecipeVC)
@@ -212,7 +209,7 @@ private extension CompactHomeViewController {
     // MARK: - DataSource
     
     private func makeDataSource() -> DataSource {
-        HomeDataSource(appData: appData, tableView: tableView)
+        HomeDataSource(tableView: tableView)
     }
 }
 
@@ -224,9 +221,9 @@ extension CompactHomeViewController {
         DispatchQueue.global(qos: .utility).async {
             guard !self.pressed else { return }
             self.pressed = true
-            guard let id = self.dataSource.itemIdentifier(for: indexPath)?.id else { return}
+            guard let id = self.dataSource.itemIdentifier(for: indexPath)?.recipe.id else { return}
             
-            self.navigateToRecipe(recipeId: Int64(id))
+            self.navigateToRecipe(recipeId: id)
             
             self.pressed = false
         }
@@ -263,30 +260,25 @@ extension CompactHomeViewController {
     
 }
 
-extension Notification.Name {
-    static var homeShouldPopSplitVC = Notification.Name.init("homeShouldPopSplitVC")
-}
-
-
 // MARK: - SwipeActions
 
 extension CompactHomeViewController {
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // Get current state from data source
-        let isFavorite = dataSource.favorite(at: indexPath)
+        guard var recipe = dataSource.itemIdentifier(for: indexPath)?.recipe else { return nil }
 
-        let title = isFavorite ? Strings.removeFavorite : Strings.addFavorite
+        let title = recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite
 
         let toggleFavAction = UIContextualAction(style: .normal, title: title,
-                                        handler: { (action, view, completionHandler) in
-                                            // Update data source when user taps action
-                                            self.dataSource.setFavorite(!isFavorite, at: indexPath)
-                                            completionHandler(true)
-                                        })
+                                                 handler: { (action, view, completionHandler) in
+            // Update data source when user taps action
+            BackAppData.shared.toggleFavorite(for: &recipe)
+            completionHandler(true)
+        })
 
-        toggleFavAction.image = UIImage(systemName: isFavorite ? "star.slash" : "star")
-        toggleFavAction.backgroundColor = isFavorite ? .red : .systemYellow
+        toggleFavAction.image = UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")
+        toggleFavAction.backgroundColor = recipe.isFavorite ? .red : .systemYellow
         return UISwipeActionsConfiguration(actions: [toggleFavAction])
     }
 
@@ -304,18 +296,19 @@ extension CompactHomeViewController {
             let favourite = UIAction(title: recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite, image: UIImage(systemName: recipe.isFavorite ? "star.slash" : "star")) { action in
                 var recipe = recipe
                 self.appData.toggleFavorite(for: &recipe)
+                NotificationCenter.default.post(name: .recipesChanged, object: nil)
             }
 
             // pull up the share recipe sheet
             let share = UIAction(title: Strings.share, image: UIImage(systemName: "square.and.arrow.up")) { action in
-                let vc = UIActivityViewController(activityItems: [self.dataSource.share(recipe)], applicationActivities: nil)
+                let vc = UIActivityViewController(activityItems: [self.appData.exportRecipesToFile(recipes: [recipe])], applicationActivities: nil)
                 vc.popoverPresentationController?.sourceView = self.tableView.cellForRow(at: indexPath)
                 self.present(vc, animated: true)
             }
 
             // delete the recipe
             let delete = UIAction(title: Strings.Alert_ActionDelete, image: UIImage(systemName: "trash"), attributes: .destructive ) { action in
-                self.dataSource.deleteRecipe(at: indexPath)
+                self.appData.delete(recipe)
             }
 
             // jump to editRecipeVC
@@ -327,7 +320,7 @@ extension CompactHomeViewController {
             // jump to scheduleForm
             let start = UIAction(title: Strings.startRecipe, image: UIImage(systemName: "arrowtriangle.right")) { action in
 
-                let scheduleFormVC = ScheduleFormViewController(recipe: self.dataSource.recipeBinding(with: recipe.id!), appData: self.appData)
+                let scheduleFormVC = ScheduleFormViewController(recipe: try! self.appData.recordBinding(for: recipe), appData: self.appData)
 
                 let nv = UINavigationController(rootViewController: scheduleFormVC)
 
@@ -341,7 +334,7 @@ extension CompactHomeViewController {
     }
 
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        if let recipe = dataSource.recipe(from: indexPath) {
+        if let recipe = dataSource.itemIdentifier(for: indexPath)?.recipe {
             return contextMenu(for: recipe, at: indexPath)
         } else { return nil }
     }
@@ -351,7 +344,8 @@ extension CompactHomeViewController {
 
 extension CompactHomeViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        dataSource.open(urls: urls)
+        guard urls.count == 1, let url = urls.first else { return }
+        appData.open(url)
     }
     
 }

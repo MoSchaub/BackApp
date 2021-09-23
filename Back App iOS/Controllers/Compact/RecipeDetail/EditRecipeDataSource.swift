@@ -145,7 +145,7 @@ extension EditRecipeDataSource {
     
     private func deleteStep(_ id: Int64) {
         if let step = appData.steps(with: recipe.id!).first(where: { $0.id == id }) {
-            _ = appData.delete(step)
+            appData.delete(step)
         }
     }
 }

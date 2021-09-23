@@ -8,6 +8,7 @@
 import GRDB
 import Foundation
 import BakingRecipeFoundation
+import SwiftUI
 
 public extension Database.ColumnType {
     static let real = Database.ColumnType.init(rawValue: "REAL")
@@ -28,7 +29,7 @@ public struct BackAppData {
     /// can use a fast in-memory `DatabaseQueue`.
     ///
     /// See https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections
-    internal let dbWriter: DatabaseWriter
+    public let dbWriter: DatabaseWriter
     
     /// The DatabaseMigrator that defines the database schema.
     ///
@@ -137,20 +138,18 @@ public extension BackAppData {
     }
     
     /// delete the specified record and returns wether the deletion was succesfull
-    func delete<T:BakingRecipeRecord>(_ record: T) -> Bool {
+    func delete<T:BakingRecipeRecord>(_ record: T) {
         do {
-            return try dbWriter.write { db in
-                let success = try T.deleteOne(db, key: ["id" : record.id])
+            try dbWriter.write { db in
+                _ = try record.delete(db)
 
-                if record is Recipe, !databaseAutoUpdatesDisabled {
-                    NotificationCenter.default.post(name: .recipesChanged, object: nil)
+                if record is Recipe {
+                    //dissmiss splitVC
+                    NotificationCenter.default.post(name: .homeShouldPopSplitVC, object: nil)
                 }
-
-                return success
             }
         } catch {
             print(error.localizedDescription)
-            return false
         }
     }
 
@@ -194,6 +193,18 @@ public extension BackAppData {
                 number += 1
             }
             databaseAutoUpdatesDisabled = false
+        }
+    }
+
+    /// record binding that is synced wtih the database
+    func recordBinding<T: BakingRecipeRecord>(for record: T) throws -> Binding<T> {
+        try dbWriter.write { db in
+            Binding {
+                try! T.fetchOne(db, key: record.id!)!
+            } set: { newValue in
+                self.update(newValue)
+            }
+
         }
     }
 }

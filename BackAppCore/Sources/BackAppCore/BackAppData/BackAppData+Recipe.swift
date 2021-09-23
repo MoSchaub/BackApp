@@ -8,6 +8,8 @@
 import BakingRecipeFoundation
 import BakingRecipeStrings
 import NotificationCenter
+import GRDB
+import Combine
 
 public extension Notification.Name {
     static var recipesChanged: Notification.Name {
@@ -15,6 +17,29 @@ public extension Notification.Name {
     }
 }
 
+// Feeds the list of recipes
+public extension BackAppData {
+    struct RecipeListItem: Decodable, Hashable, FetchableRecord {
+        public let recipe: Recipe
+        public let stepCount: Int
+
+        static var request = Recipe.annotated(with: Recipe.steps.count).orderedByNumber
+    }
+
+    func recipeList() throws -> [RecipeListItem] {
+        try dbWriter.read { db in
+            try RecipeListItem.fetchAll(db, RecipeListItem.request)
+        }
+    }
+
+    var recipeListPublisher: DatabasePublishers.Value<[RecipeListItem]> {
+        ValueObservation
+            .tracking { db in
+                try RecipeListItem.fetchAll(db, RecipeListItem.request)
+            }
+            .publisher(in: dbWriter)
+    }
+}
 
 // MARK: - Recipes
 public extension BackAppData {
@@ -26,15 +51,18 @@ public extension BackAppData {
         }) ?? []
     }
     
-    /// all favorited recipes in the database
-    var favorites: [Recipe] {
-        (try? self.databaseReader.read { db in
-            try? Recipe.all().filterFavorites.fetchAll(db)
-        }) ?? []
-    }
-    
     func moveRecipe(from source: Int, to destination: Int) {
-        self.moveRecord(in: allRecipes, from: source, to: destination)
+        self.moveRecord(in: allRecipes.filter{ !$0.isFavorite }, from: source, to: destination)
+    }
+
+    /// creates new blank recipe generates a new number inserts it and returns the inserted recipe
+    func addBlankRecipe() throws -> Recipe {
+        try self.dbWriter.write { db in
+            let newNumber = try Recipe.fetchCount(db)
+            var newRecipe = Recipe(number: newNumber)
+            try newRecipe.insert(db)
+            return newRecipe
+        }
     }
 }
 

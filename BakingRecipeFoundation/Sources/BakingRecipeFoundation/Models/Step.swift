@@ -170,7 +170,6 @@ extension DerivableRequest where RowDecoder == Step {
     public func orderedByNumber(with recipeId: Int64) -> Self {
         filter(by: recipeId)
             .order(Step.Columns.number) // sort by number in ascending order (asc is the default)
-        
     }
     
     public func orderedSubstepsByDuration(of stepId: Int64, with recipeId: Int64) -> Self {
@@ -201,19 +200,30 @@ extension Step {
 
 //MARK: - Association methods
 public extension Step {
+
+    var ingredients: QueryInterfaceRequest<Ingredient> {
+        Ingredient.all().orderedByNumber(with: self.id!)
+    }
     
     /// ingredients of the step
     internal func ingredients(reader: DatabaseReader) -> [Ingredient] {
         (try? reader.read { db in
-            try? Ingredient.filter(Ingredient.Columns.stepId == self.id).fetchAll(db)
+            try? ingredients.fetchAll(db)
         }) ?? []
+    }
+
+    var substeps: QueryInterfaceRequest<Step> {
+        Step.all().orderedSubstepsByDuration(of: self.id!, with: recipeId)
+    }
+
+    func sortedSubsteps(db: Database) -> [Step] {
+        (try? substeps.fetchAll(db)) ?? []
     }
     
     /// substep of this step sorted descending by their duration
     func sortedSubsteps(reader: DatabaseReader) -> [Step] {
         (try? reader.read { db in
-            try? Step.all().orderedSubstepsByDuration(of: self.id!, with: recipeId)
-            .fetchAll(db)
+            try? substeps.fetchAll(db)
         }) ?? []
     }
     

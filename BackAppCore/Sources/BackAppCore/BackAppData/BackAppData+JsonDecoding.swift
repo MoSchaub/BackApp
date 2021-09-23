@@ -16,6 +16,7 @@ public var databaseAutoUpdatesDisabled = false
 public extension Notification.Name {
     static var homeNavBarShouldReload = Self.init(rawValue: "homeNavBarShouldReload")
     static var alertShouldBePresented = Self.init(rawValue: "alertShouldBePresented")
+    static var homeShouldPopSplitVC = Self.init("homeShouldPopSplitVC")
 }
 
 ///the title of an alert displayed in the ui

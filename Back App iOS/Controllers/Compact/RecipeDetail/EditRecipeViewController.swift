@@ -130,9 +130,8 @@ extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
             if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextFieldCell, cell.textField.isEditing {
                 cell.textField.endEditing(true)
             }
-            if appData.delete(recipe) {
-                dissmiss()
-            }
+            appData.delete(recipe)
+            dissmiss()
         }
     }
     
@@ -141,9 +140,8 @@ extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
-            if self.appData.delete(self.recipe) {
-                self.dissmiss()
-            }
+            self.appData.delete(self.recipe)
+            self.dissmiss()
         })
         
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
@@ -261,7 +259,8 @@ private extension EditRecipeViewController {
         
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
-                if !self.creating, self.appData.delete(self.recipe) {
+                if !self.creating {
+                    self.appData.delete(self.recipe)
                     self.dismissDetail!()
                 }
             }
