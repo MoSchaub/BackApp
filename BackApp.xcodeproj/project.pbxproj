@@ -42,6 +42,7 @@
 		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
 		CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */; };
+		CD6729C126FD1F5E007C17E3 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD6729C026FD1F5E007C17E3 /* CombineCocoa */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */; };
 		CD6F748D2691D1D800BCFC3E /* 3de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748C2691D1D800BCFC3E /* 3de.bakingAppRecipe */; };
@@ -66,7 +67,6 @@
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
 		CDA806FC250400BE008E0EC0 /* ScheduleFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */; };
 		CDB20D5E2544E6FD00311A06 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
-		CDBB2841267683DB009CAD1A /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CDBB2840267683DB009CAD1A /* CombineCocoa */; };
 		CDBDCF9B24A553A300121F98 /* EditRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBDCF9A24A553A300121F98 /* EditRecipeViewController.swift */; };
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
@@ -242,7 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDBB2841267683DB009CAD1A /* CombineCocoa in Frameworks */,
+				CD6729C126FD1F5E007C17E3 /* CombineCocoa in Frameworks */,
 				CD232E6226740D7100E528BB /* BakingRecipeUIFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -638,7 +638,7 @@
 			name = "Back App iOS";
 			packageProductDependencies = (
 				CD232E6126740D7100E528BB /* BakingRecipeUIFoundation */,
-				CDBB2840267683DB009CAD1A /* CombineCocoa */,
+				CD6729C026FD1F5E007C17E3 /* CombineCocoa */,
 			);
 			productName = "Back App iOS";
 			productReference = CDA7EE2924A67DBD00763E21 /* Back App.app */;
@@ -700,7 +700,7 @@
 			);
 			mainGroup = CD6A9A032340252400748249;
 			packageReferences = (
-				CDBB283F267683DB009CAD1A /* XCRemoteSwiftPackageReference "CombineCocoa" */,
+				CD6729BF26FD1F5E007C17E3 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
 			);
 			productRefGroup = CD6A9A0D2340252400748249 /* Products */;
 			projectDirPath = "";
@@ -1241,12 +1241,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CDBB283F267683DB009CAD1A /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
+		CD6729BF26FD1F5E007C17E3 /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa";
+			repositoryURL = "https://github.com/bpollman/CombineCocoa";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1256,9 +1256,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = BakingRecipeUIFoundation;
 		};
-		CDBB2840267683DB009CAD1A /* CombineCocoa */ = {
+		CD6729C026FD1F5E007C17E3 /* CombineCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDBB283F267683DB009CAD1A /* XCRemoteSwiftPackageReference "CombineCocoa" */;
+			package = CD6729BF26FD1F5E007C17E3 /* XCRemoteSwiftPackageReference "CombineCocoa" */;
 			productName = CombineCocoa;
 		};
 /* End XCSwiftPackageProductDependency section */
