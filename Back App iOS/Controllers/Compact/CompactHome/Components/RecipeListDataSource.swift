@@ -1,5 +1,5 @@
 //
-//  HomeDataSource.swift
+//  RecipeListDataSource.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 11.08.20.
@@ -15,7 +15,7 @@ import GRDB
 
 import Combine
 
-class HomeDataSource: UITableViewDiffableDataSource<HomeSection, BackAppData.RecipeListItem> {
+class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppData.RecipeListItem> {
 
     private var searchText: String? {
         didSet {
@@ -128,7 +128,7 @@ class HomeDataSource: UITableViewDiffableDataSource<HomeSection, BackAppData.Rec
 }
 
 //MARK: UISearchResults
-extension HomeDataSource: UISearchResultsUpdating {
+extension RecipeListDataSource: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.searchTextField.text {
 //            self.update(animated: false, searchText: searchText)

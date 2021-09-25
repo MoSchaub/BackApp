@@ -41,7 +41,7 @@
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
 		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
-		CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */; };
+		CD663F6C24E2A20B008F9A09 /* RecipeListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */; };
 		CD6729C126FD1F5E007C17E3 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD6729C026FD1F5E007C17E3 /* CombineCocoa */; };
 		CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */; };
 		CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */; };
@@ -60,7 +60,7 @@
 		CDA1D80C24A782C700DDF709 /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA1D80B24A782C700DDF709 /* StepDetailViewController.swift */; };
 		CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */; };
 		CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */; };
-		CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */; };
+		CDA7EE3024A67DBD00763E21 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */; };
 		CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */; };
 		CDA7EE5824A67E7000763E21 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A152340252600748249 /* Images.xcassets */; };
 		CDA7EE6324A67E9D00763E21 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B1248BDA3000D11DD3 /* ScheduleView.swift */; };
@@ -155,7 +155,7 @@
 		CD59041024E2CF4F008A0E6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CD59041224E2CF4F008A0E6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeDataSource.swift; sourceTree = "<group>"; };
-		CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDataSource.swift; sourceTree = "<group>"; };
+		CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListDataSource.swift; sourceTree = "<group>"; };
 		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD68D46624AC5CBD000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD6A9A152340252600748249 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -204,7 +204,7 @@
 		CDA7EE2924A67DBD00763E21 /* Back App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Back App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactHomeViewController.swift; sourceTree = "<group>"; };
+		CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewController.swift; sourceTree = "<group>"; };
 		CDA7EE3924A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
@@ -300,7 +300,7 @@
 		CD2C4C8124DAC980009195A8 /* CompactHome */ = {
 			isa = PBXGroup;
 			children = (
-				CDA7EE2F24A67DBD00763E21 /* CompactHomeViewController.swift */,
+				CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */,
 				CDBDFDD324AA95BE002A6C84 /* Components */,
 			);
 			path = CompactHome;
@@ -569,7 +569,7 @@
 			children = (
 				CD285EA6259E1D5C00834C21 /* SettingsViewController.swift */,
 				CD4224B926724ED600BFCC5A /* RoomTempPickerSheet.swift */,
-				CD663F6B24E2A20B008F9A09 /* HomeDataSource.swift */,
+				CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */,
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
 				CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */,
 			);
@@ -783,9 +783,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD232E5826740CD500E528BB /* InfoStripCell.swift in Sources */,
-				CD663F6C24E2A20B008F9A09 /* HomeDataSource.swift in Sources */,
+				CD663F6C24E2A20B008F9A09 /* RecipeListDataSource.swift in Sources */,
 				CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */,
-				CDA7EE3024A67DBD00763E21 /* CompactHomeViewController.swift in Sources */,
+				CDA7EE3024A67DBD00763E21 /* RecipeListViewController.swift in Sources */,
 				CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
 				CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */,
@@ -943,7 +943,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -966,7 +966,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1114,7 +1114,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1142,7 +1142,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;

@@ -1,5 +1,5 @@
 //
-//  CompactHomeViewController.swift
+//  RecipeListViewController.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 26.06.20.
@@ -14,9 +14,9 @@ import BakingRecipeFoundation
 import BakingRecipeUIFoundation
 import Combine
 
-class CompactHomeViewController: UITableViewController {
+class RecipeListViewController: UITableViewController {
     
-    typealias DataSource = HomeDataSource
+    typealias DataSource = RecipeListDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
     
     // MARK: Properties
@@ -105,7 +105,7 @@ class CompactHomeViewController: UITableViewController {
     }
 }
 
-private extension CompactHomeViewController {
+private extension RecipeListViewController {
     
     // MARK: - Cell Registration
     
@@ -204,16 +204,16 @@ private extension CompactHomeViewController {
     
 }
 
-private extension CompactHomeViewController {
+private extension RecipeListViewController {
     
     // MARK: - DataSource
     
     private func makeDataSource() -> DataSource {
-        HomeDataSource(tableView: tableView)
+        RecipeListDataSource(tableView: tableView)
     }
 }
 
-extension CompactHomeViewController {
+extension RecipeListViewController {
     
     // MARK: - Cell Selection
     
@@ -262,7 +262,7 @@ extension CompactHomeViewController {
 
 // MARK: - SwipeActions
 
-extension CompactHomeViewController {
+extension RecipeListViewController {
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // Get current state from data source
@@ -286,7 +286,7 @@ extension CompactHomeViewController {
 
 // MARK: - Context Menu
 
-extension CompactHomeViewController {
+extension RecipeListViewController {
 
     /// creates a contextMenu for the recipe Cell
     private func contextMenu(for recipe: Recipe, at indexPath: IndexPath) -> UIContextMenuConfiguration {
@@ -342,7 +342,7 @@ extension CompactHomeViewController {
 
 // MARK: - Document Picker
 
-extension CompactHomeViewController: UIDocumentPickerDelegate {
+extension RecipeListViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard urls.count == 1, let url = urls.first else { return }
         appData.open(url)
@@ -351,7 +351,7 @@ extension CompactHomeViewController: UIDocumentPickerDelegate {
 }
 
 // MARK: - Search
-extension CompactHomeViewController {
+extension RecipeListViewController {
 
     func makeSearchController() -> UISearchController {
         let searchController = UISearchController()

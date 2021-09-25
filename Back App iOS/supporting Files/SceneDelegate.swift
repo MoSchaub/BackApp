@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     let appData = BackAppData.shared
-    lazy var compactHomeVC = CompactHomeViewController(appData: appData)
+    lazy var recipeListVC = RecipeListViewController(appData: appData)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         let splitViewController = UISplitViewController()
         
-        let navigationViewController = UINavigationController(rootViewController: compactHomeVC)
+        let navigationViewController = UINavigationController(rootViewController: recipeListVC)
         splitViewController.viewControllers = [navigationViewController]
         splitViewController.preferredDisplayMode = .allVisible
         window.rootViewController = splitViewController

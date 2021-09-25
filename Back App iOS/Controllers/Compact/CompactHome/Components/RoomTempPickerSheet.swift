@@ -61,7 +61,7 @@ struct RoomTempPickerSheet: View {
 
 struct RoomTempPickerSheet_Previews: PreviewProvider {
     static var previews: some View {
-        _ = CompactHomeViewController(appData: BackAppData.shared)
+        _ = RecipeListViewController(appData: BackAppData.shared)
         return RoomTempPickerSheet(roomTemp: Binding {
             return Standarts.roomTemp
         } set: {
