@@ -53,6 +53,7 @@
 		CD87201726DBA74700C01DAE /* 2en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201426DBA74600C01DAE /* 2en.bakingAppRecipe */; };
 		CD87201826DBA74700C01DAE /* 1en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201526DBA74700C01DAE /* 1en.bakingAppRecipe */; };
 		CD87201926DBA74700C01DAE /* 3en.bakingAppRecipe in Resources */ = {isa = PBXBuildFile; fileRef = CD87201626DBA74700C01DAE /* 3en.bakingAppRecipe */; };
+		CD87B1F926FF913D00DAC6B6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD87B1FB26FF913D00DAC6B6 /* Launch Screen.storyboard */; };
 		CD99C57524D8728700026716 /* PlainToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99C57424D8728700026716 /* PlainToggleStyle.swift */; };
 		CD9B3CE9253CE6D000132CA9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD9B3CE7253CE6D000132CA9 /* Localizable.strings */; };
 		CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B3CF3253CE6ED00132CA9 /* TestModels.swift */; };
@@ -71,7 +72,6 @@
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDE3731C26DD670F008C7B95 /* UITextView+Placeholder.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE3731A26DD670F008C7B95 /* UITextView+Placeholder.m */; };
-		CDE4E1A026C821020067FED4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDE4E19F26C821020067FED4 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -191,8 +191,11 @@
 		CD87201426DBA74600C01DAE /* 2en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2en.bakingAppRecipe; sourceTree = "<group>"; };
 		CD87201526DBA74700C01DAE /* 1en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1en.bakingAppRecipe; sourceTree = "<group>"; };
 		CD87201626DBA74700C01DAE /* 3en.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3en.bakingAppRecipe; sourceTree = "<group>"; };
+		CD87B1FA26FF913D00DAC6B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		CD87B1FD26FF914300DAC6B6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
 		CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeStrings; sourceTree = "<group>"; };
 		CD8E3FE0258E388600E86F0F /* BakingRecipeFoundation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BakingRecipeFoundation; sourceTree = "<group>"; };
+		CD9129D326FF91750040061C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
 		CD99C57424D8728700026716 /* PlainToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainToggleStyle.swift; sourceTree = "<group>"; };
 		CD9B3CE8253CE6D000132CA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CD9B3CF2253CE6D600132CA9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -217,7 +220,6 @@
 		CDE3731926DD670E008C7B95 /* Back App iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Back App iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		CDE3731A26DD670F008C7B95 /* UITextView+Placeholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Placeholder.m"; sourceTree = "<group>"; };
 		CDE3731B26DD670F008C7B95 /* UITextView+Placeholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Placeholder.h"; sourceTree = "<group>"; };
-		CDE4E19F26C821020067FED4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		CDF02D8F26FBD64C006DE272 /* BackAppDatabase */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppDatabase; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -489,7 +491,7 @@
 				CDB383E724A61ED80049C2BE /* Controllers */,
 				CDA7EE3924A67DC200763E21 /* Info.plist */,
 				CD68D46524AC5CBB000D4BD7 /* InfoPlist.strings */,
-				CDE4E19F26C821020067FED4 /* Launch Screen.storyboard */,
+				CD87B1FB26FF913D00DAC6B6 /* Launch Screen.storyboard */,
 			);
 			path = "Back App iOS";
 			sourceTree = "<group>";
@@ -738,7 +740,7 @@
 				CD87201726DBA74700C01DAE /* 2en.bakingAppRecipe in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
-				CDE4E1A026C821020067FED4 /* Launch Screen.storyboard in Resources */,
+				CD87B1F926FF913D00DAC6B6 /* Launch Screen.storyboard in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
 				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
@@ -873,6 +875,16 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		CD87B1FB26FF913D00DAC6B6 /* Launch Screen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD87B1FA26FF913D00DAC6B6 /* Base */,
+				CD87B1FD26FF914300DAC6B6 /* de */,
+				CD9129D326FF91750040061C /* en */,
+			);
+			name = "Launch Screen.storyboard";
+			sourceTree = "<group>";
+		};
 		CD9B3CE7253CE6D000132CA9 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -931,7 +943,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -954,7 +966,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1102,7 +1114,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1130,7 +1142,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;

@@ -33,7 +33,9 @@ struct RoomTempPickerSheet: View {
                         .tag(Double($0))
                         .foregroundColor(Color(.primaryCellTextColor!))
                 }
-            }.background(
+            }
+            .pickerStyle(.wheel)
+            .background(
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(Color(.cellBackgroundColor!))
             )
