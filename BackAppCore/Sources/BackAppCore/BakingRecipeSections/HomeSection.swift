@@ -16,7 +16,7 @@ public enum HomeSection: Int, CaseIterable {
     public func headerTitle(favouritesEmpty: Bool) -> String? {
         switch self {
         case .favourites: return favouritesEmpty ? nil : Strings.favorites
-        case .recipes: return favouritesEmpty ? nil : Strings.allRecipes
+        case .recipes: return nil
         }
     }
 }

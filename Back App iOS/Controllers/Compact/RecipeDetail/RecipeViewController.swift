@@ -72,6 +72,10 @@ class RecipeViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        recipeInfoPublisher.cancel()
+    }
+
     // MARK: - LifeCycle
     override func loadView() {
         super.loadView()
@@ -158,7 +162,9 @@ class RecipeViewController: UITableViewController {
     //MARK: Observer
     private func observeRecipeInfo() {
         recipeInfoPublisher = BackAppData.shared.recipeInfoPublisher(for: recipeId)
-            .sink(receiveCompletion: { _ in }) { recipeDetailItem in
+            .sink(receiveCompletion: { completion in
+                print(completion)
+            }) { recipeDetailItem in
                 self.recipeDetailItem = recipeDetailItem
             }
     }

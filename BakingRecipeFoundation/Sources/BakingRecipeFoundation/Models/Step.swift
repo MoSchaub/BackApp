@@ -244,9 +244,7 @@ public extension Step {
         var step = self // make it mutable
 
         //update the number
-        try step.updateChanges(db) {
-            $0.number = number
-        }
+        step.number = number
 
         steps.append(step)
 
