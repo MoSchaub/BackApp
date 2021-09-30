@@ -221,9 +221,9 @@ extension RecipeListViewController {
         DispatchQueue.global(qos: .utility).async {
             guard !self.pressed else { return }
             self.pressed = true
-            guard let id = self.dataSource.itemIdentifier(for: indexPath)?.recipe.id else { return}
+            guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return}
             
-            self.navigateToRecipe(recipeId: id)
+            self.navigateToRecipe(item: item)
             
             self.pressed = false
         }
@@ -243,9 +243,10 @@ extension RecipeListViewController {
         }
     }
     
-    private func navigateToRecipe(recipeId: Int64) {
+    private func navigateToRecipe(item: BackAppData.RecipeListItem) {
         DispatchQueue.main.async {
-            let recipeVC = RecipeViewController(recipeId: recipeId, appData: self.appData, editRecipeViewController: self._editVC(recipeId: recipeId))
+            let recipeId = item.recipe.id!
+            let recipeVC = RecipeViewController(recipeId: recipeId, editVC: self._editVC(recipeId: recipeId), recipeName: item.recipe.formattedName)
             //push to the view controller
             let nc = UINavigationController(rootViewController: recipeVC)
             self.splitViewController?.showDetailViewController(nc, sender: self)

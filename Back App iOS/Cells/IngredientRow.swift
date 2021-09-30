@@ -14,8 +14,8 @@ import BackAppCore
 struct IngredientRow: View {
     
     let ingredient: Ingredient
+    let step: Step
     let roomTemp: Double = Standarts.roomTemp
-    let appData: BackAppData
     let scaleFactor: Double?
     
     var body: some View {
@@ -23,7 +23,7 @@ struct IngredientRow: View {
             Text(ingredient.name).lineLimit(1)
             Spacer()
             if ingredient.type == .bulkLiquid{
-                Text(appData.temperature(for: ingredient, roomTemp: roomTemp).formattedTemp).lineLimit(1)
+                Text(tempText).lineLimit(1)
                 Spacer()
             } else{
                 EmptyView()
@@ -31,5 +31,14 @@ struct IngredientRow: View {
             Text(ingredient.scaledFormattedAmount(with: scaleFactor ?? 1)).lineLimit(1)
         }
         .foregroundColor(Color(UIColor.primaryCellTextColor!))
+    }
+
+    private var tempText: String {
+        if let temp = try? step.temperature(roomTemp: roomTemp, kneadingHeating: Standarts.kneadingHeating, databaseReader: BackAppData.shared.databaseReader) {
+            return temp.formattedTemp
+        } else {
+            print("Error getting the temp for the ingredient with name: \(ingredient.formattedName)")
+            return "error"
+        }
     }
 }

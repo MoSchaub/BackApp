@@ -37,21 +37,7 @@ class RecipesManager {
 
 // feeds a recipe screen
 extension RecipesManager {
-    struct RecipeInfo: Decodable, FetchableRecord {
-        var recipe: Recipe
-        var steps: [Step]
-    }
 
-    func recipeInfo(recipeId: Int64, db: Database) throws -> RecipeInfo? {
-        try dbPool.read { db in
-            guard let recipe = try Recipe.fetchOne(db, id: recipeId) else {
-                return nil
-            }
-
-            let steps = try recipe.steps.fetchAll(db)
-            return RecipeInfo(recipe: recipe, steps: steps)
-        }
-    }
 }
 
 //feeds a step screen

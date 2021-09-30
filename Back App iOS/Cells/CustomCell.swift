@@ -15,6 +15,12 @@ public class CustomCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
+
+    public init(text: String, reuseIdentifier: String) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        self.textLabel?.text = text
+        self.setup()
+    }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)

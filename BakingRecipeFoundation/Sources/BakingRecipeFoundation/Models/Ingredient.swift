@@ -47,6 +47,12 @@ public struct Ingredient: BakingRecipeRecord {
             _ = step.ingredients(reader: reader).filter { $0.type == self }.map { mass += $0.mass}
             return mass
         }
+
+        public func massOfSelfIngredients(in step: Step, db: Database) throws -> Double {
+            var mass = 0.0
+            _ = try step.ingredients(db: db).filter { $0.type == self }.map { mass += $0.mass }
+            return mass
+        }
     }
     
     ///id of the ingredient, is counted up incrementally

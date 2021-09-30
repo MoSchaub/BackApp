@@ -10,19 +10,28 @@ import SwiftUI
 import BakingRecipeFoundation
 import BackAppCore
 
+extension View {
+    @ViewBuilder
+    func optionalModifier<T:View>(condition: Bool, modified: @escaping (Self) -> T ) -> some View {
+        if condition {
+            modified(self)
+        } else {
+            self
+        }
+    }
+}
+
 @ViewBuilder
-public func substepIngredientRows(for step: Step, with appData: BackAppData, scaleFactor: Double? = nil) -> some View {
-    ForEach(appData.sortedSubsteps(for: step.id!)) { substep in
-        SubstepRow(substep: substep, appData: appData, scaleFactor: scaleFactor ?? 1)
+public func substepIngredientRows(for step: Step, scaleFactor: Double? = nil) -> some View {
+    ForEach(step.sortedSubsteps(reader: BackAppData.shared.databaseReader)) { substep in
+        SubstepRow(substep: substep, scaleFactor: scaleFactor ?? 1)
 
     }
-    ForEach(appData.ingredients(with: step.id!)) { ingredient in
-        if let scaleFactor = scaleFactor {
-            IngredientRow(ingredient: ingredient, appData: appData, scaleFactor: scaleFactor)
-            .padding(.vertical, 5)
-        } else {
-            IngredientRow(ingredient: ingredient, appData: appData, scaleFactor: nil)
-        }
+    ForEach(step.ingredients(reader: BackAppData.shared.databaseReader)) { ingredient in
+        IngredientRow(ingredient: ingredient, step: step, scaleFactor: scaleFactor)
+            .optionalModifier(condition: scaleFactor != nil) {
+                $0.padding(.vertical, 5)
+            }
     }
 }
 
@@ -30,7 +39,6 @@ public struct StepRow: View {
 
     let step: Step
     let roomTemp = Standarts.roomTemp
-    let appData: BackAppData
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -44,7 +52,7 @@ public struct StepRow: View {
                 Spacer()
                 Text(step.formattedDuration).secondary()
             }
-            substepIngredientRows(for: step, with: appData)
+            substepIngredientRows(for: step)
             HStack {
                 Text(step.notes)
                 Spacer()
@@ -55,9 +63,8 @@ public struct StepRow: View {
         .padding(.trailing)
     }
     
-    public init(step: Step, appData: BackAppData) {
+    public init(step: Step) {
         self.step = step
-        self.appData = appData
     }
 }
 //

@@ -89,8 +89,7 @@ class Back_App_iOSUITests: XCTestCase {
     }
     
     func removeSubstep(recipeName: String) {
-        
-        XCUIApplication().tables.children(matching: .cell).element(boundBy: 6).children(matching: .other).element(boundBy: 1).staticTexts["Sub3"].tap()
+        appTables.staticTexts["Sub3"].firstMatch.tap()
         
         // delete the substep
         appTables.children(matching: .button)["Edit"].tap()

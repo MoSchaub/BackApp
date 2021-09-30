@@ -8,6 +8,7 @@
 
 import BakingRecipeFoundation
 import BakingRecipeStrings
+import GRDB
 
 public extension Recipe {
     func nameItem() -> TextFieldItem {
@@ -31,14 +32,22 @@ public extension Recipe {
     func infoStripItem(appData: BackAppData) -> Item {
         InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
     }
+
+    internal func infoStripItem(db: Database) throws -> InfoStripItem {
+        InfoStripItem(weighIn: try self.formattedTotalAmount(db: db), formattedDuration: try self.formattedTotalDurationHours(db: db), doughYield: try self.formattedTotalDoughYield(db: db))
+    }
+
+    internal func stepItems(db: Database) throws -> [StepItem] {
+        try self.reoderedSteps(db: db).map { StepItem(step: $0) }
+    }
     
     func stepItems(appData: BackAppData) -> [StepItem] {
         let steps = appData.reorderedSteps(for: self.id!)
-        return steps.map({ StepItem(id: $0.id!, step: $0)})
+        return steps.map({ StepItem(step: $0)})
     }
 
     /// items for all steps in right order
     func allReoderedStepItems(appData: BackAppData) -> [StepItem] {
-        appData.reorderedSteps(for: self.id!).map({ StepItem(id: $0.id!, step: $0)})
+        appData.reorderedSteps(for: self.id!).map{ StepItem(step: $0) }
     }
 }

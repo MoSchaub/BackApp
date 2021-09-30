@@ -46,15 +46,14 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
                 return TextViewCell(textContent: Binding(get: {
                     return recipe.wrappedValue.info
                 }, set: updateInfo), placeholder: Strings.info, reuseIdentifier: Strings.infoCell)
-            } else if let stripItem = item as? InfoStripItem, let infoStripCell = tableView.dequeueReusableCell(withIdentifier: Strings.infoStripCell, for: indexPath) as? InfoStripCell {
+            } else if let stripItem = item as? InfoStripItem {
 
                 // infoStrip cell
-                infoStripCell.setUpCell(for: stripItem)
-                return infoStripCell
+                return InfoStripCell(infoStripItem: stripItem, reuseIdentifier: Strings.infoStripCell)
             } else if let stepItem = item as? StepItem {
 
                 // steps
-                let stepCell = StepCell(step: stepItem.step, appData: appData, reuseIdentifier: Strings.stepCell)
+                let stepCell = StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell)
                 return stepCell
             } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
 

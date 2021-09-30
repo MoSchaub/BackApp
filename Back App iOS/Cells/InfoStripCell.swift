@@ -40,12 +40,26 @@ public class InfoStripCell: CustomCell {
             .background(Color(UIColor.cellBackgroundColor!))
         }
     }
+
+    public init(infoStripItem: InfoStripItem, reuseIdentifier: String) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        self.setUpCell(for: infoStripItem)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public func setUpCell(for item: InfoStripItem) {
         selectionStyle = .none
-        let hostingController = UIHostingController(rootView: InfoStrip(weighIn: item.weighIn, formattedDuration: item.formattedDuration, doughYield: item.doughYield))
+
+        let rootView = InfoStrip(weighIn: item.weighIn, formattedDuration: item.formattedDuration, doughYield: item.doughYield)
+        let hostingController = UIHostingController(rootView: rootView)
         
-        addSubview(hostingController.view)
+        // set clear so the view takes the cells background color
+        hostingController.view.backgroundColor = .clear
+
+        contentView.addSubview(hostingController.view)
         hostingController.view.fillSuperview()
     }
     

@@ -12,6 +12,12 @@ public class DetailCell: CustomCell {
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
     }
+
+    public override init(text: String, reuseIdentifier: String) {
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+        self.textLabel?.text = text
+        self.setup()
+    }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)

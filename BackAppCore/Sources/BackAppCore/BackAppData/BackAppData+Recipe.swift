@@ -26,16 +26,42 @@ public extension BackAppData {
         static var request = Recipe.annotated(with: Recipe.steps.count).orderedByNumber
     }
 
-    func recipeList() throws -> [RecipeListItem] {
-        try dbWriter.read { db in
-            try RecipeListItem.fetchAll(db, RecipeListItem.request)
-        }
+    private func recipeList(db: Database) throws -> [RecipeListItem] {
+        try RecipeListItem.fetchAll(db, RecipeListItem.request)
     }
 
     var recipeListPublisher: DatabasePublishers.Value<[RecipeListItem]> {
         ValueObservation
             .tracking { db in
-                try RecipeListItem.fetchAll(db, RecipeListItem.request)
+                try self.recipeList(db: db)
+            }
+            .publisher(in: dbWriter)
+    }
+
+    struct RecipeDetailItem: Decodable, FetchableRecord {
+        public var recipe: Recipe
+        public var stepItems: [StepItem]
+        public var infoStripItem: InfoStripItem
+        public var timesText: String
+    }
+
+    private func recipeInfo(recipeId: Int64, db: Database) throws -> RecipeDetailItem? {
+        guard let recipe = try Recipe.fetchOne(db, id: recipeId) else {
+            return nil
+        }
+
+        let stepsItems = try recipe.stepItems(db: db)
+
+        let infoStripItem = try recipe.infoStripItem(db: db)
+
+        let timesText = try recipe.timesTextWithIndivialMass(with: recipe.totalAmount(db: db))
+        return RecipeDetailItem.init(recipe: recipe, stepItems: stepsItems, infoStripItem: infoStripItem, timesText: timesText)
+    }
+
+    func recipeInfoPublisher(for recipeId: Int64) -> DatabasePublishers.Value<RecipeDetailItem?> {
+        ValueObservation
+            .tracking { db in
+                try self.recipeInfo(recipeId: recipeId, db: db)
             }
             .publisher(in: dbWriter)
     }

@@ -143,7 +143,7 @@ private extension ScheduleViewController {
                 Text("\(step.formattedDuration), \(step.formattedTemp(roomTemp: roomTemp))").secondary()
             }
 
-            substepIngredientRows(for: step, with: self.appData, scaleFactor: self.factor)
+            substepIngredientRows(for: step, scaleFactor: self.factor)
 
             HStack {
                 Text(step.notes)

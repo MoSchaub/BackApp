@@ -13,7 +13,6 @@ import BakingRecipeFoundation
 public struct SubstepRow: View {
 
     let substep: Step
-    let appData: BackAppData
     let roomTemp = Standarts.roomTemp
     let scaleFactor: Double
 
@@ -23,7 +22,7 @@ public struct SubstepRow: View {
             Spacer()
             Text(substep.endTempEnabled ? substep.formattedEndTemp : substep.formattedTemp(roomTemp: roomTemp))
             Spacer()
-            Text(appData.totalFormattedMass(for: substep.id!, factor: scaleFactor))
+            Text(substep.totalFormattedMass(reader: BackAppData.shared.databaseReader, factor: scaleFactor))
         }
     }
 }

@@ -201,15 +201,19 @@ extension Step {
 //MARK: - Association methods
 public extension Step {
 
-    var ingredients: QueryInterfaceRequest<Ingredient> {
+    private var ingredients: QueryInterfaceRequest<Ingredient> {
         Ingredient.all().orderedByNumber(with: self.id!)
     }
     
     /// ingredients of the step
-    internal func ingredients(reader: DatabaseReader) -> [Ingredient] {
+    func ingredients(reader: DatabaseReader) -> [Ingredient] {
         (try? reader.read { db in
-            try? ingredients.fetchAll(db)
+            try? ingredients(db: db)
         }) ?? []
+    }
+
+    internal func ingredients(db: Database) throws -> [Ingredient] {
+        try ingredients.fetchAll(db)
     }
 
     var substeps: QueryInterfaceRequest<Step> {
@@ -230,32 +234,25 @@ public extension Step {
     /// substeps ordered by their duration in descending order + this step
     /// this order makes the most sense when doing the substeps and this step
     /// because the substeps are parrallel and so the longest one has to start first.
-    func stepsForReodering(writer: DatabaseWriter, number: Int) -> (steps: [Step], number: Int) {
+    func stepsForReordering(db: Database, number: inout Int) throws -> [Step] {
         var steps = [Step]()
-        var number = number
-        for sub in sortedSubsteps(reader: writer) {
+        for sub in sortedSubsteps(db: db) {
             //first add the substeps of the substep
-            let subSubsForReodering = sub.stepsForReodering(writer: writer, number: number)
-            steps.append(contentsOf: subSubsForReodering.steps)
-            
-            //update the number
-            number = subSubsForReodering.number
-
-            //increase the number by one
-            number += 1
+            steps.append(contentsOf: try sub.stepsForReordering(db: db, number: &number))
         }
-        //add the step
-        var step = self
 
-        step.number = number
-        try! writer.write { db in
-            try! step.update(db)
+        var step = self // make it mutable
+
+        //update the number
+        try step.updateChanges(db) {
+            $0.number = number
         }
-        number += 1
 
         steps.append(step)
 
-        return (steps, number)
+        number += 1
+
+        return steps
     }
 
     /// the duration of this step and its substeps
@@ -263,54 +260,67 @@ public extension Step {
     func durationWithSubsteps(reader: DatabaseReader) -> Double {
         return self.duration + (self.sortedSubsteps(reader: reader).first?.durationWithSubsteps(reader: reader) ?? 0.0 )
     }
+
+    func durationWithSubsteps(db: Database) throws -> Double {
+        return self.duration + (try self.sortedSubsteps(db: db).first?.durationWithSubsteps(db: db) ?? 0.0)
+    }
     
     /// the mass of all Ingredients and Substeps to this step in a given database
-    func totalMass(reader: DatabaseReader) -> Double{
+    func totalMass(reader: DatabaseReader) -> Double {
+        (try? reader.read { db in
+            try self.totalMass(db: db)
+        }) ?? 0.0
+    }
+
+    func totalMass(db: Database) throws -> Double {
         var mass: Double = 0
-        
-        for ingredient in ingredients(reader: reader) {
+
+        for ingredient in try ingredients(db: db){
             mass += ingredient.mass
         }
-        for substep in sortedSubsteps(reader: reader) {
-            mass += substep.totalMass(reader: reader)
+        for substep in sortedSubsteps(db: db) {
+            mass += try substep.totalMass(db: db)
         }
-        
+
         return mass
     }
     
     /// the mass of all ingredients and substeps formatted with the right unit scaled with factor
     func totalFormattedMass(reader: DatabaseReader, factor: Double = 1.0) -> String {
-        (self.totalMass(reader: reader) * factor).formattedMass
+        ((try? reader.read { db in
+            try (totalMass(db: db) * factor).formattedMass
+        }) ?? "")
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
-    func temperature(roomTemp: Double, kneadingHeating: Double, reader: DatabaseReader) -> Double {
-        
-        var sumMassCProductAll = 0.0
-        _ = ingredients(reader: reader).map { sumMassCProductAll += $0.massCProduct }
-        _ = self.sortedSubsteps(reader: reader).map { sumMassCProductAll += $0.massCProduct(reader: reader)}
-        
-        var sumMassCTempProductRest = 0.0
-        _ = ingredients(reader: reader).filter { $0.type != .bulkLiquid }.map { sumMassCTempProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
-        _ = sortedSubsteps(reader: reader).map { sumMassCTempProductRest += $0.massCTempProduct(reader: reader, superTemp: self.temperature ?? roomTemp)}
-        
-        let bulkIngredients = ingredients(reader: reader).filter { $0.type == .bulkLiquid}
-        var bulkingredientsMassCProduct = 0.0
-        for bulkIngredient in bulkIngredients {
-            bulkingredientsMassCProduct += bulkIngredient.massCProduct
+    func temperature(roomTemp: Double, kneadingHeating: Double, databaseReader: DatabaseReader) throws -> Double {
+        try databaseReader.read { db in
+            var sumMassCProductAll = 0.0
+            _ = try ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
+            _ = try sortedSubsteps(db: db).map { sumMassCProductAll += try $0.massCProduct(db: db)}
+
+            var sumMassCTempProductRest = 0.0
+            _ = try ingredients(db: db).filter { $0.type != .bulkLiquid }.map { sumMassCTempProductRest += $0.massCTempProduct(roomTemp: roomTemp) }
+            _ = try sortedSubsteps(db: db).map { sumMassCTempProductRest += try $0.massCTempProduct(db: db, superTemp: self.temperature ?? roomTemp)}
+
+            let bulkIngredients = try ingredients(db: db).filter { $0.type == .bulkLiquid}
+            var bulkingredientsMassCProduct = 0.0
+            for bulkIngredient in bulkIngredients {
+                bulkingredientsMassCProduct += bulkIngredient.massCProduct
+            }
+
+            let roomTemp = Double(roomTemp)
+
+            let temperature = (self.temperature ?? roomTemp) - (isKneadingStep ? kneadingHeating : 0)
+
+            guard bulkingredientsMassCProduct != 0.0 else {
+                return roomTemp
+            }
+
+            return ((sumMassCProductAll * temperature) - sumMassCTempProductRest)/bulkingredientsMassCProduct
         }
-        
-        let roomTemp = Double(roomTemp)
-        
-        let temperature = (self.temperature ?? roomTemp) - (isKneadingStep ? kneadingHeating : 0)
-        
-        guard bulkingredientsMassCProduct != 0.0 else {
-            return roomTemp
-        }
-        
-        return ((sumMassCProductAll * temperature) - sumMassCTempProductRest)/bulkingredientsMassCProduct
     }
-    
+
     /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
     private func c(reader: DatabaseReader) -> Double {
         let percentageFlour = flourMass(reader: reader)/totalMass(reader: reader)
@@ -321,6 +331,17 @@ public extension Step {
         return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue + percentageOther * Ingredient.Style.other.rawValue + percentageTa150 * Ingredient.Style.ta150.rawValue + percentageTa200 * Ingredient.Style.ta200.rawValue
         //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
     }
+
+    private func c(db: Database) throws -> Double {
+        let totalMass = try self.totalMass(db: db)
+        let percentageFlour = try flourMass(db: db)/totalMass
+        let percentageWater = try waterMass(db: db)/totalMass
+        let percentageOther = try otherMass(db: db)/totalMass
+        let percentageTa150 = try ta150Mass(db: db)/totalMass
+        let percentageTa200 = try ta200Mass(db: db)/totalMass
+        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue + percentageOther * Ingredient.Style.other.rawValue + percentageTa150 * Ingredient.Style.ta150.rawValue + percentageTa200 * Ingredient.Style.ta200.rawValue
+        //Anteil Mehl*cMehl+Anteil Wasser*cWasser ...
+    }
     
     /// total mass of flour in the step
     func flourMass(reader: DatabaseReader) -> Double {
@@ -328,6 +349,14 @@ public extension Step {
         mass += Ingredient.Style.ta150.massOfSelfIngredients(in: self, reader: reader) * 2/3 //ta150 is 1/3 water and 2/3 flour
         mass += Ingredient.Style.ta200.massOfSelfIngredients(in: self, reader: reader) * 1/2 //ta200 is half water and half flour
         _ = sortedSubsteps(reader: reader).map { mass += $0.flourMass(reader: reader) }
+        return mass
+    }
+
+    func flourMass(db: Database) throws -> Double {
+        var mass = try Ingredient.Style.flour.massOfSelfIngredients(in: self, db: db)
+        mass += try Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db) * 2/3 //ta150 is 1/3 water and 2/3 flour
+        mass += try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db) * 1/3 //ta200 is half water and half flour
+        _ = try sortedSubsteps(db: db).map { mass += try $0.flourMass(db: db)}
         return mass
     }
     
@@ -339,11 +368,25 @@ public extension Step {
         _ = sortedSubsteps(reader: reader).map { mass += $0.waterMass(reader: reader) }
         return mass
     }
+
+    func waterMass(db: Database) throws -> Double {
+        var mass = try Ingredient.Style.bulkLiquid.massOfSelfIngredients(in: self, db: db)
+        mass += try Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db) * 1/3 //ta150 is 1/3 water and 2/3 flour
+        mass += try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db) * 1/2 //ta200 is half water and half flour
+        _ = try sortedSubsteps(db: db).map { mass += try $0.waterMass(db: db)}
+        return mass
+    }
     
     /// total mass of ingredient with type other
     private func otherMass(reader: DatabaseReader) -> Double {
         var mass = Ingredient.Style.other.massOfSelfIngredients(in: self, reader: reader)
         _ = sortedSubsteps(reader: reader).map { mass += $0.otherMass(reader: reader) }
+        return mass
+    }
+
+    private func otherMass(db: Database) throws -> Double {
+        var mass = try Ingredient.Style.other.massOfSelfIngredients(in: self, db: db)
+        _ = try sortedSubsteps(db: db).map { mass += try $0.waterMass(db: db)}
         return mass
     }
     
@@ -352,10 +395,22 @@ public extension Step {
         _ = sortedSubsteps(reader: reader).map { mass += $0.ta150Mass(reader: reader)}
         return mass
     }
+
+    private func ta150Mass(db: Database) throws -> Double {
+        var mass = try Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db)
+        _ = try sortedSubsteps(db: db).map { mass += try $0.ta150Mass(db: db)}
+        return mass
+    }
     
     private func ta200Mass(reader: DatabaseReader) -> Double {
         var mass = Ingredient.Style.ta200.massOfSelfIngredients(in: self, reader: reader)
         _ = sortedSubsteps(reader: reader).map { mass += $0.ta200Mass(reader: reader)}
+        return mass
+    }
+
+    private func ta200Mass(db: Database) throws -> Double {
+        var mass = try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db)
+        _ = try sortedSubsteps(db: db).map { mass += try $0.ta200Mass(db: db)}
         return mass
     }
     
@@ -364,10 +419,14 @@ public extension Step {
         self.totalMass(reader: reader) * self.c(reader: reader)
     }
 
+    private func massCProduct(db: Database) throws -> Double {
+        try self.totalMass(db: db) * self.c(db: db)
+    }
 
-    private func massCTempProduct(reader: DatabaseReader, superTemp: Double) -> Double {
+
+    private func massCTempProduct(db: Database, superTemp: Double) throws -> Double {
         let temp: Double = self.endTempEnabled ? self.endTemp! : self.temperature ?? superTemp
-        return massCProduct(reader: reader) * temp
+        return try massCProduct(db: db) * temp
     }
     
     ///text for exporting for one step
@@ -382,8 +441,9 @@ public extension Step {
         text.append(nameString)
         
         for ingredient in ingredients(reader: reader){
+            let ingredientTemp = (try? self.temperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, databaseReader: reader)) ?? roomTemp
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? self.temperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, reader: reader).formattedTemp : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? ingredientTemp.formattedTemp : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in sortedSubsteps(reader: reader){

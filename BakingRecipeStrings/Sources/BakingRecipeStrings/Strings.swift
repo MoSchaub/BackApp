@@ -145,4 +145,5 @@ public struct Strings {
     public static let textCell = "text"
     public static let kneadingStepCell = "kneadingStep"
     public static let endTempCell = "endTempCell"
+    public static let timesCell = "timesCell"
 }

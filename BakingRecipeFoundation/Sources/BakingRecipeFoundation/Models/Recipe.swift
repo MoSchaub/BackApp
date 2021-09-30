@@ -260,11 +260,61 @@ public extension Recipe {
 
     /// total duration of all the steps
     func totalDuration(reader: DatabaseReader) -> Int {
+        (try? reader.read { db in
+            try totalDuration(db: db)
+        }) ?? 0
+    }
+
+    func totalDuration(db: Database) throws -> Int {
         var allTimes: Int = 0
-        for step in self.notSubsteps(reader: reader) {
-            allTimes += Int(step.durationWithSubsteps(reader: reader)/60)
+        for step in try self.notSubsteps(db: db) {
+            allTimes += Int(try step.durationWithSubsteps(db: db)/60)
         }
         return allTimes
+    }
+
+    func formattedTotalDurationHours(db: Database) throws -> String {
+        try totalDuration(db: db).hours.formattedDuration
+    }
+
+    /// totalAmount of all ingredients in the recipe
+    func totalAmount(db: Database) throws -> Double {
+        var summ: Double = 0
+        // iterate through all non substeps cause totalMass also uses the substeps
+        _ = try self.notSubsteps(db: db).map { summ += try $0.totalMass(db: db)}
+        //_ = self.notSubsteps(for: recipeId).map { summ += self.totalMass(for: $0.id!)}
+        return summ
+    }
+
+    func formattedTotalAmount(db: Database) throws -> String {
+        try totalAmount(db: db).formattedMass
+    }
+
+
+    //dough yield
+    func totalDoughYield(db: Database) throws -> Double {
+
+        var flourSum = 0.0
+        _ = try self.notSubsteps(db: db).map { flourSum += try $0.flourMass(db: db)}
+        //_ = self.notSubsteps.map { flourSum += self.flourMass(for: $0.id!)}
+
+        var waterSum = 0.0
+        _ = try self.notSubsteps(db: db).map { waterSum += try $0.waterMass(db: db)}
+
+        guard flourSum != 0 else {
+            return 0
+        }
+
+        if Bundle.main.preferredLocalizations.first! == "de" {
+            return (waterSum/flourSum) * 100 + 100
+        } else {
+            return (waterSum/flourSum)
+        }
+    }
+
+    /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points
+    func formattedTotalDoughYield(db: Database) throws -> String {
+        String(format: "%.2f", try totalDoughYield(db: db))
     }
     
     ///starting date
@@ -335,22 +385,26 @@ public extension Recipe {
     /// steps that are no substeps of any other step
     func notSubsteps(reader: DatabaseReader) -> [Step] {
         (try? reader.read { db in
-            try? Step.all().filterNotSubsteps(with: self.id!).fetchAll(db)
+            try? notSubsteps(db: db)
         }) ?? []
+    }
+
+    func notSubsteps(db: Database) throws -> [Step] {
+        try Step.all().filterNotSubsteps(with: self.id!).fetchAll(db)
     }
     
     //reorderSteps to make sense
     func reorderedSteps(writer: DatabaseWriter) -> [Step] {
+        (try? writer.write { db in
+            try reoderedSteps(db: db)
+        }) ?? []
+    }
+
+    func reoderedSteps(db: Database) throws -> [Step] {
         var steps = [Step]()
         var number = 0
-        for step in self.notSubsteps(reader: writer) {
-            let stepReodereredSteps = step.stepsForReodering(writer: writer, number: number)
-            steps.append(contentsOf: stepReodereredSteps.steps)
-            
-            number = stepReodereredSteps.number
-        }
-        steps.sort(by: { $0.number < $1.number })
-        return steps
+        _ = try self.notSubsteps(db: db).map { steps.append(contentsOf: try $0.stepsForReordering(db: db, number: &number))}
+        return steps.sorted(by: { $0.number < $1.number})
     }
     
     ///text for exporting

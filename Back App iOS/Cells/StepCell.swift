@@ -12,15 +12,12 @@ import BakingRecipeFoundation
 public class StepCell: DetailCell {
     
     private var step: Step
-    private var appData: BackAppData
     private var editMode: Bool
     
-    public init(step: Step, appData: BackAppData, reuseIdentifier: String?, editMode: Bool = true) {
+    public init(step: Step, reuseIdentifier: String, editMode: Bool = true) {
         self.step = step
         self.editMode = editMode
-        self.appData = appData
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -33,8 +30,8 @@ public class StepCell: DetailCell {
             self.accessoryType = .none
             self.selectionStyle = .none
         }
-        
-        let rootView = StepRow(step: step, appData: appData)
+
+        let rootView = StepRow(step: step)
         let hostingController = UIHostingController(rootView: rootView)
         
         // set clear so the view takes the cells background color
