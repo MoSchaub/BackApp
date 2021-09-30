@@ -104,13 +104,6 @@ public extension BackAppData {
         return successCompletion(recipe)
     }
     
-    ///total duration of all steps in minutes
-    func totalDuration(for recipeId: Int64) -> Int {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: 0) { recipe in
-            return recipe.totalDuration(reader: databaseReader)
-        }
-    }
-    
     ///count of all ingredients used in the recipe
     func numberOfAllIngredients(for recipeId: Int64) -> Int {
         (try? databaseReader.read { db in
@@ -153,13 +146,10 @@ public extension BackAppData {
 
     /// dough Yield (waterSum/flourSum) for a given Recipe as a String shorted to 2 decimal points
     func formattedTotalDoughYield(for recipeId: Int64) -> String {
-        String(format: "%.2f", totalDoughYield(for: recipeId))
-    } //tested
-
-    ///formatted total duration in the right unit
-    func formattedTotalDuration(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            recipe.totalDuration(reader: databaseReader).formattedDuration
+            (try? self.databaseReader.read { db in
+                try recipe.formattedTotalDoughYield(db: db)
+            }) ?? ""
         }
     }
 
@@ -167,38 +157,6 @@ public extension BackAppData {
     func formattedTotalDurationHours(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
             return(recipe.totalDuration(reader: databaseReader).hours * 60).formattedDuration
-        }
-    }
-
-    ///startDate formatted using the dateFormatter
-    private func formattedStartDate(for recipeId: Int64) -> String {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return dateFormatter.string(from: recipe.startDate(reader: databaseReader))
-        }
-    }
-
-    ///endDate formatted using the dateFormatter
-    private func formattedEndDate(for recipeId: Int64) -> String {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return dateFormatter.string(from: recipe.endDate(reader: databaseReader))
-        }
-    }
-
-    ///formatted Datetext including start and end Text e. g. “Start: 01.01. 1970 18:00”
-    func formattedDate(for recipeId: Int64) -> String {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            if recipe.inverted {
-                return "\(Strings.end) \(formattedEndDate(for: recipeId))"
-            } else{
-                return "\(Strings.start)) \(formattedStartDate(for: recipeId))"
-            }
-        }
-    }
-
-    ///combination of formattedEndDate and formattedStartDate
-    func formattedStartBisEnde(for recipeId: Int64) -> String {
-        findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return "\(self.formattedStartDate(for: recipeId)) bis \n\(self.formattedEndDate(for: recipeId))"
         }
     }
 

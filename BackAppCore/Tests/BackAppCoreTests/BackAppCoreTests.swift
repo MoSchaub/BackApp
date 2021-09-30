@@ -4,9 +4,11 @@ import XCTest
 @testable import GRDB
 
 final class BackAppCoreTests: XCTestCase {
+
+    var appData: BackAppData!
     
     override func setUp() {
-        let appData = BackAppData.shared
+        appData = BackAppData.shared
         try! appData.deleteAll(of: Recipe.self)
         
     }
@@ -140,6 +142,20 @@ final class BackAppCoreTests: XCTestCase {
         XCTAssert(recipe != nil)
         return recipe!.id!
     }
+
+    func insertExampleRecipe() throws -> Recipe {
+        try testInsertingExample()
+
+        let appData = BackAppData.shared
+
+        let recipeExample = Recipe.example
+
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil)
+        return recipe!
+    }
     
     func insertComplexRecipeAndGetId() throws -> Int64 {
         try testInsertingComplexRecipe()
@@ -153,6 +169,20 @@ final class BackAppCoreTests: XCTestCase {
         }
         XCTAssert(recipe != nil)
         return recipe!.id!
+    }
+
+    func insertComplexRecipe() throws -> Recipe {
+        try testInsertingComplexRecipe()
+
+        let appData = BackAppData.shared
+
+        let complexRecipeExample = Recipe.complexExample(number: 0)
+
+        let recipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == complexRecipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil)
+        return recipe!
     }
     
     func testUpdatingExample() throws {
@@ -304,21 +334,25 @@ final class BackAppCoreTests: XCTestCase {
     }
     
     func testTotalDurationOfRecipe() throws {
+        let appData = BackAppData.shared
+        let reader = appData.databaseReader
+
+        let recipe = try insertExampleRecipe()
+        XCTAssert(recipe.totalDuration(reader: reader) == 20)
         
-        let recipeId = try insertExampleRecipeAndGetId()
-        XCTAssert(BackAppData.shared.totalDuration(for: recipeId) == 20)
-        
-        let complexId = try insertComplexRecipeAndGetId()
-        XCTAssert(BackAppData.shared.totalDuration(for: complexId) == 31)
+        let complex = try insertComplexRecipe()
+        XCTAssert(complex.totalDuration(reader: reader) == 31)
     }
     
     func testFormattedTotalDurationOfRecipe() throws {
+        let appData = BackAppData.shared
+        let reader = appData.databaseReader
         
-        let recipeId = try insertExampleRecipeAndGetId()
-        XCTAssert(BackAppData.shared.formattedTotalDuration(for: recipeId) == "20 minutes")
+        let recipeExample = try insertExampleRecipe()
+        XCTAssert(recipeExample.formattedTotalDuration(reader: reader) == "20 minutes")
         
-        let complexId = try insertComplexRecipeAndGetId()
-        XCTAssert(BackAppData.shared.formattedTotalDuration(for: complexId) == "31 minutes")
+        let complexExample = try insertComplexRecipe()
+        XCTAssert(complexExample.formattedTotalDuration(reader: reader) == "31 minutes")
     }
     
     func testTotalFormattedAmountOfRecipe() throws {
@@ -339,8 +373,11 @@ final class BackAppCoreTests: XCTestCase {
     }
     
     func testText() throws {
-        let recipeId = try insertExampleRecipeAndGetId()
-        XCTAssert(BackAppData.shared.text(for: recipeId, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20.0° C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(BackAppData.shared.totalDuration(for: recipeId) * 60))))")
+        let appData = BackAppData.shared
+        let reader = appData.databaseReader
+
+        let recipeExample = try insertExampleRecipe()
+        XCTAssert(appData.text(for: recipeExample.id!, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20.0° C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(recipeExample.totalDuration(reader: reader) * 60))))")
     }
     
     func testMovingRecords() throws {
@@ -360,6 +397,20 @@ final class BackAppCoreTests: XCTestCase {
         appData.moveRecipe(from: 1, to: 0)
         sleep(1)
         XCTAssert(appData.allRecipes.first!.formattedName == "Komplexes Rezept")
+    }
+
+    func testDuplicatingExampleRecipe() throws {
+        let writer = appData.dbWriter
+
+        let recipeExample = try insertExampleRecipe()
+
+        XCTAssertEqual(appData.allRecipes.count, 1)
+        XCTAssertEqual(appData.allSteps.count, 2)
+        XCTAssertEqual(appData.allIngredients.count, appData.numberOfAllIngredients(for: recipeExample.id!))
+        recipeExample.duplicate(writer: writer)
+        XCTAssertEqual(appData.allRecipes.count, 2)
+        XCTAssertEqual(appData.allIngredients.count, appData.numberOfAllIngredients(for: recipeExample.id!) * 2)
+        XCTAssertEqual(appData.allSteps.count, 4)
     }
     
     static var allTests = [

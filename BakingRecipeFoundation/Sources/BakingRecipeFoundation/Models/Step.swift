@@ -353,7 +353,7 @@ public extension Step {
     func flourMass(db: Database) throws -> Double {
         var mass = try Ingredient.Style.flour.massOfSelfIngredients(in: self, db: db)
         mass += try Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db) * 2/3 //ta150 is 1/3 water and 2/3 flour
-        mass += try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db) * 1/3 //ta200 is half water and half flour
+        mass += try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db) * 1/2 //ta200 is half water and half flour
         _ = try sortedSubsteps(db: db).map { mass += try $0.flourMass(db: db)}
         return mass
     }

@@ -265,7 +265,14 @@ public extension Recipe {
         }) ?? 0
     }
 
-    func totalDuration(db: Database) throws -> Int {
+    /// total duration of all the steps in minutes formatted as a string
+    func formattedTotalDuration(reader: DatabaseReader) -> String {
+        self.totalDuration(reader: reader).formattedDuration
+    }
+
+    /// total duration of all the steps in minutes
+    /// - Note: multiple substeps of one step are paralelized
+    private func totalDuration(db: Database) throws -> Int {
         var allTimes: Int = 0
         for step in try self.notSubsteps(db: db) {
             allTimes += Int(try step.durationWithSubsteps(db: db)/60)
@@ -296,7 +303,6 @@ public extension Recipe {
 
         var flourSum = 0.0
         _ = try self.notSubsteps(db: db).map { flourSum += try $0.flourMass(db: db)}
-        //_ = self.notSubsteps.map { flourSum += self.flourMass(for: $0.id!)}
 
         var waterSum = 0.0
         _ = try self.notSubsteps(db: db).map { waterSum += try $0.waterMass(db: db)}
@@ -425,4 +431,46 @@ public extension Recipe {
         return text
     }
 
+}
+
+extension Recipe {
+
+    ///duplicate the recipe
+    func duplicate(writer: DatabaseWriter) {
+        try? writer.write { db in
+            var recipe = self
+            let steps = (try? recipe.steps.fetchAll(db)) ?? []
+
+            recipe.id = nil
+            try! recipe.insert(db)
+
+            _ = steps.map { $0.duplicate(db: db, with: recipe.id!, superStepId: nil) }
+        }
+    }
+}
+
+extension Step {
+    func duplicate(db: Database, with recipeId: Int64, superStepId: Int64?) {
+        var step = self
+        let ingredients = (try? step.ingredients(db: db)) ?? []
+        let substeps = step.sortedSubsteps(db: db)
+
+        step.id = nil
+        step.recipeId = recipeId
+        step.superStepId = superStepId
+        try! step.insert(db)
+
+        _ = ingredients.map { $0.duplicate(db: db, with: step.id!)}
+        _ = substeps.map { $0.duplicate(db: db, with: recipeId, superStepId: step.id!)}
+    }
+}
+
+extension Ingredient {
+    func duplicate(db: Database, with stepId: Int64) {
+        var ingredient = self
+
+        ingredient.id = nil
+        ingredient.stepId = stepId
+        try! ingredient.insert(db)
+    }
 }
