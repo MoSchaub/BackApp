@@ -198,13 +198,10 @@ public extension BackAppData {
 
     /// record binding that is synced wtih the database
     func recordBinding<T: BakingRecipeRecord>(for record: T) throws -> Binding<T> {
-        try dbWriter.write { db in
-            Binding {
-                try! T.fetchOne(db, key: record.id!)!
-            } set: { newValue in
-                self.update(newValue)
-            }
-
+        Binding {
+            self.record(with: record.id!, of: T.self)!
+        } set: {
+            self.update($0)
         }
     }
 }

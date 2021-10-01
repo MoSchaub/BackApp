@@ -25,11 +25,6 @@ extension BackAppData {
             let folderURL = try fileManager
                 .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("database", isDirectory: true)
-
-            // Support for tests: delete the database if requested
-            if CommandLine.arguments.contains("-reset") || includeTestingRecipe {
-                try? fileManager.removeItem(at: folderURL)
-            }
             
             // Create the database folder if needed
             try fileManager.createDirectory(at: folderURL, withIntermediateDirectories: true)
@@ -48,6 +43,11 @@ extension BackAppData {
                 //filter the right files by the prefix which is eg. 1en
                 _ = urls.filter({ $0.description.prefix(3).contains(subdir)}).map { appData.open($0)}
                 Standarts.newUser = false
+            }
+
+            // Support for tests: delete the database if requested
+            if CommandLine.arguments.contains("-reset") || includeTestingRecipe {
+                try? appData.deleteAll(of: Recipe.self)
             }
             
             // Support for tests: add standart recipe to database if requested

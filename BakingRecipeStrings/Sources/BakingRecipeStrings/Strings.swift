@@ -107,6 +107,7 @@ public struct Strings {
     public static var addFavorite = NSLocalizedString("addFavorite", bundle: .module, comment: "")
     public static var removeFavorite = NSLocalizedString("removeFavorite", bundle: .module, comment: "")
     public static var endTemp = NSLocalizedString("endTemp", bundle: .module, comment: "")
+    public static var duplicate = NSLocalizedString("duplicate", bundle: .module, comment: "")
     
     public static let info = "info"
     public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")

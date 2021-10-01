@@ -72,6 +72,7 @@
 		CDE2C4CC24DC3D2D009378C4 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */; };
 		CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE2C4CD24DC3EC0009378C4 /* AppIcon.xcassets */; };
 		CDE3731C26DD670F008C7B95 /* UITextView+Placeholder.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE3731A26DD670F008C7B95 /* UITextView+Placeholder.m */; };
+		CDE7BF7D27065BD1006A9970 /* RecipeListVCContextMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE7BF7C27065BD1006A9970 /* RecipeListVCContextMenuTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 		CDE3731926DD670E008C7B95 /* Back App iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Back App iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		CDE3731A26DD670F008C7B95 /* UITextView+Placeholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Placeholder.m"; sourceTree = "<group>"; };
 		CDE3731B26DD670F008C7B95 /* UITextView+Placeholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Placeholder.h"; sourceTree = "<group>"; };
+		CDE7BF7C27065BD1006A9970 /* RecipeListVCContextMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListVCContextMenuTests.swift; sourceTree = "<group>"; };
 		CDF02D8F26FBD64C006DE272 /* BackAppDatabase */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppDatabase; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -301,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */,
+				CDE7BF7C27065BD1006A9970 /* RecipeListVCContextMenuTests.swift */,
 				CDBDFDD324AA95BE002A6C84 /* Components */,
 			);
 			path = CompactHome;
@@ -767,6 +770,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
+				CDE7BF7D27065BD1006A9970 /* RecipeListVCContextMenuTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,7 +947,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -966,7 +970,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1114,7 +1118,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1142,7 +1146,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;

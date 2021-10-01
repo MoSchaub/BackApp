@@ -436,7 +436,7 @@ public extension Recipe {
 extension Recipe {
 
     ///duplicate the recipe
-    func duplicate(writer: DatabaseWriter) {
+    public func duplicate(writer: DatabaseWriter) {
         try? writer.write { db in
             var recipe = self
             let steps = (try? recipe.steps.fetchAll(db)) ?? []
