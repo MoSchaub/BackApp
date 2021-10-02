@@ -18,17 +18,30 @@ class RecipeListVCContextMenuTests: XCTestCase {
 
     var appData: BackAppData!
 
-    var tokens: Set<AnyCancellable>!
+    var subscribers: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
+
         appData = BackAppData.shared(includeTestingRecipe: true)
         sut = RecipeListViewController(appData: appData)
         _ = UINavigationController(rootViewController: sut)
 
         fixWindow()
 
-        tokens = Set<AnyCancellable>()
+        if let subscribers = subscribers {
+            _ = subscribers.map { $0.cancel() }
+        }
+        subscribers = Set<AnyCancellable>()
+
+        let recipeListAvailableExpectation = self.expectation(description: "recipeListAvailable")
+
+        NotificationCenter.default.publisher(for: .recipeListVCAvailable, object: nil)
+            .sink { _ in
+                recipeListAvailableExpectation.fulfill()
+            }.store(in: &subscribers)
+
+        waitForExpectations(timeout: 10)
 
     }
 
@@ -42,79 +55,48 @@ class RecipeListVCContextMenuTests: XCTestCase {
         sut.viewDidLoad()
     }
 
-    func test_hasContextMenu() {
-
-        let expectation = self.expectation(description: "exampleRecipe")
-
-        NotificationCenter.default.publisher(for: .recipeListVCAvailable, object: nil)
-            .sink { _ in
-
-                expectation.fulfill()
-            }.store(in: &tokens)
-
-        waitForExpectations(timeout: 10)
-
+    func contextMenu() -> UIMenu? {
         let indexPath = IndexPath(row: 0, section: 0)
+        return try? XCTUnwrap(self.sut.contextMenu(indexPath: indexPath))
+    }
 
-        let secondexpectation = self.expectation(description: "2")
+
+    func test_contextMenu() {
+        let expectation = self.expectation(description: "expectation")
         DispatchQueue.main.async {
-            let contextMenu = self.sut.contextMenu(indexPath: indexPath)
-            XCTAssertNotNil(contextMenu)
-            print(contextMenu!)
-            XCTAssertEqual(contextMenu!.children.count, 6)
+            XCTAssertEqual(self.contextMenu()?.children.count, 6)
 
-            //start
-            let startChild = contextMenu!.children.first! as! UIAction
-            XCTAssertEqual(startChild.image, UIImage(systemName: "play"))
-            XCTAssertEqual(startChild.title, Strings.startRecipe)
-            XCTAssertEqual(startChild.attributes, UIMenuElement.Attributes.init(rawValue: 0))
+            let childStatsArray = [
+                ChildStats(image: UIImage(systemName: "play"), title: Strings.startRecipe, attributes: .init(rawValue: 0)),
+                ChildStats(image: UIImage(systemName: "pencil"), title: Strings.EditButton_Edit, attributes: .init(rawValue: 0)),
+                ChildStats(image: UIImage(systemName: "square.and.arrow.up"), title: Strings.share, attributes: .init(rawValue: 0)),
+                ChildStats(image: UIImage(systemName: "square.on.square"), title: Strings.duplicate, attributes: .init(rawValue: 0)),
+                ChildStats(image: UIImage(systemName: "star"), title: Strings.addFavorite, attributes: .init(rawValue: 0)),
+                ChildStats(image: UIImage(systemName: "trash"), title: Strings.Alert_ActionDelete, attributes: .destructive)
+            ]
+            for i in 0..<childStatsArray.count {
+                self.testChild(childStats: childStatsArray[i], index: i)
+            }
 
-            let startAction = startChild.handler
-            startAction(startChild)
 
-            //edit
-            let editChild = contextMenu!.children[1] as! UIAction
-            XCTAssertEqual(editChild.image, UIImage(systemName: "pencil"))
-            XCTAssertEqual(editChild.title, Strings.EditButton_Edit)
-            XCTAssertEqual(editChild.attributes, UIMenuElement.Attributes.init(rawValue: 0))
-
-            editChild.handler(editChild)
-
-            //share
-            let shareChild = contextMenu?.children[2] as! UIAction
-            XCTAssertEqual(shareChild.image, UIImage(systemName: "square.and.arrow.up"))
-            XCTAssertEqual(shareChild.title, Strings.share)
-            XCTAssertEqual(shareChild.attributes, UIMenuElement.Attributes.init(rawValue: 0))
-
-            shareChild.handler(shareChild)
-
-            //dupe
-            let dupeChild = contextMenu?.children[3] as! UIAction
-            XCTAssertEqual(dupeChild.image, UIImage(systemName: "square.on.square"))
-            XCTAssertEqual(dupeChild.title, Strings.duplicate)
-            XCTAssertEqual(dupeChild.attributes, .init(rawValue: 0))
-
-            dupeChild.handler(dupeChild)
-
-            //favorite
-            let favChild = contextMenu?.children[4] as! UIAction
-            XCTAssertEqual(favChild.image, UIImage(systemName: "star"))
-            XCTAssertEqual(favChild.title, Strings.addFavorite)
-            XCTAssertEqual(favChild.attributes, .init(rawValue: 0))
-
-            favChild.handler(favChild)
-
-            //delete
-            let deleteChild = contextMenu?.children.last! as! UIAction
-            XCTAssertEqual(deleteChild.image, UIImage(systemName: "trash"))
-            XCTAssertEqual(deleteChild.title, Strings.Alert_ActionDelete)
-            XCTAssertEqual(deleteChild.attributes, .destructive)
-
-            deleteChild.handler(deleteChild)
-
-            secondexpectation.fulfill()
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 10)
+    }
+
+    struct ChildStats {
+        let image: UIImage?
+        let title: String
+        let attributes: UIMenu.Attributes
+    }
+
+    func testChild(childStats: ChildStats, index: Int) {
+        let child = self.contextMenu()?.children[index] as! UIAction
+        XCTAssertEqual(child.image, childStats.image)
+        XCTAssertEqual(child.title, childStats.title)
+        XCTAssertEqual(child.attributes, childStats.attributes)
+
+        child.handler(child)
     }
 
 }
