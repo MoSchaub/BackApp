@@ -97,6 +97,7 @@ class RecipeViewController: UITableViewController {
         tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
         tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 
 
@@ -121,7 +122,15 @@ class RecipeViewController: UITableViewController {
                 //steps
                 return StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell, editMode: false)
             } else if let textItem = item as? TextItem {
-                return CustomCell(text: textItem.text, reuseIdentifier: Strings.timesCell)
+                if let infoItem = textItem as? InfoItem {
+
+                    //info
+                    return TextViewCell(textContent: .constant(infoItem.text), placeholder: Strings.info, reuseIdentifier: Strings.infoCell, isEditable: false)
+                } else {
+
+                    //times
+                    return CustomCell(text: textItem.text, reuseIdentifier: Strings.timesCell)
+                }
             } else {
                 return UITableViewCell()
             }

@@ -1,5 +1,5 @@
 //
-//  RecipeListVCContextMenuTests.swift
+//  RecipeListVCTests.swift
 //  Back App iOSTests
 //
 //  Created by Moritz Schaub on 30.09.21.
@@ -12,7 +12,7 @@ import BakingRecipeStrings
 import Combine
 @testable import Back_App
 
-class RecipeListVCContextMenuTests: XCTestCase {
+class RecipeListVCTests: XCTestCase {
 
     var sut: RecipeListViewController!
 
