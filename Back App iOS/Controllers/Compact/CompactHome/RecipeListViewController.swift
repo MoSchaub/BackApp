@@ -15,55 +15,55 @@ import BakingRecipeUIFoundation
 import Combine
 
 class RecipeListViewController: UITableViewController {
-    
+
     typealias DataSource = RecipeListDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
-    
+
     // MARK: Properties
 
     ///data source for the recipe
     private(set) lazy var dataSource = makeDataSource()
-    
+
     /// appData storage interface
     private var appData: BackAppData
 
     /// wether a cell has been pressed
     private lazy var pressed = false
-    
+
     /// for managing the theme
     private var themeManager: ThemeManager
 
     private(set) lazy var searchController = makeSearchController()
-    
+
     /// for picking documents
     private lazy var documentPicker = UIDocumentPickerViewController(
         documentTypes: [kUTTypeJSON as String], in: .open
     )
-    
+
     /// set for storing publishers
     private var tokens = Set<AnyCancellable>()
 
     // MARK: - Initializers
-    
+
     init(appData: BackAppData) {
         self.appData = appData
         self.themeManager = .default
         super.init(style: .insetGrouped)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError(Strings.init_coder_not_implemented)
     }
-    
+
     deinit {
         //cancel listening to all publishers
         for token in tokens{
             token.cancel()
         }
     }
-    
+
     // MARK: - Startup functions
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
@@ -81,7 +81,7 @@ class RecipeListViewController: UITableViewController {
         NotificationCenter.default.publisher(for: .homeShouldPopSplitVC).sink { _ in
             DispatchQueue.main.async {
                 if self.splitViewController?.viewControllers.count ?? 2 > 1 {
-                _ = self.splitViewController?.viewControllers.popLast()
+                    _ = self.splitViewController?.viewControllers.popLast()
                 }
             }
         }.store(in: &tokens)
@@ -93,10 +93,10 @@ class RecipeListViewController: UITableViewController {
             }
             .store(in: &tokens)
 
-        #if !DEBUG
+#if !DEBUG
         //ask for room temp
         presentRoomTempSheet()
-        #endif
+#endif
     }
 
     override func loadView() {
@@ -108,13 +108,13 @@ class RecipeListViewController: UITableViewController {
         super.viewDidAppear(animated)
 
         DispatchQueue.global(qos: .background).async {
-            #if DEBUG
+#if DEBUG
             self.postRecipeListVCAvailable()
-            #endif
+#endif
         }
     }
 
-    #if DEBUG
+#if DEBUG
     private var triggerCounter = 0
 
     func postRecipeListVCAvailable() {
@@ -128,7 +128,7 @@ class RecipeListViewController: UITableViewController {
             }
         }
     }
-    #endif
+#endif
 }
 
 #if DEBUG
@@ -136,33 +136,50 @@ var triggering = false
 
 public extension NSNotification.Name {
     static var recipeListVCAvailable = NSNotification.Name.init(rawValue: "recipeListVCAvailable")
+    static var recipeListNavbarDidLoad = NSNotification.Name.init(rawValue: "recipeListNavbarDidLoad")
 }
 #endif
 
-private extension RecipeListViewController {
-    
+extension RecipeListViewController {
+
     // MARK: - Cell Registration
-    
+
     private func registerCells() {
         tableView.register(RecipeCell.self, forCellReuseIdentifier: Strings.recipeCell)
     }
-    
+
     // MARK: - NavigationBar
-    
-    @objc private func configureNavigationBar() {
+
+    @objc func configureNavigationBar(completion: (() -> Void)? = nil) {
         DispatchQueue.main.async { //force to main thread since ui is updated
             self.title = Strings.recipes
             self.navigationController?.navigationBar.prefersLargeTitles = true
-            
+
+            //left / leading
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
             let editButtonItem = self.editButtonItem
             self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
-            
-            let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
-            let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
-            self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
 
+            //trailing
+            if #available(iOS 14.0, *) {
+                let importAction = UIAction(title: Strings.importFile) { action in
+                    self.openImportFilePopover()
+                }
+                let addAction = UIAction(title: Strings.addRecipe, image: UIImage(systemName: "plus")) { _ in
+                    self.presentAddRecipePopover(self.navigationItem.rightBarButtonItem!)
+                }
+
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: Strings.addRecipe, image: UIImage(systemName: "plus"), primaryAction: addAction, menu: UIMenu(children: [addAction, importAction]))
+            } else {
+                let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
+                let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
+                self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+            }
             self.navigationItem.searchController = self.searchController
+
+            if let completion = completion {
+                completion()
+            }
         }
     }
 
@@ -173,9 +190,9 @@ private extension RecipeListViewController {
         } set: {
             Standarts.roomTemp = $0
         }
-        
+
         let vc = UIHostingController(rootView: RoomTempPickerSheet(roomTemp: Binding { return 0.0} set: { _ in}, dissmiss: {}))
-        
+
         let sheet = RoomTempPickerSheet(roomTemp: roomtempBinding) {
             vc.dismiss(animated: true)
         }
@@ -184,29 +201,29 @@ private extension RecipeListViewController {
 
         // set the presentation style to automatic so it also works on regular horizontal size class aka mostly ipad
         vc.modalPresentationStyle = .automatic
-        
+
         present(vc, animated: true)
     }
-    
+
     // MARK: - Input Alert
-    
+
     ///present the inputAlert
     private func presentImportAlert() {
         DispatchQueue.main.async { //force to main thread since this is ui code
-            
+
             //create the alert
             let alert = UIAlertController(title: inputAlertTitle, message: inputAlertMessage, preferredStyle: .alert)
-            
+
             //add the "ok" action/option/button
             alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
                 alert.dismiss(animated: true)
             }))
-            
+
             //finally present it
             self.present(alert, animated: true)
         }
     }
-    
+
     ///present popover for creating new recipe
     @objc private func presentAddRecipePopover(_ sender: UIBarButtonItem) {
         //create the vc
@@ -218,47 +235,47 @@ private extension RecipeListViewController {
 
         present(nc, animated: true)
     }
-    
+
     @objc private func navigateToSettings() {
         let vc = SettingsViewController(appData: appData)
-        
+
         // navigation Controller
         let nv = UINavigationController(rootViewController: vc)
-        
+
         self.splitViewController?.showDetailViewController(nv, sender: self)
     }
-    
+
     @objc private func openImportFilePopover() {
         //set the delegate
         self.documentPicker.delegate = self
-        
+
         // Present the document picker.
         self.present(documentPicker, animated: true, completion: deselectRow)
     }
-    
+
 }
 
 private extension RecipeListViewController {
-    
+
     // MARK: - DataSource
-    
+
     private func makeDataSource() -> DataSource {
         RecipeListDataSource(tableView: tableView)
     }
 }
 
 extension RecipeListViewController {
-    
+
     // MARK: - Cell Selection
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.global(qos: .utility).async {
             guard !self.pressed else { return }
             self.pressed = true
             guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return}
-            
+
             self.navigateToRecipe(item: item)
-            
+
             self.pressed = false
         }
     }
@@ -276,7 +293,7 @@ extension RecipeListViewController {
             }
         }
     }
-    
+
     private func navigateToRecipe(item: BackAppData.RecipeListItem) {
         DispatchQueue.main.async {
             let recipeId = item.recipe.id!
@@ -286,13 +303,13 @@ extension RecipeListViewController {
             self.splitViewController?.showDetailViewController(nc, sender: self)
         }
     }
-    
+
     private func deselectRow() {
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
-    
+
 }
 
 // MARK: - SwipeActions
@@ -392,7 +409,7 @@ extension RecipeListViewController: UIDocumentPickerDelegate {
         guard urls.count == 1, let url = urls.first else { return }
         appData.open(url)
     }
-    
+
 }
 
 // MARK: - Search

@@ -33,16 +33,6 @@ class RecipeListVCTests: XCTestCase {
             _ = subscribers.map { $0.cancel() }
         }
         subscribers = Set<AnyCancellable>()
-
-        let recipeListAvailableExpectation = self.expectation(description: "recipeListAvailable")
-
-        NotificationCenter.default.publisher(for: .recipeListVCAvailable, object: nil)
-            .sink { _ in
-                recipeListAvailableExpectation.fulfill()
-            }.store(in: &subscribers)
-
-        waitForExpectations(timeout: 10)
-
     }
 
     func fixWindow() {
@@ -50,7 +40,7 @@ class RecipeListVCTests: XCTestCase {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.makeKeyAndVisible()
         window.rootViewController = sut.navigationController!
-    
+
         _ = sut.view
         sut.viewDidLoad()
     }
@@ -62,6 +52,16 @@ class RecipeListVCTests: XCTestCase {
 
 
     func test_contextMenu() {
+
+        let recipeListAvailableExpectation = self.expectation(description: "recipeListAvailable")
+
+        NotificationCenter.default.publisher(for: .recipeListVCAvailable, object: nil)
+            .sink { _ in
+                recipeListAvailableExpectation.fulfill()
+            }.store(in: &subscribers)
+
+        waitForExpectations(timeout: 10)
+
         let expectation = self.expectation(description: "expectation")
         DispatchQueue.main.async {
             XCTAssertEqual(self.contextMenu()?.children.count, 6)
@@ -97,6 +97,80 @@ class RecipeListVCTests: XCTestCase {
         XCTAssertEqual(child.attributes, childStats.attributes)
 
         child.handler(child)
+    }
+
+    func test_navigationBar() {
+
+        let expectation = self.expectation(description: "")
+
+        sut.configureNavigationBar {
+            //title
+            XCTAssertEqual(self.sut.title, Strings.recipes)
+
+            let navigationItem = self.sut.navigationItem
+
+            //leading
+            let leadingButtons = navigationItem.leftBarButtonItems ?? []
+            XCTAssertEqual(leadingButtons.count, 2)
+
+            //settings button
+            let settingsButton = leadingButtons.first!
+            XCTAssertEqual(settingsButton.image, UIImage(systemName: "gear"))
+
+            self.sut.perform(settingsButton.action)
+
+            //editButton
+            let editButton = leadingButtons.last!
+            XCTAssertEqual(editButton.title, Strings.EditButton_Edit)
+
+            XCTAssertEqual(self.sut.isEditing, false)
+            self.sut.perform(editButton.action)
+            XCTAssertEqual(self.sut.isEditing, true)
+            self.sut.perform(editButton.action)
+            XCTAssertEqual(self.sut.isEditing, false)
+
+            //trailing
+            let plusButton = navigationItem.rightBarButtonItem!
+            XCTAssertEqual(plusButton.image, UIImage(systemName: "plus"))
+
+            if #available(iOS 14.0, *) {
+
+                plusButton.primaryAction!.handler(plusButton.primaryAction!)
+
+                let menu = plusButton.menu
+                XCTAssertEqual(menu?.children.count, 2)
+
+                let plusAction = menu?.children.first as! UIAction
+                XCTAssertEqual(plusAction.image, UIImage(systemName: "plus"))
+                XCTAssertEqual(plusAction.title, Strings.addRecipe)
+
+                plusAction.handler(plusAction)
+
+                let importAction = menu?.children.last as! UIAction
+                XCTAssertEqual(importAction.image, nil)
+                XCTAssertEqual(importAction.title, Strings.importFile)
+
+                importAction.handler(importAction)
+            }
+
+            //search
+            XCTAssertNotNil(navigationItem.searchController)
+            guard let searchController = navigationItem.searchController else {
+                return
+            }
+
+            XCTAssertEqual(searchController.hidesNavigationBarDuringPresentation, true)
+            XCTAssertEqual(searchController.obscuresBackgroundDuringPresentation, false)
+
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10)
+
+        //        print(navitem)
+        //
+        //        //title
+        //        XCTAssertEqual(sut.title, Strings.recipes)
     }
 
 }
