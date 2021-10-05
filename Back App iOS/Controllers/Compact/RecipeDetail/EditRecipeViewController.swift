@@ -21,13 +21,13 @@ class EditRecipeViewController: UITableViewController {
     
     // queue for performing image compression
     private lazy var compressionQueue = OperationQueue()
-    
+
     //interface object for the database
     private var appData: BackAppData
     
     // for picking images
     private var imagePickerController: UIImagePickerController?
-    
+
     // id of the recipe for pulling the recipe from the database
     private let recipeId: Int64
     
@@ -93,7 +93,6 @@ extension EditRecipeViewController {
         dataSource.update(animated: false)
         
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 250
         DispatchQueue.global(qos: .background).async {
             self.setUpNavigationBar()
         }
@@ -317,51 +316,51 @@ private extension EditRecipeViewController {
             imagePickerController = nil
         }
         imagePickerController = UIImagePickerController()
-        
+
         let alert = UIAlertController(title: Strings.image_alert_title, message: nil, preferredStyle: .actionSheet)
-        
+
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(UIAlertAction(title: Strings.take_picture, style: .default, handler: { (_) in
                 self.presentImagePicker(controller: self.imagePickerController!, for: .camera)
             }))
         }
-        
+
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(UIAlertAction(title: Strings.select_image, style: .default, handler: { (_) in
                 self.presentImagePicker(controller: self.imagePickerController!, for: .photoLibrary)
             }))
         }
-        
+
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionRemove, style: .destructive, handler: { (_) in
             self.changeRecipeImage(to: nil)
         }))
-        
+
         alert.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.cellForRow(at: indexPath)?.isSelected = false
             }
         }))
-        
+
         alert.popoverPresentationController?.sourceView = tableView.cellForRow(at: sender)
-        
+
         present(alert, animated: true)
-        
+
     }
-    
+
     // changes the image of an recipe
     private func changeRecipeImage(to image: UIImage?) {
         compressionQueue.cancelAllOperations()
         compressionQueue.addOperation {
             do {
                 self.recipe.imageData  = try image?.heicData(compressionQuality: 0.3)
-                
-                self.appData.update(self.recipe) { _ in self.dataSource.update(animated: false)}
+
+                self.appData.update(self.recipe) { _ in DispatchQueue.main.async { self.dataSource.update(animated: false) }}
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
-    
+
     private func showStepDetail(id: Int64?) {
         var step = id == nil ? Step(recipeId: self.recipe.id!, number: 0) : appData.record(with: id!, of: Step.self)!
 
@@ -383,40 +382,29 @@ private extension EditRecipeViewController {
     }
 }
 
-extension EditRecipeViewController {
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let _ = dataSource.itemIdentifier(for: indexPath) as? InfoItem {
-            return 80
-        } else if let _ = dataSource.itemIdentifier(for: indexPath) as? ImageItem {
-            return 250
-        }
-        return UITableView.automaticDimension
-    }
-}
-
 extension EditRecipeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private func presentImagePicker(controller: UIImagePickerController, for source: UIImagePickerController.SourceType) {
         controller.delegate = self
         controller.sourceType = source
-        
+
         present(controller, animated: true)
     }
-    
+
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { //cant be private
         picker.dismiss(animated: true, completion: {
             self.terminate(picker)
         })
     }
-    
+
     private func terminate(_ picker: UIImagePickerController) {
         picker.delegate = nil
         imagePickerController = nil
     }
-    
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) { // can't be private
         if let uiImage = info[.originalImage] as? UIImage {
             changeRecipeImage(to: uiImage)
-            
+
             picker.dismiss(animated: true) {
                 self.terminate(picker)
             }

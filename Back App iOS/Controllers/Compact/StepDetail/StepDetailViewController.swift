@@ -127,7 +127,7 @@ private extension StepDetailViewController {
             
             //large Title
             self.navigationController?.navigationBar.prefersLargeTitles = true
-            
+
             self.navigationController?.setToolbarHidden(true, animated: true)
             
         }

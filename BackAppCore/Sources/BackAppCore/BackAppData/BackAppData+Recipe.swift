@@ -63,7 +63,7 @@ public extension BackAppData {
             .tracking { db in
                 try self.recipeInfo(recipeId: recipeId, db: db)
             }
-            .publisher(in: dbWriter)
+            .publisher(in: dbWriter, scheduling: .immediate) //immeadiate to improve recipe loading times
     }
 }
 

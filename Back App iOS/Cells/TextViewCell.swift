@@ -34,6 +34,7 @@ public class TextViewCell: CustomCell {
     private lazy var undoButton: UIBarButtonItem = {
         let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action: #selector(undo))
         undoButton.isEnabled = false
+        undoButton.tintColor = .baTintColor
         return undoButton
     }()
 
@@ -41,6 +42,7 @@ public class TextViewCell: CustomCell {
     private lazy var redoButton: UIBarButtonItem = {
         let redoButton = UIBarButtonItem(barButtonSystemItem: .redo, target: self, action: #selector(redo))
         redoButton.isEnabled = false
+        redoButton.tintColor = .baTintColor
         return redoButton
     }()
 
