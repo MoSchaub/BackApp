@@ -56,7 +56,7 @@ extension ScheduleViewController {
 private extension ScheduleViewController {
     // - MARK: - Register Cells
     private func registerCells() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.scheduleCell)
+        tableView.register(StepCell.self, forCellReuseIdentifier: Strings.scheduleCell)
     }
     
     // - MARK: - NavigationBar
@@ -73,14 +73,7 @@ private extension ScheduleViewController {
     private func makeDataSource() -> UITableViewDiffableDataSource<Int, StepItem> {
         UITableViewDiffableDataSource<Int, StepItem>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             if let step = self.appData.record(with: Int64(item.id), of: Step.self) {
-                let cell = CustomCell()
-                
-                let hostingController = UIHostingController(rootView: self.customStepRow(step: step))
-                cell.addSubview(hostingController.view)
-                hostingController.view?.fillSuperview()
-                hostingController.view?.backgroundColor = UIColor.cellBackgroundColor
-                
-                return cell
+                return StepCell(vstack: step.vstack(scaleFactor: self.factor), reuseIdentifier: Strings.scheduleCell, editMode: false)
             }
             return UITableViewCell()
         }
@@ -124,35 +117,5 @@ private extension ScheduleViewController {
         let recipeTimes = self.recipe.times ?? 1
         let devided = times/recipeTimes
         return Double.init(truncating: devided as NSNumber)
-    }
-}
-
-// - MARK: - SwiftUI Views
-import SwiftUI
-private extension ScheduleViewController {
-    
-    private func customStepRow(step: Step) -> some View {
-        VStack{
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(step.formattedName)
-                        .font(.headline)
-                    Spacer()
-                    Text(appData.formattedStartDate(for: step, with: recipe.id!))
-                }
-                Text("\(step.formattedDuration), \(step.formattedTemp(roomTemp: roomTemp))").secondary()
-            }
-
-            substepIngredientRows(for: step, scaleFactor: self.factor)
-
-            HStack {
-                Text(step.notes)
-                Spacer()
-            }
-            Spacer()
-        }
-        .foregroundColor(Color(UIColor.primaryCellTextColor!))
-        .padding()
-        .clipped()
     }
 }

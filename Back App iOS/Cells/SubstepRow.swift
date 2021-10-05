@@ -6,23 +6,26 @@
 //  Copyright © 2021 Moritz Schaub. All rights reserved.
 //
 
-import SwiftUI
 import BackAppCore
 import BakingRecipeFoundation
 
-public struct SubstepRow: View {
+extension Step {
+    func stepRow(scaleFactor: Double?) -> UIStackView {
+        let nameLabel  = UILabel(frame: .zero)
+        nameLabel.text = self.formattedName
+        nameLabel.textColor = .primaryCellTextColor
 
-    let substep: Step
-    let roomTemp = Standarts.roomTemp
-    let scaleFactor: Double
+        let tempTextLabel = UILabel(frame: .zero)
+        tempTextLabel.text = self.endTempEnabled ? self.formattedEndTemp : self.formattedTemp(roomTemp: Standarts.roomTemp)
+        tempTextLabel.textColor = .primaryCellTextColor
 
-    public var body: some View {
-        HStack {
-            Text(substep.formattedName)
-            Spacer()
-            Text(substep.endTempEnabled ? substep.formattedEndTemp : substep.formattedTemp(roomTemp: roomTemp))
-            Spacer()
-            Text(substep.totalFormattedMass(reader: BackAppData.shared.databaseReader, factor: scaleFactor))
-        }
+        let amountLabel = UILabel(frame: .zero)
+        amountLabel.text = self.totalFormattedMass(reader: BackAppData.shared.databaseReader, factor: scaleFactor ?? 1)
+        amountLabel.textColor = .primaryCellTextColor
+
+        let hstack = UIStackView(arrangedSubviews: [nameLabel, tempTextLabel, amountLabel])
+        hstack.axis = .horizontal
+        hstack.distribution = .equalSpacing
+        return hstack
     }
 }

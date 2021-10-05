@@ -5,39 +5,43 @@
 //  Created by Moritz Schaub on 13.04.20.
 //  Copyright © 2020 Moritz Schaub. All rights reserved.
 //
-
-import SwiftUI
 import BakingRecipeFoundation
-import BakingRecipeUIFoundation
 import BackAppCore
 
-struct IngredientRow: View {
-    
-    let ingredient: Ingredient
-    let step: Step
-    let roomTemp: Double = Standarts.roomTemp
-    let scaleFactor: Double?
-    
-    var body: some View {
-        HStack {
-            Text(ingredient.name).lineLimit(1)
-            Spacer()
-            if ingredient.type == .bulkLiquid{
-                Text(tempText).lineLimit(1)
-                Spacer()
-            } else{
-                EmptyView()
-            }
-            Text(ingredient.scaledFormattedAmount(with: scaleFactor ?? 1)).lineLimit(1)
+extension Ingredient {
+
+    func stackView(scaleFactor: Double?, tempText: String) -> UIStackView {
+        var subviews = [UIView]()
+
+        let nameLabel  = UILabel(frame: .zero)
+        nameLabel.text = self.formattedName
+        nameLabel.textColor = .primaryCellTextColor
+        subviews.append(nameLabel)
+
+        if self.type == .bulkLiquid {
+
+            let tempTextLabel = UILabel(frame: .zero)
+            tempTextLabel.text = tempText
+            tempTextLabel.textColor = .primaryCellTextColor
+            subviews.append(tempTextLabel)
         }
-        .foregroundColor(Color(UIColor.primaryCellTextColor!))
+
+        let amountLabel = UILabel(frame: .zero)
+        amountLabel.text = self.scaledFormattedAmount(with: scaleFactor ?? 1)
+        amountLabel.textColor = .primaryCellTextColor
+        subviews.append(amountLabel)
+
+        let hstack = UIStackView(arrangedSubviews: subviews)
+        hstack.axis = .horizontal
+        hstack.distribution = .equalSpacing
+        return hstack
     }
 
-    private var tempText: String {
-        if let temp = try? step.temperature(roomTemp: roomTemp, kneadingHeating: Standarts.kneadingHeating, databaseReader: BackAppData.shared.databaseReader) {
+    func tempText(in step: Step) -> String {
+        if let temp = try? step.temperature(roomTemp: Standarts.roomTemp, kneadingHeating: Standarts.kneadingHeating, databaseReader: BackAppData.shared.databaseReader) {
             return temp.formattedTemp
         } else {
-            print("Error getting the temp for the ingredient with name: \(ingredient.formattedName)")
+            print("Error getting the temp for the ingredient with name: \(self.formattedName)")
             return "error"
         }
     }

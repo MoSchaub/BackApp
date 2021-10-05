@@ -166,11 +166,6 @@ class RecipeListVCTests: XCTestCase {
         }
 
         waitForExpectations(timeout: 10)
-
-        //        print(navitem)
-        //
-        //        //title
-        //        XCTAssertEqual(sut.title, Strings.recipes)
     }
 
 }

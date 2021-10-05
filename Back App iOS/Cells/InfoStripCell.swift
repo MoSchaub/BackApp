@@ -49,18 +49,34 @@ public class InfoStripCell: CustomCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    private struct InfoStripStat {
+        let string1, string2: String
+    }
     
     public func setUpCell(for item: InfoStripItem) {
-        selectionStyle = .none
 
-        let rootView = InfoStrip(weighIn: item.weighIn, formattedDuration: item.formattedDuration, doughYield: item.doughYield)
-        let hostingController = UIHostingController(rootView: rootView)
+        let hstack = UIStackView(arrangedSubviews: [InfoStripStat(string1: item.formattedDuration, string2: Strings.duration), InfoStripStat(string1: item.weighIn, string2: Strings.weighIn), InfoStripStat(string1: item.doughYield, string2: Strings.doughYield)].map {
+            let label1 = UILabel(frame: .zero)
+            label1.text = $0.string1
+            label1.textColor = .primaryCellTextColor
+            
+            let label2 = UILabel(frame: .zero)
+            label2.attributedText = NSAttributedString(string: $0.string2, attributes: [.font : UIFont.preferredFont(forTextStyle: .subheadline)])
+            label2.textColor = .secondaryCellTextColor
+            
+            let vstack = UIStackView(arrangedSubviews: [label1, label2])
+            vstack.axis = .vertical
+            vstack.alignment = .center
+            return vstack
+        })
+        hstack.axis = .horizontal
+        hstack.alignment = .center
+        hstack.distribution = .fillEqually
         
-        // set clear so the view takes the cells background color
-        hostingController.view.backgroundColor = .clear
-
-        contentView.addSubview(hostingController.view)
-        hostingController.view.fillSuperview()
+        
+        contentView.addSubview(hstack)
+        hstack.fillSuperview(padding: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
     }
     
 }

@@ -120,7 +120,7 @@ class RecipeViewController: UITableViewController {
             } else if let stepItem = item as? StepItem {
 
                 //steps
-                return StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell, editMode: false)
+                return StepCell(vstack: stepItem.step.vstack(), reuseIdentifier: Strings.stepCell, editMode: false)
             } else if let textItem = item as? TextItem {
                 if let infoItem = textItem as? InfoItem {
 

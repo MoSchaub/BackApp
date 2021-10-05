@@ -10,19 +10,20 @@ import BakingRecipeUIFoundation
 
 public class ImageCell: CustomCell {
     
-     public init(reuseIdentifier: String?, data: Data?) {
+    public init(reuseIdentifier: String?, data: Data?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        guard let imageView = self.imageView else { return }
         if let data = data {
             let image = UIImage(data: data, scale: 0.0001) ?? Images.largePhoto
-            imageView?.image = image
-            imageView?.contentMode = .scaleAspectFill
+            imageView.image = image
+            imageView.contentMode = .scaleAspectFill
         } else {
-            imageView?.image = Images.largePhoto
-            imageView?.tintColor = .primaryCellTextColor
-            imageView?.contentMode = .scaleAspectFit
+            imageView.image = Images.largePhoto
+            imageView.tintColor = .primaryCellTextColor
+            imageView.contentMode = .scaleAspectFit
         }
-        
-        imageView?.fillSuperview()
+        NSLayoutConstraint.activate([contentView.heightAnchor.constraint(equalToConstant: 250)])
+        imageView.fillSuperview()
     }
     
     required init?(coder: NSCoder) {

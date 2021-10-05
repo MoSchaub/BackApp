@@ -21,7 +21,7 @@ var navigationBar: XCUIElement {
 }
 
 var addButton: XCUIElement {
-    navigationBar.buttons["Add"].firstMatch
+    navigationBar.buttons["Add recipe"].firstMatch
 }
 
 var nameTextField: XCUIElement {
@@ -194,7 +194,7 @@ class Back_App_iOSUITests: XCTestCase {
     func testAddingExampleRecipe() throws {
         
         let recipe = Recipe.example
-        
+
         let returnButton = app.buttons["Return"]
         
         let argumentApp = app
@@ -364,7 +364,8 @@ class Back_App_iOSUITests: XCTestCase {
         argumentApp.launch()
         
         appTables.staticTexts[Recipe.example.name].tap()
-        appTables.staticTexts["Start"].tap()
+        app.tables.staticTexts["Start"].tap()
+        app.tables.staticTexts["Start"].tap()
     }
 
     func testnormalSchedule() throws {

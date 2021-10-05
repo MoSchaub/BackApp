@@ -10,75 +10,67 @@ import SwiftUI
 import BakingRecipeFoundation
 import BackAppCore
 
-extension View {
-    @ViewBuilder
-    func optionalModifier<T:View>(condition: Bool, modified: @escaping (Self) -> T ) -> some View {
-        if condition {
-            modified(self)
+extension Step {
+
+    private func firstLineHStack(showDate: Bool) -> UIStackView {
+        let primparyLabel = UILabel(frame: .zero)
+        primparyLabel.attributedText = NSAttributedString(string: formattedName, attributes: [.font: UIFont.preferredFont(forTextStyle: .headline)])
+        primparyLabel.textColor = .primaryCellTextColor
+
+        let secondaryLabel = UILabel(frame: .zero)
+        secondaryLabel.attributedText = NSAttributedString(string: formattedTemp(roomTemp: Standarts.roomTemp), attributes: [.font: UIFont.preferredFont(forTextStyle: .subheadline)])
+        secondaryLabel.textColor = .secondaryCellTextColor
+
+        let nameTempVStack = UIStackView(arrangedSubviews: [primparyLabel, secondaryLabel])
+        nameTempVStack.axis = .vertical
+        nameTempVStack.alignment = .leading
+
+        let cornerLabel = UILabel(frame: .zero)
+        if showDate {
+            cornerLabel.text = BackAppData.shared.formattedStartDate(for: self, with: recipeId)
+            cornerLabel.textColor = .primaryCellTextColor
         } else {
-            self
+            cornerLabel.attributedText = NSAttributedString(string: formattedDuration, attributes: [.font:UIFont.preferredFont(forTextStyle: .subheadline)])
+            cornerLabel.textColor = .secondaryCellTextColor
+        }
+
+        let hstack = UIStackView(arrangedSubviews: [nameTempVStack, cornerLabel])
+        hstack.axis = .horizontal
+        hstack.alignment = .center
+
+        return hstack
+    }
+
+    func vstack(scaleFactor: Double? = nil, editing: Bool = false) -> UIStackView {
+        var subviews: [UIView] = [firstLineHStack(showDate: scaleFactor != nil)]
+        subviews.append(contentsOf: ingredientStackViews(scaleFactor: scaleFactor))
+        subviews.append(contentsOf: substepStackViews(scaleFactor: scaleFactor))
+
+        if !editing {
+            let notesLabel = UILabel(frame: .zero)
+            notesLabel.text = notes
+            notesLabel.textColor = .primaryCellTextColor
+            notesLabel.numberOfLines = 0
+
+            subviews.append(notesLabel)
+        }
+
+        let totalVStack = UIStackView(arrangedSubviews: subviews)
+        totalVStack.axis = .vertical
+        totalVStack.spacing = scaleFactor != nil ? 5 : 0
+        return totalVStack
+    }
+
+
+    func ingredientStackViews(scaleFactor: Double?) -> [UIStackView] {
+        self.ingredients(reader: BackAppData.shared.databaseReader).map { ingredient in
+            ingredient.stackView(scaleFactor: scaleFactor, tempText: ingredient.tempText(in: self))
+        }
+    }
+
+    func substepStackViews(scaleFactor: Double?) -> [UIStackView] {
+        self.sortedSubsteps(reader: BackAppData.shared.databaseReader).map { substep in
+            substep.stepRow(scaleFactor: scaleFactor)
         }
     }
 }
-
-@ViewBuilder
-public func substepIngredientRows(for step: Step, scaleFactor: Double? = nil) -> some View {
-    ForEach(step.sortedSubsteps(reader: BackAppData.shared.databaseReader)) { substep in
-        SubstepRow(substep: substep, scaleFactor: scaleFactor ?? 1)
-
-    }
-    ForEach(step.ingredients(reader: BackAppData.shared.databaseReader)) { ingredient in
-        IngredientRow(ingredient: ingredient, step: step, scaleFactor: scaleFactor)
-            .optionalModifier(condition: scaleFactor != nil) {
-                $0.padding(.vertical, 5)
-            }
-    }
-}
-
-public struct StepRow: View {
-
-    let step: Step
-    let roomTemp = Standarts.roomTemp
-    
-    @Environment(\.colorScheme) var colorScheme
-    
-    public var body: some View {
-        VStack{
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(step.formattedName).font(.headline).lineLimit(1)
-                    Text(step.formattedTemp(roomTemp: roomTemp)).secondary()
-                }
-                Spacer()
-                Text(step.formattedDuration).secondary()
-            }
-            substepIngredientRows(for: step)
-            HStack {
-                Text(step.notes)
-                Spacer()
-            }
-        }
-        .foregroundColor(Color(UIColor.primaryCellTextColor!))
-        .padding()
-        .padding(.trailing)
-    }
-    
-    public init(step: Step) {
-        self.step = step
-    }
-}
-//
-//struct StepRow_Previews: PreviewProvider {
-//
-//    static var recipe: Recipe{
-//        let i = Ingredient(name: "Mehl", amount: 100, type: .flour)
-//        let b2 = Step(name: "Sub", time: 60, ingredients: [], themperature: 20)
-//        var b = Step(name: "Schritt1", time: 60, ingredients: [i], themperature: 20)
-//        b.subSteps.append(b2)
-//        return Recipe(name: "Test", brotValues: [b], inverted: false, dateString: "", isFavourite: false)
-//    }
-//
-//    static var previews: some View {
-//        StepRow(step: recipe.steps.first!)
-//    }
-//}

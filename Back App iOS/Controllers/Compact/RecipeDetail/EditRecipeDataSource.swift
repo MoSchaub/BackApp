@@ -53,7 +53,7 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
             } else if let stepItem = item as? StepItem {
 
                 // steps
-                let stepCell = StepCell(step: stepItem.step, reuseIdentifier: Strings.stepCell)
+                let stepCell = StepCell(vstack: stepItem.step.vstack(), reuseIdentifier: Strings.stepCell)
                 return stepCell
             } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
 
