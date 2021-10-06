@@ -11,16 +11,7 @@ import BakingRecipeStrings
 
 public class AmountCell: TextFieldCell {
     
-    public func setUp(with ingredient: Ingredient, format: @escaping (String) -> String ) {
-        textField.text = String(ingredient.formattedAmount)
-        textField.placeholder = Strings.amountCellPlaceholder1
-        textField.accessibilityIdentifier = Strings.amountCellPlaceholder1
-        textField.keyboardType = .decimalPad
-        setUpBoth(format: format)
-        self.textChanged!(textField.text ?? "0g" )
-    }
-    
-    public func setUp(with text: String, format: @escaping (String) -> String ) {
+    private func setUp(with text: String, format: @escaping (String) -> String ) {
         textField.text = text
         textField.placeholder = Strings.amountCellPlaceholder2
         textField.accessibilityIdentifier = Strings.amountCellPlaceholder2
@@ -28,7 +19,27 @@ public class AmountCell: TextFieldCell {
         setUpBoth(format: format)
         self.textChanged!(textField.text ?? "" )
     }
-    
+
+    public init(text: String, reuseIdentifier: String, format: @escaping (String) -> String ) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        self.setUp(with: text, format: format)
+    }
+
+    public init(ingredient: Ingredient, reuseIdentifier: String, format: @escaping (String) -> String, amountEditingDidEnd: @escaping () -> Void) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        textField.text = String(ingredient.formattedAmount)
+        textField.placeholder = Strings.amountCellPlaceholder1
+        textField.accessibilityIdentifier = Strings.amountCellPlaceholder1
+        textField.keyboardType = .decimalPad
+        setUpBoth(format: format)
+        self.textChanged!(textField.text ?? "0g" )
+        self.amountEditingDidEnd = amountEditingDidEnd
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     public var amountEditingDidEnd: (() -> Void)?
     
     private func setUpBoth(format: @escaping (String) -> String ) {

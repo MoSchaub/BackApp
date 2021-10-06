@@ -58,6 +58,7 @@ private extension ScheduleFormViewController {
         title = recipe.formattedName
         navigationItem.prompt = Strings.createSchedule
         navigationItem.rightBarButtonItem = .init(title: "OK", style: .plain, target: self, action: #selector(proceedToScheduleView))
+        navigationController?.setToolbarHidden(true, animated: true)
     }
     
     @objc private func proceedToScheduleView() {

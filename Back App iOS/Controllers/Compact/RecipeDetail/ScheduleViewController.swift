@@ -65,6 +65,7 @@ private extension ScheduleViewController {
         navigationItem.prompt = self.times!.description + " " + Strings.pieces
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .action, target: self, action: #selector(shareText))
+        navigationController?.setToolbarHidden(true, animated: true)
     }
 }
 

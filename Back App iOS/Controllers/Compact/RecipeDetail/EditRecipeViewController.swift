@@ -11,6 +11,7 @@ import BakingRecipeFoundation
 import BakingRecipeUIFoundation
 import BakingRecipeStrings
 import BackAppCore
+import Combine
 
 class EditRecipeViewController: UITableViewController {
     
@@ -30,6 +31,8 @@ class EditRecipeViewController: UITableViewController {
 
     // id of the recipe for pulling the recipe from the database
     private let recipeId: Int64
+
+    private var tokens = Set<AnyCancellable>()
     
     // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
@@ -65,6 +68,10 @@ class EditRecipeViewController: UITableViewController {
         self.dismissDetail = dismissDetail
         super.init(style: .insetGrouped)
     }
+
+    deinit {
+        _ = tokens.map {$0.cancel() }
+    }
     
     required init?(coder: NSCoder) {
         fatalError(Strings.init_coder_not_implemented)
@@ -86,11 +93,17 @@ extension EditRecipeViewController {
         //because a the controller is presented in a nav controller
         self.navigationController?.presentationController?.delegate = self
         self.splitViewController?.delegate = self
+
+        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate, object: nil)
+            .sink { _ in
+                self.updateDataSource(animated: false)
+            }
+            .store(in: &tokens)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        dataSource.update(animated: false)
+        updateDataSource(animated: false)
         
         tableView.rowHeight = UITableView.automaticDimension
         DispatchQueue.global(qos: .background).async {
@@ -162,28 +175,84 @@ extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
 private extension EditRecipeViewController {
     /// create the dataSource for this VC and provide the recipe and various update fuctions
     private func makeDataSource() -> EditRecipeDataSource {
-        EditRecipeDataSource(
-            recipe: Binding(get: {
-                return self.recipe
-            }, set: { newValue in
-                DispatchQueue.global(qos: .userInteractive).async {
-                    self.recipe = newValue
+        let dataSource = EditRecipeDataSource(tableView: self.tableView) { tableView, indexPath, item in
+            if let textFieldItem = item as? TextFieldItem {
+
+                //name text field
+                return TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.textFieldCell, textChanded: { self.recipe.name = $0 })
+            } else if let imageItem = item as? ImageItem {
+
+                //imageCell
+                return ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
+            } else if let amountItem = item as? AmountItem {
+
+                //amount cell
+                return AmountCell(text: amountItem.text, reuseIdentifier: Strings.amountCell) { timesText in
+                    guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
+                    self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
+                    return self.recipe.timesText
                 }
-            }),
-            appData: appData, tableView: tableView,
-            nameChanged: { newName in
-                self.recipe.name = newName
-            },
-            formatAmount: { timesText in
-                guard Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) != nil else { return self.recipe.timesText}
-                self.recipe.times = Decimal(floatLiteral: Double(timesText.trimmingCharacters(in: .letters).trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0)
-                return self.recipe.timesText
-            },
-            updateInfo: { newInfo in
-                    self.recipe.info = newInfo
+            } else if item is InfoItem{
+
+                //info cell
+                return TextViewCell(textContent: Binding(get: { self.recipe.info}, set: { self.recipe.info = $0}), placeholder: Strings.info, reuseIdentifier: Strings.infoCell, isEditable: true)
+            } else if let infoStripItem = item as? InfoStripItem {
+
+                //infostrip
+                return InfoStripCell(infoStripItem: infoStripItem, reuseIdentifier: Strings.infoStripCell)
+            } else if let stepItem = item as? StepItem {
+
+                // steps
+                return StepCell(vstack: stepItem.step.vstack(editing: self.isEditing), reuseIdentifier: Strings.stepCell)
+            } else if let detailItem = item as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.detailCell, for: indexPath) as? DetailCell {
+
+                // add step cell
+                cell.textLabel?.text = detailItem.text
+                cell.accessoryType = .disclosureIndicator
+
+                // gray out the text if editMode enabled
+                if self.isEditing {
+                    cell.textLabel?.textColor = UIColor.secondaryCellTextColor
+                } else {
+                    cell.textLabel?.textColor = UIColor.primaryCellTextColor
+                }
+                return cell
             }
-        )
+           return UITableViewCell()
+        }
+        dataSource.defaultRowAnimation = .fade
+        dataSource.recipeId = self.recipe.id
+
+        return dataSource
     }
+
+    private func updateDataSource(animated: Bool) {
+        var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
+        snapshot.appendSections(RecipeDetailSection.allCases)
+        snapshot.appendItems([recipe.nameItem()], toSection: .name)
+        snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
+        snapshot.appendItems([recipe.amountItem()], toSection: .times)
+        snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
+        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([recipe.infoItem], toSection: .info)
+        dataSource.apply(snapshot, animatingDifferences: animated)
+    }
+}
+
+// MARK:  - Reload Steps when entering editMode
+extension EditRecipeViewController {
+
+    override public func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        reloadStepSection()
+    }
+
+    private func reloadStepSection() {
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadSections([.steps])
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+
 }
 
 // MARK: - NavigationBar
@@ -354,7 +423,7 @@ private extension EditRecipeViewController {
             do {
                 self.recipe.imageData  = try image?.heicData(compressionQuality: 0.3)
 
-                self.appData.update(self.recipe) { _ in DispatchQueue.main.async { self.dataSource.update(animated: false) }}
+                self.appData.update(self.recipe) { _ in DispatchQueue.main.async { self.updateDataSource(animated: false) }}
             } catch {
                 print(error.localizedDescription)
             }

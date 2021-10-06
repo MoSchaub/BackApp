@@ -34,6 +34,21 @@ public class TextFieldCell: CustomCell {
         textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
         textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
     }
+
+    init(text: String, placeholder: String, reuseIdentifier: String, textChanded: ((String) -> Void)?) {
+        self.textField.text = text
+        self.placeholder = placeholder
+        self.textChanged = textChanded
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         
