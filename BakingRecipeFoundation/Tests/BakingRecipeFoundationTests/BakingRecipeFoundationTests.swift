@@ -3,27 +3,41 @@ import XCTest
 @testable import GRDB
 
 final class BakingRecipeFoundationTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        //XCTAssertEqual(BakingRecipe().text, "Hello, World!")
-    }
-    
-    func testComplexTemp() {
-//        let recipe = Recipe.complexExample
-//        let step = recipe.steps.last!
-//        let ingredient = step.ingredients[1]
-//        let expectation = 22
-//        XCTAssertEqual(step.themperature(for: ingredient, roomThemperature: 23), expectation)
-    }
-    
-    func testDatabaseInit() {
 
+    func test_TempMeasurementFormatter() {
+        var measurement = Measurement(value: 20434.16746454, unit: UnitTemperature.celsius)
+        XCTAssertEqual(measurement.formatted, "20434.2°C")
+        XCTAssertEqual(measurement.localizedValue, "20434.2")
+
+        measurement = Measurement(value: 20.0, unit: UnitTemperature.celsius)
+        XCTAssertEqual(measurement.formatted, "20°C")
+        XCTAssertEqual(measurement.localizedValue, "20")
+    }
+
+    func test_formattedEndTemp() {
+        let recipeExample = Recipe.example
+        var step = recipeExample.stepIngredients.first!.step
+        step.endTempEnabled = false
+        XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), step.formattedTemp(roomTemp: 21))
+        XCTAssertEqual(step.formattedEndTemp, nil)
+
+        step.endTempEnabled = true
+        XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), "20°C")
+        XCTAssertEqual(step.formattedEndTemp, "20°C")
+    }
+
+    func test_formattedTemp() {
+        let recipeExample = Recipe.example
+        var step = recipeExample.stepIngredients.first!.step
+
+        step.temperature = nil
+        XCTAssertEqual(step.formattedTemp(roomTemp: 21), "21°C")
+
+        step.temperature = 20
+        XCTAssertEqual(step.formattedTemp(roomTemp: 21), "20°C")
     }
 
     static var allTests = [
-        ("testExample", testExample),
-        ("testComplexTemp", testComplexTemp)
+        ("test_TempMeasurementFormatter", test_TempMeasurementFormatter)
     ]
 }

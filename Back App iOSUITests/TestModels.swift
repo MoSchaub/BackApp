@@ -284,9 +284,21 @@ public enum Difficulty: String, CaseIterable, Codable {
     case hard
 }
 
+func is24Hour() -> Bool {
+    let dateFormat = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Locale.current)!
+
+    return dateFormat.firstIndex(of: "a") == nil
+}
+
+
+///date formatter with custom dateFormat
 public var dateFormatter: DateFormatter{
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd.MM.yy',' HH:mm"
+    if is24Hour() {
+        formatter.dateFormat = "dd.MM.yy',' HH:mm"
+    } else {
+        formatter.dateFormat = "dd.MM.yy',' hh:mm a"
+    }
     return formatter
 }
 

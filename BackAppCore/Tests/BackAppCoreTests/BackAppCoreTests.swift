@@ -377,7 +377,7 @@ final class BackAppCoreTests: XCTestCase {
         let reader = appData.databaseReader
 
         let recipeExample = try insertExampleRecipe()
-        XCTAssert(appData.text(for: recipeExample.id!, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20.0° C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(recipeExample.totalDuration(reader: reader) * 60))))")
+        XCTAssertEqual(appData.text(for: recipeExample.id!, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0), "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 20°C\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(recipeExample.totalDuration(reader: reader) * 60))))")
     }
     
     func testMovingRecords() throws {

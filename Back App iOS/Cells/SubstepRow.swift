@@ -16,7 +16,7 @@ extension Step {
         nameLabel.textColor = .primaryCellTextColor
 
         let tempTextLabel = UILabel(frame: .zero)
-        tempTextLabel.text = self.endTempEnabled ? self.formattedEndTemp : self.formattedTemp(roomTemp: Standarts.roomTemp)
+        tempTextLabel.text = self.formattedEndTemp(roomTemp: Standarts.roomTemp)
         tempTextLabel.textColor = .primaryCellTextColor
 
         let amountLabel = UILabel(frame: .zero)

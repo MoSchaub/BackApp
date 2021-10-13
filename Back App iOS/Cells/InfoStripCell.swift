@@ -56,25 +56,28 @@ public class InfoStripCell: CustomCell {
     
     public func setUpCell(for item: InfoStripItem) {
 
-        let hstack = UIStackView(arrangedSubviews: [InfoStripStat(string1: item.formattedDuration, string2: Strings.duration), InfoStripStat(string1: item.weighIn, string2: Strings.weighIn), InfoStripStat(string1: item.doughYield, string2: Strings.doughYield)].map {
+        let infoStripStats =  [InfoStripStat(string1: item.formattedDuration, string2: Strings.duration), InfoStripStat(string1: item.weighIn, string2: Strings.weighIn), InfoStripStat(string1: item.doughYield, string2: Strings.doughYield)]
+
+        let vstacks: [UIStackView] = infoStripStats.map {
             let label1 = UILabel(frame: .zero)
             label1.text = $0.string1
             label1.textColor = .primaryCellTextColor
-            
+
             let label2 = UILabel(frame: .zero)
             label2.attributedText = NSAttributedString(string: $0.string2, attributes: [.font : UIFont.preferredFont(forTextStyle: .subheadline)])
             label2.textColor = .secondaryCellTextColor
-            
+
             let vstack = UIStackView(arrangedSubviews: [label1, label2])
             vstack.axis = .vertical
             vstack.alignment = .center
             return vstack
-        })
+        }
+
+        let hstack = UIStackView(arrangedSubviews: vstacks)
         hstack.axis = .horizontal
         hstack.alignment = .center
         hstack.distribution = .fillEqually
-        
-        
+
         contentView.addSubview(hstack)
         hstack.fillSuperview(padding: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
     }

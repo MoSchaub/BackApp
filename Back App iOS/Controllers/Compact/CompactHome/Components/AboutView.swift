@@ -30,8 +30,6 @@ struct AboutView: View {
                 
                 VStack(alignment: .leading) {
                     Divider()
-                    Link(url: Strings.donateURL, title: Strings.support)
-                    Divider()
                     Link(url: Strings.websiteURL, title: Strings.website)
                     Divider()
                     Link(url: Strings.privacyPolicyURL, title: Strings.privacy_policy)

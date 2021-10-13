@@ -129,7 +129,6 @@ private extension StepDetailViewController {
             self.navigationController?.navigationBar.prefersLargeTitles = true
 
             self.navigationController?.setToolbarHidden(true, animated: true)
-            
         }
     }
     
@@ -377,7 +376,9 @@ private extension StepDetailViewController {
             var snapshot = self.dataSource.snapshot()
             
             snapshot.reloadSections([.durationTemp])
-            self.dataSource.apply(snapshot, animatingDifferences: false)
+            self.dataSource.apply(snapshot, animatingDifferences: false) {
+                self.setupNavigationBar()
+            }
         }
     }
     
@@ -517,6 +518,7 @@ extension StepDetailViewController: TempPickerCellDelegate {
             self.step.endTemp = value
         }
         self.updateList(animated: false)
+        self.setupNavigationBar()
     }
     
     
@@ -587,9 +589,6 @@ private extension StepDetailViewController {
         items.append(kneadingStepSwitchItem)
         
         snapshot.appendItems(items, toSection: .durationTemp)
-        
-
-        
         return snapshot
     }
     
@@ -608,7 +607,7 @@ private extension StepDetailViewController {
     }
 
     private var endTempSwitchItem: DetailItem {
-        DetailItem(name: Strings.endTemp, detailLabel: step.endTempEnabled ? step.formattedEndTemp : "")
+        DetailItem(name: Strings.endTemp, detailLabel: step.formattedEndTemp!)
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
@@ -629,7 +628,7 @@ private extension StepDetailViewController {
 
 fileprivate extension Ingredient {
     func detailLabel(for step: Step, appData: BackAppData) -> String {
-        self.formattedAmount + " " + (self.type == .bulkLiquid ? appData.temperature(for: self, roomTemp: Standarts.roomTemp).formattedTemp : "")
+        self.formattedAmount + " " + (self.type == .bulkLiquid ? self.tempText(in: step) : "")
     }
 }
 

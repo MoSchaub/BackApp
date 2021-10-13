@@ -83,12 +83,19 @@ public extension Step {
     
     /// the temperature of the step formatted with Celsius
     func formattedTemp(roomTemp: Double) -> String{
-        return String(format: "%.01f", self.temperature ?? roomTemp) + " °C"
+        Measurement(value: self.temperature ?? roomTemp, unit: .celsius).formatted
     }
 
     /// the end temp of the step in celsius
-    var formattedEndTemp: String {
-        self.endTemp?.formattedTemp ?? "error"
+    /// returns formatted Temp if endTemp is nil
+    func formattedEndTemp(roomTemp: Double) -> String {
+        endTempEnabled ? Measurement(value: self.endTemp!, unit: .celsius).formatted : formattedTemp(roomTemp: roomTemp)
+    }
+
+    ///  the endTemp formatted in the localized unit
+    /// Returns nil if endTemp is nil
+    var formattedEndTemp: String? {
+        (endTemp != nil ? Measurement(value: endTemp!, unit: .celsius).formatted : nil)
     }
     
     /// name of the step
@@ -291,7 +298,7 @@ public extension Step {
     }
     
     /// temperature for bulk liquids so the step has the right Temperature
-    func temperature(roomTemp: Double, kneadingHeating: Double, databaseReader: DatabaseReader) throws -> Double {
+    func bulkLiquidTemperature(roomTemp: Double, kneadingHeating: Double, databaseReader: DatabaseReader) throws -> Double {
         try databaseReader.read { db in
             var sumMassCProductAll = 0.0
             _ = try ingredients(db: db).map { sumMassCProductAll += $0.massCProduct }
@@ -439,13 +446,13 @@ public extension Step {
         text.append(nameString)
         
         for ingredient in ingredients(reader: reader){
-            let ingredientTemp = (try? self.temperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, databaseReader: reader)) ?? roomTemp
+            let ingredientTemp = Measurement(value: (try? self.bulkLiquidTemperature(roomTemp: roomTemp, kneadingHeating: kneadingHeating, databaseReader: reader)) ?? roomTemp, unit: .celsius).formatted
             let ingredientString = "\t" + ingredient.formattedName + ": " + ingredient.scaledFormattedAmount(with: scaleFactor) +
-                " \(ingredient.type == .bulkLiquid ? ingredientTemp.formattedTemp : "" )" + "\n"
+                " \(ingredient.type == .bulkLiquid ? ingredientTemp : "" )" + "\n"
             text.append(ingredientString)
         }
         for subStep in sortedSubsteps(reader: reader){
-            let substepString = "\t" + subStep.formattedName + ": " + "\(totalMass(reader: reader).formattedMass) " + "\(subStep.temperature ?? roomTemp)" + "° C\n"
+            let substepString = "\t" + subStep.formattedName + ": " + "\(totalMass(reader: reader).formattedMass) " + (subStep.temperature != nil ? Measurement(value: subStep.endTemp ?? subStep.temperature! , unit: .celsius).formatted : "")
             text.append(substepString)
         }
         if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{

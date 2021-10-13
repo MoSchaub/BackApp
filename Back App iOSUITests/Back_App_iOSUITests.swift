@@ -400,6 +400,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         let customDateFormatter = DateFormatter()
         customDateFormatter.dateFormat = "MMM d, y HH:mm"
+        customDateFormatter.locale = Locale.init(identifier: "en_us")
         let newDate = customDateFormatter.date(from: "Oct 1, 21 12:00")!
         let daysSinceJuly10 = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
         

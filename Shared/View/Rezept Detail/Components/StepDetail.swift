@@ -407,7 +407,7 @@ struct stepTempPicker: View{
             }.padding()
 
             Text(step.isDynamicTemperature ? "Starttemperatur" : "Temperatur")
-            Picker(" ",selection: $step.temperature){
+            Picker(" ",selection: $step.bulkLiquidTemperature){
                 ForEach(-10...50, id: \.self){ n in
                     Text("\(n)")
                 }

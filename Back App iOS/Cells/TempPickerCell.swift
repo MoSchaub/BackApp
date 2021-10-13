@@ -51,12 +51,7 @@ public class TempPickerCell: CustomCell {
 private extension TempPickerCell {
     
     func makeTempPicker() -> UIPickerView {
-        let picker = UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
-        
-        
-//        tempPicker.setValue(UIColor.primaryCellTextColor, forKeyPath: "textColor")
-        
-        return picker
+        UIPickerView(backgroundColor: UIColor.cellBackgroundColor!)
     }
     
     func configureTempPicker() {
@@ -96,7 +91,7 @@ extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: "\(row - 10)", attributes: [NSAttributedString.Key.foregroundColor:UIColor.primaryCellTextColor!])
+        NSAttributedString(string: Measurement(value: Double(row - 10), unit: UnitTemperature.celsius).localizedValue, attributes: [.foregroundColor : UIColor.primaryCellTextColor!])
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

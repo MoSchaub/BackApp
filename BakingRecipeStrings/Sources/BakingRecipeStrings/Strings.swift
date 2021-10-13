@@ -68,7 +68,7 @@ public struct Strings {
     public static let unnamedStep = NSLocalizedString("unnamedStep", bundle: .module, comment: "")
     public static let image_alert_title = NSLocalizedString("image_alert_title", bundle: .module, comment: "")
     public static let take_picture = NSLocalizedString("take_picture", bundle: .module, comment: "")
-    public static let version = NSLocalizedString("version", bundle: .module, comment: "") + " \(Bundle.main.releaseVersionNumber!).\(Bundle.main.buildVersionNumber!)"
+    public static let version = NSLocalizedString("version", bundle: .module, comment: "") + " \(Bundle.main.releaseVersionNumber!) (\(Bundle.main.buildVersionNumber!))"
     public static let donate_text = NSLocalizedString("donateText", bundle: .module, comment: "")
     public static let website = NSLocalizedString("website", bundle: .module, comment: "")
     public static let support = NSLocalizedString("support", bundle: .module, comment: "")

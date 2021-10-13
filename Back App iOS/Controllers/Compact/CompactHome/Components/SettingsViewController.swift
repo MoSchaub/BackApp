@@ -335,7 +335,7 @@ extension SettingsViewController {
     
     /// detailItem for roomTemp
     private var roomTempItem: DetailItem {
-        DetailItem(name: Strings.roomTemperature, detailLabel: String(Standarts.roomTemp) + "° C" )
+        DetailItem(name: Strings.roomTemperature, detailLabel: Measurement(value: Standarts.roomTemp, unit: .celsius).formatted)
     }
     
     /// detailItem for temp

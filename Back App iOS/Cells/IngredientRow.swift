@@ -38,8 +38,8 @@ extension Ingredient {
     }
 
     func tempText(in step: Step) -> String {
-        if let temp = try? step.temperature(roomTemp: Standarts.roomTemp, kneadingHeating: Standarts.kneadingHeating, databaseReader: BackAppData.shared.databaseReader) {
-            return temp.formattedTemp
+        if let temp = try? step.bulkLiquidTemperature(roomTemp: Standarts.roomTemp, kneadingHeating: Standarts.kneadingHeating, databaseReader: BackAppData.shared.databaseReader) {
+            return Measurement(value: temp, unit: .celsius).formatted
         } else {
             print("Error getting the temp for the ingredient with name: \(self.formattedName)")
             return "error"
