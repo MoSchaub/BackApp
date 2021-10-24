@@ -118,7 +118,7 @@ public extension Recipe {
     ///formatted Name with a standart value
     ///should be used when displaying the name
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedRecipe : name
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedRecipe : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     static var example: (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
@@ -292,7 +292,7 @@ public extension Recipe {
     }
 
     func formattedTotalDurationHours(db: Database) throws -> String {
-        try totalDuration(db: db).hours.formattedDuration
+        try totalDuration(db: db).formattedDurationHours
     }
 
     /// totalAmount of all ingredients in the recipe

@@ -13,21 +13,23 @@ extension Ingredient {
     func stackView(scaleFactor: Double?, tempText: String) -> UIStackView {
         var subviews = [UIView]()
 
+        let textStyle = UIFont.TextStyle.subheadline
+
         let nameLabel  = UILabel(frame: .zero)
-        nameLabel.text = self.formattedName
+        nameLabel.attributedText = NSAttributedString(string: self.formattedName, attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
         nameLabel.textColor = .primaryCellTextColor
         subviews.append(nameLabel)
 
         if self.type == .bulkLiquid {
 
             let tempTextLabel = UILabel(frame: .zero)
-            tempTextLabel.text = tempText
+            tempTextLabel.attributedText = NSAttributedString(string: tempText, attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
             tempTextLabel.textColor = .primaryCellTextColor
             subviews.append(tempTextLabel)
         }
 
         let amountLabel = UILabel(frame: .zero)
-        amountLabel.text = self.scaledFormattedAmount(with: scaleFactor ?? 1)
+        amountLabel.attributedText = NSAttributedString(string: scaledFormattedAmount(with: scaleFactor ?? 1), attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
         amountLabel.textColor = .primaryCellTextColor
         subviews.append(amountLabel)
 

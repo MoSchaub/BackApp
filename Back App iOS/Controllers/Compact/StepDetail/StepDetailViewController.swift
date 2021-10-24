@@ -538,14 +538,14 @@ private extension StepDetailViewController {
     }
     
     private func snapshotBase() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
-        
+
         // textfieldItem
         let nameItem = TextFieldItem(text: step.name)
-        
+
         // notesTextFieldItem
         let notesItem = TextFieldItem(text: step.notes)
 
-        let ingredientItems = appData.ingredients(with: step.id!).map{ IngredientItem(id: Int($0.id!), name: $0.name, detailLabel: $0.detailLabel(for: step, appData: appData)) }
+        let ingredientItems = appData.ingredients(with: step.id!).map{ IngredientItem(id: Int($0.id!), name: $0.formattedName, detailLabel: $0.detailLabel(for: step, appData: appData)) }
         let substepItems = appData.sortedSubsteps(for: step.id!).map { SubstepItem(id: Int($0.id!), name: $0.formattedName, detailLabel: appData.totalFormattedMass(for: $0.id!) + " " + $0.formattedTemp(roomTemp: Standarts.roomTemp) )}
         let addIngredientItem = DetailItem(name: Strings.addIngredient)
         
@@ -591,7 +591,7 @@ private extension StepDetailViewController {
         snapshot.appendItems(items, toSection: .durationTemp)
         return snapshot
     }
-    
+
     /// detailItem for duration
     private var durationItem: DetailItem {
         DetailItem(name: Strings.duration, detailLabel: step.formattedDuration )
@@ -607,7 +607,7 @@ private extension StepDetailViewController {
     }
 
     private var endTempSwitchItem: DetailItem {
-        DetailItem(name: Strings.endTemp, detailLabel: step.formattedEndTemp!)
+        DetailItem(name: Strings.endTemp, detailLabel: step.formattedEndTemp)
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {

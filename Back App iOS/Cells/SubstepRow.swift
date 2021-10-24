@@ -11,16 +11,18 @@ import BakingRecipeFoundation
 
 extension Step {
     func stepRow(scaleFactor: Double?) -> UIStackView {
+        let textStyle = UIFont.TextStyle.subheadline
+
         let nameLabel  = UILabel(frame: .zero)
-        nameLabel.text = self.formattedName
+        nameLabel.attributedText = NSAttributedString(string: formattedName, attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
         nameLabel.textColor = .primaryCellTextColor
 
         let tempTextLabel = UILabel(frame: .zero)
-        tempTextLabel.text = self.formattedEndTemp(roomTemp: Standarts.roomTemp)
+        tempTextLabel.attributedText = NSAttributedString(string: formattedEndTemp(roomTemp: Standarts.roomTemp), attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
         tempTextLabel.textColor = .primaryCellTextColor
 
         let amountLabel = UILabel(frame: .zero)
-        amountLabel.text = self.totalFormattedMass(reader: BackAppData.shared.databaseReader, factor: scaleFactor ?? 1)
+        amountLabel.attributedText = NSAttributedString(string: totalFormattedMass(reader: BackAppData.shared.databaseReader, factor: scaleFactor ?? 1), attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
         amountLabel.textColor = .primaryCellTextColor
 
         let hstack = UIStackView(arrangedSubviews: [nameLabel, tempTextLabel, amountLabel])

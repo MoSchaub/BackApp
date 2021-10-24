@@ -26,7 +26,7 @@ public extension Int {
         if hours > 1 {
             return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
         } else if hours == 1 {
-            return Strings.one + " " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
+            return Strings.one + " " + formattedDurationUnit(for: hours, hours: true) + (minutes > 0 ? " " + minutesFormatted() : "")
         } else {
             return minutesFormatted()
         }
@@ -38,6 +38,11 @@ public extension Int {
     
     var hours: Int {
         self / 60
+    }
+
+    var formattedDurationHours: String {
+        let hours = self.hours
+        return (hours == 1 ? Strings.one : "\(hours)") + " " + formattedDurationUnit(for: hours, hours: true)
     }
 }
 

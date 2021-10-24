@@ -101,7 +101,7 @@ public extension Step {
     /// name of the step
     ///- NOTE:should be used for displaying the name. For changing the name use name instead.
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedStep : name
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedStep : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 
