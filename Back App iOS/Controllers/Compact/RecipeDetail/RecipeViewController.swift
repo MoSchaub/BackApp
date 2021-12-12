@@ -108,7 +108,9 @@ class RecipeViewController: UITableViewController {
             if let imageItem = item as? ImageItem {
 
                 //image
-                return ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
+                let imageCell = ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
+                imageCell.selectionStyle = .none
+                return imageCell
             } else if let detailItem = item as? DetailItem {
 
                 //detail items
@@ -129,7 +131,9 @@ class RecipeViewController: UITableViewController {
                 } else {
 
                     //times
-                    return CustomCell(text: textItem.text, reuseIdentifier: Strings.timesCell)
+                    let cell = CustomCell(text: textItem.text, reuseIdentifier: Strings.timesCell)
+                    cell.selectionStyle = .none
+                    return cell
                 }
             } else {
                 return UITableViewCell()

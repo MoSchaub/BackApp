@@ -43,6 +43,7 @@ public class InfoStripCell: CustomCell {
 
     public init(infoStripItem: InfoStripItem, reuseIdentifier: String) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         self.setUpCell(for: infoStripItem)
     }
 
