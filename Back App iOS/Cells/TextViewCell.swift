@@ -6,35 +6,48 @@
 //
 
 import SwiftUI
-import BakingRecipeStrings
 
 // uitableviewcell with a textview
-public class TextViewCell: CustomCell {
+public class TextViewCell: CustomCell, UITextViewDelegate {
 
-    /// text of the cell
-    /// - Note: This is synced with textView.text
-    @Binding private var textContent: String
+    // MARK: Colors
+    private var textViewBackgroundColor = UIColor.cellBackgroundColor!
+    private var textViewTextColor = UIColor.primaryCellTextColor!
+    private var baTintColor = UIColor.baTintColor
+    private var placeholderColor = UIColor.secondaryCellTextColor!
 
-    /// the placeholder for the textView
-    private var placeholder: String
-
-    /// the textView, the main content, of this cell
+    //MARK: main properties
+    /// the main content of the cell
     private var textView: UITextView
 
-    //determines wether the textView should be editable or just visual
     private var isEditable: Bool
 
-    ///managing undo state
+    private var placeholder: String
+
+    @Binding private var textContent: String
+
+
+    // MARK: Updating Properties
+
+    ///timer to track wether the user has stopped typing
+    var textViewTimer : Timer?
+
+    //minimum intervall between changes that causes an update
+    private var typingTimerIntervall = 0.2
+
+
+    //MARK: Undo Properties
+
     private let _undoManager = UndoManager()
     public override var undoManager: UndoManager {
-        return _undoManager
+        _undoManager
     }
 
     /// button for undoing used in the toolbar
     private lazy var undoButton: UIBarButtonItem = {
         let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action: #selector(undo))
         undoButton.isEnabled = false
-        undoButton.tintColor = .baTintColor
+        undoButton.tintColor = baTintColor
         return undoButton
     }()
 
@@ -42,16 +55,18 @@ public class TextViewCell: CustomCell {
     private lazy var redoButton: UIBarButtonItem = {
         let redoButton = UIBarButtonItem(barButtonSystemItem: .redo, target: self, action: #selector(redo))
         redoButton.isEnabled = false
-        redoButton.tintColor = .baTintColor
+        redoButton.tintColor = baTintColor
         return redoButton
     }()
 
     /// button for stop editing the textView
     private lazy var doneButton: UIBarButtonItem = {
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        doneButton.tintColor = .baTintColor
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(endEditing(_:)))
+        doneButton.tintColor = baTintColor
         return doneButton
     }()
+
+    //MARK: Initializer
 
     /// initalizer
     /// - Parameter textContent: the content of the textView
@@ -72,78 +87,119 @@ public class TextViewCell: CustomCell {
 
     override func setup() {
         super.setup()
-
-        /// add the textView to the cell
-        addSubview(textView)
-
-        configureTextView()
-
+        setupTextView()
     }
 
-}
+    //MARK: Configuring Textview
 
-private extension TextViewCell {
-    private var textContentEmpty: Bool {
-        textContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-}
+    private func setupTextView() {
+        // add subview
+        contentView.addSubview(textView)
 
-
-private extension TextViewCell {
-
-    func configureTextView() {
-        //delegate
+        // delegate for editingDidEnd and textViewDidChange
         self.textView.delegate = self
 
-        // design
-        self.setupTextViewDesign()
+        // constraints
+        textView.fillSuperview()
+
+        self.textView.attributedText = NSAttributedString(string: self.textContent, attributes: [.foregroundColor: textViewTextColor ])
+
+        //placeholder
+        self.textView.placeholder = self.placeholder
+        self.textView.placeholderColor = self.placeholderColor
+
+        //font
+        self.textView.font = UIFont.preferredFont(forTextStyle: .body)
+
+        //background color
+        self.textView.backgroundColor = self.textViewBackgroundColor
+
+        // auto growing
+        self.textView.isScrollEnabled = false
 
         // link detection and toolbar if editable
         setupLinkDetection()
 
-        if self.isEditable {
-
-            // make textField editable if tapped
-            self.addTextFieldGestureRecognizer()
-            self.addToolbarWithButtons()
+        // add toolbar Buttons and editing functionality if it should be editable
+        if isEditable {
+            addToolbar()
+            addTextFieldGestureRecognizer()
         }
     }
+
+    //MARK: Updating Text
+
+    public func textViewDidEndEditing(_ textView: UITextView) {
+        self.textContent = textView.text
+        setupLinkDetection()
+    }
+
+    public func textViewDidChange(_ textView: UITextView) {
+        textViewTimer?.invalidate()
+        textViewTimer = Timer.scheduledTimer(timeInterval: self.typingTimerIntervall, target: self, selector: #selector(typingStopped), userInfo: nil, repeats: false)
+    }
+
+    @objc func typingStopped() {
+        self.textDidChange(previousText: self.textContent, previousCursorPosition: self.textView.getCursorPosition())
+    }
+
+    public func clickTextView() {
+        self.textView.becomeFirstResponder()
+    }
+
+    //MARK: Toolbar
+
+    func addToolbar() {
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44))
+        toolBar.setItems([undoButton, redoButton, UIBarButtonItem.flexible, doneButton], animated: true)
+        textView.inputAccessoryView = toolBar
+    }
+
 }
 
+//MARK:  Undo and Redo
 private extension TextViewCell {
 
-    /// sets up the constraints and design of the textView
-    func setupTextViewDesign() {
-        //contraints
-        self.textView.fillSuperview()
-
-        //textColor, text and font
-        self.setTextViewTextFromTextContent()
-
-        //background color
-        self.textView.backgroundColor = UIColor.cellBackgroundColor
-
-        //baTintColor
-        self.textView.tintColor = UIColor.baTintColor
-    }
-
-    /// sets the text for textView from textContent, the textColor and the font
-    func setTextViewTextFromTextContent() {
+    /// enables or disables undo and redo buttons if undo or redo are possible
+    func updateUndoRedoButtons() {
         DispatchQueue.main.async {
-            if !self.textContentEmpty {
-                self.textView.attributedText = NSAttributedString(string: self.textContent, attributes: [.foregroundColor : UIColor.primaryCellTextColor!])
-            }
-
-            self.textView.font = UIFont.preferredFont(forTextStyle: .body)
-            self.textView.textColor = .primaryCellTextColor
-            self.textView.placeholder = self.placeholder
-            self.textView.placeholderColor = .secondaryCellTextColor
-
+            self.undoButton.isEnabled = self.undoManager.canUndo
+            self.redoButton.isEnabled = self.undoManager.canRedo
         }
     }
+
+    @objc private func undo() {
+        undoManager.undo()
+        updateUndoRedoButtons()
+    }
+
+    @objc private func redo() {
+        undoManager.redo()
+        updateUndoRedoButtons()
+    }
+
+    func registerUndo(previousText: String, previousCursorPosition: Int) {
+        self.undoManager.registerUndo(withTarget: self) { target in
+            let currentText: String = self.textView.text
+            let currentCursorPosition = self.textView.getCursorPosition()
+
+            self.textView.text = previousText
+            self.textView.setCursor(to: previousCursorPosition) //TODO: Fix Cursor Position not working correctly in the middle of a string
+
+            self.textDidChange(previousText: currentText, previousCursorPosition: currentCursorPosition)
+        }
+    }
+
+    private func textDidChange(previousText: String, previousCursorPosition: Int) {
+        self.textContent = self.textView.text
+        self.textView.textColor = textViewTextColor
+        registerUndo(previousText: previousText, previousCursorPosition: previousCursorPosition)
+        self.updateUndoRedoButtons()
+    }
+
 }
 
-//MARK: - Link Detection and Editable
+// MARK:  enabling Link Detection while retaining Editing Functionality
 private extension TextViewCell {
 
     func setupLinkDetection() {
@@ -151,7 +207,7 @@ private extension TextViewCell {
         textView.dataDetectorTypes = [.link]
     }
 
-    private func addTextFieldGestureRecognizer() {
+    func addTextFieldGestureRecognizer() {
         let recognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(textViewDidTapped))
@@ -212,79 +268,5 @@ private extension TextViewCell {
         } else {
             changeTextViewToNormalState()
         }
-    }
-}
-
-//MARK: - Toolbar and Undo/Redo
-private extension TextViewCell {
-    func addToolbarWithButtons() {
-        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44))
-        toolBar.setItems([undoButton, redoButton, UIBarButtonItem.flexible, doneButton], animated: true)
-        textView.inputAccessoryView = toolBar
-    }
-
-    private func updateUndoRedoButtons() {
-        DispatchQueue.main.async {
-            self.undoButton.isEnabled = self.undoManager.canUndo
-            self.redoButton.isEnabled = self.undoManager.canRedo
-        }
-    }
-
-    @objc private func undo() {
-        undoManager.undo()
-        updateUndoRedoButtons()
-    }
-
-    @objc private func redo() {
-        undoManager.redo()
-        updateUndoRedoButtons()
-    }
-
-    @objc private func done() {
-        textView.endEditing(true)
-    }
-}
-
-private extension TextViewCell {
-    
-    func textDidChange(from previousText: String, previousCursorPosition: Int) {
-        DispatchQueue.main.async {
-            self.textContent = self.textView.text
-        }
-
-        self.undoManager.registerUndo(withTarget: self) { target in
-            let currentText: String = self.textContent
-            let currentCursorPosition = self.textView.getCursorPosition()
-            DispatchQueue.main.async {
-                self.textView.text = previousText
-                self.textView.setCursor(to: previousCursorPosition)
-            }
-            self.textDidChange(from: currentText, previousCursorPosition: currentCursorPosition)
-        }
-
-        self.updateUndoRedoButtons()
-    }
-}
-
-extension TextViewCell: UITextViewDelegate {
-
-    // update textContent if textView.text changes
-    public func textViewDidChange(_ textView: UITextView) {
-        textDidChange(from: self.textContent, previousCursorPosition: self.textView.getCursorPosition())
-    }
-
-
-    public func textViewDidBeginEditing(_ textView: UITextView) {
-        // remove placeholder when editing did begin
-        DispatchQueue.main.async {
-            if self.textContentEmpty {
-                textView.text = ""
-            }
-        }
-    }
-
-    public func textViewDidEndEditing(_ textView: UITextView) {
-        setTextViewTextFromTextContent()
-        setupLinkDetection()
     }
 }

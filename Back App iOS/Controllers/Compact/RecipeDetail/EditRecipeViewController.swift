@@ -195,7 +195,7 @@ private extension EditRecipeViewController {
             } else if item is InfoItem{
 
                 //info cell
-                return TextViewCell(textContent: Binding(get: { self.recipe.info}, set: { self.recipe.info = $0}), placeholder: Strings.info, reuseIdentifier: Strings.infoCell, isEditable: true)
+                return TextViewCell(textContent: Binding(get: { self.recipe.info}, set: { self.recipe.info = $0; self.updateInfo(indexPath: indexPath) }), placeholder: Strings.info, reuseIdentifier: Strings.infoCell, isEditable: true)
             } else if let infoStripItem = item as? InfoStripItem {
 
                 //infostrip
@@ -220,10 +220,17 @@ private extension EditRecipeViewController {
             }
            return UITableViewCell()
         }
-        dataSource.defaultRowAnimation = .fade
+        dataSource.defaultRowAnimation = .none
         dataSource.recipeId = self.recipe.id
 
         return dataSource
+    }
+
+    private func updateInfo(indexPath: IndexPath) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+        }
     }
 
     private func updateDataSource(animated: Bool) {

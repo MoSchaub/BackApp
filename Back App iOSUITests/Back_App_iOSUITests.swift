@@ -365,7 +365,6 @@ class Back_App_iOSUITests: XCTestCase {
         
         appTables.staticTexts[Recipe.example.name].tap()
         app.tables.staticTexts["Start"].tap()
-        app.tables.staticTexts["Start"].tap()
     }
 
     func testnormalSchedule() throws {
@@ -401,11 +400,11 @@ class Back_App_iOSUITests: XCTestCase {
         let customDateFormatter = DateFormatter()
         customDateFormatter.dateFormat = "MMM d, y HH:mm"
         customDateFormatter.locale = Locale.init(identifier: "en_us")
-        let newDate = customDateFormatter.date(from: "Oct 1, 21 12:00")!
+        let newDate = customDateFormatter.date(from: "Dec 1, 21 12:00")!
         let daysSinceJuly10 = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
         
         
-        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "Oct 1")
+        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "Dec 1")
         appTables.segmentedControls.buttons["end"].tap()
         navigationBar.buttons["OK"].tap()
         
