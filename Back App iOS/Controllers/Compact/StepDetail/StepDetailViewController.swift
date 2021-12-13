@@ -93,13 +93,6 @@ extension StepDetailViewController {
         applyInitialSnapshot()
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == StepDetailSection.notes.rawValue {
-            return 100
-        }
-        return UITableView.automaticDimension
-    }
-    
     // MARK:  Header
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -420,7 +413,7 @@ private extension StepDetailViewController {
                                             } else {
                                                 // notes
                                                 return TextViewCell(
-                                                    textContent: Binding(get: { self.step.notes }, set: { newText in  self.step.notes = newText }),
+                                                    textContent: Binding(get: { self.step.notes }, set: { newText in  self.step.notes = newText; self.updateNotes() }),
                                                     placeholder: Strings.notes,
                                                     reuseIdentifier: Strings.notesCell
                                                 )
@@ -527,6 +520,14 @@ extension StepDetailViewController: TempPickerCellDelegate {
     
 private extension StepDetailViewController {
     // MARK: Snapshot
+
+    ///updates notes textFieldSize
+    private func updateNotes() {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+        }
+    }
     
     /// creates the initial list
     private func applyInitialSnapshot(animated: Bool = true) {

@@ -102,7 +102,7 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
         // constraints
         textView.fillSuperview()
 
-        self.textView.attributedText = NSAttributedString(string: self.textContent, attributes: [.foregroundColor: textViewTextColor ])
+        self.setText()
 
         //placeholder
         self.textView.placeholder = self.placeholder
@@ -125,6 +125,11 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
             addToolbar()
             addTextFieldGestureRecognizer()
         }
+    }
+
+    private func setText() {
+        self.textView.textColor = textViewTextColor
+        self.textView.attributedText = NSAttributedString(string: self.textContent, attributes: [.foregroundColor: textViewTextColor ])
     }
 
     //MARK: Updating Text
