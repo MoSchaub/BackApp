@@ -250,18 +250,6 @@ class RecipeViewController: UITableViewController {
             }
         }
     }
-
-    //MARK: - CellHeight
-
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let item = dataSource.itemIdentifier(for: indexPath), item is ImageItem {
-            return 250
-        } else if dataSource.itemIdentifier(for: indexPath) is InfoItem {
-            return 100
-        } else {
-            return UITableView.automaticDimension
-        }
-    }
 }
 
 // MARK: Conformance to UISplitViewControllerDelegate
