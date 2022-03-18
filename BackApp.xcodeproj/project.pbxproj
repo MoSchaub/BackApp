@@ -1122,7 +1122,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 74;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1150,7 +1150,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 74;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
