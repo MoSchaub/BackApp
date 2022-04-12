@@ -113,6 +113,8 @@ public var dateFormatter: DateFormatter{
     return formatter
 }
 
+public typealias RecipeTransferType = (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])])
+
 //MARK: - Formatted Properties
 public extension Recipe {
     ///formatted Name with a standart value
@@ -121,7 +123,7 @@ public extension Recipe {
         name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedRecipe : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    static var example: (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
+    static var example: RecipeTransferType {
         let vollkornMehl = Ingredient(stepId: 1, name: "Vollkornmehl", amount: 50, type: .flour, number: 0)
         let anstellgut = Ingredient(stepId: 1, name: "Anstellgut TA 200", amount: 120, type: .ta200, number: 1)
         let olivenöl = Ingredient(stepId: 1, name: "Olivenöl", amount: 40, type: .bulkLiquid, number: 2)
@@ -135,7 +137,7 @@ public extension Recipe {
         return (Recipe(name: "Sauerteigcracker", number: 0), [(schritt1, [vollkornMehl, anstellgut, olivenöl, saaten, salz]), (backen, [])])
     }
     
-    static func complexExample(number: Int) -> (recipe: Recipe, stepIngredients: [(step: Step, ingredients: [Ingredient])]) {
+    static func complexExample(number: Int) -> RecipeTransferType {
         let recipe = Recipe(name: "Komplexes Rezept", number: number)
         var sub = Step(name: "Sauerteig", temperature: 30, recipeId: Int64(number), number: 1)
         sub.superStepId = 1
@@ -146,6 +148,29 @@ public extension Recipe {
         let wasser2 = Ingredient(stepId: 0, name: "Wasser", amount: 100, type: .bulkLiquid, number: 1)
         
         return (recipe, [(step, [mehl2, wasser2]), (sub, [mehl, wasser])])
+    }
+
+    static func multilayerSubstepExample(number: Int) -> RecipeTransferType {
+        let recipe = Recipe(name: "Rezept", number: number)
+        let schritt1 = Step(name: "Schritt", duration: 60, recipeId: Int64(number), number: 1)
+
+        var s1sub1 = Step(name: "s1sub1", duration: 900, recipeId: Int64(number), number: 2)
+        s1sub1.superStepId = 1
+
+        var s1sub1sub = Step(name: "s1sub1sub", duration: 1200, recipeId: Int64(number), number: 3)
+        s1sub1sub.superStepId = 2
+
+        var s1sub2 = Step(name: "s1sub2", duration: 600, recipeId: Int64(number), number: 4)
+        s1sub2.superStepId = 1
+
+        var s1sub2sub = Step(name: "s1sub2sub", duration: 1800, recipeId: Int64(number), number: 5)
+        s1sub2sub.superStepId = 4
+
+        var s1sub2subsub = Step(name: "s1sub2subsub", duration: 400, recipeId: Int64(number), number: 6)
+        s1sub2subsub.superStepId = 5
+
+        let schritt2 = Step(name: "s2", duration: 390, recipeId: Int64(number), number: 7)
+        return (recipe, [(schritt1, []), (s1sub1, []), (s1sub1sub, []), (s1sub2, []), (s1sub2sub, []), (s1sub2subsub, []), (schritt2, []) ])
     }
     
     ///recipe prepared for exporting

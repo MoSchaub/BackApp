@@ -8,9 +8,9 @@ final class BackAppCoreTests: XCTestCase {
     var appData: BackAppData!
     
     override func setUp() {
+        //nuke the database after every test
         appData = BackAppData.shared
         try! appData.deleteAll(of: Recipe.self)
-        
     }
     
     func testRecipeDatabaseSchema() throws {
@@ -64,62 +64,46 @@ final class BackAppCoreTests: XCTestCase {
     
     
     func testInsertingExample() throws {
-        let recipeExample = Recipe.example
-        var recipe = recipeExample.recipe
-        let appData = BackAppData.shared()
-
-        appData.insert(&recipe)
-        try XCTAssertTrue(appData.databaseReader.read(recipe.exists))
-
-        let id = recipe.id!
-
-        let stepIngredients = recipeExample.stepIngredients
-
-        _ = try stepIngredients.map {
-            var step = $0.step
-            step.recipeId = id
-            appData.insert(&step)
-            try XCTAssertTrue(appData.databaseReader.read(step.exists))
-
-            let stepId = step.id!
-
-            for ingredient in $0.ingredients {
-                var ingredient = ingredient
-                ingredient.stepId = stepId
-                appData.insert(&ingredient)
-                try XCTAssert(appData.databaseReader.read(ingredient.exists))
-            }
-        }
+        try insert(recipeTransfer: Recipe.example)
     }
     
     func testInsertingComplexRecipe() throws {
-        let complexRecipe = Recipe.complexExample(number: 0)
-        var recipe = complexRecipe.recipe
+        try insert(recipeTransfer: Recipe.complexExample(number: 0))
+    }
+
+    func testInsertingMultilayerRecipe() throws {
+        try insert(recipeTransfer: Recipe.multilayerSubstepExample(number: 0), complex: true)
+
+        let step = appData.allSteps.first
+        XCTAssertEqual(appData.sortedSubsteps(for: step!.id!).count, 2)
+    }
+
+    func insert(recipeTransfer: RecipeTransferType, complex: Bool = false) throws {
+        var recipe = recipeTransfer.recipe
         let appData = BackAppData.shared
-        
+
         appData.insert(&recipe)
         try XCTAssert(appData.databaseReader.read(recipe.exists))
-        
-        let recipeId = recipe.id!
-        
-        let stepIngredients = complexRecipe.stepIngredients
-        
+
         var previousStepId: Int64?
-        
-        _ = try stepIngredients.map {
+
+        _ = try recipeTransfer.stepIngredients.map {
             var step = $0.step
-            step.recipeId = recipeId
-            
-            if step.superStepId != nil, let previousStepId = previousStepId {
+            step.recipeId = recipe.id!
+
+            //check if there is any superstep id that is not nil. any superstep id is used as a notation to say that the step is suposed to be substep of the previously inserted step. This means the superstepid is not set if it was nil before.
+            if !complex, step.superStepId != nil, let previousStepId = previousStepId {
                 step.superStepId = previousStepId
+            } else if complex, let superStepId = step.superStepId, let superStep = appData.allSteps.first(where: { $0.number == superStepId }), let newId = superStep.id  {
+                step.superStepId = newId
             }
             appData.insert(&step)
-            
+
             try XCTAssertTrue(appData.databaseReader.read(step.exists))
-            
+
             let stepId = step.id!
             previousStepId = stepId
-            
+
             for ingredient in $0.ingredients {
                 var ingredient = ingredient
                 ingredient.stepId = stepId
@@ -127,6 +111,8 @@ final class BackAppCoreTests: XCTestCase {
                 try XCTAssert(appData.databaseReader.read(ingredient.exists))
             }
         }
+
+        XCTAssertEqual(appData.steps(with: recipe.id!).count, recipeTransfer.stepIngredients.count)
     }
     
     func insertExampleRecipeAndGetId() throws -> Int64 {
@@ -183,6 +169,21 @@ final class BackAppCoreTests: XCTestCase {
         }
         XCTAssert(recipe != nil)
         return recipe!
+    }
+
+    func insertMultilayerRecipeAndGetId() throws -> Int64 {
+        try testInsertingMultilayerRecipe()
+
+        let appData = BackAppData.shared
+
+        let multilayerRecipeExample = Recipe.multilayerSubstepExample(number: 0)
+
+        //identify the recipe by name is fine cause there is only one recipe in the database
+        let recipe  = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == multilayerRecipeExample.recipe.name).fetchOne(db)
+        }
+        XCTAssert(recipe != nil) // check wether the insert worked
+        return recipe!.id!
     }
     
     func testUpdatingExample() throws {
@@ -411,6 +412,69 @@ final class BackAppCoreTests: XCTestCase {
         XCTAssertEqual(appData.allRecipes.count, 2)
         XCTAssertEqual(appData.allIngredients.count, appData.numberOfAllIngredients(for: recipeExample.id!) * 2)
         XCTAssertEqual(appData.allSteps.count, 4)
+    }
+
+    func testNewQuery() throws {
+
+        struct QueryRes: FetchableRecord {
+            init(row: Row) {
+                name = row["name"]
+                id = row["id"]!;
+                superStepId = row["superStepId"];
+                path = row["path"];
+                totalDuration = row["totalDuration"]
+            }
+
+            var id: String
+            var superStepId: String?
+            var path: String
+            var name: String
+            var totalDuration: Double
+
+            var description: String {
+                "(name: \(name), id: \(id), superStepId: \(superStepId ?? "nil"), path: \(path)), totalDuration: \(totalDuration)"
+            }
+        }
+
+        func stringfromoptional(_ int64: Int64?) -> String {
+            if let str = int64 {
+                return String(str)
+            } else { return "nil"}
+        }
+
+        func totalStepDuration(db: Database, stepId: Int64, duration: Double) throws -> [QueryRes] {
+            try QueryRes.fetchAll(db, sql: """
+                                  WITH RECURSIVE step_hierarchy AS (
+                                    SELECT
+                                        name, id, superStepId, 'schritt1' AS path, 0 AS totalDuration
+                                    FROM STEP
+                                    WHERE superStepId IS NULL AND id = \(stepId)
+
+                                    UNION ALL
+
+                                  SELECT
+                                    s.name, s.id, s.superStepId, step_hierarchy.path || ' -> ' || s.name, step_hierarchy.totalDuration + s.duration
+                                  FROM STEP s, step_hierarchy
+                                  WHERE s.superStepId == step_hierarchy.id
+                                  )
+                                  SELECT *
+                                  FROM step_hierarchy
+                                  """)
+        }
+
+        let reader = appData.databaseReader
+
+        let recipeId = try insertMultilayerRecipeAndGetId()
+
+        try reader.read { db in
+            let step = try Step.all().filter(Step.Columns.recipeId == recipeId).fetchOne(db)
+            if let stepId = step?.id {
+                let foo = try totalStepDuration(db: db, stepId: stepId, duration: step!.duration)
+                _ = foo.map { print( $0.description )}
+            }
+        }
+        print("\n")
+        _ = appData.allSteps.map { print("(\($0.formattedName) \($0.id!) \($0.duration) \(stringfromoptional($0.superStepId)) )")}
     }
     
     static var allTests = [
