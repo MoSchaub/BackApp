@@ -178,13 +178,13 @@ extension DerivableRequest where RowDecoder == Step {
         filter(by: recipeId)
             .order(Step.Columns.number) // sort by number in ascending order (asc is the default)
     }
-    
+
     public func orderedSubstepsByDuration(of stepId: Int64, with recipeId: Int64) -> Self {
         filter(by: recipeId)
             .filter(Step.Columns.superStepId == stepId)
             .order(Step.Columns.duration.desc)
     }
-    
+
     public func filterNotSubsteps(with recipeId: Int64) -> Self {
         orderedByNumber(with: recipeId)
             .filter(Step.Columns.superStepId == nil)
@@ -238,25 +238,49 @@ public extension Step {
         }) ?? []
     }
     
-    /// substeps ordered by their duration in descending order + this step
+    /// substeps ordered by their and their substeps longest duration  in descending order + this step
     /// this order makes the most sense when doing the substeps and this step
-    /// because the substeps are parrallel and so the longest one has to start first.
+    /// because the substeps are parrallel and so the longest chain has to start first.
+    /// also updates numbers
     func stepsForReordering(db: Database, number: inout Int) throws -> [Step] {
-        var steps = [Step]()
-        for sub in sortedSubsteps(db: db) {
-            //first add the substeps of the substep
-            steps.append(contentsOf: try sub.stepsForReordering(db: db, number: &number))
+
+        //get the ordered ids from the database
+        let stepIds = try Int64.fetchAll(db, sql: """
+                                  WITH RECURSIVE step_hierarchy AS (
+                                    SELECT
+                                        id, superStepId, 0 AS plannedDuration
+                                    FROM STEP
+                                    WHERE superStepId IS NULL AND id = \(self.id!)
+
+                                    UNION ALL
+
+                                  SELECT
+                                    s.id, s.superStepId, step_hierarchy.plannedDuration + s.duration
+                                  FROM STEP s, step_hierarchy
+                                  WHERE s.superStepId == step_hierarchy.id
+                                  )
+                                  SELECT id
+                                  FROM step_hierarchy
+                                  ORDER BY plannedDuration DESC
+
+                                  """)
+
+        //convert the ids to steps
+        var steps = try stepIds.map{ try Step.all().filter(key: ["id":$0]).fetchOne(db)!}
+
+        //update the numbers
+        for (index,step) in steps.enumerated() {
+            number += 1
+
+            //make step mutable
+            var step = step
+
+            //change its number and write the step
+            step.number = number
+
+            //update the step in the array
+            steps[index] = step
         }
-
-        var step = self // make it mutable
-
-        //update the number
-        step.number = number
-
-        steps.append(step)
-
-        number += 1
-
         return steps
     }
 

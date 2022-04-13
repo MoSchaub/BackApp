@@ -151,7 +151,7 @@ public extension Recipe {
     }
 
     static func multilayerSubstepExample(number: Int) -> RecipeTransferType {
-        let recipe = Recipe(name: "Rezept", number: number)
+        let recipe = Recipe(name: "multilayer", number: number)
         let schritt1 = Step(name: "Schritt", duration: 60, recipeId: Int64(number), number: 1)
 
         var s1sub1 = Step(name: "s1sub1", duration: 900, recipeId: Int64(number), number: 2)

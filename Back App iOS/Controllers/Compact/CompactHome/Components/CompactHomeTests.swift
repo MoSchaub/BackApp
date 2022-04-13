@@ -36,7 +36,7 @@ class CompactHomeTests: XCTestCase {
         app.navigationBars["Settings"].buttons["Recipes"].tap()        
         
         settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["30.0° C"].exists)
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["30°C"].exists)
         
         app.terminate()
 
@@ -51,7 +51,7 @@ class CompactHomeTests: XCTestCase {
         app.navigationBars["Settings"].buttons["Recipes"].tap()
         
         settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["20.0° C"].exists)
+        XCTAssertTrue(XCUIApplication().tables.staticTexts["20°C"].exists)
     }
     
     func testNavigatingToAboutScreen() throws {

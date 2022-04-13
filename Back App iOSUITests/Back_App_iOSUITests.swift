@@ -93,7 +93,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         // delete the substep
         appTables.children(matching: .button)["Edit"].tap()
-        appTables.buttons["Delete Sub2, 1000.0 g 20.0 °C"].tap()
+        appTables.buttons["Delete Sub2, 1000.0 g 20°C"].tap()
         appTables.buttons["Delete"].tap()
         appTables.children(matching: .button)["Done"].tap()
         
@@ -400,11 +400,11 @@ class Back_App_iOSUITests: XCTestCase {
         let customDateFormatter = DateFormatter()
         customDateFormatter.dateFormat = "MMM d, y HH:mm"
         customDateFormatter.locale = Locale.init(identifier: "en_us")
-        let newDate = customDateFormatter.date(from: "Dec 1, 21 12:00")!
+        let newDate = customDateFormatter.date(from: "May 1, 21 12:00")!
         let daysSinceJuly10 = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
         
         
-        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "Dec 1")
+        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "May 1")
         appTables.segmentedControls.buttons["end"].tap()
         navigationBar.buttons["OK"].tap()
         
