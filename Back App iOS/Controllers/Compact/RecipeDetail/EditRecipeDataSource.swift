@@ -14,6 +14,7 @@ import BackAppCore
 
 extension NSNotification.Name {
     static var editRecipeShouldUpdate = NSNotification.Name.init(rawValue: "editRecipeShouldUpdate")
+    static var specialNavbarShouldShow = NSNotification.Name.init(rawValue: "specialNavbarShouldShow")
 }
 
 class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {

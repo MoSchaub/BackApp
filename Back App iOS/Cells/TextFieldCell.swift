@@ -33,6 +33,9 @@ public class TextFieldCell: CustomCell {
     internal func setTextFieldBehavior() {
         textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
         textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
+        textField.controlEventPublisher(for: .editingDidBegin).sink { _ in
+            NotificationCenter.default.post(name: .specialNavbarShouldShow, object: self.textField)
+        }.store(in: &tokens)
     }
 
     init(text: String, placeholder: String, reuseIdentifier: String, textChanded: ((String) -> Void)?) {

@@ -33,6 +33,12 @@ class EditRecipeViewController: UITableViewController {
     private let recipeId: Int64
 
     private var tokens = Set<AnyCancellable>()
+
+    private var editingTextField: UITextField? = nil {
+        didSet {
+            self.updateNavBar()
+        }
+    }
     
     // recipe pulled from the database updates the database on set
     private var recipe: Recipe {
@@ -42,7 +48,7 @@ class EditRecipeViewController: UITableViewController {
         set {
             if newValue != self.recipe {
                 appData.update(newValue) { _ in
-                    self.setUpNavigationBar()
+                    self.updateNavBar()
                     if !self.recipeChanged, self.creating{
                         self.recipeChanged = true
                     }
@@ -99,6 +105,13 @@ extension EditRecipeViewController {
                 self.updateDataSource(animated: false)
             }
             .store(in: &tokens)
+
+        NotificationCenter.default.publisher(for: .specialNavbarShouldShow, object: nil)
+            .sink { notification in
+                if let textField = notification.object as? UITextField, #available(iOS 14.0, *) {
+                    self.specialNavbar(textField: textField)
+                }
+            }.store(in: &tokens)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,19 +120,24 @@ extension EditRecipeViewController {
         
         tableView.rowHeight = UITableView.automaticDimension
         DispatchQueue.global(qos: .background).async {
-            self.setUpNavigationBar()
+            self.updateNavBar()
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.editingTextField = nil
     }
     
 }
 
 extension EditRecipeViewController: UISplitViewControllerDelegate {
     func splitViewControllerDidExpand(_ svc: UISplitViewController) {
-        self.setUpNavigationBar()
+        self.updateNavBar()
     }
     
     func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-        self.setUpNavigationBar()
+        self.updateNavBar()
     }
 }
 
@@ -265,12 +283,20 @@ extension EditRecipeViewController {
 // MARK: - NavigationBar
 
 private extension EditRecipeViewController {
-    private func setUpNavigationBar() {
+    private func updateNavBar() {
         
         if creating {
             DispatchQueue.main.async {
                 //set the items
-                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
+
+                //right
+                if let item = self.navBarDoneItem() {
+                        self.navigationItem.rightBarButtonItem = item
+                } else {
+                    self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
+                }
+
+                //left
                 self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
                 
             }
@@ -287,6 +313,14 @@ private extension EditRecipeViewController {
 
             setUp3ItemToolbar(item1: share, item2: favourite, item3: delete)
 
+            //right done item if editing
+            DispatchQueue.main.async {
+                if let item = self.navBarDoneItem() {
+                    self.navigationItem.rightBarButtonItem = item
+                } else {
+                    self.navigationItem.rightBarButtonItems = []
+                }
+            }
 
         }
 
@@ -295,6 +329,28 @@ private extension EditRecipeViewController {
             self.title = self.recipe.formattedName
         }
 
+    }
+
+    private func navBarDoneItem() -> UIBarButtonItem? {
+        guard self.editingTextField != nil else { return nil }
+
+        let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneItemPressed))
+
+        return button
+    }
+
+    @objc func doneItemPressed() {
+        DispatchQueue.main.async {
+
+            //end editing and remove done button
+            self.editingTextField?.endEditing(true)
+            self.editingTextField = nil
+        }
+    }
+
+    @available(iOS 14.0, *)
+    private func specialNavbar(textField: UITextField) {
+        self.editingTextField = textField
     }
     
     // MARK: Cell registration
