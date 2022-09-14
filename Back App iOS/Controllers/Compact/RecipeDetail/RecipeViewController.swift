@@ -42,11 +42,11 @@ class RecipeViewController: UITableViewController {
         }
     }
 
+    //storing all publishers
+    private var tokens = Set<AnyCancellable>()
+
     /// id of the recipe used to get the recipeDetailItem or a recipe binding
     private let recipeId: Int64
-
-    /// storing the publisher that updates the recipeDetailItem when it changes in the database
-    private var recipeInfoPublisher: AnyCancellable!
 
     /// edit recipe vc provided by the init used for pushing to the detail screen
     private let editVC: EditRecipeViewController
@@ -63,7 +63,7 @@ class RecipeViewController: UITableViewController {
 
         registerCells()
         self.configureDataSource()
-        observeRecipeInfo()
+        attachPublishers()
 
         self.tableView.separatorStyle = .none
     }
@@ -73,7 +73,7 @@ class RecipeViewController: UITableViewController {
     }
 
     deinit {
-        recipeInfoPublisher.cancel()
+        _ = tokens.map { $0.cancel() }
     }
 
     // MARK: - LifeCycle
@@ -173,13 +173,20 @@ class RecipeViewController: UITableViewController {
     }
 
     //MARK: Observer
-    private func observeRecipeInfo() {
-        recipeInfoPublisher = BackAppData.shared.recipeInfoPublisher(for: recipeId)
+    private func attachPublishers() {
+        NotificationCenter.default.publisher(for: .horizontalSizeClassDidChange)
+            .sink { _ in
+                self.configureNavbarItems()
+            }
+            .store(in: &tokens)
+
+        BackAppData.shared.recipeInfoPublisher(for: recipeId)
             .sink(receiveCompletion: { completion in
                 print(completion)
             }) { recipeDetailItem in
                 self.recipeDetailItem = recipeDetailItem
             }
+            .store(in: &tokens)
     }
 
     // MARK: Navbar

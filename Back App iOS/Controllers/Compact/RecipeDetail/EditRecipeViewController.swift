@@ -8,39 +8,26 @@
 
 import SwiftUI
 import BakingRecipeFoundation
-import BakingRecipeUIFoundation
 import BakingRecipeStrings
 import BackAppCore
-import Combine
 
-class EditRecipeViewController: UITableViewController {
-    
+class EditRecipeViewController: BackAppVC {
+
     // MARK: Properties
-    
+
     // class for managing table creation and updates
     private lazy var dataSource = makeDataSource()
-    
+
     // queue for performing image compression
     private lazy var compressionQueue = OperationQueue()
 
-    //interface object for the database
-    private var appData: BackAppData
-    
     // for picking images
     private var imagePickerController: UIImagePickerController?
 
     // id of the recipe for pulling the recipe from the database
     private let recipeId: Int64
 
-    private var tokens = Set<AnyCancellable>()
-
-    private var editingTextField: UITextField? = nil {
-        didSet {
-            self.updateNavBar()
-        }
-    }
-    
-    // recipe pulled from the database updates the database on set
+    // recipe pulled from teh database, updates the database on set
     private var recipe: Recipe {
         get {
             self.appData.record(with: recipeId) ?? Recipe.example.recipe
@@ -49,7 +36,7 @@ class EditRecipeViewController: UITableViewController {
             if newValue != self.recipe {
                 appData.update(newValue) { _ in
                     self.updateNavBar()
-                    if !self.recipeChanged, self.creating{
+                    if !self.recipeChanged, self.creating {
                         self.recipeChanged = true
                     }
                 }
@@ -59,133 +46,114 @@ class EditRecipeViewController: UITableViewController {
 
     // wether the recipe is freshly created
     private var creating: Bool
-    
+
     // wether the recipe already has been changed
     private var recipeChanged: Bool = false
 
     // func for dissmissing after pressing delete button
     private var dismissDetail: (() -> ())?
-    
+
     //initializer
     init(recipeId: Int64, creating: Bool, appData: BackAppData, dismissDetail: (() -> ())? = nil ) {
         self.creating = creating
         self.recipeId = recipeId
-        self.appData = appData
         self.dismissDetail = dismissDetail
-        super.init(style: .insetGrouped)
+        super.init(appData: appData)
+
+        //because a the controller is presented in a nav controller
+        self.navigationController?.presentationController?.delegate = self
     }
 
-    deinit {
-        _ = tokens.map {$0.cancel() }
-    }
-    
     required init?(coder: NSCoder) {
         fatalError(Strings.init_coder_not_implemented)
     }
-}
 
-// MARK: - Update and Load View
+    override func updateDataSource(animated: Bool) {
+        var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
+        snapshot.appendSections(RecipeDetailSection.allCases)
+        snapshot.appendItems([recipe.nameItem()], toSection: .name)
+        snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
+        snapshot.appendItems([recipe.amountItem()], toSection: .times)
+        snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
+        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([recipe.infoItem], toSection: .info)
+        dataSource.apply(snapshot, animatingDifferences: animated)
+    }
 
-extension EditRecipeViewController {
-    override func loadView() {
-        super.loadView()
+    // MARK: - NavigationBar
+
+    /// share item to share the recipe as a file
+    func shareItem() -> UIBarButtonItem {
+        UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
+    }
+
+    /// favourite item to add  the recipe to the favorites
+    private func favouriteItem() -> UIBarButtonItem {
+        UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+    }
+
+    /// delete item; deletes the recipe and dissmisses
+    private func deleteItem() -> UIBarButtonItem {
+        UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
+    }
+
+    override func setRightBarButtonItems() {
+        if creating {
+            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
+        } else {
+            if UITraitCollection.current.horizontalSizeClass == .regular { // ipad and large iphone landscape
+
+                // fill navbar with buttons
+                self.navigationItem.rightBarButtonItems = [shareItem(), favouriteItem(), deleteItem()]
+            } else { // normal iphone format and small ipad
+
+                // do default stuff
+                super.setRightBarButtonItems()
+            }
+        }
+    }
+
+    override func setLeftBarButtonItems() {
+        if creating {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+        }
+    }
+
+    override func setupToolbar() {
+        if !creating {
+            self.setUp3ItemToolbar(item1: shareItem(), item2: favouriteItem(), item3: deleteItem(), shouldFillNavbar: false)
+        }
+    }
+
+    override func updateNavBarTitle() {
         self.title = self.recipe.formattedName
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        registerCells()
-        self.tableView.separatorStyle = .none
-        
-        //because a the controller is presented in a nav controller
-        self.navigationController?.presentationController?.delegate = self
-        self.splitViewController?.delegate = self
 
-        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate, object: nil)
+    // MARK: - Cell Registration
+    override func registerCells() {
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
+        tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
+        tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
+        tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+    }
+
+    override func attachPublishers() {
+        super.attachPublishers()
+        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate)
             .sink { _ in
                 self.updateDataSource(animated: false)
             }
             .store(in: &tokens)
-
-        NotificationCenter.default.publisher(for: .specialNavbarShouldShow, object: nil)
-            .sink { notification in
-                if let textField = notification.object as? UITextField, #available(iOS 14.0, *) {
-                    self.specialNavbar(textField: textField)
-                }
-            }.store(in: &tokens)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateDataSource(animated: false)
-        
-        tableView.rowHeight = UITableView.automaticDimension
-        DispatchQueue.global(qos: .background).async {
-            self.updateNavBar()
-        }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.editingTextField = nil
-    }
-    
-}
-
-extension EditRecipeViewController: UISplitViewControllerDelegate {
-    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
-        self.updateNavBar()
-    }
-    
-    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-        self.updateNavBar()
-    }
-}
-
-// MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
-
-extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
-    
-    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-        handleCancelButtonPress()
-    }
-    
-    ///Presents an alert if the user is creating a new recipe and presses cancel if he really wants to cancel to prevent data loss else just dissmisses
-    private func handleCancelButtonPress() {
-        if creating, recipeChanged {
-            //show alert
-            showAlert()
-        } else {
-            
-            // make sure the textFieldObserver is stopped
-            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextFieldCell, cell.textField.isEditing {
-                cell.textField.endEditing(true)
+        NotificationCenter.default.publisher(for: .horizontalSizeClassDidChange)
+            .sink { _ in
+                self.updateNavBar()
             }
-            appData.delete(recipe)
-            dissmiss()
-        }
+            .store(in: &tokens)
     }
-    
-    private func showAlert() {
-        let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
-        
-        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
-            alertVC.dismiss(animated: false)
-            self.appData.delete(self.recipe)
-            self.dissmiss()
-        })
-        
-        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
-            alertVC.dismiss(animated: false)
-            self.dissmiss()
-        })
-        
-        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel) { _ in
-            alertVC.dismiss(animated: true)
-        })
-        
-        self.navigationController?.present(alertVC, animated: true )
-    }
-    
+
 }
 
 // MARK: - DataSource
@@ -197,7 +165,7 @@ private extension EditRecipeViewController {
             if let textFieldItem = item as? TextFieldItem {
 
                 //name text field
-                return TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.textFieldCell, textChanded: { self.recipe.name = $0 })
+                return TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.nameCell, textChanded: { self.recipe.name = $0 })
             } else if let imageItem = item as? ImageItem {
 
                 //imageCell
@@ -236,7 +204,7 @@ private extension EditRecipeViewController {
                 }
                 return cell
             }
-           return UITableViewCell()
+            return UITableViewCell()
         }
         dataSource.defaultRowAnimation = .none
         dataSource.recipeId = self.recipe.id
@@ -251,23 +219,12 @@ private extension EditRecipeViewController {
         }
     }
 
-    private func updateDataSource(animated: Bool) {
-        var snapshot = NSDiffableDataSourceSnapshot<RecipeDetailSection, Item>()
-        snapshot.appendSections(RecipeDetailSection.allCases)
-        snapshot.appendItems([recipe.nameItem()], toSection: .name)
-        snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
-        snapshot.appendItems([recipe.amountItem()], toSection: .times)
-        snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
-        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
-        snapshot.appendItems([recipe.infoItem], toSection: .info)
-        dataSource.apply(snapshot, animatingDifferences: animated)
-    }
 }
 
-// MARK:  - Reload Steps when entering editMode
+// MARK: - Reload Steps when entering editMode
 extension EditRecipeViewController {
 
-    override public func setEditing(_ editing: Bool, animated: Bool) {
+    override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         reloadStepSection()
     }
@@ -277,117 +234,76 @@ extension EditRecipeViewController {
         snapshot.reloadSections([.steps])
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-
 }
 
-// MARK: - NavigationBar
 
-private extension EditRecipeViewController {
-    private func updateNavBar() {
-        
-        if creating {
-            DispatchQueue.main.async {
-                //set the items
+// MARK: - Show Alert when Cancel was pressed and recipe modified to prevent data loss
 
-                //right
-                if let item = self.navBarDoneItem() {
-                        self.navigationItem.rightBarButtonItem = item
-                } else {
-                    self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
-                }
+extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
 
-                //left
-                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
-                
-            }
+    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        handleCancelButtonPress()
+    }
+
+    ///Presents an alert if the user is creating a new recipe and presses cancel if he really wants to cancel to prevent data loss else just dissmisses
+    private func handleCancelButtonPress() {
+        if creating, recipeChanged {
+            //show alert
+            showAlert()
         } else {
 
-            /// share item to share the recipe as a file
-            let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareRecipeFile))
-
-            /// favourite item to add  the recipe to the favorites
-            let favourite = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
-
-            /// delete item; deletes the recipe and dissmisses
-            let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePressed))
-
-            setUp3ItemToolbar(item1: share, item2: favourite, item3: delete)
-
-            //right done item if editing
-            DispatchQueue.main.async {
-                if let item = self.navBarDoneItem() {
-                    self.navigationItem.rightBarButtonItem = item
-                } else {
-                    self.navigationItem.rightBarButtonItems = []
-                }
+            // make sure the textFieldObserver is stopped
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextFieldCell, cell.textField.isEditing {
+                cell.textField.endEditing(true)
             }
-
-        }
-
-        DispatchQueue.main.async {
-            // set the title
-            self.title = self.recipe.formattedName
-        }
-
-    }
-
-    private func navBarDoneItem() -> UIBarButtonItem? {
-        guard self.editingTextField != nil else { return nil }
-
-        let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneItemPressed))
-
-        return button
-    }
-
-    @objc func doneItemPressed() {
-        DispatchQueue.main.async {
-
-            //end editing and remove done button
-            self.editingTextField?.endEditing(true)
-            self.editingTextField = nil
+            appData.delete(recipe)
+            dissmiss()
         }
     }
 
-    @available(iOS 14.0, *)
-    private func specialNavbar(textField: UITextField) {
-        self.editingTextField = textField
-    }
-    
-    // MARK: Cell registration
-    
-    private func registerCells() {
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.detailCell)
-        tableView.register(ImageCell.self, forCellReuseIdentifier: Strings.imageCell)
-        tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
-        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.textFieldCell)
-        tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
-        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
-        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
+    private func showAlert() {
+        let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
+            alertVC.dismiss(animated: false)
+            self.appData.delete(self.recipe)
+            self.dissmiss()
+        })
+
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionSave, style: .default) {_ in
+            alertVC.dismiss(animated: false)
+            self.dissmiss()
+        })
+
+        alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel) { _ in
+            alertVC.dismiss(animated: true)
+        })
+
+        self.navigationController?.present(alertVC, animated: true )
     }
 }
 
 // MARK: helpers for navbarItems
 
 private extension EditRecipeViewController {
-    
+
     @objc private func favouriteRecipe(_ sender: UIBarButtonItem) {
         recipe.isFavorite.toggle()
     }
-    
+
     @objc private func shareRecipeFile(sender: UIBarButtonItem) {
         let vc = UIActivityViewController(activityItems: [appData.exportRecipesToFile(recipes: [self.recipe])], applicationActivities: nil)
         vc.popoverPresentationController?.barButtonItem = sender
         present(vc, animated: true)
     }
-    
+
     @objc private func cancel() {
         handleCancelButtonPress()
     }
 
     @objc private func deletePressed(sender: UIBarButtonItem) {
         let sheet = UIAlertController(preferredStyle: .actionSheet)
-        
+
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive, handler: { _ in
             sheet.dismiss(animated: true) {
                 if !self.creating {
@@ -396,31 +312,28 @@ private extension EditRecipeViewController {
                 }
             }
         }))
-        
+
         sheet.addAction(UIAlertAction(title: Strings.Alert_ActionCancel, style: .cancel, handler: { (_) in
             sheet.dismiss(animated: true)
         }))
-        
+
         sheet.popoverPresentationController?.barButtonItem = sender
-        
+
         present(sheet, animated: true)
     }
-    
+
     @objc private func dissmiss() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 
-
 extension EditRecipeViewController {
-    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard RecipeDetailSection.allCases[section] == .steps else { return nil }
         let steps = appData.steps(with: recipe.id!)
         return customHeader(enabled: !steps.isEmpty, title: Strings.steps, frame: tableView.frame)
     }
 
-    
 }
 
 // MARK: - Cell Selection
@@ -498,17 +411,17 @@ private extension EditRecipeViewController {
 
         // insert the new step
         if id == nil {
-            
+
             step.number = (appData.notSubsteps(for: self.recipeId).last?.number ?? -1) + 1
 
             // insert it
             appData.insert(&step)
-                
+
             self.recipeChanged = true
         }
-        
+
         let stepDetailVC = StepDetailViewController(stepId: step.id!, appData: appData)
-        
+
         //navigate to the conroller
         navigationController?.pushViewController(stepDetailVC, animated: true)
     }

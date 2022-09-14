@@ -31,10 +31,15 @@ public class TextFieldCell: CustomCell {
     /// sets the behavior for updating: only calls update Text when editingDidEnd
     /// - Note: internal because its needs to be overwritten in a subclass
     internal func setTextFieldBehavior() {
-        textField.controlEventPublisher(for: .editingDidEnd).sink { _ in self.updateText() }.store(in: &tokens)
+        textField.controlEventPublisher(for: .editingDidEnd)
+            .sink { _ in
+                self.updateText()
+                NotificationCenter.default.post(name: .doneButtonItemShouldBeRemoved, object: nil)
+            }
+            .store(in: &tokens)
         textField.controlEventPublisher(for: .editingChanged).sink { _ in self.updateText() }.store(in: &tokens)
         textField.controlEventPublisher(for: .editingDidBegin).sink { _ in
-            NotificationCenter.default.post(name: .specialNavbarShouldShow, object: self.textField)
+            NotificationCenter.default.post(name: .doneButtonItemShouldBeDisplayed, object: self.textField)
         }.store(in: &tokens)
     }
 

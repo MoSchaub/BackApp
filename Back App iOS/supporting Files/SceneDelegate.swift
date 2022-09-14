@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        let splitViewController = UISplitViewController()
-        
+        let splitViewController = BackAppSplitVC()
+
         let navigationViewController = UINavigationController(rootViewController: recipeListVC)
         splitViewController.viewControllers = [navigationViewController]
         splitViewController.preferredDisplayMode = .allVisible
@@ -42,6 +42,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             appData.open(url)
         }
     }
-
 }
 
+class BackAppSplitVC: UISplitViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if UITraitCollection.current.horizontalSizeClass != previousTraitCollection?.horizontalSizeClass {
+            // update nav bar
+            NotificationCenter.default.post(name: .horizontalSizeClassDidChange, object: nil)
+        }
+    }
+
+}

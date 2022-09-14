@@ -12,7 +12,7 @@ import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeUIFoundation
 
-class StepDetailViewController: UITableViewController {
+class StepDetailViewController: BackAppVC {
     
     
     // MARK: - Properties
@@ -27,16 +27,13 @@ class StepDetailViewController: UITableViewController {
         
         set {
             self.appData.update(newValue) { _ in
-                self.setupNavigationBar()
+                self.updateNavBarTitle()
             }
         }
     }
 
     /// table view dataSource
     private lazy var dataSource = makeDiffableDataSource()
-    
-    /// appData
-    private var appData: BackAppData
     
     ///wether the datePickerCell is shown
     private var datePickerShown: Bool {
@@ -56,38 +53,65 @@ class StepDetailViewController: UITableViewController {
     // MARK: - Initalizers
     
     init(stepId: Int64, appData: BackAppData) {
-        self.appData = appData
         self.stepId = stepId
-        super.init(style: .insetGrouped)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .listShouldUpdate, object: nil)
+        super.init(appData: appData)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+
+    override func attachPublishers() {
+        super.attachPublishers()
+        NotificationCenter.default.publisher(for: .listShouldUpdate)
+            .sink { _ in
+                self.updateDataSource(animated: false)
+            }
+            .store(in: &tokens)
+        NotificationCenter.default.publisher(for: .stepChanged)
+            .sink { _ in
+                self.updateDataSource(animated: false)
+            }
+            .store(in: &tokens)
     }
-    
+
+    // MARK: - NavigationBar
+    override func updateNavBarTitle() {
+        self.title = self.step.formattedName
+
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
+    override func setupToolbar() {
+        self.navigationController?.setToolbarHidden(true, animated: true)
+    }
+
+    // MARK: - Cell Registraiton
+    override func registerCells() {
+        super.registerCells()
+
+        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.notesCell) // notes
+
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.durationCell) //durationCell
+        tableView.register(TimePickerCell.self, forCellReuseIdentifier: Strings.timePickerCell) //expanded duration
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.tempCell) //tempCell
+        tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.tempPickerCell) //tempPicker
+
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.addIngredientCell) // add ingredient
+        tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.substepCell) // substep
+        tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell) // ingredients
+        tableView.register(SwitchCell.self, forCellReuseIdentifier: Strings.kneadingStepCell) // isKneadingStep
+        tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.endTempCell) //endTemp
+    }
+
+    // MARK: - Apply updated Data source
+    override func updateDataSource(animated: Bool = true) {
+        self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated)
+    }
 }
 
 // MARK: - Startup functions
 extension StepDetailViewController {
-    override func loadView() {
-        super.loadView()
-        tableView.separatorStyle = .none
-        registerCells()
-        setupNavigationBar()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateList), name: .init("stepChanged"), object: nil)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateList(animated: false) //update the tableView
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         applyInitialSnapshot()
@@ -109,21 +133,7 @@ extension StepDetailViewController {
 
 }
 
-// MARK: - NavigationBar
 private extension StepDetailViewController {
-    
-    /// sets up navigation bar title and items
-    private func setupNavigationBar() {
-        DispatchQueue.main.async {
-            //title
-            self.title = self.step.formattedName
-            
-            //large Title
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-
-            self.navigationController?.setToolbarHidden(true, animated: true)
-        }
-    }
     
     /// adds the step and pops the top view controller on the navigation stack
     @objc private func addStep(_ sender: UIBarButtonItem) {
@@ -132,28 +142,6 @@ private extension StepDetailViewController {
     
 }
 
-// MARK: - Cell Registraiton
-private extension StepDetailViewController {
-    
-    /// registers the different Cell Types for later reuse
-    private func registerCells() {
-        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)  //name textField
-        
-        tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.notesCell) // notes
-        
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.durationCell) //durationCell
-        tableView.register(TimePickerCell.self, forCellReuseIdentifier: Strings.timePickerCell) //expanded duration
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.tempCell) //tempCell
-        tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.tempPickerCell) //tempPicker
-        
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.addIngredientCell) // add ingredient
-        tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.substepCell) // substep
-        tableView.register(SubtitleCell.self, forCellReuseIdentifier: Strings.ingredientCell) // ingredients
-        tableView.register(SwitchCell.self, forCellReuseIdentifier: Strings.kneadingStepCell) // isKneadingStep
-        tableView.register(TempPickerCell.self, forCellReuseIdentifier: Strings.endTempCell) //endTemp
-    }
-    
-}
 
 enum StepDetailSection: Int, CaseIterable{
     case name
@@ -250,7 +238,7 @@ extension StepDetailViewController {
                 newSubstep.superStepId = self.step.id
                 
                 self.appData.update(newSubstep) { _ in
-                    self.updateList(animated: false)
+                    self.updateDataSource(animated: false)
                 }
             }))
         }
@@ -279,7 +267,7 @@ private extension StepDetailViewController {
         let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
             self.appData.update(newValue)
             DispatchQueue.main.async {
-                self.updateList(animated: false)
+                self.updateDataSource(animated: false)
             }
         }
         navigationController?.pushViewController(vc, animated: true)
@@ -369,9 +357,7 @@ private extension StepDetailViewController {
             var snapshot = self.dataSource.snapshot()
             
             snapshot.reloadSections([.durationTemp])
-            self.dataSource.apply(snapshot, animatingDifferences: false) {
-                self.setupNavigationBar()
-            }
+            self.dataSource.apply(snapshot, animatingDifferences: false)
         }
     }
     
@@ -481,7 +467,7 @@ extension StepDetailViewController: SwitchCellDelegate {
         } else {
             self.step.isKneadingStep = isOn
         }
-        self.updateList(animated: false)
+        self.updateDataSource(animated: false)
     }
 
     func switchValue(in cell: SwitchCell) -> Bool {
@@ -510,8 +496,7 @@ extension StepDetailViewController: TempPickerCellDelegate {
         } else if cell.id == "et" {
             self.step.endTemp = value
         }
-        self.updateList(animated: false)
-        self.setupNavigationBar()
+        self.updateDataSource(animated: false)
     }
     
     
@@ -532,10 +517,6 @@ private extension StepDetailViewController {
     /// creates the initial list
     private func applyInitialSnapshot(animated: Bool = true) {
         self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
-    }
-    
-    @objc private func updateList(animated: Bool = true) {
-        self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated)
     }
     
     private func snapshotBase() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {
@@ -715,4 +696,5 @@ public extension Notification.Name {
     static var listShouldUpdate: Notification.Name {
         Notification.Name.init("listShouldUpdate")
     }
+    static var stepChanged = Notification.Name.init(rawValue: "stepChanged")
 }

@@ -96,7 +96,7 @@ private extension IngredientDetailViewController {
     
     /// registers the different Cell Types for later reuse
     private func registerCells() {
-        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell)  //name textField
+        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell) //name textField
         tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell) //amount Cell
         tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.IngredientTypeCell) // typeCell wich type
         tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell) // for options for type

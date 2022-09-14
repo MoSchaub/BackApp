@@ -14,7 +14,9 @@ import BackAppCore
 
 extension NSNotification.Name {
     static var editRecipeShouldUpdate = NSNotification.Name.init(rawValue: "editRecipeShouldUpdate")
-    static var specialNavbarShouldShow = NSNotification.Name.init(rawValue: "specialNavbarShouldShow")
+    static var doneButtonItemShouldBeDisplayed = NSNotification.Name.init(rawValue: "doneButtonItemShouldBeDisplayed")
+    static var doneButtonItemShouldBeRemoved = NSNotification.Name.init(rawValue: "doneButtonItemShouldBeRemoved")
+    static var horizontalSizeClassDidChange = NSNotification.Name.init(rawValue: "horizontalSizeClassDidChange")
 }
 
 class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
