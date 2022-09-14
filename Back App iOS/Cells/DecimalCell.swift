@@ -54,8 +54,7 @@ public class DecimalCell: CustomCell {
         textField.delegate = self
         textField.addTarget(self, action: #selector(editingchange), for: .editingChanged) //updates the text while editing
         textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd) //updates the text when finished editing
-        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone)) // add toolbar to keyboard with done button to finish editing
-        
+
         textField.keyboardType = .decimalPad //set keyboard type to decimalpad because the user should be only enter decimals
         
         //colors
@@ -102,10 +101,6 @@ private extension DecimalCell {
         }
     }
     
-    @objc private func tapDone(sender: Any) {
-        self.textField.endEditing(true)
-    }
-    
     @objc private func editingchange() {
         // When the field is in focus we replace the field's contents
         // with a plain unformatted number. When not in focus, the field
@@ -127,14 +122,19 @@ extension DecimalCell: UITextFieldDelegate {
         self.textField.endEditing(true)
         return false
     }
+
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        NotificationCenter.default.post(name: .doneButtonItemShouldBeRemoved, object: nil)
+    }
     
     /// delete the textFields contents when editing did begin so the placeholder can be shown as it provides information to the user what purpose the textField serves
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = nil
+        NotificationCenter.default.post(name: .doneButtonItemShouldBeDisplayed, object: textField)
     }
     
     public func pressOk() {
-        self.tapDone(sender: self.textField)
+        self.textField.endEditing(true)
     }
     
     public var textFieldIsFirstResponder: Bool {

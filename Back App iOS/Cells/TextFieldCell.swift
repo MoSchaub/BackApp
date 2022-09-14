@@ -66,7 +66,6 @@ public class TextFieldCell: CustomCell {
         }
     }
     
-    
 }
 
 private extension TextFieldCell {
@@ -76,7 +75,6 @@ private extension TextFieldCell {
         textField.delegate = self
         
         setTextFieldBehavior()
-        textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         
         textField.textColor = .primaryCellTextColor
         textField.tintColor = .baTintColor
@@ -93,13 +91,7 @@ private extension TextFieldCell {
         textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
     }
-    
-    
-    
-    @objc private func tapDone(sender: Any) {
-        self.textField.endEditing(true)
-    }
-    
+
 }
 
 extension TextFieldCell: UITextFieldDelegate {
@@ -121,12 +113,4 @@ extension TextFieldCell: UITextFieldDelegate {
         return false
     }
     
-    public override func endEditing(_ force: Bool) -> Bool {
-        // cancel listening to control event publishers
-        for token in tokens {
-            token.cancel()
-        }
-        
-        return super.endEditing(force)
-    }
 }

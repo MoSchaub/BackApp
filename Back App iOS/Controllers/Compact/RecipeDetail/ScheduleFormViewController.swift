@@ -12,19 +12,17 @@ import BakingRecipeStrings
 import BackAppCore
 import BakingRecipeUIFoundation
 
-class ScheduleFormViewController: UITableViewController {
+class ScheduleFormViewController: BackAppVC {
 
     @Binding private var recipe: Recipe
     var times: Decimal?
-    private var appData: BackAppData
 
     private(set) lazy var dataSource = makeDataSource()
 
     init(recipe: Binding<Recipe>, appData: BackAppData) {
         self._recipe = recipe
         self.times = recipe.wrappedValue.times
-        self.appData = appData
-        super.init(style: .insetGrouped)
+        super.init(appData: appData)
 
         //set date to now
         self.recipe.date = Date()
@@ -33,44 +31,52 @@ class ScheduleFormViewController: UITableViewController {
     required init?(coder: NSCoder) {
         fatalError(Strings.init_coder_not_implemented)
     }
+
+    override func registerCells() {
+        tableView.register(DecimalCell.self, forCellReuseIdentifier: "times")
+        tableView.register(DatePickerCell.self, forCellReuseIdentifier: "datePicker")
+    }
+
+    override func setupToolbar() {
+        self.navigationController?.setToolbarHidden(true, animated: false)
+    }
+
+    override func setRightBarButtonItems() {
+        self.navigationItem.rightBarButtonItem = .init(title: Strings.Alert_ActionOk, style: .plain, target: self, action: #selector(proceedToScheduleView))
+    }
+
+    override func updateNavBarTitle() {
+        self.navigationItem.largeTitleDisplayMode = .never
+        self.title = recipe.formattedName
+        navigationItem.prompt = Strings.createSchedule
+    }
+
+    override func updateDataSource(animated: Bool) {
+        let timesItem = TimesItem(decimal: self.recipe.times)
+        let dateItem = DateItem(date: self.recipe.date)
+        let pickerItem = Item()
+        var snapshot = NSDiffableDataSourceSnapshot<ScheduleFormSection, Item>()
+        snapshot.appendSections(ScheduleFormSection.allCases)
+        snapshot.appendItems([timesItem], toSection: .times)
+        snapshot.appendItems([dateItem, pickerItem], toSection: .datepicker)
+
+        self.dataSource.apply(snapshot, animatingDifferences: animated)
+    }
 }
 
 extension ScheduleFormViewController {
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        registerCells()
-        updateTableView()
-        setUpNavigationBar()
-        self.tableView.separatorStyle = .none
-        tableView.rowHeight = UITableView.automaticDimension
-
-        navigationController?.setToolbarHidden(true, animated: false)
-    }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 0 ? "Menge" : ""
+        section == 0 ? Strings.amount : ""
     }
 }
 
 private extension ScheduleFormViewController {
-    
-    private func setUpNavigationBar() {
-        title = recipe.formattedName
-        navigationItem.prompt = Strings.createSchedule
-        navigationItem.rightBarButtonItem = .init(title: "OK", style: .plain, target: self, action: #selector(proceedToScheduleView))
-        navigationController?.setToolbarHidden(true, animated: true)
-    }
-    
     @objc private func proceedToScheduleView() {
         if let decimalCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DecimalCell, decimalCell.textFieldIsFirstResponder {
             decimalCell.pressOk()
         }
         navigationController?.pushViewController(ScheduleViewController(recipe: self.recipe, roomTemp: Standarts.roomTemp, times: self.times, appData: appData), animated: true)
-    }
-    
-    private func registerCells() {
-        tableView.register(DecimalCell.self, forCellReuseIdentifier: "times")
-        tableView.register(DatePickerCell.self, forCellReuseIdentifier: "datePicker")
     }
 }
 
@@ -123,18 +129,6 @@ internal extension ScheduleFormViewController {
         snapshot.reloadSections([.datepicker])
         
         self.dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
-    private func updateTableView() {
-        let timesItem = TimesItem(decimal: self.recipe.times)
-        let dateItem = DateItem(date: self.recipe.date)
-        let pickerItem = Item()
-        var snapshot = NSDiffableDataSourceSnapshot<ScheduleFormSection, Item>()
-        snapshot.appendSections(ScheduleFormSection.allCases)
-        snapshot.appendItems([timesItem], toSection: .times)
-        snapshot.appendItems([dateItem, pickerItem], toSection: .datepicker)
-        
-        self.dataSource.apply(snapshot)
     }
 }
 
