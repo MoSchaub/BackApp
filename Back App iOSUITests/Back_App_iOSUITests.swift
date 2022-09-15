@@ -33,7 +33,7 @@ var returnButton: XCUIElement {
 }
 
 var doneButton: XCUIElement {
-    toolbar.buttons["Done"]
+    navigationBar.buttons["Done"]
 }
 
 var toolbar: XCUIElement {
@@ -286,7 +286,7 @@ class Back_App_iOSUITests: XCTestCase {
         notesField.tap()
         notesField.typeText(step.notes)
         
-        let doneButton = app.toolbars.firstMatch.buttons["Done"]
+        let doneButton = app.navigationBars.firstMatch.buttons["Done"]
         doneButton.tap()
 
         // duration
@@ -329,23 +329,14 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.staticTexts[Recipe.example.name].tap()
         toolbar.buttons["Edit"].tap()
 
-        let staticText = appTables.cells.staticTexts["2 minutes"].firstMatch
-        staticText.tap()
-        staticText.tap()
-    
-        appTables.cells.pickerWheels["2 minutes"].adjust(toPickerWheelValue: "\(18) minutes")
-        
-        
-        app.navigationBars["Mischen"].buttons.firstMatch.tap()
-
-        let schnittbrTchenNavigationBar = XCUIApplication().navigationBars.firstMatch
-        schnittbrTchenNavigationBar.buttons.firstMatch.tap()
-        XCTAssertTrue(appTables.cells.staticTexts["18 minutes"].exists)
+        appTables.staticTexts["add Step"].tap()
+        app.navigationBars["unnamed Step"].buttons[Recipe.example.name].tap()
+        app.navigationBars[Recipe.example.name].buttons[Recipe.example.name].tap()
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
-        
+
         sleep(1)
-        XCTAssertTrue(appTables.staticTexts["36 minutes"].exists)
+        XCTAssertTrue(appTables.staticTexts["3 steps"].exists)
     }
     
     func testInEditingDissmissCrash() throws {
@@ -400,15 +391,20 @@ class Back_App_iOSUITests: XCTestCase {
         let customDateFormatter = DateFormatter()
         customDateFormatter.dateFormat = "MMM d, y HH:mm"
         customDateFormatter.locale = Locale.init(identifier: "en_us")
-        let newDate = customDateFormatter.date(from: "May 1, 21 12:00")!
-        let daysSinceJuly10 = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
+
+        let newDate = Date().addingTimeInterval(3600*24*10)
+        let newDateFormatter = DateFormatter()
+        newDateFormatter.dateFormat = "MMM d"
+        let newDateString = newDateFormatter.string(from: newDate)
+
+        let daysSinceNewDate = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
         
         
-        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: "May 1")
+        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: newDateString)
         appTables.segmentedControls.buttons["end"].tap()
         navigationBar.buttons["OK"].tap()
         
-        let startDate = Date().addingTimeInterval(-(daysSinceJuly10 * 3600 * 24))
+        let startDate = Date().addingTimeInterval(-(daysSinceNewDate * 3600 * 24))
             .addingTimeInterval(TimeInterval(-(Recipe.example.totalTime * 60)))
         let backenDate = startDate.addingTimeInterval(Recipe.example.steps.first!.time)
         XCTAssert(appTables.staticTexts[dateFormatter.string(from: startDate)].exists)

@@ -77,9 +77,11 @@ class StepDetailViewController: BackAppVC {
 
     // MARK: - NavigationBar
     override func updateNavBarTitle() {
-        self.title = self.step.formattedName
-
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        DispatchQueue.main.async {
+            self.title = self.step.formattedName
+            
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
     }
 
     override func setupToolbar() {
@@ -264,7 +266,7 @@ private extension StepDetailViewController {
         if id == nil {
             appData.insert(&ingredient)
         }
-        let vc = IngredientDetailViewController(ingredient: ingredient) { newValue in
+        let vc = IngredientDetailViewController(ingredient: ingredient, appData: appData) { newValue in
             self.appData.update(newValue)
             DispatchQueue.main.async {
                 self.updateDataSource(animated: false)

@@ -11,7 +11,7 @@ import BackAppCore
 import BakingRecipeFoundation
 import BakingRecipeStrings
 
-class IngredientDetailViewController: UITableViewController {
+class IngredientDetailViewController: BackAppVC {
     
     // MARK: - Properties
     
@@ -19,7 +19,7 @@ class IngredientDetailViewController: UITableViewController {
     private var ingredient: Ingredient {
         didSet {
             if oldValue != ingredient {
-                self.setupNavigationBar()
+                self.updateNavBar()
                 self.saveIngredient(self.ingredient)
             }
             
@@ -41,69 +41,51 @@ class IngredientDetailViewController: UITableViewController {
     
     // MARK: - Initializers
     
-    init(ingredient: Ingredient, saveIngredient: @escaping (Ingredient) -> () ) {
+    init(ingredient: Ingredient, appData: BackAppData, saveIngredient: @escaping (Ingredient) -> ()) {
         self.ingredient = ingredient
         self.saveIngredient = saveIngredient
-        super.init(style: .insetGrouped)
+        super.init(appData: appData)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
 
-// MARK: - Startup methods
-extension IngredientDetailViewController {
-    
-    override func loadView() {
-        super.loadView()
-        registerCells()
-        setupNavigationBar()
-        tableView.separatorStyle = .none
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateList(animated: false)
-    }
-    
-}
+    // MARK: - Cell Registraiton
+    override func updateNavBarTitle() {
+        DispatchQueue.main.async {
 
-// MARK: - NavigationBar
-private extension IngredientDetailViewController {
-    
-    /// sets up navigation bar title and items
-    private func setupNavigationBar() {
-        DispatchQueue.main.async { //needs to be on main thread cause ui can only be changed on main thread
             //title
             self.title = self.ingredient.formattedName
-            
-            //large Title
+
+            //largeTitle
             self.navigationController?.navigationBar.prefersLargeTitles = true
         }
     }
-    
+
+    // MARK: - Cell Registraiton
+
+    /// registers the different Cell Types for later reuse
+    override func registerCells() {
+        super.registerCells()
+        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell) //amount Cell
+        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.IngredientTypeCell) // typeCell wich type
+        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell) // for options for type
+    }
+
+    /// updates the whole list
+    override func updateDataSource(animated: Bool) {
+        self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
+    }
+}
+
+private extension IngredientDetailViewController {
     /// adds the ingredient and pops the top view controller on the navigation stack
     @objc private func addIngredient(_ sender: UIBarButtonItem) {
         saveIngredient(ingredient)
         navigationController?.popViewController(animated: true)
     }
-    
 }
-
-// MARK: - Cell Registraiton
-private extension IngredientDetailViewController {
-    
-    /// registers the different Cell Types for later reuse
-    private func registerCells() {
-        tableView.register(TextFieldCell.self, forCellReuseIdentifier: Strings.nameCell) //name textField
-        tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell) //amount Cell
-        tableView.register(DetailCell.self, forCellReuseIdentifier: Strings.IngredientTypeCell) // typeCell wich type
-        tableView.register(CustomCell.self, forCellReuseIdentifier: Strings.plainCell) // for options for type
-    }
-    
-}
-
 
 // MARK: - DataSource and Snapshot
 private extension IngredientDetailViewController {
@@ -129,7 +111,7 @@ private extension IngredientDetailViewController {
 
                 return AmountCell(ingredient: self.ingredient, reuseIdentifier: Strings.amountCell, format: format) {
                     DispatchQueue.main.async {
-                        self.updateList(animated: false)
+                        self.updateDataSource(animated: false)
                     }
                 }
             } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
@@ -148,11 +130,6 @@ private extension IngredientDetailViewController {
                 return CustomCell()
             }
         }
-    }
-    
-    /// updates the whole list
-    private func updateList(animated: Bool = true) {
-        self.dataSource.apply(createInitialSnapshot(), animatingDifferences: animated)
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<IngredientDetailSection, TextItem> {
@@ -256,7 +233,7 @@ extension IngredientDetailViewController {
     
     /// reload first cell in typeSection
     private func reloadTypeHeader() {
-        updateList(animated: false)
+        updateDataSource(animated: false)
         self.expandTypeSection(animated: false)
     }
 }
