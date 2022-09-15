@@ -58,10 +58,10 @@ public class AmountCell: TextFieldCell {
                     amountEditingDidEnd()
                 }
             }
-            NotificationCenter.default.post(name: .doneButtonItemShouldBeRemoved, object: nil)
+            NotificationCenter.default.post(name: .fieldDoneButtonItemShouldBeRemoved, object: nil)
         }.store(in: &tokens)
         textField.controlEventPublisher(for: .editingDidBegin).sink { _ in
-            NotificationCenter.default.post(name: .doneButtonItemShouldBeDisplayed, object: self.textField)
+            NotificationCenter.default.post(name: .fieldDoneButtonItemShouldBeDisplayed, object: self.textField)
         }.store(in: &tokens)
        
     }

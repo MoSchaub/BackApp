@@ -25,6 +25,30 @@ internal class BackAppVC: UITableViewController{
         }
     }
 
+    private var editingTextView: UITextView? = nil {
+        didSet {
+            if oldValue != self.editingTextView {
+                self.updateNavBar()
+            }
+        }
+    }
+
+    private var undoButton: UIBarButtonItem? = nil {
+        didSet {
+            if oldValue != self.undoButton {
+                self.updateNavBar()
+            }
+        }
+    }
+
+    private var redoButton: UIBarButtonItem? = nil {
+        didSet {
+            if oldValue != self.redoButton {
+                self.updateNavBar()
+            }
+        }
+    }
+
     init(appData: BackAppData) {
         self.appData = appData
 
@@ -32,7 +56,7 @@ internal class BackAppVC: UITableViewController{
     }
 
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(Strings.init_coder_not_implemented)
     }
 
     deinit {
@@ -53,17 +77,33 @@ internal class BackAppVC: UITableViewController{
     }
     
     internal func attachPublishers() {
-        NotificationCenter.default.publisher(for: .doneButtonItemShouldBeDisplayed)
+        NotificationCenter.default.publisher(for: .fieldDoneButtonItemShouldBeDisplayed)
             .sink { notification in
                 if let textField = notification.object as? UITextField {
-                    self.updateEditingTextField(textField: textField)
+                    self.editingTextField = textField
                 }
             }.store(in: &tokens)
-        NotificationCenter.default.publisher(for: .doneButtonItemShouldBeRemoved)
+        NotificationCenter.default.publisher(for: .fieldDoneButtonItemShouldBeRemoved)
             .sink { _ in
                 self.editingTextField = nil
             }
             .store(in: &tokens)
+
+        NotificationCenter.default.publisher(for: .viewDoneButtonItemShouldBeDisplayed)
+            .sink { notification in
+                if let tuple = notification.object as? (textView: UITextView, undo: UIBarButtonItem, redo: UIBarButtonItem) {
+                    self.editingTextView = tuple.textView
+                    self.undoButton = tuple.undo
+                    self.redoButton = tuple.redo
+                }
+            }
+            .store(in: &tokens)
+        NotificationCenter.default.publisher(for: .viewDoneButtonItemShouldBeRemoved)
+            .sink { _ in
+                self.editingTextView = nil
+                self.redoButton = nil
+                self.undoButton = nil
+            }.store(in: &tokens)
     }
 }
 
@@ -90,14 +130,25 @@ internal extension BackAppVC {
 
 private extension BackAppVC {
 
-    func updateEditingTextField(textField: UITextField){
-        self.editingTextField = textField
-    }
-
     func doneButtonItem() -> UIBarButtonItem? {
-        guard self.editingTextField != nil else { return nil }
+        guard self.editingTextField != nil || self.editingTextView != nil else { return nil }
 
         return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonItemPressed))
+    }
+
+    private func items() -> [UIBarButtonItem] {
+        var items = [UIBarButtonItem]()
+
+        let dirtyItems = [undoButton, redoButton, doneButtonItem()]
+
+        _ = dirtyItems.reversed().map {
+            if let item = $0 {
+                items.append(item)
+            }
+        }
+
+
+        return items
     }
 
     @objc func doneButtonItemPressed() {
@@ -106,6 +157,8 @@ private extension BackAppVC {
             //end editing and remove done button
             self.editingTextField?.endEditing(true)
             self.editingTextField = nil
+            self.editingTextView?.endEditing(true)
+            self.editingTextView = nil
         }
     }
 
@@ -118,8 +171,8 @@ private extension BackAppVC {
 internal extension BackAppVC {
     func updateNavBar() {
         DispatchQueue.main.async {
-            if let item = self.doneButtonItem() {
-                self.navigationItem.rightBarButtonItems = [item]
+            if !self.items().isEmpty {
+                self.navigationItem.rightBarButtonItems = self.items()
             } else {
                 self.setRightBarButtonItems()
             }

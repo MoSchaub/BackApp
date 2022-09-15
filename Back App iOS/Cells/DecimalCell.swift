@@ -124,13 +124,13 @@ extension DecimalCell: UITextFieldDelegate {
     }
 
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        NotificationCenter.default.post(name: .doneButtonItemShouldBeRemoved, object: nil)
+        NotificationCenter.default.post(name: .fieldDoneButtonItemShouldBeRemoved, object: nil)
     }
     
     /// delete the textFields contents when editing did begin so the placeholder can be shown as it provides information to the user what purpose the textField serves
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = nil
-        NotificationCenter.default.post(name: .doneButtonItemShouldBeDisplayed, object: textField)
+        NotificationCenter.default.post(name: .fieldDoneButtonItemShouldBeDisplayed, object: textField)
     }
     
     public func pressOk() {

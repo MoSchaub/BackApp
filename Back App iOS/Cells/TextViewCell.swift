@@ -122,7 +122,6 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
 
         // add toolbar Buttons and editing functionality if it should be editable
         if isEditable {
-            addToolbar()
             addTextFieldGestureRecognizer()
         }
     }
@@ -137,6 +136,13 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
     public func textViewDidEndEditing(_ textView: UITextView) {
         self.textContent = textView.text
         setupLinkDetection()
+
+        NotificationCenter.default.post(name: .viewDoneButtonItemShouldBeRemoved, object: nil)
+    }
+
+    public func textViewDidBeginEditing(_ textView: UITextView) {
+        let tuple = (textView: self.textView, undo: undoButton, redo: redoButton)
+        NotificationCenter.default.post(name: .viewDoneButtonItemShouldBeDisplayed, object: tuple)
     }
 
     public func textViewDidChange(_ textView: UITextView) {
@@ -151,15 +157,6 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
     public func clickTextView() {
         self.textView.becomeFirstResponder()
     }
-
-    //MARK: Toolbar
-
-    func addToolbar() {
-        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44))
-        toolBar.setItems([undoButton, redoButton, UIBarButtonItem.flexible, doneButton], animated: true)
-        textView.inputAccessoryView = toolBar
-    }
-
 }
 
 //MARK:  Undo and Redo

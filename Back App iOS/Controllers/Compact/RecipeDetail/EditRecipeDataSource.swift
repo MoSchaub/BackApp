@@ -14,8 +14,10 @@ import BackAppCore
 
 extension NSNotification.Name {
     static var editRecipeShouldUpdate = NSNotification.Name.init(rawValue: "editRecipeShouldUpdate")
-    static var doneButtonItemShouldBeDisplayed = NSNotification.Name.init(rawValue: "doneButtonItemShouldBeDisplayed")
-    static var doneButtonItemShouldBeRemoved = NSNotification.Name.init(rawValue: "doneButtonItemShouldBeRemoved")
+    static var fieldDoneButtonItemShouldBeDisplayed = NSNotification.Name.init(rawValue: "fieldDoneButtonItemShouldBeDisplayed")
+    static var fieldDoneButtonItemShouldBeRemoved = NSNotification.Name.init(rawValue: "fieldDoneButtonItemShouldBeRemoved")
+    static var viewDoneButtonItemShouldBeDisplayed = NSNotification.Name.init(rawValue: "viewDoneButtonItemShouldBeDisplayed")
+    static var viewDoneButtonItemShouldBeRemoved = NSNotification.Name.init(rawValue: "viewDoneButtonItemShouldBeRemoved")
     static var horizontalSizeClassDidChange = NSNotification.Name.init(rawValue: "horizontalSizeClassDidChange")
 }
 
