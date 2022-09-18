@@ -75,14 +75,14 @@ class Back_App_iOSUITests: XCTestCase {
         argumentApp.launch()
         
         addButton.tap()
-        
+
         nameTextField.tap()
         nameTextField.typeText(recipeName)
 
         for sub in subs {
             try addStep(step: sub, recipeName: recipeName)
         }
-        
+
         removeSubstep(recipeName: recipeName)
         
         app.navigationBars[recipeName].buttons["Save"].tap()
@@ -302,11 +302,10 @@ class Back_App_iOSUITests: XCTestCase {
         
         for substep in step.subSteps {
             appTables.staticTexts["add Ingredient"].tap()
-            
             sleep(5)
-            app.sheets["new ingredient or step as ingredient?"].scrollViews.otherElements.buttons["step"].tap()
+            app.scrollViews.otherElements.buttons["step"].tap()
             sleep(5)
-            app.sheets["select Step"].scrollViews.otherElements.buttons[substep.formattedName].tap()
+            app.scrollViews.otherElements.buttons[substep.formattedName].tap()
             
             appTables.cells.staticTexts[substep.name].firstMatch.tap()
             

@@ -160,8 +160,8 @@ public extension Step {
 //MARK: SQL Persistence methods
 public extension Step {
     /// Update auto-increment id upon succesfull insertion
-    mutating func didInsert(with rowID: Int64, for column: String?) {
-        id = rowID
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        id = inserted.rowID
     }
 }
 

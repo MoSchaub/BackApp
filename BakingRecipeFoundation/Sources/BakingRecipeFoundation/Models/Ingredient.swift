@@ -220,8 +220,8 @@ public extension Ingredient {
     }
     
     /// Update auto-increment id upon successful insertion
-    mutating func didInsert(with rowID: Int64, for column: String?) {
-        id = rowID
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        id = inserted.rowID
     }
     
 }

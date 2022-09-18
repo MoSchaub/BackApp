@@ -153,10 +153,10 @@ public extension BackAppData {
         }
     }
 
-    internal func updateChanges<T:BakingRecipeRecord>(for record: inout T, changes: @escaping (inout T) -> Void) {
+    internal func updateChanges<T:BakingRecipeRecord>(for record: inout T, modify: @escaping (inout T) -> Void) {
         do {
             try dbWriter.write { db in
-                _ = try record.updateChanges(db, with: changes)
+                _ = try record.updateChanges(db, modify: modify)
             }
         } catch {
             print(error.localizedDescription)
