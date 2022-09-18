@@ -476,7 +476,7 @@ public extension Step {
             text.append(ingredientString)
         }
         for subStep in sortedSubsteps(reader: reader){
-            let substepString = "\t" + subStep.formattedName + ": " + "\(totalMass(reader: reader).formattedMass) " + (subStep.temperature != nil ? Measurement(value: subStep.endTemp ?? subStep.temperature! , unit: .celsius).formatted : "")
+            let substepString = "\t" + subStep.formattedName + ": " + "\(subStep.totalFormattedMass(reader: reader, factor: scaleFactor)) " + (subStep.temperature != nil ? Measurement(value: subStep.endTemp ?? subStep.temperature! , unit: .celsius).formatted : "") + "\n"
             text.append(substepString)
         }
         if !self.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty{
