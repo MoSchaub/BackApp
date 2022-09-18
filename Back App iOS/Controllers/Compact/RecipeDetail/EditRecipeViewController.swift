@@ -44,6 +44,9 @@ class EditRecipeViewController: BackAppVC {
         }
     }
 
+    // wether swipe delete action is in progress
+    private lazy var singleRowDeleteMode = false
+
     // wether the recipe is freshly created
     private var creating: Bool
 
@@ -226,7 +229,16 @@ extension EditRecipeViewController {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        if self.singleRowDeleteMode { return }
         reloadStepSection()
+    }
+
+    override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        self.singleRowDeleteMode = true;
+    }
+
+    override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        self.singleRowDeleteMode = false;
     }
 
     private func reloadStepSection() {
