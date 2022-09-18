@@ -15,7 +15,7 @@ final class BackAppCoreTests: XCTestCase {
     
     func testRecipeDatabaseSchema() throws {
         // Given an empty database
-        let dbQueue = DatabaseQueue()
+        let dbQueue = try! DatabaseQueue()
         
         // When we instantiate an BackAppData
         _ = try BackAppData(dbQueue)
@@ -31,7 +31,7 @@ final class BackAppCoreTests: XCTestCase {
     
     func testStepDatabaseSchema() throws {
         // Given an empty database
-        let dbQueue = DatabaseQueue()
+        let dbQueue = try! DatabaseQueue()
         
         // When we instantiate an BackAppData
         _ = try BackAppData(dbQueue)
@@ -47,7 +47,7 @@ final class BackAppCoreTests: XCTestCase {
     
     func testIngredientDatabaseSchema() throws {
         // Given an empty database
-        let dbQueue = DatabaseQueue()
+        let dbQueue = try! DatabaseQueue()
         
         // When we instantiate an BackAppData
         _ = try BackAppData(dbQueue)

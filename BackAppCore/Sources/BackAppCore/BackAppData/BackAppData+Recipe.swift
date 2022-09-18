@@ -35,7 +35,7 @@ public extension BackAppData {
             .tracking { db in
                 try self.recipeList(db: db)
             }
-            .publisher(in: dbWriter)
+            .publisher(in: dbWriter, scheduling: .immediate)
     }
 
     struct RecipeDetailItem: Decodable, FetchableRecord {
@@ -63,7 +63,7 @@ public extension BackAppData {
             .tracking { db in
                 try self.recipeInfo(recipeId: recipeId, db: db)
             }
-            .publisher(in: dbWriter, scheduling: .immediate) //immeadiate to improve recipe loading times
+            .publisher(in: dbWriter, scheduling: .immediate) //immediate to improve recipe loading times
     }
 }
 
