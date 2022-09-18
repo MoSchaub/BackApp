@@ -39,7 +39,7 @@
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
-		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
 		CD663F6C24E2A20B008F9A09 /* RecipeListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */; };
 		CD6729C126FD1F5E007C17E3 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD6729C026FD1F5E007C17E3 /* CombineCocoa */; };
@@ -102,15 +102,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CD59041624E2CF4F008A0E6E /* Embed App Extensions */ = {
+		CD59041624E2CF4F008A0E6E /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed App Extensions */,
+				CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CD68D46824AC64D2000D4BD7 /* CopyFiles */ = {
@@ -639,7 +639,7 @@
 				CDA7EE2624A67DBD00763E21 /* Frameworks */,
 				CDA7EE2724A67DBD00763E21 /* Resources */,
 				CD68D46824AC64D2000D4BD7 /* CopyFiles */,
-				CD59041624E2CF4F008A0E6E /* Embed App Extensions */,
+				CD59041624E2CF4F008A0E6E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -680,7 +680,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
 					CD2BCE5224AE72CB00B868D7 = {
