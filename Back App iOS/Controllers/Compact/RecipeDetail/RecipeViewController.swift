@@ -83,10 +83,10 @@ class RecipeViewController: UITableViewController {
         configureNavbarTitle()
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        self.splitViewController?.delegate = self
+        configureNavbarItems()
     }
 
     //MARK: - Helpers
@@ -233,6 +233,7 @@ class RecipeViewController: UITableViewController {
 
 
     public func startRecipe() {
+        self.navigationController?.setToolbarHidden(true, animated: true)
         let recipeBinding = Binding(get: {
             return BackAppData.shared.record(with: self.recipeId, of: Recipe.self)!
         }) { (newValue) in
@@ -256,18 +257,5 @@ class RecipeViewController: UITableViewController {
                 startRecipe()
             }
         }
-    }
-}
-
-// MARK: Conformance to UISplitViewControllerDelegate
-extension RecipeViewController: UISplitViewControllerDelegate {
-    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
-        // reload the navbar to switch between showing the toolbar and not showing the toolbar
-        self.configureNavbarItems()
-    }
-
-    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-        // reload the navbar to switch between showing the toolbar and not showing the toolbar
-        self.configureNavbarItems()
     }
 }
