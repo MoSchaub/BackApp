@@ -46,9 +46,7 @@ class ScheduleFormViewController: BackAppVC {
     }
 
     override func updateNavBarTitle() {
-        self.navigationItem.largeTitleDisplayMode = .never
-        self.title = recipe.formattedName
-        navigationItem.prompt = Strings.createSchedule
+        self.title = Strings.createSchedule
     }
 
     override func updateDataSource(animated: Bool) {
@@ -69,13 +67,16 @@ extension ScheduleFormViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         section == 0 ? Strings.amount : ""
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.navigationController?.setToolbarHidden(true, animated: true)
+        NotificationCenter.default.post(name: .decimalCellTextFieldShouldBecomeFirstResponder, object: nil)
+    }
 }
 
 private extension ScheduleFormViewController {
     @objc private func proceedToScheduleView() {
-        if let decimalCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DecimalCell, decimalCell.textFieldIsFirstResponder {
-            decimalCell.pressOk()
-        }
         navigationController?.pushViewController(ScheduleViewController(recipe: self.recipe, roomTemp: Standarts.roomTemp, times: self.times, appData: appData), animated: true)
     }
 }

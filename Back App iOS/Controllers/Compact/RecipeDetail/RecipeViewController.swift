@@ -233,7 +233,6 @@ class RecipeViewController: UITableViewController {
 
 
     public func startRecipe() {
-        self.navigationController?.setToolbarHidden(true, animated: true)
         let recipeBinding = Binding(get: {
             return BackAppData.shared.record(with: self.recipeId, of: Recipe.self)!
         }) { (newValue) in

@@ -16,7 +16,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(name: "BakingRecipeStrings", path: "/Users/moritzschaub/Entwickler/Swift/ios/BrotApp2/BakingRecipeStrings"),
-        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift.git", from: "6.0.0")
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift.git", .upToNextMajor(from: "6.0.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

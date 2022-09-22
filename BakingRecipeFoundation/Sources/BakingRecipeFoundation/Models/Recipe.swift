@@ -62,11 +62,11 @@ public struct Recipe: BakingRecipeRecord {
     public var timesText: String{
         get{
             if self.times != nil {
-                return times!.description + " " +
-                    (times!.description == "1" ? Strings.piece : Strings.pieces)
-            } else {
-                return "1 " + Strings.piece
+                if let timesString = numberFormatter.string(from: times! as NSNumber) {
+                    return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
+                }
             }
+            return "1 " + Strings.piece
         }
         set{
             if let int = Int(newValue){
@@ -82,16 +82,24 @@ public struct Recipe: BakingRecipeRecord {
         
         return self.timesText + (Bundle.main.preferredLocalizations.first! == "de" ? " à " : ", " ) + (totalMass/Double(self.times!.description)!).formattedMass + (Bundle.main.preferredLocalizations.first! == "en" ? " each" : "")
     }
+
+    private var numberFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 1
+        formatter.numberStyle = .decimal
+        return formatter
+    }
     
     /// scale the times text with a factor
     private func timesTextScaled(with factor: Double) -> String {
         if self.times != nil {
-            let times = self.times! * Decimal(factor)
-            return times.description + " " +
-                (times.description == "1" ? Strings.piece : Strings.pieces)
-        } else {
-            return "1 " + Strings.piece
+            let times = self.times! * Decimal(factor) as NSNumber
+            if let timesString = numberFormatter.string(from: times) {
+                return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
+            }
         }
+        return "1 " + Strings.piece
+
     }
 }
 

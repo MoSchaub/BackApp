@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import BakingRecipeStrings
 
 /// The `DecimalCellDelegate` protocol allows the adopting delegate to respond to the UI interaction
@@ -22,6 +23,8 @@ public class DecimalCell: CustomCell {
             delegate?.decimalCell(self, didChangeValue: value)
         }
     }
+
+    private lazy var tokens = Set<AnyCancellable>()
     
     /// The textField of the cell
     private lazy var textField = makeTextField()
@@ -41,6 +44,10 @@ public class DecimalCell: CustomCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
+    }
+
+    deinit {
+        _ = tokens.map { $0.cancel() }
     }
     
     func setupCell() {
@@ -80,7 +87,11 @@ private extension DecimalCell {
     func configureTextField() {
         addSubview(textField)
         setTextFieldConstraints()
-        textField.becomeFirstResponder()
+        NotificationCenter.default.publisher(for: .decimalCellTextFieldShouldBecomeFirstResponder)
+            .sink { _ in
+                self.textField.becomeFirstResponder()
+            }
+            .store(in: &tokens)
     }
     
     /// set up the constraints
@@ -139,5 +150,11 @@ extension DecimalCell: UITextFieldDelegate {
     
     public var textFieldIsFirstResponder: Bool {
         self.textField.isFirstResponder
+    }
+}
+
+extension Notification.Name {
+    static var decimalCellTextFieldShouldBecomeFirstResponder: Self {
+        return Notification.Name.init("decimalCellTextFieldShouldBecomeFirstResponder")
     }
 }
