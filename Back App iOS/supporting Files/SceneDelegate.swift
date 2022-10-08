@@ -14,7 +14,7 @@ import BakingRecipeUIFoundation
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
+
     let appData = BackAppData.shared
     lazy var recipeListVC = RecipeListViewController(appData: appData)
 
@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navigationViewController = UINavigationController(rootViewController: recipeListVC)
         splitViewController.viewControllers = [navigationViewController]
         splitViewController.preferredDisplayMode = .allVisible
+
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
         self.window = window

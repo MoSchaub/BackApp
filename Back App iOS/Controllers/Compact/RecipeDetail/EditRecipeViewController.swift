@@ -409,7 +409,7 @@ private extension EditRecipeViewController {
         compressionQueue.cancelAllOperations()
         compressionQueue.addOperation {
             do {
-                self.recipe.imageData  = try image?.fixOrientation().heicData(compressionQuality: 0)
+                self.recipe.imageData  = try image?.fixOrientation().compressedDataToKb(value: 100)
 
                 self.appData.update(self.recipe) { _ in DispatchQueue.main.async { self.updateDataSource(animated: false) }}
             } catch {

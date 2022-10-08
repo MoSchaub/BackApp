@@ -483,7 +483,7 @@ extension Recipe {
     public func duplicate(writer: DatabaseWriter) {
         try? writer.write { db in
             var recipe = self
-            let steps = (try? recipe.steps.fetchAll(db)) ?? []
+            let steps = (try? recipe.notSubsteps(db: db)) ?? []
 
             recipe.id = nil
             try! recipe.insert(db)

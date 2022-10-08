@@ -60,6 +60,9 @@ class ScheduleFormViewController: BackAppVC {
 
         self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
+
+    /// property to store wether this vc has already dissapeared at least once
+    private lazy var hasDisappeared: Bool = false
 }
 
 extension ScheduleFormViewController {
@@ -71,7 +74,16 @@ extension ScheduleFormViewController {
         super.viewDidAppear(animated)
 
         self.navigationController?.setToolbarHidden(true, animated: true)
-        NotificationCenter.default.post(name: .decimalCellTextFieldShouldBecomeFirstResponder, object: nil)
+        if !hasDisappeared {
+            // dont make first responder when returning from ScheduleView
+            NotificationCenter.default.post(name: .decimalCellTextFieldShouldBecomeFirstResponder, object: nil)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.hasDisappeared = true
     }
 }
 

@@ -420,6 +420,20 @@ final class BackAppCoreTests: XCTestCase {
         XCTAssertEqual(appData.allSteps.count, 4)
     }
 
+    func testDuplicationgComplexRecipe() throws {
+        let writer = appData.dbWriter
+
+        let recipeExample = try insertComplexRecipe()
+        XCTAssertEqual(appData.allRecipes.count, 1)
+        XCTAssertEqual(appData.allSteps.count, 2)
+        XCTAssertEqual(appData.allIngredients.count, appData.numberOfAllIngredients(for: recipeExample.id!))
+        recipeExample.duplicate(writer: writer)
+        XCTAssertEqual(appData.allRecipes.count, 2)
+        XCTAssertEqual(appData.allIngredients.count, appData.numberOfAllIngredients(for: recipeExample.id!) * 2)
+        XCTAssertEqual(appData.allSteps.count, 4)
+
+    }
+
     ///tests the new query for finding the correct order of steps
     func testReorderedSteps() throws {
         let recipeId = try insertExampleRecipeAndGetId()
