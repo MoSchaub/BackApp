@@ -11,6 +11,9 @@
 		CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B4248BDA3000D11DD3 /* NeomorphicToggleStyle.swift */; };
 		CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F999248BDA3000D11DD3 /* DecimalField.swift */; };
 		CD0A179724ADF0B1001CDF5F /* MODatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9A7248BDA3000D11DD3 /* MODatePicker.swift */; };
+		CD20880C28F32D8600127961 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880B28F32D8600127961 /* Coordinator.swift */; };
+		CD20880E28F32E6A00127961 /* RecipeListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */; };
+		CD20881428F330D300127961 /* BackAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20881328F330D300127961 /* BackAppCoordinator.swift */; };
 		CD232E4926740CD500E528BB /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3726740CD400E528BB /* SwitchCell.swift */; };
 		CD232E4A26740CD500E528BB /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3826740CD400E528BB /* RecipeCell.swift */; };
 		CD232E4B26740CD500E528BB /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD232E3926740CD400E528BB /* ImageCell.swift */; };
@@ -127,6 +130,9 @@
 
 /* Begin PBXFileReference section */
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		CD20880B28F32D8600127961 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListCoordinator.swift; sourceTree = "<group>"; };
+		CD20881328F330D300127961 /* BackAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackAppCoordinator.swift; sourceTree = "<group>"; };
 		CD232E3726740CD400E528BB /* SwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
 		CD232E3826740CD400E528BB /* RecipeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
 		CD232E3926740CD400E528BB /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
@@ -312,6 +318,7 @@
 				CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */,
 				CDE7BF7C27065BD1006A9970 /* RecipeListVCTests.swift */,
 				CDBDFDD324AA95BE002A6C84 /* Components */,
+				CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */,
 			);
 			path = CompactHome;
 			sourceTree = "<group>";
@@ -534,6 +541,8 @@
 				CDBDFDD224AA9593002A6C84 /* Compact */,
 				CD7B541728C8F644001F25EC /* BackAppVC.swift */,
 				CD48482028E33F1600714468 /* BASplitViewController.swift */,
+				CD20880B28F32D8600127961 /* Coordinator.swift */,
+				CD20881328F330D300127961 /* BackAppCoordinator.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -824,8 +833,10 @@
 				CD399AD024AA3F1200232F90 /* IngredientDetailViewController.swift in Sources */,
 				CDA7EE6524A67E9D00763E21 /* ScheduleForm.swift in Sources */,
 				CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */,
+				CD20880C28F32D8600127961 /* Coordinator.swift in Sources */,
 				CD232E4F26740CD500E528BB /* TextViewCell.swift in Sources */,
 				CD232E5A26740CD500E528BB /* DatePickerCell.swift in Sources */,
+				CD20881428F330D300127961 /* BackAppCoordinator.swift in Sources */,
 				CD232E5026740CD500E528BB /* TextFieldCell.swift in Sources */,
 				CD232E4D26740CD500E528BB /* AmountCell.swift in Sources */,
 				CD232E5226740CD500E528BB /* CustomCell.swift in Sources */,
@@ -834,6 +845,7 @@
 				CD232E4E26740CD500E528BB /* DecimalCell.swift in Sources */,
 				CD232E4B26740CD500E528BB /* ImageCell.swift in Sources */,
 				CD232E5926740CD500E528BB /* StepRow.swift in Sources */,
+				CD20880E28F32E6A00127961 /* RecipeListCoordinator.swift in Sources */,
 				CDE3731C26DD670F008C7B95 /* UITextView+Placeholder.m in Sources */,
 				CD232E5426740CD500E528BB /* TimePickerCell.swift in Sources */,
 				CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */,
@@ -959,7 +971,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -982,7 +994,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -1130,7 +1142,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
@@ -1159,7 +1171,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
