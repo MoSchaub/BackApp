@@ -15,42 +15,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    let appData = BackAppData.shared
-    lazy var recipeListVC = RecipeListViewController(appData: appData)
+    var coordinator: BackAppCoordinator!
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
-        let splitViewController = BackAppSplitVC()
 
-        let navigationViewController = UINavigationController(rootViewController: recipeListVC)
-        splitViewController.viewControllers = [navigationViewController]
-        splitViewController.preferredDisplayMode = .allVisible
-
-        window.rootViewController = splitViewController
-        window.makeKeyAndVisible()
-        self.window = window
-        self.window!.tintColor = UIColor.baTintColor
+        coordinator = BackAppCoordinator(windowScene: windowScene)
+        coordinator.start()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+
+        guard let coordinator = coordinator else {
+            print("error importing url: no coordinator")
+            return
+        }
         // open file in app
-        let urls = URLContexts.map { $0.url}
-        for url in urls {
-            appData.open(url)
-        }
+        coordinator.open(URLContexts: URLContexts)
     }
 }
 
-class BackAppSplitVC: UISplitViewController {
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        if UITraitCollection.current.horizontalSizeClass != previousTraitCollection?.horizontalSizeClass {
-            // update nav bar
-            NotificationCenter.default.post(name: .horizontalSizeClassDidChange, object: nil)
-        }
-    }
-
-}

@@ -134,12 +134,6 @@ extension SettingsViewController {
         self.updateList(animated: false)
     }
     
-    private func deselectRow() {
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
-    }
-    
     @objc private func exportAllRecipes(sender: UIView) {
         let ac = UIActivityViewController(activityItems: [appData.exportAllRecipesToFile()], applicationActivities: nil)
         
