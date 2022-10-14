@@ -1,5 +1,5 @@
 //
-//  RecipeViewController.swift
+//  RecipeDetailViewController.swift
 //  Back App iOS
 //
 //  Created by Moritz Schaub on 04.07.21.
@@ -14,7 +14,7 @@ import Combine
 
 typealias RecipeDetailDataSource = UITableViewDiffableDataSource<RecipeDetailSection, Item>
 
-class RecipeViewController: UITableViewController {
+class RecipeDetailViewController: UITableViewController {
 
     //MARK: - Properties
 

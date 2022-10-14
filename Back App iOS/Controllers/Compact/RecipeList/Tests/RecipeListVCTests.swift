@@ -24,6 +24,8 @@ class RecipeListVCTests: XCTestCase {
         super.setUp()
 
         appData = BackAppData.shared(includeTestingRecipe: true)
+        
+
         sut = RecipeListViewController(appData: appData)
         _ = UINavigationController(rootViewController: sut)
 

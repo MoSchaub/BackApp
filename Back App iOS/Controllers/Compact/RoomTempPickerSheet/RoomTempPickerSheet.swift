@@ -59,15 +59,15 @@ struct RoomTempPickerSheet: View {
     }
 }
 
-struct RoomTempPickerSheet_Previews: PreviewProvider {
-    static var previews: some View {
-        _ = RecipeListViewController(appData: BackAppData.shared)
-        return RoomTempPickerSheet(roomTemp: Binding {
-            return Standarts.roomTemp
-        } set: {
-            Standarts.roomTemp = $0
-        }, dissmiss: {
-            print("dissmiss")
-        })
-    }
-}
+//struct RoomTempPickerSheet_Previews: PreviewProvider {
+//    static var previews: some View {
+//        _ = RecipeListViewController(appData: BackAppData.shared)
+//        return RoomTempPickerSheet(roomTemp: Binding {
+//            return Standarts.roomTemp
+//        } set: {
+//            Standarts.roomTemp = $0
+//        }, dissmiss: {
+//            print("dissmiss")
+//        })
+//    }
+//}

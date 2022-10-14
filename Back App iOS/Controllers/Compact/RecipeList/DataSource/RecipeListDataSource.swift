@@ -131,7 +131,6 @@ class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppDa
 extension RecipeListDataSource: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.searchTextField.text {
-//            self.update(animated: false, searchText: searchText)
             if !searchText.isEmpty {
                 self.searchText = searchText
             } else {

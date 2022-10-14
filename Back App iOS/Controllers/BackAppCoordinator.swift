@@ -28,6 +28,7 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
     init(windowScene: UIWindowScene) {
         self.window = UIWindow(windowScene: windowScene)
 
+        //the navigation controller is needed to make the title and navbar work
         self.navigationController = UINavigationController()
 
         self.splitViewController = BASplitViewController()
@@ -40,8 +41,9 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
     func start() {
         window.rootViewController = splitViewController
 
-        let recipeListCoordinator = RecipeListCoordinator(navigationController: navigationController)
-        recipeListCoordinator.delegate = self
+        let recipeListCoordinator = RecipeListCoordinator(navigationController: navigationController,
+                                                          splitViewController: splitViewController,
+                                                          delegate: self)
         recipeListCoordinator.start()
         add(childCoordinator: recipeListCoordinator)
 
