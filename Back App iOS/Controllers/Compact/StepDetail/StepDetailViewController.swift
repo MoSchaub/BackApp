@@ -108,7 +108,8 @@ class StepDetailViewController: BackAppVC {
 
     // MARK: - Apply updated Data source
     override func updateDataSource(animated: Bool = true) {
-        self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated)
+        self.dataSource.apply(createUpdatedSnapshot(), animatingDifferences: animated, completion: self.setupToolbar)
+        //self.setupToolbar()
     }
 }
 
