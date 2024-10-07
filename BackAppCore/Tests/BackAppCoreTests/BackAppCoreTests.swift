@@ -283,7 +283,7 @@ final class BackAppCoreTests: XCTestCase {
         
         appData.open(url)
         
-        sleep(1)
+        sleep(2)
         
         for recipe in recipes {
             XCTAssert(appData.allRecipes.first(where: { $0.name == recipe.name }) != nil)

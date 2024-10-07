@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -248,7 +248,6 @@
 		CDE3731A26DD670F008C7B95 /* UITextView+Placeholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Placeholder.m"; sourceTree = "<group>"; };
 		CDE3731B26DD670F008C7B95 /* UITextView+Placeholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Placeholder.h"; sourceTree = "<group>"; };
 		CDE7BF7C27065BD1006A9970 /* RecipeListVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListVCTests.swift; sourceTree = "<group>"; };
-		CDF02D8F26FBD64C006DE272 /* BackAppDatabase */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackAppDatabase; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,7 +353,6 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
-				CDF02D8F26FBD64C006DE272 /* BackAppDatabase */,
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,

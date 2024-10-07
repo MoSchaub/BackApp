@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(name: "BakingRecipeStrings", path: "/Users/moritzschaub/Entwickler/Swift/ios/BrotApp2/BakingRecipeStrings"),
+        .package(name: "BakingRecipeStrings", path: "../BakingRecipeStrings"),
         .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift.git", .upToNextMajor(from: "6.0.0"))
     ],
     targets: [
