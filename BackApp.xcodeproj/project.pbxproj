@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9AF248BDA3000D11DD3 /* BackgroundGradient.swift */; };
 		CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B4248BDA3000D11DD3 /* NeomorphicToggleStyle.swift */; };
 		CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F999248BDA3000D11DD3 /* DecimalField.swift */; };
@@ -76,7 +77,6 @@
 		CDB916B428F865C70014F447 /* RecipeListVC+CellSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916B328F865C70014F447 /* RecipeListVC+CellSelection.swift */; };
 		CDB916B628F8733A0014F447 /* RecipeListViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916B528F8733A0014F447 /* RecipeListViewDelegate.swift */; };
 		CDB916B828F8774C0014F447 /* RecipeListVC+ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916B728F8774C0014F447 /* RecipeListVC+ContextMenu.swift */; };
-		CDB916BB28F879780014F447 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		CDB916C228F87A670014F447 /* RecipeListCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916C128F87A670014F447 /* RecipeListCoordinatorDelegate.swift */; };
 		CDB916C428F87AB90014F447 /* RecipeListCoordinator+navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916C328F87AB90014F447 /* RecipeListCoordinator+navigate.swift */; };
 		CDB916C628F87B130014F447 /* RecipeListCoordinator+present.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB916C528F87B130014F447 /* RecipeListCoordinator+present.swift */; };
@@ -758,8 +758,9 @@
 		CD6A9A042340252400748249 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1600;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
 					CD2BCE5224AE72CB00B868D7 = {
@@ -854,7 +855,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDB916BB28F879780014F447 /* CompactHomeTests.swift in Sources */,
 				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
 				CDE7BF7D27065BD1006A9970 /* RecipeListVCTests.swift in Sources */,
 				CDD4F15D271B1E9E004E6840 /* CellTests.swift in Sources */,
@@ -934,6 +934,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */,
+				8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */,
 				CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1012,6 +1013,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1033,6 +1035,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1054,6 +1057,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1077,6 +1081,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1125,6 +1130,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1188,6 +1194,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1210,7 +1217,6 @@
 		CDA7EE4524A67DC200763E21 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
@@ -1224,6 +1230,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
@@ -1238,7 +1245,6 @@
 		CDA7EE4624A67DC200763E21 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
@@ -1254,6 +1260,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
@@ -1269,7 +1276,6 @@
 		CDA7EE4724A67DC200763E21 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSUITests/Info.plist";
@@ -1279,6 +1285,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1290,7 +1297,6 @@
 		CDA7EE4824A67DC200763E21 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSUITests/Info.plist";
@@ -1300,6 +1306,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOSUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

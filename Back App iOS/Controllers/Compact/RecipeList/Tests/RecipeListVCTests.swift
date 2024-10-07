@@ -12,6 +12,34 @@ import BakingRecipeStrings
 import Combine
 @testable import Back_App
 
+class MockDelegate: RecipeListViewDelegate {
+    func navigateToSettings(from recipeListViewController: Back_App.RecipeListViewController) {
+        
+    }
+    
+    func navigateToRecipeDetail(from recipeListViewController: Back_App.RecipeListViewController, with: BackAppCore.BackAppData.RecipeListItem) {
+        
+    }
+    
+    func presentNewRecipePopover(from recipeListViewController: Back_App.RecipeListViewController) {
+        
+    }
+    
+    func presentRoomTempSheet(from recipeListViewController: Back_App.RecipeListViewController) {
+        
+    }
+    
+    func presentImportAlert(from recipeListViewController: Back_App.RecipeListViewController) {
+        
+    }
+    
+    func editRecipeViewController(for recipeId: Int64) -> Back_App.EditRecipeViewController {
+        return EditRecipeViewController(recipeId: recipeId, creating: false, appData: BackAppData.shared(includeTestingRecipe: true))
+    }
+    
+    
+}
+
 class RecipeListVCTests: XCTestCase {
 
     var sut: RecipeListViewController!
@@ -26,7 +54,7 @@ class RecipeListVCTests: XCTestCase {
         appData = BackAppData.shared(includeTestingRecipe: true)
         
 
-        sut = RecipeListViewController(appData: appData)
+        sut = RecipeListViewController(appData: appData, delegate: MockDelegate())
         _ = UINavigationController(rootViewController: sut)
 
         fixWindow()

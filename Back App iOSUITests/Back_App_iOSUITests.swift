@@ -28,10 +28,6 @@ var nameTextField: XCUIElement {
     appTables.textFields["name"]
 }
 
-var returnButton: XCUIElement {
-    app.keyboards.buttons["Return"]
-}
-
 var doneButton: XCUIElement {
     navigationBar.buttons["Done"]
 }
@@ -194,8 +190,6 @@ class Back_App_iOSUITests: XCTestCase {
     func testAddingExampleRecipe() throws {
         
         let recipe = Recipe.example
-
-        let returnButton = app.buttons["Return"]
         
         let argumentApp = app
         argumentApp.launchArguments.append("-reset")
@@ -206,7 +200,7 @@ class Back_App_iOSUITests: XCTestCase {
         // name
         nameTextField.tap()
         nameTextField.typeText(recipe.name)
-        returnButton.tap()
+        doneButton.tap()
         
         // quantity
         let textField = appTables.textFields["Number of breads, rolls, etc."]
@@ -237,7 +231,7 @@ class Back_App_iOSUITests: XCTestCase {
         // name
         nameTextField.tap()
         nameTextField.typeText(ingredient.name)
-        returnButton.tap()
+        doneButton.tap()
         
         // amount
         let amountTextField = appTables.textFields["amount in gramms"]
@@ -277,8 +271,7 @@ class Back_App_iOSUITests: XCTestCase {
         // name
         nameTextField.tap()
         nameTextField.typeText(step.name)
-        returnButton.tap()
-
+        doneButton.tap()
 
         // notes
         let notesField = appTables.textViews.firstMatch
@@ -381,6 +374,7 @@ class Back_App_iOSUITests: XCTestCase {
         XCTAssert(appTables.staticTexts[dateFormatter.string(from: backenDate)].exists)
     }
     
+    //needs to run with en_us locale
     func testScheduleDiffrentDate() throws {
         
         // inverted diffrentDate originalTimes
