@@ -30,6 +30,7 @@ public extension Measurement where UnitType == UnitTemperature {
     var localizedValue: String {
         var string = measurementFormatter.string(from: self)
         string.removeLast(2)
+        string = string.trimmingCharacters(in: .whitespacesAndNewlines)
         return string
     }
 }
