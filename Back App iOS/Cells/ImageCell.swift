@@ -14,7 +14,7 @@ public class ImageCell: CustomCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         guard let imageView = self.imageView else { return }
         if let data = data {
-            let image = UIImage(data: data, scale: 0.0001) ?? Images.largePhoto
+            let image = UIImage(data: data, scale: 0.01) ?? Images.largePhoto
             imageView.image = image
             imageView.contentMode = .scaleAspectFill
         } else {
