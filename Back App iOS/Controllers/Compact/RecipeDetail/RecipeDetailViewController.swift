@@ -19,7 +19,7 @@ class RecipeDetailViewController: UITableViewController {
     //MARK: - Properties
 
     /// the diffable dataSource for this screen
-    private var dataSource: RecipeDetailDataSource!
+    private(set) var dataSource: RecipeDetailDataSource!
 
     /// all of the info this screen needs for displaying the cellls
     private var recipeDetailItem: BackAppData.RecipeDetailItem? {

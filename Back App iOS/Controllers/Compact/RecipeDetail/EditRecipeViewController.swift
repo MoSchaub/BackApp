@@ -16,7 +16,7 @@ class EditRecipeViewController: BackAppVC {
     // MARK: Properties
 
     // class for managing table creation and updates
-    private lazy var dataSource = makeDataSource()
+    private(set) lazy var dataSource = makeDataSource()
 
     // queue for performing image compression
     private lazy var compressionQueue = OperationQueue()
@@ -139,7 +139,6 @@ class EditRecipeViewController: BackAppVC {
         tableView.register(StepCell.self, forCellReuseIdentifier: Strings.stepCell)
         tableView.register(InfoStripCell.self, forCellReuseIdentifier: Strings.infoStripCell)
         tableView.register(AmountCell.self, forCellReuseIdentifier: Strings.amountCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Strings.plainCell)
         tableView.register(TextViewCell.self, forCellReuseIdentifier: Strings.infoCell)
     }
 

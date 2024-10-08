@@ -107,6 +107,58 @@ final class BakingRecipeFoundationTests: XCTestCase {
         step.duration = 130
         XCTAssertEqual(step.formattedDuration, "2 \(Strings.minutes)")
     }
+    
+    func testFormattedDuration() {
+        var duration = 1
+        XCTAssertEqual(duration.formattedDuration,Strings.one + " " + Strings.minute)
+
+        duration = 60
+        XCTAssertEqual(duration.formattedDuration, Strings.one + " " + Strings.hour )
+
+        duration = 61
+        XCTAssertEqual(duration.formattedDuration, Strings.one + " " + Strings.hour + " " + Strings.one + " " + Strings.minute)
+
+        duration = 66
+        XCTAssertEqual(duration.formattedDuration, Strings.one + " " + Strings.hour + " " + "6 " + Strings.minutes)
+
+        duration = 126
+        XCTAssertEqual(duration.formattedDuration, "2 " + Strings.hours + " " + "6 " + Strings.minutes)
+
+        duration = 1
+        XCTAssertEqual(duration.formattedDuration, Strings.one + " " + Strings.minute)
+
+        duration = 0
+        XCTAssertEqual(duration.formattedDuration, "0 " + Strings.minutes)
+
+        duration = 2
+        XCTAssertEqual(duration.formattedDuration, "2 \(Strings.minutes)")
+    }
+    
+    func testCompactFormattedDuration() {
+        var duration = 1
+        XCTAssertEqual(duration.compactForamttedDuration,Strings.one + " " + Strings.minute)
+
+        duration = 60
+        XCTAssertEqual(duration.compactForamttedDuration, Strings.one + " " + Strings.hour )
+
+        duration = 61
+        XCTAssertEqual(duration.compactForamttedDuration, "1.02 " + Strings.hours)
+
+        duration = 66
+        XCTAssertEqual(duration.compactForamttedDuration, "1.1 " + Strings.hours)
+
+        duration = 126
+        XCTAssertEqual(duration.compactForamttedDuration, "2.1 " + Strings.hours)
+
+        duration = 1
+        XCTAssertEqual(duration.compactForamttedDuration, Strings.one + " " + Strings.minute)
+
+        duration = 0
+        XCTAssertEqual(duration.compactForamttedDuration, "0 " + Strings.minutes)
+
+        duration = 2
+        XCTAssertEqual(duration.compactForamttedDuration, "2 \(Strings.minutes)")
+    }
 
     static var allTests = [
         ("test_TempMeasurementFormatter", test_TempMeasurementFormatter)

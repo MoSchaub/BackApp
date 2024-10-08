@@ -154,9 +154,9 @@ public extension BackAppData {
     }
 
     ///formatted total duration in hours
-    func formattedTotalDurationHours(for recipeId: Int64) -> String {
+    func totalCompactFormattedDuration(for recipeId: Int64) -> String {
         findRecipeAndReturnAttribute(for: recipeId, failValue: "") { recipe in
-            return(recipe.totalDuration(reader: databaseReader).hours * 60).formattedDuration
+            return(recipe.totalDuration(reader: databaseReader)).compactForamttedDuration
         }
     }
 

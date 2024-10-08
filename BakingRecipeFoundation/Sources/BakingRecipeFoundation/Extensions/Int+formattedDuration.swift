@@ -44,6 +44,29 @@ public extension Int {
         let hours = self.hours
         return (hours == 1 ? Strings.one : "\(hours)") + " " + formattedDurationUnit(for: hours, hours: true)
     }
+    
+    var compactForamttedDuration: String {
+        
+        func formatNumber(_ number: Double) -> String {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 0 // Don't force decimal places if not needed
+            formatter.maximumFractionDigits = 2 // Limit to 2 decimal places
+            
+            if let formattedString = formatter.string(from: NSNumber(value: number)) {
+                return formattedString
+            } else {
+                return "\(number)" // Fallback if formatting fails
+            }
+        }
+        
+        if self <= 60 {
+            return self.formattedDuration
+        } else {
+            let hours = Double(self) / 60.0
+            return formatNumber(hours) + " " + Strings.hours
+        }
+    }
 }
 
 fileprivate func formattedDurationUnit(for time: Int, hours: Bool = false) -> String{

@@ -11,6 +11,7 @@ import BackAppCore
 import Combine
 import BakingRecipeStrings
 
+/// Custom Table view controller which simplifies done button in navigationbar
 internal class BackAppVC: UITableViewController{
 
     internal var appData: BackAppData
@@ -107,6 +108,7 @@ internal class BackAppVC: UITableViewController{
     }
 }
 
+//MARK: - Life cydle
 internal extension BackAppVC {
     override func loadView() {
         super.loadView()

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
+		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
+		8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */; };
 		CD0A179224ADF036001CDF5F /* BackgroundGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9AF248BDA3000D11DD3 /* BackgroundGradient.swift */; };
 		CD0A179424ADF095001CDF5F /* NeomorphicToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F9B4248BDA3000D11DD3 /* NeomorphicToggleStyle.swift */; };
 		CD0A179524ADF09D001CDF5F /* DecimalField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76F999248BDA3000D11DD3 /* DecimalField.swift */; };
@@ -136,6 +138,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
+		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD20880B28F32D8600127961 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListCoordinator.swift; sourceTree = "<group>"; };
@@ -286,6 +290,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E5F3F142CB4330600C74344 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */,
+				8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		CD232E3626740CAA00E528BB /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,6 +498,7 @@
 		CD8101F924A9F381000C0220 /* RecipeDetail */ = {
 			isa = PBXGroup;
 			children = (
+				8E5F3F142CB4330600C74344 /* Tests */,
 				CDBDCF9A24A553A300121F98 /* EditRecipeViewController.swift */,
 				CD6FD71026921D0800ACDE85 /* RecipeDetailViewController.swift */,
 				CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */,
@@ -855,6 +869,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */,
+				8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */,
 				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
 				CDE7BF7D27065BD1006A9970 /* RecipeListVCTests.swift in Sources */,
 				CDD4F15D271B1E9E004E6840 /* CellTests.swift in Sources */,

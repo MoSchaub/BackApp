@@ -30,11 +30,11 @@ public extension Recipe {
     /// an ``InfoStripItem`` with the recipes formatted Values
     /// - Parameter appData: database interfacefor accessing the recipes formatted Values
     func infoStripItem(appData: BackAppData) -> Item {
-        InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.formattedTotalDurationHours(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
+        InfoStripItem(weighIn: appData.totalFormattedAmount(for: self.id!), formattedDuration: appData.totalCompactFormattedDuration(for: self.id!), doughYield: appData.formattedTotalDoughYield(for: self.id!))
     }
 
     internal func infoStripItem(db: Database) throws -> InfoStripItem {
-        InfoStripItem(weighIn: try self.formattedTotalAmount(db: db), formattedDuration: try self.formattedTotalDurationHours(db: db), doughYield: try self.formattedTotalDoughYield(db: db))
+        InfoStripItem(weighIn: try self.formattedTotalAmount(db: db), formattedDuration: try self.compactFormattedTotalDuration(db: db), doughYield: try self.formattedTotalDoughYield(db: db))
     }
 
     internal func stepItems(db: Database) throws -> [StepItem] {

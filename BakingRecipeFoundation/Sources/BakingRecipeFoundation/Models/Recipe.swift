@@ -324,8 +324,8 @@ public extension Recipe {
         return allTimes
     }
 
-    func formattedTotalDurationHours(db: Database) throws -> String {
-        try totalDuration(db: db).formattedDurationHours
+    func compactFormattedTotalDuration(db: Database) throws -> String {
+        try totalDuration(db: db).compactForamttedDuration
     }
 
     /// totalAmount of all ingredients in the recipe
