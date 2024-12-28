@@ -1,10 +1,9 @@
 // SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
-
 //
-//  File.swift
-//  
+//  BackAppData+Recipe.swift
+//
 //
 //  Created by Moritz Schaub on 22.12.20.
 //

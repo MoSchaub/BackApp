@@ -1,4 +1,3 @@
-// Copyright © 2020 Moritz Schaub. All rights reserved.
 // SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -19,7 +18,6 @@ public struct AnchoredConstraints {
     public var top, leading, bottom, trailing, width, height: NSLayoutConstraint?
 }
 
-// Reference Video: https://youtu.be/iqpAP7s3b-8
 @available(iOS 11.0, tvOS 11.0, *)
 extension UIView {
     
