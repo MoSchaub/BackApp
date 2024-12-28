@@ -1,285 +1,98 @@
 
-
 "Alert_ActionCancel" = "Cancel";
-
-
 "Alert_ActionDelete" = "Delete";
-
-
 "Alert_ActionOk" = "OK";
-
-
 "Alert_ActionRemove" = "Remove";
-
-
 "Alert_ActionRetry" = "Repeat";
-
-
 "Alert_ActionSave" = "Save";
-
-
 "Alert_Error" = "Error";
-
-
 "CancelRecipeMessage" = "Are you sure you want to permanently delete this recipe?";
-
-
 "EditButton_Done" = "Done";
-
-
 "EditButton_Edit" = "Edit";
-
-
 "General_BackButtonTitle" = "Back";
-
-
 "about" = "about Baking App";
-
-
 "addFavorite" = "Favourite";
-
-
 "addIngredient" = "add Ingredient";
-
-
 "addRecipe" = "Add recipe";
-
-
 "addStep" = "add Step";
-
-
 "allRecipes" = "all recipes";
-
-
 "amount" = "amount";
-
-
 "amountCellPlaceholder1" = "amount in gramms";
-
-
 "amountCellPlaceholder2" = "Number of breads, rolls, etc.";
-
-
 "appTitle" = "Baking App";
-
-
 "appearance" = "Appearance";
-
-
 "auto" = "automatic";
-
-
 "bulkLiquid" = "bulk liquid";
-
-
 "createSchedule" = "create schedule";
-
-
 "dark" = "dark";
-
-/*  */
 "date" = "date";
-
-
 "deleteRecipeMessage" = "do you really want to delete this recipe";
-
-
 "donate_text" = "The use of this app with all its functions is completely free and without any advertising.\nHowever, the development of this app is connected with a lot of costs and work and if you want to support the development of this app with a small contribution, we as developers would be very happy.";
-
-
 "doughYield" = "hydration";
-
-
 "duplicate" = "Duplicate";
-
-
 "duration" = "duration";
-
-
 "dynamicTemp" = "dynamic temperature";
-
-
 "end" = "end";
-
-
 "endDate" = "end date";
-
-
 "endTemp" = "end temperature";
-
-
 "exportAll" = "export all recipes";
-
-
 "favorites" = "Favourites";
-
-
 "flour" = "flour";
-
-
 "hour" = "hour";
-
-
 "hours" = "hours";
-
-
 "image" = "image";
-
-
 "image_alert_title" = "Select image, edit image, or remove current image";
-
-
 "importFile" = "import from file";
-
-
 "ingredientOrStep" = "new ingredient or step as ingredient?";
-
-
 "ingredients" = "ingredients";
-
-
 "isKneadingStep" = "kneading step";
-
-
 "kneadingHeatCellPlaceholder" = "kneading heating";
-
-
 "kneadingHeating" = "kneading heating";
-
-
 "language" = "language";
-
-
 "light" = "light";
-
-
 "minute" = "minute";
-
-
 "minutes" = "minutes";
-
-
 "name" = "name";
-
-
 "newIngredient" = "new ingredient";
-
-
 "next" = "next";
-
-
 "notes" = "notes";
-
 /* one for one minute */
 "one" = "one";
-
-
 "other" = "other";
-
-
 "piece" = "piece";
-
-
 "pieces" = "pieces";
-
-
 "privacy_policy" = "privacy policy";
-
-
 "quantity" = "quantity";
-
-
 "recipeImported" = "recipe has been imported";
-
-
 "recipe_already_exist_error" = "The file contains already existing recipes";
-
-
 "recipes" = "Recipes";
-
-
 "recipesImported" = "recipes have been imported";
-
-
 "removeFavorite" = "Unfavourite";
-
-
 "roomTempQuestionLabel" = "current room temperature";
-
-
 "roomTemperature" = "room temperature";
-
-
 "schedule" = "schedule";
-
-
 "scheduleFormErrorMessage" = "Please enter the amount you wish to make";
-
-
 "selectStep" = "select Step";
-
-
 "select_image" = "pick image";
-
-
 "settings" = "Settings";
-
-
 "share" = "Share";
-
-
 "start" = "start";
-
-
 "startDate" = "start date";
-
-/*  */
 "startEndDate" = "test";
-
-
 "startRecipe" = "Start";
-
-
 "step" = "step";
-
-
 "steps" = "steps";
-
-
 "success" = "success";
-
-
 "support" = "learn more";
-
-
 "ta150" = "starter 50% hydration";
-
-
 "ta200" = "starter 100% hydration";
-
-
 "take_picture" = "take picture";
-
-
 "temperature" = "temperature";
-
-
 "type" = "type";
-
-
 "unnamedIngredient" = "unnamed Ingredient";
-
-
 "unnamedRecipe" = "unnamed recipe";
-
-
 "unnamedStep" = "unnamed Step";
-
-
 "version" = "version";
-
-
 "website" = "website";
-
-
 "weighIn" = "total weight";
+"License" = "license";

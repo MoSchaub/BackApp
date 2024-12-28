@@ -1,285 +1,98 @@
 
-
 "Alert_ActionCancel" = "Abbrechen";
-
-
 "Alert_ActionDelete" = "Löschen";
-
-
 "Alert_ActionOk" = "OK";
-
-
 "Alert_ActionRemove" = "Entfernen";
-
-
 "Alert_ActionRetry" = "Wiederholen";
-
-
 "Alert_ActionSave" = "Sichern";
-
-
 "Alert_Error" = "Fehler";
-
-
 "CancelRecipeMessage" = "Möchtest du wirklich dieses Rezept permanent löschen?";
-
-
 "EditButton_Done" = "Fertig";
-
-
 "EditButton_Edit" = "Bearbeiten";
-
-
 "General_BackButtonTitle" = "Zurück";
-
-
 "about" = "über Back App";
-
-
 "addFavorite" = "Favorit";
-
-
 "addIngredient" = "Zutat hinzufügen";
-
-
 "addRecipe" = "Rezept hinzufügen";
-
-
 "addStep" = "Schritt hinzufügen";
-
-
 "allRecipes" = "alle Rezepte";
-
-
 "amount" = "Menge";
-
-
 "amountCellPlaceholder1" = "Menge in gramm";
-
-
 "amountCellPlaceholder2" = "Anzahl an Broten, Brötchen, etc.";
-
-
 "appTitle" = "Back App";
-
-
 "appearance" = "Erscheinungsbild";
-
-
 "auto" = "automatisch";
-
-
 "bulkLiquid" = "Schüttflüssigkeit";
-
-
 "createSchedule" = "Zeitplan erstellen";
-
-
 "dark" = "dunkel";
-
-
 "date" = "Datum";
-
-
 "deleteRecipeMessage" = "Möchten Sie dieses Rezept wirklich löschen";
-
-
 "donate_text" = "Die Nutzung dieser App mit allen Funktionen ist komplett gratis und ohne jegliche Werbung.\nJedoch ist die Entwicklung dieser App mit einer Menge an Kosten und Arbeit verbunden und wenn sie mit einem kleinem Beitrag die Entwicklung dieser App unterstützen wollen, würden wir uns als Entwickler sehr freuen.";
-
-
 "doughYield" = "Teigausbeute";
-
-
 "duplicate" = "Duplizieren";
-
-
 "duration" = "Dauer";
-
-
 "dynamicTemp" = "dynamische Temperatur";
-
-
 "end" = "Ende";
-
-
 "endDate" = "Enddatum";
-
-
 "endTemp" = "Endtemperatur";
-
-
 "exportAll" = "alle Rezepte exportieren";
-
-
 "favorites" = "Favoriten";
-
-
 "flour" = "Mehl";
-
-
 "hour" = "Stunde";
-
-
 "hours" = "Stunden";
-
-
 "image" = "Bild";
-
-
 "image_alert_title" = "Bild auswählen, bearbeiten, oder aktuelles Bild entfernen";
-
-
 "importFile" = "aus Datei importieren";
-
-
 "ingredientOrStep" = "neue Zutat oder Schritt als Zutat?";
-
-
 "ingredients" = "Zutaten";
-
-
 "isKneadingStep" = "Knetschritt";
-
-
 "kneadingHeatCellPlaceholder" = "kneterwärmung";
-
-
 "kneadingHeating" = "kneterwärmung";
-
-
 "language" = "Sprache";
-
-
 "light" = "hell";
-
-
 "minute" = "Minute";
-
-
 "minutes" = "Minuten";
-
-
 "name" = "Name";
-
-
 "newIngredient" = "neue Zutat";
-
-
 "next" = "nächste";
-
-
 "notes" = "Notizen";
-
 /* one for one minute */
 "one" = "eine";
-
-
 "other" = "Sonstiges";
-
-
 "piece" = "Stück";
-
-
 "pieces" = "Stück";
-
-
 "privacy_policy" = "Datenschutzerklärung";
-
-
 "quantity" = "Anzahl";
-
-
 "recipeImported" = "Rezept wurde importiert";
-
-
 "recipe_already_exist_error" = "Die Datei enhält bereits existierende Rezepte";
-
-
 "recipes" = "Rezepte";
-
-
 "recipesImported" = "Rezepte wurden importiert";
-
-
 "removeFavorite" = "kein Favorit";
-
-
 "roomTempQuestionLabel" = "aktuelle Raumtemperatur";
-
-
 "roomTemperature" = "Raumtemperatur";
-
-
 "schedule" = "Zeitplan";
-
-
 "scheduleFormErrorMessage" = "Bitte gebe die gewünschte Menge an";
-
-
 "selectStep" = "Schritt auswählen";
-
-
 "select_image" = "Bild auswählen";
-
-
 "settings" = "Einstellungen";
-
-
 "share" = "Teilen";
-
-
 "start" = "Start";
-
-
 "startDate" = "Startdatum";
-
-
 "startEndDate" = "Start/End datum";
-
-
 "startRecipe" = "Starten";
-
-
 "step" = "Schritt";
-
-
 "steps" = "Schritte";
-
-
 "success" = "Erfolg";
-
-
 "support" = "mehr erfahren";
-
-
 "ta150" = "Anstellgut TA 150";
-
-
 "ta200" = "Anstellgut TA 200";
-
-
 "take_picture" = "Bild aufnehmen";
-
-
 "temperature" = "Temperatur";
-
-
 "type" = "Art";
-
-
 "unnamedIngredient" = "unbenannte Zutat";
-
-
 "unnamedRecipe" = "unbenanntes Rezept";
-
-
 "unnamedStep" = "unbenannter Schritt";
-
-
 "version" = "Version";
-
-
 "website" = "Website";
-
-
 "weighIn" = "Einwage";
+"License" = "Lizenz";

@@ -34,6 +34,10 @@ struct AboutView: View {
                     Divider()
                     Link(url: Strings.privacyPolicyURL, title: Strings.privacy_policy)
                     Divider()
+                    NavigationLink(destination: LicenseView(model: LicenseViewModel())) {
+                        Text(Strings.license)
+                    }
+                    Divider()
                     
                 }.padding(.horizontal)
             }
