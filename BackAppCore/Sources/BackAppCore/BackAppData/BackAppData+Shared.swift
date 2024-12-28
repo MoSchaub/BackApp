@@ -12,11 +12,11 @@ import BakingRecipeFoundation
 extension BackAppData {
     public static let shared = makeShared()
     
-    public static func shared(includeTestingRecipe: Bool = false) -> BackAppData {
-        return makeShared(includeTestingRecipe: includeTestingRecipe)
+    public static func shared(includeTestingRecipe: Bool = false, resetDatabase: Bool = false) -> BackAppData {
+        return makeShared(includeTestingRecipe: includeTestingRecipe, resetDatabase: resetDatabase)
     }
     
-    private static func makeShared(includeTestingRecipe: Bool = false) -> BackAppData {
+    private static func makeShared(includeTestingRecipe: Bool = false, resetDatabase: Bool = false) -> BackAppData {
         do {
             // Pick a folder for storing the SQLite database, as well as
             // the various temporary files created during normal database
@@ -46,7 +46,7 @@ extension BackAppData {
             }
 
             // Support for tests: delete the database if requested
-            if CommandLine.arguments.contains("-reset") || includeTestingRecipe {
+            if CommandLine.arguments.contains("-reset") || includeTestingRecipe || resetDatabase {
                 try? appData.deleteAll(of: Recipe.self)
             }
             

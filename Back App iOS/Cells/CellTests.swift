@@ -118,6 +118,57 @@ class CellTests: XCTestCase {
         stackview = step.vstack(scaleFactor: 1, editing: true)
         try testNotes(exists: false)
     }
+    
+    func testStepRow() throws {
+        var complexExample = Recipe.complexExample(number: 0)
+        let steps = try insert(recipeTransfer: &complexExample)
+        
+        for step in steps {
+            let stepRow = step.vstack(scaleFactor: 1)
+            let label = stepRow.subviews[0].subviews.last as! UILabel
+            XCTAssertEqual(label.text, BackAppData.shared.formattedStartDate(for: step, with: complexExample.recipe.id!))
+        }
+    }
+}
+
+func insert(recipeTransfer: inout RecipeTransferType, complex: Bool = false) throws -> [Step] {
+    var recipe = recipeTransfer.recipe
+    let appData = BackAppData.shared(resetDatabase: true)
+
+    appData.insert(&recipe)
+    try XCTAssert(appData.databaseReader.read(recipe.exists))
+
+    var previousStepId: Int64?
+
+    _ = try recipeTransfer.stepIngredients.map {
+        var step = $0.step
+        step.recipeId = recipe.id!
+
+        //check if there is any superstep id that is not nil. any superstep id is used as a notation to say that the step is suposed to be substep of the previously inserted step. This means the superstepid is not set if it was nil before.
+        if !complex, step.superStepId != nil, let previousStepId = previousStepId {
+            step.superStepId = previousStepId
+        } else if complex, let superStepId = step.superStepId, let superStep = appData.steps(with: step.recipeId).first(where: { $0.number == superStepId }), let newId = superStep.id  { // check only steps of the recipe to improve efficiency and don't missmatch the superstep.
+            step.superStepId = newId
+        }
+        appData.insert(&step)
+
+        try XCTAssertTrue(appData.databaseReader.read(step.exists))
+
+        let stepId = step.id!
+        previousStepId = stepId
+
+        for ingredient in $0.ingredients {
+            var ingredient = ingredient
+            ingredient.stepId = stepId
+            appData.insert(&ingredient)
+            try XCTAssert(appData.databaseReader.read(ingredient.exists))
+        }
+    }
+
+    let steps = appData.steps(with: recipe.id!)
+    recipeTransfer.recipe = recipe
+    XCTAssertEqual(steps.count, recipeTransfer.stepIngredients.count)
+    return steps
 }
 
 

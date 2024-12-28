@@ -10,6 +10,7 @@ import Testing
 @testable import Back_App
 @preconcurrency import BackAppCore
 import BakingRecipeFoundation
+import BakingRecipeUIFoundation
 
 struct RecipeDetailViewTest {
     
