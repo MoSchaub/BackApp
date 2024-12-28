@@ -8,7 +8,7 @@
 
 import Testing
 @testable import Back_App
-import BackAppCore
+@preconcurrency import BackAppCore
 import BakingRecipeFoundation
 
 

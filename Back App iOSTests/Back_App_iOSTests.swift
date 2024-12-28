@@ -8,7 +8,7 @@
 
 import Testing
 @testable import Back_App
-import BackAppCore
+@preconcurrency import BackAppCore
 import BakingRecipeFoundation
 import SwiftUI
 
@@ -16,7 +16,7 @@ import SwiftUI
     
     var sut: ScheduleFormViewController
     
-    init() {
+    @MainActor init() {
         let appData = BackAppData.shared(includeTestingRecipe: true)
         let recipeId = appData.allRecipes.first(where: { $0.name == Recipe.example.recipe.name})!.id!
         let recipeBinding = Binding {

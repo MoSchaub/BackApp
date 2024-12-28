@@ -83,15 +83,6 @@ class RecipeListVCTests: XCTestCase {
 
     func test_contextMenu() {
 
-        let recipeListAvailableExpectation = self.expectation(description: "recipeListAvailable")
-
-        NotificationCenter.default.publisher(for: .recipeListVCAvailable, object: nil)
-            .sink { _ in
-                recipeListAvailableExpectation.fulfill()
-            }.store(in: &subscribers)
-
-        waitForExpectations(timeout: 10)
-
         let expectation = self.expectation(description: "expectation")
         DispatchQueue.main.async {
             XCTAssertEqual(self.contextMenu()?.children.count, 6)

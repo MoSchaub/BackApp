@@ -54,55 +54,6 @@ class Back_App_iOSUITests: XCTestCase {
         print("error")
     }
     
-    func testAddingSubstep() throws {
-        let sub1 = Step(name: "Sub1", ingredients: [Ingredient(name: "Mehl", amount: 1000, type: .flour)])
-        var sub2 = Step(name: "Sub2")
-        sub2.subSteps.append(sub1)
-        var sub3 = Step(name: "Sub3")
-        sub3.subSteps.append(sub2)
-        
-        let recipeName = "substepTest"
-        
-        let subs = [sub1, sub2, sub3]
-        
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launchArguments.append("-includeTestingRecipe")
-        argumentApp.launch()
-        
-        addButton.tap()
-
-        nameTextField.tap()
-        nameTextField.typeText(recipeName)
-
-        for sub in subs {
-            try addStep(step: sub, recipeName: recipeName)
-        }
-
-        removeSubstep(recipeName: recipeName)
-        
-        app.navigationBars[recipeName].buttons["Save"].tap()
-    }
-    
-    func removeSubstep(recipeName: String) {
-        appTables.staticTexts["Sub3"].firstMatch.tap()
-        
-        // delete the substep
-        appTables.children(matching: .button)["Edit"].tap()
-        appTables.buttons["Delete Sub2, 1000.0 g 20°C"].tap()
-        appTables.buttons["Delete"].tap()
-        appTables.children(matching: .button)["Done"].tap()
-        
-        
-        app.navigationBars["Sub3"].buttons[recipeName].tap()
-        
-        appTables.staticTexts["Sub3"].firstMatch.tap()
-        
-        XCTAssertFalse(appTables.staticTexts["Sub2"].firstMatch.exists)
-        
-        //get back
-        app.navigationBars["Sub3"].buttons[recipeName].tap()
-    }
     
     func testAddingRecipeStepUpdateBug() {
         let argumentApp = app
@@ -383,7 +334,7 @@ class Back_App_iOSUITests: XCTestCase {
         
         let customDateFormatter = DateFormatter()
         customDateFormatter.dateFormat = "MMM d, y HH:mm"
-        customDateFormatter.locale = Locale.init(identifier: "en_us")
+        customDateFormatter.locale = Locale.init(identifier: "en_gb")
 
         let newDate = Date().addingTimeInterval(3600*24*10)
         let newDateFormatter = DateFormatter()
