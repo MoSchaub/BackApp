@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8E5C07492D2070A5002EED55 /* LICENSE.txt */; };
+		8E5C074C2D207293002EED55 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5C074B2D207293002EED55 /* LicenseView.swift */; };
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
 		8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */; };
@@ -46,7 +48,6 @@
 		CD59040B24E2CF4F008A0E6E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD59040A24E2CF4F008A0E6E /* UserNotificationsUI.framework */; };
 		CD59040E24E2CF4F008A0E6E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59040D24E2CF4F008A0E6E /* NotificationViewController.swift */; };
 		CD59041124E2CF4F008A0E6E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD59040F24E2CF4F008A0E6E /* MainInterface.storyboard */; };
-		CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CD59040724E2CF4F008A0E6E /* Push Notification.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6724E2A0FE008F9A09 /* EditRecipeDataSource.swift */; };
 		CD663F6C24E2A20B008F9A09 /* RecipeListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */; };
 		CD6729C126FD1F5E007C17E3 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD6729C026FD1F5E007C17E3 /* CombineCocoa */; };
@@ -117,11 +118,10 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		CD59041624E2CF4F008A0E6E /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CD59041524E2CF4F008A0E6E /* Push Notification.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +138,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
 		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8E5C07492D2070A5002EED55 /* LICENSE.txt */,
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
@@ -642,6 +645,7 @@
 			isa = PBXGroup;
 			children = (
 				CDE2C4CB24DC3D2D009378C4 /* AboutView.swift */,
+				8E5C074B2D207293002EED55 /* LicenseView.swift */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -844,6 +848,7 @@
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD87B1F926FF913D00DAC6B6 /* Launch Screen.storyboard in Resources */,
+				8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
 				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
@@ -929,6 +934,7 @@
 				CD20881428F330D300127961 /* BackAppCoordinator.swift in Sources */,
 				CD232E5026740CD500E528BB /* TextFieldCell.swift in Sources */,
 				CD232E4D26740CD500E528BB /* AmountCell.swift in Sources */,
+				8E5C074C2D207293002EED55 /* LicenseView.swift in Sources */,
 				CD232E5226740CD500E528BB /* CustomCell.swift in Sources */,
 				CD232E4A26740CD500E528BB /* RecipeCell.swift in Sources */,
 				CDB916C628F87B130014F447 /* RecipeListCoordinator+present.swift in Sources */,
@@ -965,7 +971,6 @@
 		};
 		CD59041424E2CF4F008A0E6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = CD59040624E2CF4F008A0E6E /* Push Notification */;
 			targetProxy = CD59041324E2CF4F008A0E6E /* PBXContainerItemProxy */;
 		};
@@ -1063,9 +1068,11 @@
 		CD59041724E2CF4F008A0E6E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 88;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1077,6 +1084,8 @@
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppNotifAppStore;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
@@ -1087,9 +1096,11 @@
 		CD59041824E2CF4F008A0E6E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 88;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Push Notification/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1101,6 +1112,8 @@
 				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS.Push-Notification";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppNotifAppStore;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
@@ -1236,10 +1249,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
-				DEVELOPMENT_TEAM = 2WV4PNAXJT;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 89;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1247,9 +1263,11 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppStoreConnect;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Back App iOS/Cells/Back App iOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1264,10 +1282,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 88;
+				CURRENT_PROJECT_VERSION = 89;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
@@ -1277,11 +1295,11 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppProfil;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppStoreConnect;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Back App iOS/Cells/Back App iOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
