@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //
-//  File.swift
+//  InfoStripCell.swift
 //
 //
 //  Created by Moritz Schaub on 05.10.20.
