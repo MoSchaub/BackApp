@@ -1,10 +1,7 @@
+// Copyright © 2020 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  CompactHomeTests.swift
-//  Back App iOSUITests
-//
-//  Created by Moritz Schaub on 25.10.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import XCTest
 

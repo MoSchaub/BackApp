@@ -1,10 +1,7 @@
+// Copyright © 2024 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  RecipeDetailViewTest.swift
-//  Back App iOSTests
-//
-//  Created by Moritz Schaub on 08.10.24.
-//  Copyright © 2024 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import Testing
 @testable import Back_App

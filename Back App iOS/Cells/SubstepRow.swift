@@ -1,10 +1,7 @@
+// Copyright © 2021 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  SubstepRow.swift
-//  Back App iOS
-//
-//  Created by Moritz Schaub on 24.08.21.
-//  Copyright © 2021 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import BackAppCore
 import BakingRecipeFoundation

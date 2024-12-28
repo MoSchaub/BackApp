@@ -1,10 +1,7 @@
+// Copyright © 2019 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  Rezept.swift
-//  BrotApp2
-//
-//  Created by Moritz Schaub on 29.09.19.
-//  Copyright © 2019 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import Foundation
 

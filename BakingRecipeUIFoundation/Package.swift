@@ -1,5 +1,8 @@
 // swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 
 import PackageDescription
 

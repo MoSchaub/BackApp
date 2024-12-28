@@ -1,10 +1,7 @@
+// Copyright © 2020 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  ImagePicker.swift
-//  KAS4Elderly
-//
-//  Created by Moritz Schaub on 24.02.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import SwiftUI
 

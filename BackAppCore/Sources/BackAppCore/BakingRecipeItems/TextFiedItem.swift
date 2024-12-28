@@ -1,10 +1,7 @@
+// Copyright © 2020 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  TextFiedItem.swift
-//  Back App iOS
-//
-//  Created by Moritz Schaub on 11.08.20.
-//  Copyright © 2020 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import Foundation
 

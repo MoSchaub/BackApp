@@ -1,10 +1,7 @@
+// Copyright © 2020 Franka Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  SceneDelegate.swift
-//  Back App iOS
-//
-//  Created by Franka Schaub on 26.06.20.
-//  Copyright © 2020 Franka Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import UIKit
 import BackAppCore

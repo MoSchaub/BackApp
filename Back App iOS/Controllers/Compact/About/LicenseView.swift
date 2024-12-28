@@ -1,10 +1,7 @@
+// Copyright © 2024 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  LicenseView.swift
-//  Back App iOS
-//
-//  Created by Moritz Schaub on 28.12.24.
-//  Copyright © 2024 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import SwiftUI
 import BakingRecipeStrings

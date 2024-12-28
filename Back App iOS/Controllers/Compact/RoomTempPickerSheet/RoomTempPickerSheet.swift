@@ -1,10 +1,7 @@
+// Copyright © 2021 Moritz Schaub. All rights reserved.
+// SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
-//  RoomTempPickerSheet.swift
-//  Back App iOS
-//
-//  Created by Moritz Schaub on 10.06.21.
-//  Copyright © 2021 Moritz Schaub. All rights reserved.
-//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import SwiftUI
 import BackAppCore
