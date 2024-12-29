@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import SwiftUI
-import BakingRecipeStrings
 
-struct AssociatedKeys {
+private struct ColorUtilsKey {
     static var cellBackgroundColor: UIColor?
     
     static var primaryCellTextColor: UIColor?
@@ -20,57 +19,48 @@ struct AssociatedKeys {
 }
 
 public extension UIColor {
+    
+    private static func getAssociatedObject(key: inout UIColor?) -> UIColor? {
+        return withUnsafePointer(to: &key) {
+            objc_getAssociatedObject(self, $0) as? UIColor
+        }
+    }
+    
+    private static func setAssociatedObject<T>(key: inout UIColor?, value: T?) {
+        withUnsafePointer(to: &key) {
+            objc_setAssociatedObject(self, $0, value, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    
+    
     static var primaryCellTextColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.primaryCellTextColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.primaryCellTextColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.primaryCellTextColor)}
+        set { setAssociatedObject(key: &ColorUtilsKey.primaryCellTextColor, value: newValue) }
     }
     
     static var secondaryTextColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.secondaryTextColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.secondaryTextColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.secondaryTextColor)}
+        set { setAssociatedObject(key: &ColorUtilsKey.secondaryTextColor, value: newValue) }
     }
     
     static var secondaryCellTextColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.secondaryCellTextColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.secondaryCellTextColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.secondaryCellTextColor)}
+        set { setAssociatedObject(key: &ColorUtilsKey.secondaryCellTextColor, value: newValue) }
     }
     
     static var cellBackgroundColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.cellBackgroundColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.cellBackgroundColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.cellBackgroundColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.cellBackgroundColor, value: newValue) }
     }
     
     static var selectedCellBackgroundColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.selectedCellBackgroundColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.selectedCellBackgroundColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.selectedCellBackgroundColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.selectedCellBackgroundColor, value: newValue) }
     }
     
     static var baTintColor: UIColor? {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.baTintColor) as? UIColor
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.baTintColor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { getAssociatedObject(key: &ColorUtilsKey.baTintColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.baTintColor, value: newValue) }
     }
 }

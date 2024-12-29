@@ -16,7 +16,7 @@ import SwiftUI
         let appData = BackAppData.shared(includeTestingRecipe: true)
         let recipeId = appData.allRecipes.first(where: { $0.name == Recipe.example.recipe.name})!.id!
         let recipeBinding = Binding {
-            return appData.record(with: recipeId, of: Recipe.self)!
+            return appData.record(with: recipeId, of: Recipe.self) ?? Recipe.example.recipe
         } set: {
             appData.update($0)
         }
