@@ -19,6 +19,7 @@ enum ColorKey: String {
     case secondaryCellText
     case tint
     case selectedCellBackground
+    case secondaryCellBackground
 }
 
 extension Theme {
@@ -57,6 +58,10 @@ extension Theme {
     
     var baTintColor: UIColor? {
         return color(with: .tint)
+    }
+    
+    var secondaryCellBackgroundColor: UIColor? {
+        return color(with: .secondaryCellBackground)
     }
     
 }

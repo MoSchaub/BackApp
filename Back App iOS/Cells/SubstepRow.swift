@@ -6,7 +6,7 @@ import BackAppCore
 import BakingRecipeFoundation
 
 extension Step {
-    func stepRow(scaleFactor: Double?) -> UIStackView {
+    func stepRow(scaleFactor: Double?, even: Bool) -> UIView {
         let textStyle = UIFont.TextStyle.subheadline
 
         let nameLabel  = UILabel(frame: .zero)
@@ -24,6 +24,17 @@ extension Step {
         let hstack = UIStackView(arrangedSubviews: [nameLabel, tempTextLabel, amountLabel])
         hstack.axis = .horizontal
         hstack.distribution = .equalSpacing
-        return hstack
+        
+        let containerView = UIView()
+        containerView.addSubview(hstack)
+        containerView.layer.cornerRadius = 10
+        hstack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+        if even {
+            containerView.backgroundColor = .secondaryCellBackgroundColor
+        } else {
+            containerView.backgroundColor = .cellBackgroundColor
+        }
+        
+        return containerView
     }
 }

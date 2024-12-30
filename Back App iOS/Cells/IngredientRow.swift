@@ -7,7 +7,7 @@ import BackAppCore
 
 extension Ingredient {
 
-    func stackView(scaleFactor: Double?, tempText: String) -> UIStackView {
+    func stackView(scaleFactor: Double?, tempText: String, even: Bool) -> UIView {
         var subviews = [UIView]()
 
         let textStyle = UIFont.TextStyle.subheadline
@@ -33,7 +33,18 @@ extension Ingredient {
         let hstack = UIStackView(arrangedSubviews: subviews)
         hstack.axis = .horizontal
         hstack.distribution = .equalSpacing
-        return hstack
+        
+        let containerView = UIView()
+        containerView.addSubview(hstack)
+        containerView.layer.cornerRadius = 10
+        hstack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+        if even {
+            containerView.backgroundColor = .secondaryCellBackgroundColor
+        } else {
+            containerView.backgroundColor = .cellBackgroundColor
+        }
+        
+        return containerView
     }
 
     func tempText(in step: Step) -> String {

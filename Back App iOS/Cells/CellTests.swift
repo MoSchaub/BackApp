@@ -12,7 +12,8 @@ class CellTests: XCTestCase {
     func test_ingredientRow() throws {
 
         var ingredient = try XCTUnwrap(Recipe.example.stepIngredients.first?.ingredients.first)
-        var stackView = ingredient.stackView(scaleFactor: nil, tempText: "")
+        var containerView = ingredient.stackView(scaleFactor: nil, tempText: "", even: false)
+        var stackView = containerView.subviews.first as! UIStackView
 
         // 2 subviews if not bulk Liquid
         XCTAssertEqual(stackView.subviews.count, 2)
@@ -28,7 +29,7 @@ class CellTests: XCTestCase {
         ingredient.name = ""
         let scaleFactor = 2.0
         let tempText = "test"
-        stackView = ingredient.stackView(scaleFactor: scaleFactor, tempText: tempText)
+        stackView = ingredient.stackView(scaleFactor: scaleFactor, tempText: tempText, even: false).subviews.first as! UIStackView
         XCTAssertEqual(stackView.subviews.count, 3)
 
         // check nameLabel still has the formatted Name if it is not empty
@@ -65,7 +66,7 @@ class CellTests: XCTestCase {
 
         // test that ingredient rows exist
         for (index) in appData.ingredients(with: step.id!).indices {
-            _ = try XCTUnwrap(stackview.subviews[index+1] as? UIStackView)
+            _ = try XCTUnwrap(stackview.subviews[index+1].subviews.first as? UIStackView)
         }
 
         func notesLabel() throws -> UILabel { try XCTUnwrap(stackview.subviews.last as? UILabel)}

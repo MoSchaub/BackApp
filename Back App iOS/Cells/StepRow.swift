@@ -72,15 +72,24 @@ extension Step {
     }
 
 
-    func ingredientStackViews(scaleFactor: Double?) -> [UIStackView] {
-        self.ingredients(reader: BackAppData.shared.databaseReader).map { ingredient in
-            ingredient.stackView(scaleFactor: scaleFactor, tempText: ingredient.tempText(in: self))
+    func ingredientStackViews(scaleFactor: Double?) -> [UIView] {
+        self.ingredients(reader: BackAppData.shared.databaseReader).enumerated().map { (index, ingredient) in
+            ingredient.stackView(scaleFactor: scaleFactor, tempText: ingredient.tempText(in: self), even: index % 2 == 0)
         }
     }
 
-    func substepStackViews(scaleFactor: Double?) -> [UIStackView] {
-        self.sortedSubsteps(reader: BackAppData.shared.databaseReader).map { substep in
-            substep.stepRow(scaleFactor: scaleFactor)
+    func substepStackViews(scaleFactor: Double?) -> [UIView] {
+        self.sortedSubsteps(reader: BackAppData.shared.databaseReader).enumerated().map { (index, substep) in
+            //
+            let ingredientCount = (try? BackAppData.shared.databaseReader.read { db in
+                return try? Ingredient.fetchCount(db)
+            }) ?? 0
+            
+            var even = index % 2 == 0
+            if ingredientCount % 2 == 0 {
+                even.toggle()
+            }
+            return substep.stepRow(scaleFactor: scaleFactor, even: even)
         }
     }
 }
