@@ -11,6 +11,10 @@
 import SwiftUI
 import BackAppCore
 
+fileprivate let NUMBER_OF_TEMPS: Int = 500
+fileprivate let TEMP_OFFSET: Int = 20
+fileprivate let DEFAULT_TEMP: Double = 20.0
+
 public protocol TempPickerCellDelegate: AnyObject {
     
     func tempPickerCell(_ cell: TempPickerCell, didChangeValue value: Double)
@@ -24,7 +28,7 @@ public class TempPickerCell: CustomCell {
     public var id: String? = nil
     
     ///currently selected temperature
-    private var temp: Double = 20.0 {
+    private var temp: Double = DEFAULT_TEMP {
         didSet {
             delegate?.tempPickerCell(self, didChangeValue: temp)
         }
@@ -82,23 +86,23 @@ private extension TempPickerCell {
 extension TempPickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     
     @objc private func updatePicker() {
-        tempPicker.selectRow(Int(delegate?.startValue(for: self) ?? Standarts.roomTemp) + 10, inComponent: 0, animated: false)
+        tempPicker.selectRow(Int(delegate?.startValue(for: self) ?? Standarts.roomTemp) + TEMP_OFFSET, inComponent: 0, animated: false)
     }
     
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        1
+        1 //only one picker wheel
     }
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        60
+        NUMBER_OF_TEMPS
     }
     
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        NSAttributedString(string: Measurement(value: Double(row - 10), unit: UnitTemperature.celsius).localizedValue, attributes: [.foregroundColor : UIColor.primaryCellTextColor!])
+        NSAttributedString(string: Measurement(value: Double(row - TEMP_OFFSET), unit: UnitTemperature.celsius).localizedValue, attributes: [.foregroundColor : UIColor.primaryCellTextColor!])
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        temp = Double(row - 10)
+        temp = Double(row - TEMP_OFFSET)
     }
     
 }
