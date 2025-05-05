@@ -86,7 +86,7 @@ extension Step {
             }) ?? 0
             
             var even = index % 2 == 0
-            if ingredientCount % 2 == 0 {
+            if ingredientCount % 2 != 0 {
                 even.toggle()
             }
             return substep.stepRow(scaleFactor: scaleFactor, even: even)

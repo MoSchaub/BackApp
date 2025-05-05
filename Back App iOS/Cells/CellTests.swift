@@ -12,7 +12,7 @@ class CellTests: XCTestCase {
     func test_ingredientRow() throws {
 
         var ingredient = try XCTUnwrap(Recipe.example.stepIngredients.first?.ingredients.first)
-        var containerView = ingredient.stackView(scaleFactor: nil, tempText: "", even: false)
+        let containerView = ingredient.stackView(scaleFactor: nil, tempText: "", even: false)
         var stackView = containerView.subviews.first as! UIStackView
 
         // 2 subviews if not bulk Liquid

@@ -136,9 +136,13 @@ public extension Ingredient {
         return self.formattedAmount
     }
     
+    static func scaledFormattedAmount(_ amount: Double, with factor: Double) -> String{
+        (amount * factor).formattedMass
+    }
+    
     ///amount of the ingredient formatted with the right unit and scaled with the scale Factor provided by the recipe
     func scaledFormattedAmount(with factor: Double) -> String{
-        (self.mass * factor).formattedMass
+        Self.scaledFormattedAmount(self.mass, with: factor)
     }
     
     var massCProduct: Double {
