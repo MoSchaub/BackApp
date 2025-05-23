@@ -116,6 +116,9 @@ public class TextViewCell: CustomCell, UITextViewDelegate {
 
         //background color
         self.textView.backgroundColor = self.textViewBackgroundColor
+        
+        //tint color
+        self.textView.tintColor = .baTintBackgroundColor
 
         // auto growing
         self.textView.isScrollEnabled = false
