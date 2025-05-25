@@ -23,7 +23,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "KEYCHAIN_PASSWORD" build.keychain
         env:
           CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
-          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD}}
       - name: Verify signing identities
         run: |
