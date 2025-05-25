@@ -124,6 +124,7 @@
 		8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-profile.sh"; sourceTree = "<group>"; };
 		8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-env-from-xcodeproj.sh"; sourceTree = "<group>"; };
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
+		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
 		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5C074D2D20A3DF002EED55 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -338,6 +339,7 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */,
 				8E5A9A092DE3ACEB00A9B87B /* .github */,
 				8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */,
 				8E5C074D2D20A3DF002EED55 /* README.md */,
@@ -1023,7 +1025,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 91;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
@@ -1057,7 +1059,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 91;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";

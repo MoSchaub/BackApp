@@ -7,11 +7,13 @@ on:
 
 jobs:
   build-and-upload:
-    runs-on: macos-14
+    runs-on: macos-latest
 
     steps:
-      - name: Select Xcode 16
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+      - name: Select newest xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
         
       - name: Show Xcode version
         run: xcodebuild -version
@@ -60,26 +62,6 @@ jobs:
 
       - name: Export IPA
         run: |
-          cat > exportOptions.plist <<EOF
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>com.moritzschaub.Back-App-iOS</key>
-              <string>BackAppStoreConnect</string>
-            </dict>
-            <key>signingStyle</key>
-            <string>manual</string>
-            <key>compileBitcode</key>
-            <true/>
-            <key>destination</key>
-            <string>export</string>
-          </dict>
-          </plist>
-          EOF
           xcodebuild -exportArchive \
             -archivePath $PWD/build/BackApp.xcarchive \
             -exportPath $PWD/build/export \
