@@ -1,4 +1,4 @@
-name: iOS Archive and Upload to App Store
+name: Deploy iOS App
 
 on:
   push:
