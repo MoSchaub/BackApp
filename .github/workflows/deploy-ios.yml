@@ -43,7 +43,17 @@ jobs:
       - name: Build and archive
         run: |
           xcodebuild clean -project BackApp.xcodeproj -scheme "Back App Release" -configuration Release
-          xcodebuild archive -project BackApp.xcodeproj -scheme "Back App Release" -configuration Release -archivePath $PWD/build/BackApp.xcarchive -destination "generic/platform=iOS" CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE="$UUID" DEVELOPMENT_TEAM="$TEAM_ID" PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS" | tee xcodebuild.log | xcpretty
+          xcodebuild archive \
+            -project BackApp.xcodeproj \
+            -scheme "Back App Release" \
+            -configuration Release \
+            -archivePath $PWD/build/BackApp.xcarchive \
+            -destination "generic/platform=iOS" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME" \
+            PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS" \
+            | tee xcodebuild.log | xcpretty
 
       - name: Export IPA
         run: |
