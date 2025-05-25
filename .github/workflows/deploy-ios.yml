@@ -16,6 +16,7 @@ jobs:
       - name: Decode and install certificate
         run: |
           echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          
           security create-keychain -p "" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
@@ -24,6 +25,9 @@ jobs:
         env:
           CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+      - name: Verify signing identities
+        run: |
+          security find-identity -v -p codesigning build.keychain
 
       - name: Decode and install provisioning profile
         run: |
@@ -66,8 +70,8 @@ jobs:
             </dict>
             <key>signingStyle</key>
             <string>manual</string>
-            <key>compileBitcode</key>
-            <true/>
+            <key>teamID</key>
+            <string>${{ secrets.DEVELOPMENT_TEAM }}</string>
             <key>destination</key>
             <string>export</string>
           </dict>
