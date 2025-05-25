@@ -1,72 +1,81 @@
-name: Deploy iOS App
+name: iOS Archive and Upload to App Store
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
+      - main
 
 jobs:
-  build:
+  build-and-upload:
     runs-on: macos-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ruby (for Fastlane)
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      - name: Decode certificate
+      - name: Decode and install certificate
         run: |
-          echo "${{ secrets.IOS_CERTIFICATE }}" | base64 --decode > certificate.p12
-
-      - name: Decode provisioning profile
-        run: |
-          echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > profile.mobileprovision
-
-      - name: Install certificate and profile
-        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
           security create-keychain -p "" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
-          security import certificate.p12 -k build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+          security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+
+      - name: Decode and install provisioning profile
+        run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          PROFILE_NAME=$(grep -a -A1 "<key>Name</key>" profile.mobileprovision | grep -oE '<string>.*</string>' | sed -e 's/<string>//' -e 's/<\/string>//')
-          TEAM_ID=$(grep -a -A1 "<key>TeamIdentifier</key>" profile.mobileprovision | grep -oE '<string>.*</string>' | sed -e 's/<string>//' -e 's/<\/string>//')
-          UUID=$(grep -a -o '<key>UUID</key><string>.*</string>' profile.mobileprovision | sed -E 's/.*<string>(.*)<\/string>/\1/')
-          cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE }}
 
+      - name: Set up keychain for codesigning
+        run: |
+          security list-keychains -d user -s build.keychain
 
-      - name: Build and archive
+      - name: Build archive
         run: |
           xcodebuild clean -project BackApp.xcodeproj -scheme "Back App Release" -configuration Release
           xcodebuild archive \
             -project BackApp.xcodeproj \
             -scheme "Back App Release" \
-            -configuration Release \
             -archivePath $PWD/build/BackApp.xcarchive \
-            -destination "generic/platform=iOS" \
+            -configuration Release \
             CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE="$UUID" \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
-            PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS"
-
+            PROVISIONING_PROFILE_SPECIFIER="profile" \
+            OTHER_CODE_SIGN_FLAGS="--keychain build.keychain"
 
       - name: Export IPA
         run: |
+          cat > exportOptions.plist <<EOF
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.moritzschaub.Back-App-iOS</key>
+              <string>BackAppStoreConnect</string>
+            </dict>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>compileBitcode</key>
+            <true/>
+            <key>destination</key>
+            <string>export</string>
+          </dict>
+          </plist>
+          EOF
           xcodebuild -exportArchive \
             -archivePath $PWD/build/BackApp.xcarchive \
-            -exportPath $PWD/build \
-            -exportOptionsPlist ExportOption.plist
+            -exportPath $PWD/build/export \
+            -exportOptionsPlist exportOptions.plist
 
-      - name: Upload to App Store Connect
+      - name: Upload to App Store
         env:
           APPSTORE_CONNECT_API_KEY_BASE64: ${{ secrets.APPSTORE_API_KEY }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
