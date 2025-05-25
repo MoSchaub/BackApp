@@ -56,13 +56,7 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution" \
             PROVISIONING_PROFILE="$UUID" \
             DEVELOPMENT_TEAM="$TEAM_ID" \
-            PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS" \
-            | tee xcodebuild.log | xcpretty
-    - name: Print archive failure reason
-      if: failure()
-      run: |
-        echo "=== ARCHIVE LOG ==="
-        cat xcodebuild.log | tail -n 100
+            PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS"
 
 
       - name: Export IPA
