@@ -1,0 +1,70 @@
+name: Deploy iOS App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby (for Fastlane)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Decode certificate
+        run: |
+          echo "${{ secrets.IOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+
+      - name: Decode provisioning profile
+        run: |
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > profile.mobileprovision
+
+      - name: Install certificate and profile
+        run: |
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security import certificate.p12 -k build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          UUID=$(grep -a -o '<key>UUID</key><string>.*</string>' profile.mobileprovision | sed -E 's/.*<string>(.*)<\/string>/\1/')
+          cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+
+      - name: Build and archive
+        run: |
+          xcodebuild clean -project BackApp.xcodeproj -scheme "Back App Release" -configuration Release
+          xcodebuild archive \
+            -project BackApp.xcodeproj \
+            -scheme "Back App Release" \
+            -archivePath $PWD/build/BackApp.xcarchive \
+            -destination "generic/platform=iOS" \
+            CODE_SIGN_STYLE=Manual \
+            PROVISIONING_PROFILE_SPECIFIER="$UUID" \
+            | tee xcodebuild.log | xcpretty
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath $PWD/build/BackApp.xcarchive \
+            -exportPath $PWD/build \
+            -exportOptionsPlist ExportOptions.plist
+
+      - name: Upload to App Store Connect
+        env:
+          APPSTORE_CONNECT_API_KEY_BASE64: ${{ secrets.APPSTORE_API_KEY }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+        run: |
+          echo "$APPSTORE_CONNECT_API_KEY_BASE64" | base64 --decode > api_key.p8
+          xcrun altool --upload-app \
+            --type ios \
+            --file build/*.ipa \
+            --apiKey $APPSTORE_KEY_ID \
+            --apiIssuer $APPSTORE_ISSUER_ID
