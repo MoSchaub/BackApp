@@ -15,7 +15,11 @@ private struct ColorUtilsKey {
     
     static var baTintColor: UIColor?
     
+    static var baTintBackgroundColor: UIColor?
+    
     static var secondaryTextColor: UIColor?
+    
+    static var secondaryCellBackgroundColor: UIColor?
 }
 
 public extension UIColor {
@@ -62,5 +66,15 @@ public extension UIColor {
     static var baTintColor: UIColor? {
         get { getAssociatedObject(key: &ColorUtilsKey.baTintColor) }
         set { setAssociatedObject(key: &ColorUtilsKey.baTintColor, value: newValue) }
+    }
+    
+    static var baTintBackgroundColor: UIColor? {
+        get { getAssociatedObject(key: &ColorUtilsKey.baTintBackgroundColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.baTintBackgroundColor, value: newValue) }
+    }
+    
+    static var secondaryCellBackgroundColor: UIColor? {
+        get { getAssociatedObject(key: &ColorUtilsKey.secondaryCellBackgroundColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.secondaryCellBackgroundColor, value: newValue) }
     }
 }

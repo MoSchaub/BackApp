@@ -47,7 +47,7 @@ public class CustomCell: UITableViewCell {
         
         textLabel?.text = text
         accessoryView = UIImageView(image: image)
-        accessoryView?.tintColor = UIView.appearance().tintColor
+        accessoryView?.tintColor = UIColor.baTintBackgroundColor
     }
     
 }

@@ -72,7 +72,7 @@ private extension KneadingHeatingCell {
         textField.addTarget(self, action: #selector(updateText), for: .editingDidEnd)
         textField.addDoneButton(title: Strings.EditButton_Done, target: self, selector: #selector(tapDone))
         
-        textField.tintColor = .baTintColor
+        textField.tintColor = .baTintBackgroundColor
         textField.textColor = .primaryCellTextColor
         textField.attributedPlaceholder = NSAttributedString(string: Strings.kneadingHeatCellPlaceholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
