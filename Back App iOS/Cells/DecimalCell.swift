@@ -68,7 +68,7 @@ public class DecimalCell: CustomCell {
         textField.keyboardType = .decimalPad //set keyboard type to decimalpad because the user should be only enter decimals
         
         //colors
-        textField.tintColor = .baTintColor
+        textField.tintColor = .baTintBackgroundColor
         textField.textColor = .primaryCellTextColor
         //set placeholder text and its color. color has to be changed cause it should use light mode colors in dark mode and dark mode colors in light mode. textColor of placeholder text can't be set but by using an attributed String
         textField.attributedPlaceholder = NSAttributedString(string: Strings.amountCellPlaceholder2, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])

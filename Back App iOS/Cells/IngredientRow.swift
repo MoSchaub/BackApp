@@ -7,33 +7,12 @@ import BackAppCore
 
 extension Ingredient {
 
-    func stackView(scaleFactor: Double?, tempText: String) -> UIStackView {
-        var subviews = [UIView]()
+    func stackView(scaleFactor: Double?, tempText: String, even: Bool) -> UIView {
+        Ingredient.stackView(scaleFactor: scaleFactor, tempText: tempText, even: even, type: self.type, formattedName: self.formattedName, amount: self.mass)
+    }
 
-        let textStyle = UIFont.TextStyle.subheadline
-
-        let nameLabel  = UILabel(frame: .zero)
-        nameLabel.attributedText = NSAttributedString(string: self.formattedName, attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
-        nameLabel.textColor = .primaryCellTextColor
-        subviews.append(nameLabel)
-
-        if self.type == .bulkLiquid {
-
-            let tempTextLabel = UILabel(frame: .zero)
-            tempTextLabel.attributedText = NSAttributedString(string: tempText, attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
-            tempTextLabel.textColor = .primaryCellTextColor
-            subviews.append(tempTextLabel)
-        }
-
-        let amountLabel = UILabel(frame: .zero)
-        amountLabel.attributedText = NSAttributedString(string: scaledFormattedAmount(with: scaleFactor ?? 1), attributes: [.font : UIFont.preferredFont(forTextStyle: textStyle)])
-        amountLabel.textColor = .primaryCellTextColor
-        subviews.append(amountLabel)
-
-        let hstack = UIStackView(arrangedSubviews: subviews)
-        hstack.axis = .horizontal
-        hstack.distribution = .equalSpacing
-        return hstack
+    static func stackView(scaleFactor: Double?, tempText: String, even: Bool, type: Ingredient.Style, formattedName: String, amount: Double) -> UIView {
+        return stepSubRow(formattedName: formattedName, tempText: type == .bulkLiquid ? tempText : nil, amountText: Ingredient.scaledFormattedAmount(amount, with: scaleFactor ?? 1), even: even)
     }
 
     func tempText(in step: Step) -> String {

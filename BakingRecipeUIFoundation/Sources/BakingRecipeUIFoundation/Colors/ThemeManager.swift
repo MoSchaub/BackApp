@@ -36,9 +36,11 @@ public final class ThemeManager {
         UIColor.cellBackgroundColor = currentTheme.cellBackgroundColor
         UIColor.selectedCellBackgroundColor = currentTheme.selectedCellBackground
         UIColor.baTintColor = currentTheme.baTintColor
+        UIColor.baTintBackgroundColor = currentTheme.baTintBackgroundColor
         UIColor.primaryCellTextColor = currentTheme.primaryCellTextColor
         UIColor.secondaryCellTextColor = currentTheme.secondaryCellTextColor
         UIColor.secondaryTextColor = currentTheme.secondaryTextColor
+        UIColor.secondaryCellBackgroundColor = currentTheme.secondaryCellBackgroundColor
         
         UINavigationBar.appearance().backgroundColor = currentTheme.backgroundColor
         UINavigationBar.appearance().barTintColor = currentTheme.backgroundColor

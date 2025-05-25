@@ -9,7 +9,6 @@
 //
 
 import UIKit
-import BakingRecipeStrings
 
 public struct Theme {
     

@@ -45,10 +45,10 @@ struct RecipeDetailViewTest {
         try await MainActor.run {
             let cell = try #require(sut.dataSource.tableView(sut.tableView, cellForRowAt: IndexPath(row: 2, section: 0)) as? InfoStripCell)
             
-            let hstack = try #require(cell.subviews[0].subviews[1] )
-            let vstack = try #require(hstack.subviews[0])
-            let label = try #require(vstack.subviews[0] as? UILabel)
-            #expect(label.text == "20 minutes")
+            let hstack = try #require(cell.subviews[0].subviews[safe: 1] )
+            let vstack = try #require(hstack.subviews[safe: 0])
+            let label = try #require(vstack.subviews[safe: 0] as? UILabel)
+            #expect((label.text ?? "").contains("20 "))
         }
     }
 

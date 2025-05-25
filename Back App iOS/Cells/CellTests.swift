@@ -12,7 +12,8 @@ class CellTests: XCTestCase {
     func test_ingredientRow() throws {
 
         var ingredient = try XCTUnwrap(Recipe.example.stepIngredients.first?.ingredients.first)
-        var stackView = ingredient.stackView(scaleFactor: nil, tempText: "")
+        let containerView = ingredient.stackView(scaleFactor: nil, tempText: "", even: false)
+        var stackView = containerView.subviews.first as! UIStackView
 
         // 2 subviews if not bulk Liquid
         XCTAssertEqual(stackView.subviews.count, 2)
@@ -28,7 +29,7 @@ class CellTests: XCTestCase {
         ingredient.name = ""
         let scaleFactor = 2.0
         let tempText = "test"
-        stackView = ingredient.stackView(scaleFactor: scaleFactor, tempText: tempText)
+        stackView = ingredient.stackView(scaleFactor: scaleFactor, tempText: tempText, even: false).subviews.first as! UIStackView
         XCTAssertEqual(stackView.subviews.count, 3)
 
         // check nameLabel still has the formatted Name if it is not empty
@@ -65,7 +66,7 @@ class CellTests: XCTestCase {
 
         // test that ingredient rows exist
         for (index) in appData.ingredients(with: step.id!).indices {
-            _ = try XCTUnwrap(stackview.subviews[index+1] as? UIStackView)
+            _ = try XCTUnwrap(stackview.subviews[index+1].subviews.first as? UIStackView)
         }
 
         func notesLabel() throws -> UILabel { try XCTUnwrap(stackview.subviews.last as? UILabel)}
@@ -115,7 +116,7 @@ class CellTests: XCTestCase {
         try testNotes(exists: false)
     }
     
-    func testStepRow() throws {
+    func testStepRowShowingFormattedStartDate() throws {
         var complexExample = Recipe.complexExample(number: 0)
         let steps = try insert(recipeTransfer: &complexExample)
         
@@ -124,6 +125,32 @@ class CellTests: XCTestCase {
             let label = stepRow.subviews[0].subviews.last as! UILabel
             XCTAssertEqual(label.text, BackAppData.shared.formattedStartDate(for: step, with: complexExample.recipe.id!))
         }
+    }
+    
+    func testStepRowTemp() throws {
+        var complexExample = Recipe.complexExample(number: 0)
+        let steps = try insert(recipeTransfer: &complexExample)
+        
+        for step in steps {
+            let stepRow = step.vstack()
+            let label = stepRow.subviews[safe: 0]?.subviews[safe: 0]?.subviews[safe: 1] as? UILabel
+            XCTAssertEqual(label?.text, step.formattedTemp(roomTemp: Standarts.roomTemp))
+        }
+    }
+    
+    func testStepRowEndTemp() throws {
+        var complexExample = Recipe.complexExample(number: 0)
+        let steps = try insert(recipeTransfer: &complexExample)
+        var step = steps.first
+        step?.endTemp = 100
+        BackAppData.shared.update(step!)
+        XCTAssert(step?.endTempEnabled ?? false)
+        XCTAssertEqual(step?.endTemp, 100)
+        
+        
+        let stepRow = step?.vstack()
+        let label = stepRow?.subviews[safe: 0]?.subviews[safe: 0]?.subviews[safe: 1] as? UILabel
+        XCTAssertEqual(label?.text, step?.formattedEndTemp(roomTemp: Standarts.roomTemp))
     }
 }
 

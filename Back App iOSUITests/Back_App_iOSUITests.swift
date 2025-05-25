@@ -327,10 +327,6 @@ class Back_App_iOSUITests: XCTestCase {
         // inverted diffrentDate originalTimes
         setupScheduleTesting()
         doneButton.tap()
-        
-        let customDateFormatter = DateFormatter()
-        customDateFormatter.dateFormat = "MMM d, y HH:mm"
-        customDateFormatter.locale = Locale.init(identifier: "en_gb")
 
         let newDate = Date().addingTimeInterval(3600*24*10)
         let newDateFormatter = DateFormatter()
@@ -340,7 +336,9 @@ class Back_App_iOSUITests: XCTestCase {
         let daysSinceNewDate = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
         
         
-        appTables.pickers.pickerWheels["Today"].adjust(toPickerWheelValue: newDateString)
+        let picker = appTables.pickers.pickerWheels["Today"]
+            
+        picker.adjust(toPickerWheelValue: newDateString)
         appTables.segmentedControls.buttons["end"].tap()
         navigationBar.buttons["OK"].tap()
         
