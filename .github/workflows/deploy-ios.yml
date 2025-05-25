@@ -20,10 +20,15 @@ jobs:
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
           security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "KEYCHAIN_PASSWORD" build.keychain
         env:
           CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD}}
+      - name: Verify signing identities
+        run: |
+          security find-identity -v -p codesigning build.keychain
+
 
       - name: Decode and install provisioning profile
         run: |
