@@ -49,9 +49,10 @@ jobs:
             -configuration Release \
             -archivePath $PWD/build/BackApp.xcarchive \
             -destination "generic/platform=iOS" \
+            CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE="$UUID" \
             DEVELOPMENT_TEAM="$TEAM_ID" \
-            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME" \
             PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS" \
             | tee xcodebuild.log | xcpretty
 

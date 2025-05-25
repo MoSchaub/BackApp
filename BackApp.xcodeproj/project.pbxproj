@@ -120,6 +120,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-certificate.sh"; sourceTree = "<group>"; };
+		8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-profile.sh"; sourceTree = "<group>"; };
+		8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-env-from-xcodeproj.sh"; sourceTree = "<group>"; };
+		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5C074D2D20A3DF002EED55 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -241,6 +245,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E5A9A062DE3ACEB00A9B87B /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */,
+				8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */,
+				8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
+		8E5A9A082DE3ACEB00A9B87B /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		8E5A9A092DE3ACEB00A9B87B /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A062DE3ACEB00A9B87B /* scripts */,
+				8E5A9A082DE3ACEB00A9B87B /* workflows */,
+			);
+			path = .github;
+			sourceTree = "<group>";
+		};
 		8E5F3F142CB4330600C74344 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,6 +338,7 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8E5A9A092DE3ACEB00A9B87B /* .github */,
 				8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */,
 				8E5C074D2D20A3DF002EED55 /* README.md */,
 				8E5C07492D2070A5002EED55 /* LICENSE.txt */,
