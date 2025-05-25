@@ -59,8 +59,8 @@ jobs:
             PRODUCT_BUNDLE_IDENTIFIER="com.moritzschaub.Back-App-iOS" \
             | tee xcodebuild.log | xcpretty
     - name: Print archive failure reason
-    if: failure()
-    run: |
+      if: failure()
+      run: |
         echo "=== ARCHIVE LOG ==="
         cat xcodebuild.log | tail -n 100
 
