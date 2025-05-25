@@ -18,8 +18,9 @@ extension Step {
         // secondary Label
         let secondaryLabel = UILabel(frame: .zero)
 
+        let tempText = self.endTempEnabled ? formattedEndTemp(roomTemp: Standarts.roomTemp) : formattedTemp(roomTemp: Standarts.roomTemp)
         //duration and temp if showing date else only temp
-        let secondaryText = (showDate ? formattedDuration + ", " : "") + formattedTemp(roomTemp: Standarts.roomTemp)
+        let secondaryText = (showDate ? formattedDuration + ", " : "") + tempText
         secondaryLabel.attributedText = NSAttributedString(string: secondaryText, attributes: [.font: UIFont.preferredFont(forTextStyle: .subheadline)])
         secondaryLabel.textColor = .secondaryCellTextColor //"gray" color
 
