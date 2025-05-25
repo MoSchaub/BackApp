@@ -80,10 +80,7 @@ extension Step {
 
     func substepStackViews(scaleFactor: Double?) -> [UIView] {
         self.sortedSubsteps(reader: BackAppData.shared.databaseReader).enumerated().map { (index, substep) in
-            //
-            let ingredientCount = (try? BackAppData.shared.databaseReader.read { db in
-                return try? Ingredient.fetchCount(db)
-            }) ?? 0
+            let ingredientCount = self.ingredientCount(reader: BackAppData.shared.databaseReader)
             
             var even = index % 2 == 0
             if ingredientCount % 2 != 0 {

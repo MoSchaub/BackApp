@@ -214,6 +214,14 @@ public extension Step {
             try? ingredients(db: db)
         }) ?? []
     }
+   
+    // number of ingredients in this step using fetchCount
+    // should be more efficient than self.ingredients(reader: reader).count
+    func ingredientCount(reader: DatabaseReader) -> Int {
+        (try? reader.read { db in
+            try? Ingredient.all().orderedByNumber(with: self.id!).fetchCount(db)
+        }) ?? 0
+    }
 
     internal func ingredients(db: Database) throws -> [Ingredient] {
         try ingredients.fetchAll(db)
