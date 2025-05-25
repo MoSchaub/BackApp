@@ -50,7 +50,7 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath $PWD/build/BackApp.xcarchive \
             -exportPath $PWD/build \
-            -exportOptionsPlist ExportOptions.plist
+            -exportOptionsPlist ExportOption.plist
 
       - name: Upload to App Store Connect
         env:
