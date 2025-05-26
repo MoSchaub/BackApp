@@ -468,6 +468,23 @@ final class BackAppCoreTests: XCTestCase {
         XCTAssertEqual(secondStep?.ingredients(reader: reader).count, 2)
         XCTAssertEqual(secondStep?.ingredients(reader: reader).count, secondStep?.ingredientCount(reader: reader))
     }
+    
+    func testStepsWithIngredientsOrSupersteps() throws {
+        let recipeId = try insertMultilayerRecipeAndGetId()
+        let step = appData.steps(with: recipeId).first
+        XCTAssertNotNil(step?.id)
+        let possibleSubsteps = appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: step!.id!)
+        XCTAssertEqual( possibleSubsteps.count, 1)
+        
+        var substep = possibleSubsteps.first!
+        substep.superStepId = step!.id
+        appData.update(substep) { _ in
+            XCTAssertEqual( self.appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: step!.id!).count, 0)
+        }
+        
+
+    }
+    
 
     static var allTests = [
         ("testRecipeDatabaseSchema", testRecipeDatabaseSchema(BackAppCoreTests())),

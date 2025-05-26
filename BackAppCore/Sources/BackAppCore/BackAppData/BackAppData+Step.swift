@@ -25,22 +25,21 @@ public extension BackAppData {
         }) ?? []
     }
     
+    /// steps which have ingredients or substeps for a given recipe minust the current stepId and the ones that are already a substep of the current step
     func stepsWithIngredientsOrSupersteps(in recipeId: Int64, without stepId: Int64) -> [Step] {
-        ///get the step ids that contain ingredients
-        /// - NOTE:  a step can appear multiple times
-        let stepIdsOfIngredients = allIngredients.map { $0.stepId }
         
-        ///get all thes step ids that have substeps
-        /// step ids can appear multiple times
-        let substeps = steps(with: recipeId).filter {$0.superStepId != nil}
-        let superstepIds = substeps.map { $0.superStepId! }
-        
-        //put them together and make them unique with a set and filter out the current step and steps of other recipes
-        let stepIdsWithIngredientsOrSubsteps: Set<Int64> = Set(stepIdsOfIngredients + superstepIds).filter({ $0 != stepId }).filter { id in  self.steps(with: recipeId).map{ step in step.id}.contains(id)}
-        //convert the ids to steps
-        let stepsWithIngredientsOrSubsteps = stepIdsWithIngredientsOrSubsteps.map { id in self.steps(with: recipeId).first(where: { step in step.id == id})!}
-        
-        return stepsWithIngredientsOrSubsteps
+        return (try? databaseReader.read { db in
+            try Step.fetchAll(db, sql: """
+                SELECT DISTINCT Step.*
+                FROM Step
+                LEFT JOIN Ingredient ON Ingredient.stepId = Step.id
+                LEFT JOIN Step AS sub ON sub.superStepId = Step.id
+                WHERE Step.recipeId = ?
+                  AND Step.id != ?
+                  AND Step.id NOT IN (SELECT id FROM Step WHERE superStepId = ?)
+                  AND (Ingredient.id IS NOT NULL OR sub.id IS NOT NULL)
+                """, arguments: [recipeId, stepId, stepId])
+        }) ?? []
     }
     
     func moveStep(with recipeId: Int64, from source: Int, to destination: Int) {
