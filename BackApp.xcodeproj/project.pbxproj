@@ -120,6 +120,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-certificate.sh"; sourceTree = "<group>"; };
+		8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-profile.sh"; sourceTree = "<group>"; };
+		8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-env-from-xcodeproj.sh"; sourceTree = "<group>"; };
+		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
+		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
 		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5C074D2D20A3DF002EED55 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -241,6 +246,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E5A9A062DE3ACEB00A9B87B /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */,
+				8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */,
+				8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
+		8E5A9A082DE3ACEB00A9B87B /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		8E5A9A092DE3ACEB00A9B87B /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				8E5A9A062DE3ACEB00A9B87B /* scripts */,
+				8E5A9A082DE3ACEB00A9B87B /* workflows */,
+			);
+			path = .github;
+			sourceTree = "<group>";
+		};
 		8E5F3F142CB4330600C74344 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,6 +339,8 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */,
+				8E5A9A092DE3ACEB00A9B87B /* .github */,
 				8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */,
 				8E5C074D2D20A3DF002EED55 /* README.md */,
 				8E5C07492D2070A5002EED55 /* LICENSE.txt */,
@@ -991,7 +1025,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
@@ -1007,7 +1041,8 @@
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppStoreConnect;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Back App iOS/Cells/Back App iOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1022,11 +1057,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Back App iOS/Back App.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1039,7 +1075,9 @@
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = BackAppStoreConnect;
-				SUPPORTS_MACCATALYST = YES;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Back App iOS/Cells/Back App iOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

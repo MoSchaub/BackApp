@@ -1,0 +1,79 @@
+name: Deploy iOS App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-upload:
+    runs-on: macos-latest
+
+    steps:
+      - name: Select newest xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+        
+      - name: Show Xcode version
+        run: xcodebuild -version
+        
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Decode and install certificate
+        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+
+      - name: Decode and install provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/BackAppStoreConnect.mobileprovision
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+
+      - name: Set up keychain for codesigning
+        run: |
+          security list-keychains -d user -s build.keychain
+
+      - name: Build archive
+        run: |
+          xcodebuild clean -project BackApp.xcodeproj -scheme "Back App Release" -configuration Release
+          xcodebuild archive \
+            -project BackApp.xcodeproj \
+            -scheme "Back App Release" \
+            -archivePath $PWD/build/BackApp.xcarchive \
+            -configuration Release \
+            CODE_SIGN_STYLE=Manual \
+            PROVISIONING_PROFILE_SPECIFIER="BackAppStoreConnect" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" | tee xcodebuild.log | xcpretty
+        env:
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath $PWD/build/BackApp.xcarchive \
+            -exportPath $PWD/build/export \
+            -exportOptionsPlist exportOptions.plist
+
+      - name: Upload to App Store
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
+        run: |
+          xcrun altool --upload-app \
+            -f build/export/*.ipa \
+            -t ios \
+            -u "$APPLE_ID" \
+            -p "$APP_SPECIFIC_PASSWORD"
