@@ -201,6 +201,7 @@ extension RecipeListViewController {
     func makeSearchController() -> UISearchController {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self.dataSource
+        searchController.searchBar.tintColor = .label
 
         searchController.obscuresBackgroundDuringPresentation = false
         return searchController
