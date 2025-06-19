@@ -80,7 +80,7 @@ private extension TextFieldCell {
         setTextFieldBehavior()
         
         textField.textColor = .primaryCellTextColor
-        textField.tintColor = .baTintBackgroundColor
+        textField.tintColor = .primaryCellTextColor
         textField.placeholder = placeholder
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor : UIColor.secondaryCellTextColor!])
         
