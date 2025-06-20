@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8E5C07492D2070A5002EED55 /* LICENSE.txt */; };
 		8E5C074C2D207293002EED55 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5C074B2D207293002EED55 /* LicenseView.swift */; };
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
@@ -120,17 +119,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-certificate.sh"; sourceTree = "<group>"; };
-		8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "import-profile.sh"; sourceTree = "<group>"; };
-		8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-env-from-xcodeproj.sh"; sourceTree = "<group>"; };
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
-		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5C074D2D20A3DF002EED55 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = download_on_the_app_store.svg; sourceTree = "<group>"; };
 		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
 		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
+		8EBCD2362E04C44C00F9452F /* REUSE.toml */ = {isa = PBXFileReference; lastKnownFileType = text; path = REUSE.toml; sourceTree = "<group>"; };
+		8EBCD2372E05968C00F9452F /* overview.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = overview.jpeg; sourceTree = "<group>"; };
+		8EBCD2382E05968C00F9452F /* recipeManagement.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recipeManagement.jpeg; sourceTree = "<group>"; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD20880B28F32D8600127961 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListCoordinator.swift; sourceTree = "<group>"; };
@@ -246,16 +244,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8E5A9A062DE3ACEB00A9B87B /* scripts */ = {
-			isa = PBXGroup;
-			children = (
-				8E5A9A032DE3ACEB00A9B87B /* import-certificate.sh */,
-				8E5A9A042DE3ACEB00A9B87B /* import-profile.sh */,
-				8E5A9A052DE3ACEB00A9B87B /* set-env-from-xcodeproj.sh */,
-			);
-			path = scripts;
-			sourceTree = "<group>";
-		};
 		8E5A9A082DE3ACEB00A9B87B /* workflows */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,7 +255,6 @@
 		8E5A9A092DE3ACEB00A9B87B /* .github */ = {
 			isa = PBXGroup;
 			children = (
-				8E5A9A062DE3ACEB00A9B87B /* scripts */,
 				8E5A9A082DE3ACEB00A9B87B /* workflows */,
 			);
 			path = .github;
@@ -280,6 +267,15 @@
 				8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		8EBCD2392E05968C00F9452F /* images */ = {
+			isa = PBXGroup;
+			children = (
+				8EBCD2372E05968C00F9452F /* overview.jpeg */,
+				8EBCD2382E05968C00F9452F /* recipeManagement.jpeg */,
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 		CD232E3626740CAA00E528BB /* Cells */ = {
@@ -339,11 +335,12 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8EBCD2392E05968C00F9452F /* images */,
+				8EBCD2362E04C44C00F9452F /* REUSE.toml */,
 				8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */,
 				8E5A9A092DE3ACEB00A9B87B /* .github */,
 				8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */,
 				8E5C074D2D20A3DF002EED55 /* README.md */,
-				8E5C07492D2070A5002EED55 /* LICENSE.txt */,
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
@@ -705,7 +702,6 @@
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD87B1F926FF913D00DAC6B6 /* Launch Screen.storyboard in Resources */,
-				8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
 				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
