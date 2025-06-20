@@ -1,0 +1,2 @@
+This asset is governed by the Apple Marketing Guidelines.
+See: https://developer.apple.com/app-store/marketing/guidelines/
