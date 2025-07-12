@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Moritz Schaub <moritz@pfaender.net>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 version = 1
 
 # random files
@@ -79,7 +83,8 @@ path = [
   "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/selectedCellBackground.colorset/Contents.json",
   "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/temp.colorset/Contents.json",
   "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/tint.colorset/Contents.json",
-  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/tintBackground.colorset/Contents.json"
+  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/tintBackground.colorset/Contents.json",
+  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/Contents.json"
 ]
 precedence = "closest"
 SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
