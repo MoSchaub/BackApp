@@ -1030,13 +1030,14 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1064,13 +1065,14 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
