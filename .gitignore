@@ -38,5 +38,6 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 BackApp.xcodeproj/project.xcworkspace/xcuserdata/moritzschaub.xcuserdatad/UserInterfaceState.xcuserstate
 .DS_Store
+**/.DS_Store
 .nvimlog
 xcschememanagement.plist
