@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8E5C07492D2070A5002EED55 /* LICENSE.txt */; };
 		8E5C074C2D207293002EED55 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5C074B2D207293002EED55 /* LicenseView.swift */; };
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
 		8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */; };
+		8EDCC56A2E2314AC00478852 /* LICENSES in Resources */ = {isa = PBXBuildFile; fileRef = 8EDCC5692E2314A800478852 /* LICENSES */; };
 		CD20880C28F32D8600127961 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880B28F32D8600127961 /* Coordinator.swift */; };
 		CD20880E28F32E6A00127961 /* RecipeListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */; };
 		CD20881428F330D300127961 /* BackAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20881328F330D300127961 /* BackAppCoordinator.swift */; };
@@ -122,12 +122,12 @@
 /* Begin PBXFileReference section */
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
-		8E5C07492D2070A5002EED55 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
 		8E5C074D2D20A3DF002EED55 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = download_on_the_app_store.svg; sourceTree = "<group>"; };
 		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
 		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
+		8EDCC5692E2314A800478852 /* LICENSES */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSES; sourceTree = SOURCE_ROOT; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD20880B28F32D8600127961 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListCoordinator.swift; sourceTree = "<group>"; };
@@ -325,11 +325,11 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8EDCC5692E2314A800478852 /* LICENSES */,
 				8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */,
 				8E5A9A092DE3ACEB00A9B87B /* .github */,
 				8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */,
 				8E5C074D2D20A3DF002EED55 /* README.md */,
-				8E5C07492D2070A5002EED55 /* LICENSE.txt */,
 				CD285D47258E474000813A4C /* BakingRecipeUIFoundation */,
 				CD8A742F258E3A9D0039C1BF /* BakingRecipeStrings */,
 				CDDFC21E2591087B00B497AE /* BackAppCore */,
@@ -633,7 +633,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "Moritz Schaub";
 				TargetAttributes = {
 					CD2BCE5224AE72CB00B868D7 = {
@@ -689,9 +689,9 @@
 				CD6F748D2691D1D800BCFC3E /* 3de.bakingAppRecipe in Resources */,
 				CD87201726DBA74700C01DAE /* 2en.bakingAppRecipe in Resources */,
 				CD68D46324AC5CBB000D4BD7 /* InfoPlist.strings in Resources */,
+				8EDCC56A2E2314AC00478852 /* LICENSES in Resources */,
 				CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */,
 				CD87B1F926FF913D00DAC6B6 /* Launch Screen.storyboard in Resources */,
-				8E5C074A2D2070A5002EED55 /* LICENSE.txt in Resources */,
 				CD29972324A9E53300759EBA /* bread.png in Resources */,
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
 				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
@@ -1017,7 +1017,7 @@
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1052,7 +1052,7 @@
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				INFOPLIST_FILE = "Back App iOS/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
