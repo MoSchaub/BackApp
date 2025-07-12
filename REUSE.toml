@@ -116,3 +116,14 @@ path = [
 ]
 SPDX-FileCopyrightText = "Icons 8 <icons8.com>"
 SPDX-License-Identifier = "LicenseRef-Icons8-License" 
+
+
+# Colors
+[[annotations]]
+path = [
+  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/*/*.json"
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
