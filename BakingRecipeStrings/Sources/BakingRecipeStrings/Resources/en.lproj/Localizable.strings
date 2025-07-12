@@ -10,6 +10,7 @@
 "EditButton_Done" = "Done";
 "EditButton_Edit" = "Edit";
 "General_BackButtonTitle" = "Back";
+"License" = "licenses";
 "about" = "about Baking App";
 "addFavorite" = "Favourite";
 "addIngredient" = "add Ingredient";
@@ -95,4 +96,3 @@
 "version" = "version";
 "website" = "website";
 "weighIn" = "total weight";
-"License" = "license";
