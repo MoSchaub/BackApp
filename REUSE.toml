@@ -1,0 +1,119 @@
+version = 1
+
+# random files
+[[annotations]]
+path = [
+    "Back App iOS/Back App.entitlements",
+    "Back App iOS/Cells/Back App iOS-Bridging-Header.h",
+    "Back App iOS/Info.plist",
+    "Back App iOSTests/Info.plist",
+    "Back App iOSUITests/Info.plist",
+    "BackAppCore/.swiftpm/xcode/xcshareddata/xcschemes/BackAppCore.xcscheme",
+    "exportOptions.plist",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+
+# Storyboards and corresponding strings
+[[annotations]]
+path = [
+    "Back App iOS/de.lproj/Launch Screen.strings",
+    "Back App iOS/de.lproj/LaunchScreen.storyboard",
+    "Back App iOS/de.lproj/LaunchScreen.strings",
+    "Back App iOS/en.lproj/Launch Screen.storyboard",
+    "Back App iOS/en.lproj/Launch Screen.strings",
+    "Back App iOS/en.lproj/LaunchScreen.strings",
+    "Back App iOS/Base.lproj/Launch Screen.storyboard",
+    "BakingRecipeStrings/Sources/BakingRecipeStrings/Resources/de.lproj/Localizable.strings",
+    "BakingRecipeStrings/Sources/BakingRecipeStrings/Resources/en.lproj/Localizable.strings",
+    "Back App iOS/de.lproj/InfoPlist.strings",
+    "Back App iOS/en.lproj/InfoPlist.strings",
+    "Back App iOSUITests/de.lproj/Localizable.strings",
+    "Back App iOSUITests/en.lproj/Localizable.strings",
+    "de.lproj/Localizable.strings",
+    "en.lproj/Localizable.strings",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+#xcodeproj files
+[[annotations]]
+path = [
+    "BackApp.xcodeproj/project.pbxproj",
+    "BackApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+    "BackApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+    "BackApp.xcodeproj/project.xcworkspace/xcuserdata/moritzschaub.xcuserdatad/IDEFindNavigatorScopes.plist",
+    "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/49A7FE36-D0D4-4BC8-B93D-56802C0C6FFA.plist",
+    "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/Info.plist",
+    "BackApp.xcodeproj/xcshareddata/xcschemes/Back App Debug.xcscheme",
+    "BackApp.xcodeproj/xcshareddata/xcschemes/Back App Release.xcscheme",
+    "BackApp.xcodeproj/xcshareddata/xcschemes/Push Notification.xcscheme",
+    "BackApp.xcodeproj/xcuserdata/moritzschaub.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist",
+    "BakingRecipeStrings/.swiftpm/xcode/xcshareddata/xcschemes/BakingRecipeStrings.xcscheme",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+#Colors and AppIcon
+[[annotations]]
+path = [
+  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/*",
+  "BakingRecipeUIFoundation/Sources/BakingRecipeUIFoundation/Resources/Colors.xcassets/*/*",
+  "Shared/AppIcon.xcassets/AppIcon.appiconset/*",
+  "Default-568h@2x.png",
+  "Shared/AppIcon.xcassets/Contents.json",
+  "Shared/Images.xcassets/AppSymbol.imageset/*",
+  "Shared/Images.xcassets/Brot.imageset/*",
+  "Shared/Images.xcassets/Contents.json",
+  "images/overview.jpeg",
+  "images/recipeManagement.jpeg"
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+# Recipe files
+[[annotations]]
+path = [
+  "ExampleRecipeFiles/de/*.bakingAppRecipe",
+  "ExampleRecipeFiles/en/*.bakingAppRecipe",
+  "Ovend Brut.bakingAppRecipe",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+
+# txt files PrivacyPolicy
+[[annotations]]
+path = [
+  "Shared/Models/Data/BackAppImpressum.txt",
+  "Shared/Models/Data/PrivacyPolicy.txt",
+  "Shared/Data/BackAppImpressum.txt",
+  "Shared/Data/PrivacyPolicy.txt"
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
+path = [
+  "download_on_the_app_store.svg",
+  "Shared/Images.xcassets/photo.imageset/*",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+#bread imageset
+[[annotations]]
+path = [
+  "Shared/Images.xcassets/bread.imageset/*",
+  "bread.png",
+]
+SPDX-FileCopyrightText = "Icons 8 <icons8.com>"
+SPDX-License-Identifier = "LicenseRef-Icons8-License" 
