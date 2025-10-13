@@ -35,7 +35,7 @@ public extension UITableViewController {
             self.navigationController?.setToolbarHidden(false, animated: true)
 
             //fill the toolbar with buttons
-            self.setToolbarItems([item1, .flexible, item2, .flexible, item3], animated: false)
+            self.setToolbarItems([item1, item2, .flexible, item3], animated: false)
         }
     }
 }

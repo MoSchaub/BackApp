@@ -42,18 +42,22 @@ public final class ThemeManager {
         UIColor.secondaryTextColor = currentTheme.secondaryTextColor
         UIColor.secondaryCellBackgroundColor = currentTheme.secondaryCellBackgroundColor
         
-        UINavigationBar.appearance().backgroundColor = currentTheme.backgroundColor
-        UINavigationBar.appearance().barTintColor = currentTheme.backgroundColor
+        // only for versions below iOS 26
+        if #unavailable(iOS 26) {
+            UINavigationBar.appearance().backgroundColor = currentTheme.backgroundColor
+            UINavigationBar.appearance().barTintColor = currentTheme.backgroundColor
 
-        if let textColor = currentTheme.primaryTextColor {
-            let attrs: [NSAttributedString.Key: Any] = [.foregroundColor: textColor]
-            UINavigationBar.appearance().titleTextAttributes = attrs
+            if let textColor = currentTheme.primaryTextColor {
+                let attrs: [NSAttributedString.Key: Any] = [.foregroundColor: textColor]
+                UINavigationBar.appearance().titleTextAttributes = attrs
+            }
+
+            if let largeTitleColor = currentTheme.primaryTextColor {
+                UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: largeTitleColor]
+            }
+            UIToolbar.appearance().backgroundColor = currentTheme.backgroundColor
+            UIToolbar.appearance().barTintColor = currentTheme.backgroundColor
         }
-
-        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor:currentTheme.primaryTextColor!]
-
-        UIToolbar.appearance().backgroundColor = currentTheme.backgroundColor
-        UIToolbar.appearance().barTintColor = currentTheme.backgroundColor
         
         UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = currentTheme.primaryTextColor
 

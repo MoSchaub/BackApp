@@ -4,20 +4,15 @@
 
 import Foundation
 
-fileprivate var counter = 0
-
 public class Item: Hashable {
     
     public var id: Int
     
     public init(id: Int? = nil) {
-        if id != nil {
-            self.id = id!
+        if let id = id {
+            self.id = id
         } else {
-            self.id = counter
-        }
-        if self.id == counter {
-            counter += 1
+            self.id = Int.random(in: Int.min...Int.max)
         }
     }
     
