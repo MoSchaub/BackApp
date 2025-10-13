@@ -120,7 +120,10 @@ class EditRecipeViewController: BackAppVC {
 
     override func setupToolbar() {
         if !creating {
-            self.setUp3ItemToolbar(item1: shareItem(), item2: favouriteItem(), item3: deleteItem(), shouldFillNavbar: false)
+            self.setUpItemToolbar(item1: shareItem(), item2: favouriteItem(), item3: deleteItem(), openSettings: {
+                let settingsViewController = SettingsViewController(appData: self.appData)
+                self.navigationController?.pushViewController(settingsViewController, animated: true)
+            }, shouldFillNavbar: false)
         }
     }
 

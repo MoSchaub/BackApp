@@ -26,18 +26,21 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
 
         //the navigation controller is needed to make the title and navbar work
         self.navigationController = UINavigationController()
-
-        self.splitViewController = BASplitViewController(style: UISplitViewController.Style.doubleColumn)
-        splitViewController.viewControllers = [navigationController]
         
-        if #available(iOS 14, *) {
+        if #available(iOS 26.0, *) {
+            self.splitViewController = BASplitViewController(style: UISplitViewController.Style.doubleColumn)
             splitViewController.preferredDisplayMode = .oneBesideSecondary
-            if #available(iOS 26.0, *) {
-                splitViewController.displayModeButtonVisibility = .never
-            }
+            splitViewController.displayModeButtonVisibility = .never
         } else {
-            splitViewController.preferredDisplayMode = .allVisible
+            self.splitViewController = BASplitViewController()
+            if #available(iOS 14.0, *) {
+                splitViewController.preferredDisplayMode = .oneBesideSecondary
+            } else {
+                splitViewController.preferredDisplayMode = .allVisible
+            }
         }
+        
+        splitViewController.viewControllers = [navigationController]
 
         self.appData = BackAppData.shared
     }

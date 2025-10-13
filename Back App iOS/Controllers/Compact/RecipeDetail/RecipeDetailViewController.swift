@@ -207,7 +207,10 @@ class RecipeDetailViewController: UITableViewController {
         let edit =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editRecipe))
 
         //setup toolbar / navbar
-        setUp3ItemToolbar(item1: share, item2: favourite, item3: edit)
+        setUpItemToolbar(item1: share, item2: favourite, item3: edit) {
+            let settingsViewController = SettingsViewController(appData: self.editVC.appData)
+            self.navigationController?.pushViewController(settingsViewController, animated: true)
+        }
     }
 
     //MARK: Navbar Helpers
