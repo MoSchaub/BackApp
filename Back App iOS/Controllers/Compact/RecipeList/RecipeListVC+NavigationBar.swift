@@ -10,11 +10,12 @@ extension RecipeListViewController {
         DispatchQueue.main.async { //force to main thread since ui is updated
             self.title = Strings.recipes
             self.navigationController?.navigationBar.prefersLargeTitles = true
+            self.navigationController?.navigationItem.largeTitleDisplayMode = .automatic
 
             //left / leading
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
             let editButtonItem = self.editButtonItem
-            self.navigationItem.leftBarButtonItems = [settingsButtonItem, editButtonItem]
+            self.navigationItem.leftBarButtonItems = [settingsButtonItem]
 
             //trailing
             if #available(iOS 14.0, *) {
@@ -24,14 +25,20 @@ extension RecipeListViewController {
                 let addAction = UIAction(title: Strings.addRecipe, image: UIImage(systemName: "plus")) { _ in
                     self.presentAddRecipePopover(self.navigationItem.rightBarButtonItem!)
                 }
-
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: Strings.addRecipe, image: UIImage(systemName: "plus"), primaryAction: addAction, menu: UIMenu(children: [addAction, importAction]))
+                
+                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(title: Strings.addRecipe, image: UIImage(systemName: "plus"), primaryAction: addAction, menu: UIMenu(children: [addAction, importAction])), .flexible, editButtonItem]
             } else {
                 let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
                 let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
-                self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem]
+                self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem, editButtonItem]
             }
+            
+            // search
             self.navigationItem.searchController = self.searchController
+            if #available(iOS 26.0, *) {
+                //enable search 
+                self.navigationItem.searchBarPlacementAllowsExternalIntegration = true
+            }
 
             if let completion = completion {
                 completion()

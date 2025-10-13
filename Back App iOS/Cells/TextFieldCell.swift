@@ -91,8 +91,8 @@ private extension TextFieldCell {
     func setTextFieldConstraints() {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
     }
 
 }

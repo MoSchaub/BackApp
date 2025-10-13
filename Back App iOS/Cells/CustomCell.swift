@@ -11,7 +11,6 @@
 import UIKit
 import BakingRecipeUIFoundation
 
-
 public class CustomCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -40,6 +39,33 @@ public class CustomCell: UITableViewCell {
         
         selectionStyle = .blue
     }
+
+    // Always keep custom background when highlighted or selected (fixes white flash/context menu)
+    override public func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        // Use your custom highlight color, or fallback to default
+        contentView.backgroundColor = highlighted ? UIColor.selectedCellBackgroundColor : UIColor.cellBackgroundColor
+        backgroundColor = contentView.backgroundColor
+    }
+
+    override public func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        // Use your custom selected color
+        contentView.backgroundColor = selected ? UIColor.selectedCellBackgroundColor : UIColor.cellBackgroundColor
+        backgroundColor = contentView.backgroundColor
+    }
+
+    // (Optional) For iOS 14+, support cell background configuration
+    override public func updateConfiguration(using state: UICellConfigurationState) {
+        super.updateConfiguration(using: state)
+        if state.isHighlighted || state.isSelected {
+            backgroundColor = UIColor.selectedCellBackgroundColor
+            contentView.backgroundColor = UIColor.selectedCellBackgroundColor
+        } else {
+            backgroundColor = UIColor.cellBackgroundColor
+            contentView.backgroundColor = UIColor.cellBackgroundColor
+        }
+    }
     
     public func chevronUpCell(text: String) {
         let image = UIImage(systemName: "chevron.up")
@@ -49,5 +75,4 @@ public class CustomCell: UITableViewCell {
         accessoryView = UIImageView(image: image)
         accessoryView?.tintColor = UIColor.baTintBackgroundColor
     }
-    
 }

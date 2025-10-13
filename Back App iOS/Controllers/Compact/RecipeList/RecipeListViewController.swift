@@ -9,34 +9,33 @@ import BakingRecipeStrings
 import BakingRecipeFoundation
 import BakingRecipeUIFoundation
 import Combine
+import UniformTypeIdentifiers
 
 class RecipeListViewController: UITableViewController {
-
+    
     typealias DataSource = RecipeListDataSource
     typealias Snapshot = NSDiffableDataSourceSnapshot<HomeSection,TextItem>
-
+    
     // MARK: Properties
-
+    
     ///data source for the recipe
     private(set) lazy var dataSource = makeDataSource()
-
+    
     /// appData storage interface
     private(set) var appData: BackAppData
-
+    
     /// wether a cell has been pressed
     internal lazy var pressed = false
-
+    
     /// for managing the theme
     private var themeManager: ThemeManager
-
+    
     private(set) lazy var searchController = makeSearchController()
-
+    
     internal var delegate: RecipeListViewDelegate
-
+    
     /// for picking documents
-    internal lazy var documentPicker = UIDocumentPickerViewController(
-        documentTypes: [kUTTypeJSON as String], in: .open
-    )
+    internal lazy var documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.json])
 
     /// set for storing publishers
     private var tokens = Set<AnyCancellable>()
