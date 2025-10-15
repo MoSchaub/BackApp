@@ -48,6 +48,7 @@ public class InfoStripCell: CustomCell {
     public init(infoStripItem: InfoStripItem, reuseIdentifier: String) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
+        self.isUserInteractionEnabled = false
         self.setUpCell(for: infoStripItem)
     }
 
