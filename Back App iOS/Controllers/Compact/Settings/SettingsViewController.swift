@@ -89,7 +89,15 @@ private extension SettingsViewController {
             //large Title
             self.navigationController!.navigationBar.prefersLargeTitles = true
             self.navigationController!.navigationItem.largeTitleDisplayMode = .always
+
+            // Add Close button for modal presentation
+            let closeItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(self.dismissSelf))
+            self.navigationItem.leftBarButtonItem = closeItem
         }
+    }
+
+    @objc private func dismissSelf() {
+        self.dismiss(animated: true)
     }
     
 }
@@ -334,3 +342,4 @@ extension SettingsViewController {
     }
     
 }
+

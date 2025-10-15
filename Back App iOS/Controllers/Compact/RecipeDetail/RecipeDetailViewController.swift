@@ -165,7 +165,7 @@ class RecipeDetailViewController: UITableViewController {
         }
 
         //apply the snapshot
-        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 
     //MARK: Observer
@@ -183,6 +183,11 @@ class RecipeDetailViewController: UITableViewController {
                 self.recipeDetailItem = recipeDetailItem
             }
             .store(in: &tokens)
+        Standarts.standartsChangedPublisher.sink { _ in
+            var snapshot = self.dataSource.snapshot()
+            snapshot.reloadSections([.steps])
+            self.dataSource.apply(snapshot)
+        }.store(in: &tokens)
     }
 
     // MARK: Navbar
@@ -209,7 +214,12 @@ class RecipeDetailViewController: UITableViewController {
         //setup toolbar / navbar
         setUpItemToolbar(item1: share, item2: favourite, item3: edit) {
             let settingsViewController = SettingsViewController(appData: self.editVC.appData)
-            self.navigationController?.pushViewController(settingsViewController, animated: true)
+            let nav = UINavigationController(rootViewController: settingsViewController)
+            if #available(iOS 15.0, *) {
+                nav.sheetPresentationController?.detents = [.medium(), .large()]
+            }
+            nav.modalPresentationStyle = .pageSheet
+            self.present(nav, animated: true)
         }
     }
 
@@ -257,3 +267,4 @@ class RecipeDetailViewController: UITableViewController {
         }
     }
 }
+

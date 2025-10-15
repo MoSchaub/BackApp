@@ -122,8 +122,13 @@ class EditRecipeViewController: BackAppVC {
         if !creating {
             self.setUpItemToolbar(item1: shareItem(), item2: favouriteItem(), item3: deleteItem(), openSettings: {
                 let settingsViewController = SettingsViewController(appData: self.appData)
-                self.navigationController?.pushViewController(settingsViewController, animated: true)
-            }, shouldFillNavbar: false)
+                let nav = UINavigationController(rootViewController: settingsViewController)
+                if #available(iOS 15.0, *) {
+                    nav.sheetPresentationController?.detents = [.medium(), .large()]
+                }
+                nav.modalPresentationStyle = .pageSheet
+                self.present(nav, animated: true)
+            })
         }
     }
 
@@ -153,6 +158,11 @@ class EditRecipeViewController: BackAppVC {
                 self.updateNavBar()
             }
             .store(in: &tokens)
+        Standarts.standartsChangedPublisher.sink { _ in
+            var snapshot = self.dataSource.snapshot()
+            snapshot.reloadSections([.steps])
+            self.dataSource.apply(snapshot)
+        }.store(in: &tokens)
     }
 
 }
@@ -468,3 +478,4 @@ extension EditRecipeViewController: UIImagePickerControllerDelegate, UINavigatio
         }
     }
 }
+
