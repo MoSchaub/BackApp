@@ -90,6 +90,8 @@ class RecipeListViewController: UITableViewController {
                 self.configureNavigationBar()
             }
             .store(in: &tokens)
+        
+        self.tableView.separatorColor = .secondaryCellBackgroundColor
 
 #if !DEBUG
         //ask for room temp

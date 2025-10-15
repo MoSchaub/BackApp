@@ -32,6 +32,7 @@ public class StepCell: DetailCell {
         if !editMode {
             self.accessoryType = .none
             self.selectionStyle = .none
+            self.isUserInteractionEnabled = editMode
         }
         self.contentView.addSubview(vstack)
         vstack.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 8))

@@ -106,6 +106,7 @@ class RecipeDetailViewController: UITableViewController {
                 //image
                 let imageCell = ImageCell(reuseIdentifier: Strings.imageCell, data: imageItem.imageData)
                 imageCell.selectionStyle = .none
+                imageCell.isUserInteractionEnabled = false
                 return imageCell
             } else if let detailItem = item as? DetailItem {
 
@@ -129,6 +130,7 @@ class RecipeDetailViewController: UITableViewController {
                     //times
                     let cell = CustomCell(text: textItem.text, reuseIdentifier: Strings.timesCell)
                     cell.selectionStyle = .none
+                    cell.isUserInteractionEnabled = false
                     return cell
                 }
             } else {
