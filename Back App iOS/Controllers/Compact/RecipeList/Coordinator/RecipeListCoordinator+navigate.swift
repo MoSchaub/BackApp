@@ -9,10 +9,14 @@ extension RecipeListCoordinator {
     func navigateToSettings(from recipeListViewController: RecipeListViewController) {
         let settingsViewController = SettingsViewController(appData: delegate.appData)
 
-        // a brand new navigation Controller since the RecipeDetail should use a diffrent Navigation Stack than the List
+        // Present settings modally in its own navigation controller as a sheet
         let navigationController = UINavigationController(rootViewController: settingsViewController)
+        if #available(iOS 15.0, *) {
+            navigationController.sheetPresentationController?.detents = [.medium(), .large()]
+        }
+        navigationController.modalPresentationStyle = .pageSheet
 
-        self.splitViewController.showDetailViewController(navigationController, sender: self)
+        recipeListViewController.present(navigationController, animated: true)
     }
 
     func navigateToRecipeDetail(from recipeListViewController: RecipeListViewController, with item: BackAppData.RecipeListItem) {
