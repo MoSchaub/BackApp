@@ -1,0 +1,39 @@
+{
+  "configurations" : [
+    {
+      "id" : "C58D38CB-711F-4633-9CDD-2E27156ED9CC",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "areLocalizationScreenshotsEnabled" : true,
+    "language" : "en",
+    "performanceAntipatternCheckerEnabled" : true,
+    "region" : "US",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:BackApp.xcodeproj",
+      "identifier" : "CDA7EE2824A67DBD00763E21",
+      "name" : "Back App iOS"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:BackApp.xcodeproj",
+        "identifier" : "CDA7EE3D24A67DC200763E21",
+        "name" : "Back App iOSUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:BackApp.xcodeproj",
+        "identifier" : "CD2BCE5224AE72CB00B868D7",
+        "name" : "Back App iOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

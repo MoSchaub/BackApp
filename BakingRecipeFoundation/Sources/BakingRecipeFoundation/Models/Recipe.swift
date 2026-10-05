@@ -455,7 +455,7 @@ public extension Recipe {
     
     ///text for exporting
     func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String {
-        var h = startDate(reader: reader)
+        var runningDate = startDate(reader: reader)
         var text = self.formattedName
         text += " "
         
@@ -464,8 +464,8 @@ public extension Recipe {
         text += "\n"
         
         for step in notSubsteps(reader: reader) {
-            text += step.text(startDate: h, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
-            h = h.addingTimeInterval(step.duration)
+            text += step.text(startDate: runningDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: self, reader: reader)
+            runningDate = runningDate.addingTimeInterval(step.duration)
         }
         text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: endDate(reader: reader)))"
         return text

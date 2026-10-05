@@ -37,8 +37,13 @@ public extension Recipe {
         try self.reoderedSteps(db: db).map { StepItem(step: $0) }
     }
     
-    func stepItems(appData: BackAppData) -> [StepItem] {
-        let steps = appData.reorderedSteps(for: self.id!)
+    func stepItems(appData: BackAppData, editing: Bool = false) -> [StepItem] {
+        let steps: [Step]
+        if editing {
+            steps = appData.notSubsteps(for: self.id!)
+        } else {
+            steps = appData.reorderedSteps(for: self.id!)
+        }
         return steps.map({ StepItem(step: $0)})
     }
 

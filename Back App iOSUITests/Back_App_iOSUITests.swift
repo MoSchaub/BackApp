@@ -4,8 +4,28 @@
 
 import XCTest
 
+/// Availability-safe blocking wait for UI tests
+  func waitSeconds(_ seconds: UInt64) {
+      if #available(iOS 16.0, *) {
+          // Use Task.sleep when available, but block synchronously to keep call sites simple
+          let group = DispatchGroup()
+          group.enter()
+          Task {
+              try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
+              group.leave()
+          }
+          group.wait()
+      } else {
+          // Fallback for older OS versions
+          sleep(UInt32(seconds))
+      }
+  }
+
 var app: XCUIApplication {
-    XCUIApplication()
+    let app = XCUIApplication()
+    app.launchEnvironment["AppleLanguages"] = "(en-US)"
+    app.launchEnvironment["AppleLocale"] = "en_US"
+    return app
 }
 
 var appTables: XCUIElementQuery {
@@ -85,7 +105,7 @@ class Back_App_iOSUITests: XCTestCase {
         appTables.staticTexts["add Step"].tap()
         
         appTables.staticTexts["add Ingredient"].tap()
-        sleep(1)
+        waitSeconds(1)
         nameTextField.tap()
         nameTextField.typeText("test")
         
@@ -242,9 +262,9 @@ class Back_App_iOSUITests: XCTestCase {
         
         for substep in step.subSteps {
             appTables.staticTexts["add Ingredient"].tap()
-            sleep(5)
+            waitSeconds(5)
             app.scrollViews.otherElements.buttons["step"].tap()
-            sleep(5)
+            waitSeconds(5)
             app.scrollViews.otherElements.buttons[substep.formattedName].tap()
             
             appTables.cells.staticTexts[substep.name].firstMatch.tap()
@@ -274,7 +294,7 @@ class Back_App_iOSUITests: XCTestCase {
 
         app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
 
-        sleep(1)
+        waitSeconds(1)
         XCTAssertTrue(appTables.staticTexts["3 steps"].exists)
     }
     
@@ -367,3 +387,4 @@ class Back_App_iOSUITests: XCTestCase {
     
     
 }
+

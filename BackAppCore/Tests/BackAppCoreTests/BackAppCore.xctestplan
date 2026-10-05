@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "ABC268E5-175E-4F80-B48A-5115DA534F82",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BackAppCoreTests",
+        "name" : "BackAppCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}

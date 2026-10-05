@@ -463,14 +463,14 @@ public extension Step {
     }
     
     ///text for exporting for one step
-    func text(startDate: Date, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String{
+    func text(startDate: Date, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, recipe: Recipe, reader: DatabaseReader) -> String{
         var text = ""
         
         for step in sortedSubsteps(reader: reader) {
-            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
+            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: recipe, reader: reader)
         }
         
-        let nameString = "\(self.formattedName) \(dateFormatter.string(from: startDate))\n"
+        let nameString = "\(self.formattedName) \(recipe.formattedStartDate(for: self, reader: reader))\n"
         text.append(nameString)
         
         for ingredient in ingredients(reader: reader){

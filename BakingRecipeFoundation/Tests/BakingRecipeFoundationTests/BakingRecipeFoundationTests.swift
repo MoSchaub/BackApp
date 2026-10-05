@@ -9,37 +9,100 @@ import XCTest
 
 final class BakingRecipeFoundationTests: XCTestCase {
 
-    func test_TempMeasurementFormatter() {
-        var measurement = Measurement(value: 20434.16746454, unit: UnitTemperature.celsius)
-        XCTAssertEqual(measurement.formatted, "20434.2°C")
-        XCTAssertEqual(measurement.localizedValue, "20434.2")
+    // Helper to run assertions under a specific locale/language and restore afterwards
+    private func withLocale(_ localeIdentifier: String, languageCode: String, _ body: () -> Void) {
+        let defaults = UserDefaults.standard
+        MeasurementFormatting.localeOverride = Locale(identifier: localeIdentifier)
+        let previousLanguages = defaults.array(forKey: "AppleLanguages")
+        let previousLocale = defaults.string(forKey: "AppleLocale")
+        defaults.set([languageCode], forKey: "AppleLanguages")
+        defaults.set(localeIdentifier, forKey: "AppleLocale")
+        defaults.synchronize()
+        defer {
+            MeasurementFormatting.localeOverride = nil
+            if let previousLanguages = previousLanguages {
+                defaults.set(previousLanguages, forKey: "AppleLanguages")
+            } else {
+                defaults.removeObject(forKey: "AppleLanguages")
+            }
+            if let previousLocale = previousLocale {
+                defaults.set(previousLocale, forKey: "AppleLocale")
+            } else {
+                defaults.removeObject(forKey: "AppleLocale")
+            }
+            defaults.synchronize()
+        }
+        body()
+    }
 
-        measurement = Measurement(value: 20.0, unit: UnitTemperature.celsius)
-        XCTAssertEqual(measurement.formatted, "20°C")
-        XCTAssertEqual(measurement.localizedValue, "20")
+    func test_TempMeasurementFormatter() {
+        // Test both en_US (Fahrenheit) and de_DE (Celsius) formatting/values
+        withLocale("en_US", languageCode: "en") {
+            var measurement = Measurement(value: 20434.16746454, unit: UnitTemperature.celsius)
+            XCTAssertEqual(measurement.formatted, "36813.5°F")
+            XCTAssertEqual(measurement.localizedValue, "36813.5")
+
+            measurement = Measurement(value: 20.0, unit: UnitTemperature.celsius)
+            XCTAssertEqual(measurement.formatted, "68°F")
+            XCTAssertEqual(measurement.localizedValue, "68")
+        }
+
+        withLocale("de_DE", languageCode: "de") {
+            var measurement = Measurement(value: 20434.16746454, unit: UnitTemperature.celsius)
+            XCTAssertEqual(measurement.formatted, "20434,2 °C")
+            XCTAssertEqual(measurement.localizedValue, "20434,2")
+
+            measurement = Measurement(value: 20.0, unit: UnitTemperature.celsius)
+            XCTAssertEqual(measurement.formatted, "20 °C")
+            XCTAssertEqual(measurement.localizedValue, "20")
+        }
     }
 
     func test_formattedEndTemp() {
         let recipeExample = Recipe.example
         var step = recipeExample.stepIngredients.first!.step
-        step.endTempEnabled = false
-        XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), step.formattedTemp(roomTemp: 21))
-        XCTAssertEqual(step.formattedEndTemp, nil)
 
-        step.endTempEnabled = true
-        XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), "20°C")
-        XCTAssertEqual(step.formattedEndTemp, "20°C")
+        // When end temp is disabled, it mirrors formattedTemp(roomTemp:) and the stored property is nil
+        withLocale("en_US", languageCode: "en") {
+            step.endTempEnabled = false
+            XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), step.formattedTemp(roomTemp: 21))
+            XCTAssertEqual(step.formattedEndTemp, nil)
+
+            step.endTempEnabled = true
+            XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), "68°F")
+            XCTAssertEqual(step.formattedEndTemp, "68°F")
+        }
+
+        withLocale("de_DE", languageCode: "de") {
+            step.endTempEnabled = false
+            XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), step.formattedTemp(roomTemp: 21))
+            XCTAssertEqual(step.formattedEndTemp, nil)
+
+            step.endTempEnabled = true
+            XCTAssertEqual(step.formattedEndTemp(roomTemp: 21), "20 °C")
+            XCTAssertEqual(step.formattedEndTemp, "20 °C")
+        }
     }
 
     func test_formattedTemp() {
         let recipeExample = Recipe.example
         var step = recipeExample.stepIngredients.first!.step
 
-        step.temperature = nil
-        XCTAssertEqual(step.formattedTemp(roomTemp: 21), "21°C")
+        withLocale("en_US", languageCode: "en") {
+            step.temperature = nil
+            XCTAssertEqual(step.formattedTemp(roomTemp: 21), "69.8°F")
 
-        step.temperature = 20
-        XCTAssertEqual(step.formattedTemp(roomTemp: 21), "20°C")
+            step.temperature = 20
+            XCTAssertEqual(step.formattedTemp(roomTemp: 21), "68°F")
+        }
+
+        withLocale("de_DE", languageCode: "de") {
+            step.temperature = nil
+            XCTAssertEqual(step.formattedTemp(roomTemp: 21), "21 °C")
+
+            step.temperature = 20
+            XCTAssertEqual(step.formattedTemp(roomTemp: 21), "20 °C")
+        }
     }
 
     func test_RecipeFormattedName() {
@@ -168,3 +231,4 @@ final class BakingRecipeFoundationTests: XCTestCase {
         ("test_TempMeasurementFormatter", test_TempMeasurementFormatter)
     ]
 }
+

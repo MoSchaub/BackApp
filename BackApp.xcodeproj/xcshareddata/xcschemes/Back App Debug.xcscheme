@@ -49,6 +49,12 @@
       region = "US"
       codeCoverageEnabled = "YES"
       localizableStringsDataGatheringEnabled = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:Back App Debug.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
