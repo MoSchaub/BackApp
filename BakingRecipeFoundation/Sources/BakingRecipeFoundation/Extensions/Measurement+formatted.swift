@@ -10,14 +10,27 @@
 
 import Foundation
 
-fileprivate var measurementFormatter: MeasurementFormatter {
-    let formatter = MeasurementFormatter()
-    formatter.numberFormatter.maximumFractionDigits = 1
-    formatter.numberFormatter.usesGroupingSeparator = false
-    formatter.unitStyle = .medium
-    return formatter
+public enum MeasurementFormatting {
+    public static var localeOverride: Locale?
 }
 
+fileprivate var measurementFormatter: MeasurementFormatter {
+    let formatter = MeasurementFormatter()
+    formatter.unitStyle = .medium
+
+    // Configure a dedicated number formatter so we can also apply the locale override
+    let numberFormatter = NumberFormatter()
+    numberFormatter.maximumFractionDigits = 1
+    numberFormatter.usesGroupingSeparator = false
+
+    if let override = MeasurementFormatting.localeOverride {
+        formatter.locale = override
+        numberFormatter.locale = override
+    }
+
+    formatter.numberFormatter = numberFormatter
+    return formatter
+}
 
 public extension Measurement where UnitType == UnitTemperature {
 

@@ -11,6 +11,9 @@
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
 		8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */; };
+		8E8B41F72F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
+		8E8B41F82F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
+		8E8B41F92F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
 		8EDCC56A2E2314AC00478852 /* LICENSES in Resources */ = {isa = PBXBuildFile; fileRef = 8EDCC5692E2314A800478852 /* LICENSES */; };
 		CD20880C28F32D8600127961 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880B28F32D8600127961 /* Coordinator.swift */; };
 		CD20880E28F32E6A00127961 /* RecipeListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20880D28F32E6A00127961 /* RecipeListCoordinator.swift */; };
@@ -120,6 +123,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E35DC7A2F93809900624927 /* BackAppCore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = BackAppCore.xctestplan; path = BackAppCore/Tests/BackAppCoreTests/BackAppCore.xctestplan; sourceTree = "<group>"; };
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
 		8E5C074B2D207293002EED55 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 		8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = download_on_the_app_store.svg; sourceTree = "<group>"; };
 		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
 		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
+		8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Back App Debug.xctestplan"; sourceTree = "<group>"; };
 		8EDCC5692E2314A800478852 /* LICENSES */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSES; sourceTree = SOURCE_ROOT; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CD20880B28F32D8600127961 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -325,6 +330,8 @@
 		CD6A9A032340252400748249 = {
 			isa = PBXGroup;
 			children = (
+				8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */,
+				8E35DC7A2F93809900624927 /* BackAppCore.xctestplan */,
 				8EDCC5692E2314A800478852 /* LICENSES */,
 				8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */,
 				8E5A9A092DE3ACEB00A9B87B /* .github */,
@@ -679,6 +686,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E8B41F92F97760C00A10B5E /* Back App Debug.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,6 +704,7 @@
 				CDE2C4CE24DC3EC0009378C4 /* AppIcon.xcassets in Resources */,
 				CD6F748B2691D1C800BCFC3E /* 2de.bakingAppRecipe in Resources */,
 				CD6F748F2691EE6100BCFC3E /* 1de.bakingAppRecipe in Resources */,
+				8E8B41F72F97760C00A10B5E /* Back App Debug.xctestplan in Resources */,
 				CDA7EE5824A67E7000763E21 /* Images.xcassets in Resources */,
 				CD87201826DBA74700C01DAE /* 1en.bakingAppRecipe in Resources */,
 				CD87201926DBA74700C01DAE /* 3en.bakingAppRecipe in Resources */,
@@ -706,6 +715,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E8B41F82F97760C00A10B5E /* Back App Debug.xctestplan in Resources */,
 				CD9B3CE9253CE6D000132CA9 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,7 +853,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -865,7 +875,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1013,7 +1023,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 185;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
@@ -1049,7 +1059,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 185;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";

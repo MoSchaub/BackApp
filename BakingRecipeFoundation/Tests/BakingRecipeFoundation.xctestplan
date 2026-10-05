@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "5ECA6D27-D7BA-4514-80BC-BAC88DC79DFA",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BakingRecipeFoundationTests",
+        "name" : "BakingRecipeFoundationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
