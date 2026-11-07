@@ -5,80 +5,61 @@
 
 import XCTest
 
-var settingsButton: XCUIElement {
-    navigationBar.buttons["settings"]
-}
+final class CompactHomeTests: BackAppUITestCase {
 
-class CompactHomeTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-    
     func testChangingRoomTempature() throws {
         app.launch()
         app.swipeDown()
-        
-        settingsButton.tap()
-        
-        appTables.cells.staticTexts["room temperature"].tap()
-        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "30")
-        
-        app.navigationBars["Settings"].buttons["Recipes"].tap()        
-        
-        settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["30°C"].exists)
-        
-        app.terminate()
 
+        setRoomTemperature("30")
+        settingsButton.tap()
+        assertExists(app.staticTexts["30°C"])
+
+        // relaunch to check the setting was persisted, then restore the default
+        app.terminate()
         app.launch()
         app.swipeDown()
-        
+
+        setRoomTemperature("20")
         settingsButton.tap()
-        
-        appTables.cells.staticTexts["room temperature"].tap()
-        
-        appTables.pickerWheels.firstMatch.adjust(toPickerWheelValue: "20")
-        app.navigationBars["Settings"].buttons["Recipes"].tap()
-        
-        settingsButton.tap()
-        XCTAssertTrue(XCUIApplication().tables.staticTexts["20°C"].exists)
+        assertExists(app.staticTexts["20°C"])
     }
-    
+
     func testNavigatingToAboutScreen() throws {
         app.launch()
         app.swipeDown()
 
         settingsButton.tap()
-        
-        appTables.cells.staticTexts["about Baking App"].tap()
-        
-        XCTAssert(app.navigationBars["about Baking App"].exists)
-                        
+        cell(AccessibilityID.aboutCell).tap()
+
+        assertExists(app.navigationBars["about Baking App"])
     }
-    
+
     func testDeletingRecipe() throws {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launchArguments.append("-includeTestingRecipe")
-        argumentApp.launch()
-        
-        try! delete(recipeName: Recipe.example.name)
+        let recipeName = Recipe.example.name
+        app.launchArguments.append("-includeTestingRecipe")
+        app.launch()
+
+        let recipe = app.staticTexts[recipeName].firstMatch
+        assertExists(recipe)
+        recipe.swipeLeft()
+        // the swipe action is a system button, so it's found by its title
+        app.buttons["Delete"].tap()
+
+        XCTAssertTrue(recipe.waitForNonExistence(timeout: timeout), "\(recipeName) was not deleted")
     }
 
+    // MARK: - Helpers
+
+    /// Opens the settings, picks `temperature` as room temperature and goes back to the recipe list.
+    private func setRoomTemperature(_ temperature: String) {
+        settingsButton.tap()
+        cell(AccessibilityID.roomTemperatureCell).tap()
+
+        let picker = app.pickerWheels.firstMatch
+        assertExists(picker)
+        picker.adjust(toPickerWheelValue: temperature)
+
+        app.buttons[AccessibilityID.closeSettingsButton].tap()
+    }
 }
-
-func delete(recipeName: String) throws {
-    
-    appTables.staticTexts[recipeName].firstMatch.swipeLeft()
-    appTables.buttons["Delete"].tap()
-    XCTAssertFalse(appTables.children(matching: .cell).element(boundBy: 0).staticTexts[recipeName].exists)
-}
-
-

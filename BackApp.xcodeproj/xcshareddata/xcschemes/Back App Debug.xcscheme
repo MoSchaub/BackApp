@@ -47,8 +47,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       language = "en"
       region = "US"
-      codeCoverageEnabled = "YES"
-      localizableStringsDataGatheringEnabled = "YES">
+      codeCoverageEnabled = "YES">
       <TestPlans>
          <TestPlanReference
             reference = "container:Back App Debug.xctestplan"

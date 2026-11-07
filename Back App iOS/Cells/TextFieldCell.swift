@@ -99,9 +99,13 @@ private extension TextFieldCell {
 
 extension TextFieldCell: UITextFieldDelegate {
     
+    /// Serial, so text changes are saved in the order they were typed.
+    /// A concurrent queue let an older value (e.g. "Mis") overwrite a newer one ("Mischen").
+    private static let updateQueue = DispatchQueue(label: "TextFieldCell.updateText", qos: .userInitiated)
+
     @objc internal func updateText(completion: (() -> ())? = nil ) {
         let textFieldText = textField.text
-        DispatchQueue.global(qos: .background).async {
+        Self.updateQueue.async {
             if let textChanged = self.textChanged, let text = textFieldText {//force away from main thread to not interrupt the ux
                 textChanged(text)
                 if let completion = completion {

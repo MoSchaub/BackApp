@@ -4,311 +4,199 @@
 
 import XCTest
 
-/// Availability-safe blocking wait for UI tests
-  func waitSeconds(_ seconds: UInt64) {
-      if #available(iOS 16.0, *) {
-          // Use Task.sleep when available, but block synchronously to keep call sites simple
-          let group = DispatchGroup()
-          group.enter()
-          Task {
-              try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
-              group.leave()
-          }
-          group.wait()
-      } else {
-          // Fallback for older OS versions
-          sleep(UInt32(seconds))
-      }
-  }
+final class Back_App_iOSUITests: BackAppUITestCase {
 
-var app: XCUIApplication {
-    let app = XCUIApplication()
-    app.launchEnvironment["AppleLanguages"] = "(en-US)"
-    app.launchEnvironment["AppleLocale"] = "en_US"
-    return app
-}
+    private var saveRecipeButton: XCUIElement { app.buttons[AccessibilityID.saveRecipeButton].firstMatch }
+    private var cancelRecipeButton: XCUIElement { app.buttons[AccessibilityID.cancelRecipeButton].firstMatch }
+    private var addStepCell: XCUIElement { cell(AccessibilityID.addStepCell) }
+    private var addIngredientCell: XCUIElement { cell(AccessibilityID.addIngredientCell) }
+    private var amountTextField: XCUIElement { app.textFields[AccessibilityID.ingredientAmountField] }
 
-var appTables: XCUIElementQuery {
-    app.tables
-}
-
-var navigationBar: XCUIElement {
-    app.navigationBars.firstMatch
-}
-
-var addButton: XCUIElement {
-    navigationBar.buttons["Add recipe"].firstMatch
-}
-
-var nameTextField: XCUIElement {
-    appTables.textFields["name"]
-}
-
-var doneButton: XCUIElement {
-    navigationBar.buttons["Done"]
-}
-
-var toolbar: XCUIElement {
-    app.toolbars.firstMatch
-}
-
-class Back_App_iOSUITests: XCTestCase {
-    
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    /// "Delete" in the alert shown when cancelling a new recipe.
+    /// Alert actions can't have an accessibility identifier, so this one is found by its title.
+    private var cancelDeleteButton: XCUIElement {
+        app.alerts[AccessibilityID.cancelRecipeAlert].buttons["Delete"]
     }
 
+    // MARK: - Tests
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        print("error")
-    }
-    
-    
-    func testAddingRecipeStepUpdateBug() {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launch()
-        
+    func testAddingRecipeStepUpdateBug() throws {
+        app.launch()
+
         addButton.tap()
-        
-        nameTextField.tap()
-        nameTextField.typeText("testRezept")
+        type("testRezept", into: nameTextField)
         doneButton.tap()
-        
-        appTables.staticTexts["add Step"].tap()
-        
-        nameTextField.tap()
-        nameTextField.typeText("testSchritt")
+
+        addStepCell.tap()
+        type("testSchritt", into: nameTextField)
         doneButton.tap()
-        
-        app.navigationBars.firstMatch.buttons.firstMatch.tap()
-        
-        app.navigationBars.firstMatch.buttons["Cancel"].tap()
-        
-        app.alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
+
+        backButton.tap()
+        cancelRecipeButton.tap()
+        cancelDeleteButton.tap()
     }
-    
+
     func testAddingIngredientBug() throws {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launch()
-        
-        addButton.tap()
-        
-        appTables.staticTexts["add Step"].tap()
-        
-        appTables.staticTexts["add Ingredient"].tap()
-        waitSeconds(1)
-        nameTextField.tap()
-        nameTextField.typeText("test")
-        
-        appTables.staticTexts["other"].tap()
-        
-        appTables.staticTexts["bulk liquid"].tap()
-        
-        app.navigationBars.firstMatch.buttons.firstMatch.tap()
-        
-        app.navigationBars.firstMatch.buttons.firstMatch.tap()
-        XCUIApplication().navigationBars["unnamed recipe"].buttons["Cancel"].tap()
+        app.launch()
 
-        app.alerts["Cancel"].scrollViews.otherElements.buttons["Delete"].tap()
-        
-    }
-    
-    func testIngredientMassTextConvertBug() {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launch()
-        
         addButton.tap()
-        
-        appTables.staticTexts["add Step"].tap()
-        
-        appTables.staticTexts["add Ingredient"].tap()
-        
-        nameTextField.tap()
-        nameTextField.typeText("test")
-        
-        doneButton.tap()
-        
-        let amountTextField = appTables.textFields["amount in gramms"]
-        amountTextField.tap()
-        amountTextField.typeText("10,5")
-        
-        doneButton.tap()
-        
-        XCTAssert(appTables.textFields["10.5 g"].firstMatch.exists)
-        
-        app.navigationBars.firstMatch.buttons.firstMatch.tap()
-                
-        XCTAssert(appTables.staticTexts["10.5 g "].firstMatch.exists)
-        
-    }
-    
+        addStepCell.tap()
+        addIngredientCell.tap()
 
-    //tests adding an example recipe
+        type("test", into: nameTextField)
+
+        cell(AccessibilityID.ingredientTypeCell).tap()
+        cell(AccessibilityID.ingredientTypeOption("bulkLiquid")).tap()
+
+        backButton.tap()
+        backButton.tap()
+        cancelRecipeButton.tap()
+        cancelDeleteButton.tap()
+    }
+
+    func testIngredientMassTextConvertBug() throws {
+        app.launch()
+
+        addButton.tap()
+        addStepCell.tap()
+        addIngredientCell.tap()
+
+        type("test", into: nameTextField)
+        doneButton.tap()
+
+        type("10,5", into: amountTextField)
+        doneButton.tap()
+
+        assertValue(of: amountTextField, is: "10.5 g")
+
+        backButton.tap()
+
+        assertExists(app.staticTexts["10.5 g "].firstMatch)
+    }
+
+    /// Enters `Recipe.example` through the UI and checks it is still there after a relaunch.
     func testAddingExampleRecipe() throws {
-        
         let recipe = Recipe.example
-        
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launch()
-        
-        addButton.tap()
-        
-        // name
-        nameTextField.tap()
-        nameTextField.typeText(recipe.name)
-        doneButton.tap()
-        
-        // quantity
-        let textField = appTables.textFields["Number of breads, rolls, etc."]
-        textField.tap()
-        textField.typeText(recipe.timesText)
-        doneButton.tap()
-        
-        // steps
-        for step in recipe.steps {
-            try addStep(step: step, recipeName: recipe.formattedName)
-        }
-
-        app.navigationBars[recipe.name].buttons["Save"].tap()
-        
-        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
-        
-        app.terminate()
 
         app.launch()
-        app.swipeDown()
-        
-        XCTAssertTrue(appTables.staticTexts[recipe.name].exists)
-    }
-    
-    func addIngredient(ingredient: Ingredient, stepName: String) {
-        appTables.staticTexts["add Ingredient"].tap()
-        
-        // name
-        nameTextField.tap()
-        nameTextField.typeText(ingredient.name)
-        doneButton.tap()
-        
-        // amount
-        let amountTextField = appTables.textFields["amount in gramms"]
-        amountTextField.tap()
-        amountTextField.typeText("\(ingredient.amount)")
-        doneButton.tap()
-        
-        
-        
-        appTables.staticTexts["other"].tap()
-        
-        XCTAssert(appTables.textFields[ingredient.name].exists)
-        
-        switch ingredient.type {
-        case .bulkLiquid:
-            appTables.staticTexts["bulk liquid"].tap()
 
-        case .flour:
-            appTables.staticTexts["flour"].tap()
-        case .ta150:
-            appTables.staticTexts["starter 50% hydration"].tap()
-        case .ta200:
-            appTables.staticTexts["starter 100% hydration"].tap()
-        case .other:
-            appTables.staticTexts["other"].firstMatch.tap()
+        addButton.tap()
+
+        // name
+        type(recipe.name, into: nameTextField)
+        doneButton.tap()
+
+        // quantity
+        type(recipe.timesText, into: app.textFields[AccessibilityID.recipeQuantityField])
+        doneButton.tap()
+
+        // steps
+        for step in recipe.steps {
+            addStep(step)
         }
-        
-        XCUIApplication().navigationBars[ingredient.name].buttons[stepName].tap()
-        
-        XCTAssertTrue(appTables.staticTexts[ingredient.name].exists)
-        
+
+        saveRecipeButton.tap()
+
+        assertExists(app.staticTexts[recipe.name])
+
+        // relaunch without resetting the database to check the recipe was persisted
+        app.terminate()
+        app.launchArguments.removeAll { $0 == "-reset" }
+        app.launch()
+        app.swipeDown()
+
+        assertExists(app.staticTexts[recipe.name])
     }
-    
-    func addStep(step: Step, recipeName: String) throws {
-        appTables.staticTexts["add Step"].tap()
+
+    func testChangingRecipeExample() throws {
+        app.launchArguments.append("-includeTestingRecipe")
+        app.launch()
+
+        app.staticTexts[Recipe.example.name].tap()
+        app.buttons[AccessibilityID.editRecipeButton].firstMatch.tap()
+
+        addStepCell.tap()
+        backButton.tap() // step -> edit recipe
+        backButton.tap() // edit recipe -> recipe detail
+        backButton.tap() // recipe detail -> recipe list
+
+        assertExists(app.staticTexts["3 steps"])
+    }
+
+    func testInEditingDissmissCrash() throws {
+        app.launch()
+        app.swipeDown()
+
+        addButton.tap()
+        nameTextField.tap()
+        cancelRecipeButton.tap()
+    }
+
+    // The schedule tests (testnormalSchedule, testScheduleInverted, testScheduleDiffrentDate,
+    // testScheduleDiffrentTimes) were reworked into unit tests, since they only verified
+    // date math and amount scaling: see BackAppCoreTests/ScheduleAndFormattingTests.swift.
+
+    // MARK: - Flows
+
+    private func addIngredient(_ ingredient: Ingredient) {
+        addIngredientCell.tap()
 
         // name
-        nameTextField.tap()
-        nameTextField.typeText(step.name)
+        type(ingredient.name, into: nameTextField)
+        doneButton.tap()
+
+        // amount
+        type("\(ingredient.amount)", into: amountTextField)
+        doneButton.tap()
+
+        assertValue(of: nameTextField, is: ingredient.name)
+
+        // type
+        cell(AccessibilityID.ingredientTypeCell).tap()
+        cell(AccessibilityID.ingredientTypeOption("\(ingredient.type)")).tap()
+
+        backButton.tap()
+
+        assertExists(app.staticTexts[ingredient.name])
+    }
+
+    private func addStep(_ step: Step) {
+        addStepCell.tap()
+
+        // name
+        type(step.name, into: nameTextField)
         doneButton.tap()
 
         // notes
-        let notesField = appTables.textViews.firstMatch
-
-        notesField.tap()
-        notesField.typeText(step.notes)
-        
-        let doneButton = app.navigationBars.firstMatch.buttons["Done"]
+        type(step.notes, into: app.textViews.firstMatch)
         doneButton.tap()
 
         // duration
-        XCUIApplication().tables.staticTexts["one minute"].firstMatch.tap()
+        cell(AccessibilityID.stepDurationCell).tap()
         if step.time != 60 {
-            XCUIApplication().tables.pickerWheels["one minute"].adjust(toPickerWheelValue: "\(Int(step.time/60)) minutes")
+            // the second wheel holds the minutes
+            let minutesWheel = app.pickers[AccessibilityID.stepDurationPicker].pickerWheels.element(boundBy: 1)
+            assertExists(minutesWheel)
+            minutesWheel.adjust(toPickerWheelValue: "\(Int(step.time / 60)) minutes")
         }
 
         // ingredients
         for ingredient in step.ingredients {
-            addIngredient(ingredient: ingredient, stepName: step.formattedName)
+            addIngredient(ingredient)
         }
-        
+
+        // substeps (Recipe.example has none, so this isn't run at the moment)
         for substep in step.subSteps {
-            appTables.staticTexts["add Ingredient"].tap()
-            waitSeconds(5)
+            addIngredientCell.tap()
             app.scrollViews.otherElements.buttons["step"].tap()
-            waitSeconds(5)
             app.scrollViews.otherElements.buttons[substep.formattedName].tap()
-            
-            appTables.cells.staticTexts[substep.name].firstMatch.tap()
-            
-            
-            navigationBar.buttons[step.name].tap()
-            //TODO test the tapping all the substeps
+            app.cells.staticTexts[substep.name].firstMatch.tap()
+            backButton.tap()
+            // TODO: test tapping all the substeps
         }
 
-        app.navigationBars[step.formattedName].buttons.firstMatch.tap()
+        backButton.tap()
 
-        XCTAssertTrue(appTables.staticTexts[step.name].exists)
+        assertExists(app.staticTexts[step.name])
     }
-    
-    func testChangingRecipeExample() throws {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launchArguments.append("-includeTestingRecipe")
-        argumentApp.launch()
-
-        appTables.staticTexts[Recipe.example.name].tap()
-        toolbar.buttons["Edit"].tap()
-
-        appTables.staticTexts["add Step"].tap()
-        app.navigationBars["unnamed Step"].buttons[Recipe.example.name].tap()
-        app.navigationBars[Recipe.example.name].buttons[Recipe.example.name].tap()
-
-        app.navigationBars[Recipe.example.name].buttons["Recipes"].tap()
-
-        waitSeconds(1)
-        XCTAssertTrue(appTables.staticTexts["3 steps"].exists)
-    }
-    
-    func testInEditingDissmissCrash() throws {
-        app.launch()
-        app.swipeDown()
-        
-        addButton.tap()
-        nameTextField.tap()
-        app.navigationBars.firstMatch.buttons["Cancel"].tap()
-    }
-    
-    // The schedule tests (testnormalSchedule, testScheduleInverted, testScheduleDiffrentDate,
-    // testScheduleDiffrentTimes) were reworked into unit tests, since they only verified
-    // date math and amount scaling: see BackAppCoreTests/ScheduleAndFormattingTests.swift.
 }
-

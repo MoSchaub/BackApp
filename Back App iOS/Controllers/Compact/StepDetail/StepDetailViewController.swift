@@ -391,6 +391,7 @@ private extension StepDetailViewController {
                                                 //name
                                                 cell.textField.text = textFieldItem.text
                                                 cell.textField.placeholder = Strings.name
+                                                cell.textField.accessibilityIdentifier = AccessibilityID.nameField
                                                 cell.textChanged = { text in
                                                     self.step.name = text
                                                 }
@@ -409,6 +410,7 @@ private extension StepDetailViewController {
                                                 if detailItem.text == Strings.duration {
                                                     //duration
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
+                                                    cell.accessibilityIdentifier = AccessibilityID.stepDurationCell
                                                     cell.detailTextLabel?.textColor = self.datePickerShown ? .baTintBackgroundColor : .secondaryCellTextColor
                                                     return cell
                                                 } else if detailItem.text == Strings.temperature {
@@ -437,7 +439,9 @@ private extension StepDetailViewController {
                                                     return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.substepCell, with: detailItem)
                                                 } else  {
                                                     // add ingredient
-                                                    return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
+                                                    let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
+                                                    cell.accessibilityIdentifier = AccessibilityID.addIngredientCell
+                                                    return cell
                                                 }
                                             }
                                         } else if self.datePickerShown, indexPath.row == 1{
