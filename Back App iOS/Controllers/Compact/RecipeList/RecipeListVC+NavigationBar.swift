@@ -66,3 +66,11 @@ extension RecipeListViewController {
     }
 }
 
+#if DEBUG
+extension RecipeListViewController {
+    @objc func _test_openImportFilePopover() {
+        // Forward to the real implementation so tests can invoke via selector
+        self.openImportFilePopover()
+    }
+}
+#endif

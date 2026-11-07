@@ -35,7 +35,11 @@ extension BackAppData {
             // Connect to a database on disk
             // See https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections
             let dbURL = folderURL.appendingPathComponent("db.sqlite")
-            let dbPool = try DatabasePool(path: dbURL.path)
+            // Wait instead of failing with SQLITE_BUSY when several connections
+            // (app + tests, or multiple shared() calls) access the same file.
+            var configuration = Configuration()
+            configuration.busyMode = .timeout(5)
+            let dbPool = try DatabasePool(path: dbURL.path, configuration: configuration)
             
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)

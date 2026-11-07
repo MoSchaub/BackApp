@@ -307,84 +307,8 @@ class Back_App_iOSUITests: XCTestCase {
         app.navigationBars.firstMatch.buttons["Cancel"].tap()
     }
     
-    func setupScheduleTesting() {
-        let argumentApp = app
-        argumentApp.launchArguments.append("-reset")
-        argumentApp.launchArguments.append("-includeTestingRecipe")
-        argumentApp.launch()
-        
-        appTables.staticTexts[Recipe.example.name].tap()
-        app.tables.staticTexts["Start"].tap()
-    }
-
-    func testnormalSchedule() throws {
-        // noninverted current date original Times
-        setupScheduleTesting()
-        doneButton.tap()
-        navigationBar.buttons["OK"].tap()
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date())].exists)
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.steps.first!.time))].exists)
-    }
-    
-    func testScheduleInverted() throws {
-        // inverted currentDate originalTimes
-        setupScheduleTesting()
-        
-        let startDate = Date().addingTimeInterval(TimeInterval(-(Recipe.example.totalTime * 60)))
-        let backenDate = startDate.addingTimeInterval(Recipe.example.steps.first!.time)
-        
-        doneButton.tap()
-        appTables.segmentedControls.buttons["end"].tap()
-        navigationBar.buttons["OK"].tap()
-        
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: startDate)].exists)
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: backenDate)].exists)
-    }
-    
-    //needs to run with en_us locale
-    func testScheduleDiffrentDate() throws {
-        
-        // inverted diffrentDate originalTimes
-        setupScheduleTesting()
-        doneButton.tap()
-
-        let newDate = Date().addingTimeInterval(3600*24*10)
-        let newDateFormatter = DateFormatter()
-        newDateFormatter.dateFormat = "MMM d"
-        let newDateString = newDateFormatter.string(from: newDate)
-
-        let daysSinceNewDate = (Date().timeIntervalSince(newDate)/(3600*24)).rounded()
-        
-        
-        let picker = appTables.pickers.pickerWheels["Today"]
-            
-        picker.adjust(toPickerWheelValue: newDateString)
-        appTables.segmentedControls.buttons["end"].tap()
-        navigationBar.buttons["OK"].tap()
-        
-        let startDate = Date().addingTimeInterval(-(daysSinceNewDate * 3600 * 24))
-            .addingTimeInterval(TimeInterval(-(Recipe.example.totalTime * 60)))
-        let backenDate = startDate.addingTimeInterval(Recipe.example.steps.first!.time)
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: startDate)].exists)
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: backenDate)].exists)
-    }
-    
-    func testScheduleDiffrentTimes() throws {
-        //normal current Date diffrentTimes
-        setupScheduleTesting()
-        
-        let quantityTextField = appTables.textFields["Number of breads, rolls, etc."]
-        quantityTextField.tap()
-        quantityTextField.typeText("10")
-        doneButton.tap()
-        navigationBar.buttons["OK"].tap()
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date())].exists)
-        XCTAssert(appTables.staticTexts[dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.steps.first!.time))].exists)
-        XCTAssert(appTables.staticTexts["1200.0 g"].exists)
-        
-        
-    }
-    
-    
+    // The schedule tests (testnormalSchedule, testScheduleInverted, testScheduleDiffrentDate,
+    // testScheduleDiffrentTimes) were reworked into unit tests, since they only verified
+    // date math and amount scaling: see BackAppCoreTests/ScheduleAndFormattingTests.swift.
 }
 
