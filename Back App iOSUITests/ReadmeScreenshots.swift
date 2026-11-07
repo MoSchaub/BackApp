@@ -77,8 +77,8 @@ final class ReadmeScreenshots: XCTestCase {
         snapshot("5_stepDetail")
 
         // 6. ingredient detail
-        // the tap is lost if the cell isn't hittable yet, and then the screen never opens
-        waitUntilHittable(ingredient)
+        // the ingredient can be below the screen edge, e.g. on iPhone 16 with iOS 27
+        scrollIntoView(ingredient)
         ingredient.tap()
         XCTAssertTrue(app.navigationBars[ingredientName].waitForExistence(timeout: timeout))
         snapshot("6_ingredientDetail")
@@ -102,10 +102,15 @@ final class ReadmeScreenshots: XCTestCase {
         }
     }
 
-    private func waitUntilHittable(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
-        let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: element)
-        XCTAssertEqual(XCTWaiter().wait(for: [hittable], timeout: timeout), .completed,
-                       "\(element) did not become hittable", file: file, line: line)
+    /// Swipes the list up until `element` can be tapped.
+    /// XCUITest doesn't scroll a label in a table cell into view before tapping it,
+    /// so a tap on a row below the screen edge is lost.
+    private func scrollIntoView(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        for _ in 0..<5 where element.isHittable == false {
+            app.tables.firstMatch.swipeUp(velocity: .slow)
+            waitForAnimations()
+        }
+        XCTAssertTrue(element.isHittable, "\(element) is not on screen", file: file, line: line)
     }
 
     private func waitForAnimations() {
