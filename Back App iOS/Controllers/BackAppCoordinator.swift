@@ -59,8 +59,8 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
     }
 
 
-    public func open(URLContexts: Set<UIOpenURLContext>) {
-        let urls = URLContexts.map { $0.url}
+    /// imports the recipe files at the given urls
+    public func open(urls: [URL]) {
         for url in urls {
             appData.open(url)
         }

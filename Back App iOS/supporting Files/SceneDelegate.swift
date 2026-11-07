@@ -21,6 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         coordinator = BackAppCoordinator(windowScene: windowScene)
         coordinator.start()
+
+        // When the app is launched by opening a recipe file, or iPadOS opens the file in a
+        // new window (the app supports multiple scenes), the file is only delivered here
+        // and `scene(_:openURLContexts:)` is never called for it.
+        coordinator.open(urls: connectionOptions.urlContexts.map(\.url))
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -30,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         // open file in app
-        coordinator.open(URLContexts: URLContexts)
+        coordinator.open(urls: URLContexts.map(\.url))
     }
 }
 

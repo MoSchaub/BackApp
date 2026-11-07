@@ -67,6 +67,8 @@
 "recipe_already_exist_error" = "Die Datei enhält bereits existierende Rezepte";
 "recipes" = "Rezepte";
 "recipesImported" = "Rezepte wurden importiert";
+"importFileUnreadable" = "Die Datei konnte nicht gelesen werden.";
+"importFileContainsNoRecipes" = "Die Datei enthält keine Rezepte.";
 "removeFavorite" = "kein Favorit";
 "roomTempQuestionLabel" = "aktuelle Raumtemperatur";
 "roomTemperature" = "Raumtemperatur";
