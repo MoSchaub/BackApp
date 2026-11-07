@@ -22,6 +22,11 @@ struct RecordPersistenceTests {
 
     // MARK: Full-column round-trips
 
+    // Every round-trip test sets a distinct, non-default value in every column —
+    // including all optionals — so that two columns of the same type can never
+    // mask a swapped index, and compares with synthesized equality, which covers
+    // all stored properties at once.
+
     @Test func recipeRoundTripsAllColumns() throws {
         var recipe = Recipe(name: "Roundtrip", number: 7)
         recipe.info = "crispy"
@@ -46,6 +51,9 @@ struct RecordPersistenceTests {
 
     @Test func stepRoundTripsAllColumns() throws {
         let inserted = try appData.dbWriter.write { db -> Step in
+            // recipe and super step only exist to satisfy the foreign keys,
+            // so that recipeId and the optional superStepId column are both
+            // non-nil and round-trip too
             var recipe = Recipe(name: "host recipe", number: 0)
             try recipe.insert(db)
 
@@ -74,6 +82,9 @@ struct RecordPersistenceTests {
             var step = Step(recipeId: recipe.id!, number: 0)
             try step.insert(db)
 
+            // the name must not contain flour/liquid keywords ("Mehl", "Wasser", ...),
+            // otherwise Ingredient's auto type detection would overwrite the
+            // explicitly chosen .ta150 type when the name changes later
             var ingredient = Ingredient(stepId: step.id!, name: "Anstellgut", amount: 42.5, type: .ta150, number: 2)
             ingredient.temperature = 18.25
             try ingredient.insert(db)
@@ -89,6 +100,8 @@ struct RecordPersistenceTests {
 
     @Test func recipeListRequestOrdersByNumberAndCountsSteps() throws {
         try appData.dbWriter.write { db in
+            // inserted in reverse number order on purpose: the request must
+            // sort by number, not by insertion order (rowid)
             var second = Recipe(name: "second", number: 1)
             try second.insert(db)
             var first = Recipe(name: "first", number: 0)

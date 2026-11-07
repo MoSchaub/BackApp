@@ -179,6 +179,12 @@ public extension Ingredient {
     }
     
     /// Arange the seleted columns and lock their order
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
     static var databaseSelection: [any SQLSelectable] {
         [
             Columns.id,

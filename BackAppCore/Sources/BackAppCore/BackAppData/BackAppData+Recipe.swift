@@ -22,10 +22,15 @@ public extension Notification.Name {
 
 // Feeds the list of recipes
 public extension BackAppData {
+    /// one row of the recipe list: a recipe annotated with the number of its steps
+    /// - Note: `Sendable` because values travel from the database observation
+    ///   (`recipeListPublisher`) to the UI.
     struct RecipeListItem: Decodable, Hashable, FetchableRecord, Sendable {
         public let recipe: Recipe
         public let stepCount: Int
 
+        // computed rather than stored: a mutable `static var` is shared
+        // mutable state, which GRDB 7's concurrency checking rejects
         static var request: QueryInterfaceRequest<Recipe> {
             Recipe.annotated(with: Recipe.steps.count).orderedByNumber
         }
