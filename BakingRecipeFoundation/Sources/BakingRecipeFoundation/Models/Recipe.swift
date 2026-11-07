@@ -207,18 +207,26 @@ public extension Recipe {
     }
     
     /// Arange the selected columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.info,
-        Columns.isFavorite,
-        Columns.difficulty,
-        Columns.inverted,
-        Columns.times,
-        Columns.date,
-        Columns.imageData,
-        Columns.number
-    ]
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.info,
+            Columns.isFavorite,
+            Columns.difficulty,
+            Columns.inverted,
+            Columns.times,
+            Columns.date,
+            Columns.imageData,
+            Columns.number
+        ]
+    }
 }
 
 //MARK: SQL Fetching
