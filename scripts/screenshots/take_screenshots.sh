@@ -31,6 +31,8 @@ TEST_RUNNER_SCREENSHOT_DIR="$RAW_DIR" xcodebuild test \
     -destination "platform=iOS Simulator,name=$DEVICE" \
     -only-testing "Back App iOSUITests/ReadmeScreenshots/testTakeReadmeScreenshots"
 
+# the screenshots are taken, so give the simulator its real status bar back
+# (time, network and battery) instead of the fixed 9:41 one set above
 xcrun simctl status_bar "$DEVICE" clear
 
 python3 "$ROOT/scripts/screenshots/frame_screenshots.py" "$RAW_DIR" "$ROOT/images"
