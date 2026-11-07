@@ -400,40 +400,34 @@ public extension Recipe {
     
     ///dictonary with the step and the corresponding startdate
     private func startDatesDictionary(reader: DatabaseReader) -> [Step : Date]{
-        var dict = [Step : Date]()
-        var h = startDate(reader: reader)
-        for step in self.notSubsteps(reader: reader) {
-            let stepDates = startDates(for: step, h: h, reader: reader)
-            dict.append(contentsOf: stepDates.dict)
-            h = stepDates.h
-            
-            h.addTimeInterval(step.duration)
-        }
-        return dict
+        // read before entering `reader.read` because database access is not reentrant
+        let start = startDate(reader: reader)
+        return (try? reader.read { db in
+            var dict = [Step : Date]()
+            var h = start
+            for step in try self.notSubsteps(db: db) {
+                h = try startDates(for: step, chainStart: h, db: db, into: &dict)
+                h.addTimeInterval(step.duration)
+            }
+            return dict
+        }) ?? [:]
     }
     
-    ///Tuple with a start date and a startDates dictionary
-    private func startDates(for step: Step, h: Date, reader: DatabaseReader) -> (h: Date, dict: [Step : Date]) {
-        var dict = [Step : Date]()
-        var h = h
-        var sortedSubs = step.sortedSubsteps(reader: reader)
-        if let first = sortedSubs.first { //get the longest sub
-            sortedSubs.removeFirst() //remove so it does not get used twice
-            let firstDates = startDates(for: first, h: h, reader: reader)
-            dict.append(contentsOf: firstDates.dict)
-            h = firstDates.h
-            
-            let subEndDate = h.addingTimeInterval(first.duration) //data when all substebs of the step should end
-            for sub in sortedSubs {
-                let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-(sub.duration)), reader: reader)
-                dict.append(contentsOf: subDates.dict)
-            }
-            
-            h = subEndDate
+    /// schedules `step` and all its substeps so that the step's whole chain starts at `chainStart`
+    /// - NOTE: Substeps run in parallel and all end when `step` starts.
+    /// The substep with the longest chain (`durationWithSubsteps`) starts at `chainStart`, the others start later.
+    /// - Returns: the start date of `step` itself
+    private func startDates(for step: Step, chainStart: Date, db: Database, into dict: inout [Step : Date]) throws -> Date {
+        var substepChains = [(substep: Step, duration: TimeInterval)]()
+        for substep in step.sortedSubsteps(db: db) {
+            substepChains.append((substep, try substep.durationWithSubsteps(db: db)))
         }
-        dict[step] = h
-        
-        return (h,dict)
+        let stepStart = chainStart.addingTimeInterval(substepChains.map(\.duration).max() ?? 0)
+        for (substep, duration) in substepChains {
+            _ = try startDates(for: substep, chainStart: stepStart.addingTimeInterval(-duration), db: db, into: &dict)
+        }
+        dict[step] = stepStart
+        return stepStart
     }
     
     /// steps that are no substeps of any other step

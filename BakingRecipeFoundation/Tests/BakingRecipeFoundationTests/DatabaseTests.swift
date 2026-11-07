@@ -285,6 +285,51 @@ struct BulkLiquidTemperatureTests {
         let mixture = (100 * waterC * waterTemp + 50 * otherC * 30) / (100 * waterC + 50 * otherC)
         #expect(abs(mixture - 26) < 1e-9)
     }
+
+    @Test("A starter in a substep has the same heat capacity as a starter used directly", arguments: [
+        Ingredient.Style.ta150,
+        Ingredient.Style.ta200,
+    ])
+    func starterInSubstep(starter: Ingredient.Style) throws {
+        let dbQueue = try makeDatabase()
+        let (direct, nested) = try dbQueue.write { db -> (Step, Step) in
+            let recipe = try insertRecipe(db)
+
+            let direct = try insertStep(db, in: recipe, name: "direkt", temperature: 26)
+            try insertIngredient(db, in: direct, name: "Wasser", mass: 100, type: .bulkLiquid, number: 0)
+            try insertIngredient(db, in: direct, name: "Anstellgut", mass: 200, type: starter, number: 1)
+
+            let nested = try insertStep(db, in: recipe, name: "mit Vorteig", temperature: 26, number: 1)
+            try insertIngredient(db, in: nested, name: "Wasser", mass: 100, type: .bulkLiquid)
+            // a substep at room temperature that only holds the starter
+            let sub = try insertStep(db, in: recipe, name: "Sauerteig", temperature: 20, superStep: nested, number: 2)
+            try insertIngredient(db, in: sub, name: "Anstellgut", mass: 200, type: starter)
+            return (direct, nested)
+        }
+
+        let directTemp = try direct.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let nestedTemp = try nested.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let mixture = (100 * waterC * nestedTemp + 200 * starter.rawValue * 20) / (100 * waterC + 200 * starter.rawValue)
+        #expect(abs(mixture - 26) < 1e-9)
+        #expect(abs(directTemp - nestedTemp) < 1e-9)
+    }
+
+    @Test("An empty substep does not affect the bulk liquid temperature")
+    func emptySubstep() throws {
+        let dbQueue = try makeDatabase()
+        let step = try dbQueue.write { db -> Step in
+            let recipe = try insertRecipe(db)
+            let step = try insertStep(db, in: recipe, name: "Hauptteig", temperature: 26)
+            try insertIngredient(db, in: step, name: "Mehl", mass: 500, type: .flour, number: 0)
+            try insertIngredient(db, in: step, name: "Wasser", mass: 350, type: .bulkLiquid, number: 1)
+            try insertStep(db, in: recipe, name: "leer", superStep: step, number: 1)
+            return step
+        }
+
+        let waterTemp = try step.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let mixture = (500 * flourC * 20 + 350 * waterC * waterTemp) / (500 * flourC + 350 * waterC)
+        #expect(abs(mixture - 26) < 1e-9)
+    }
 }
 
 @Suite("Durations and schedule")
@@ -318,10 +363,45 @@ struct ScheduleTests {
         let schritt = try #require(steps["Schritt"])
 
         // The s1sub2 chain (600 + 1800 + 400 s) is longer than the s1sub1 chain (900 + 1200 s),
-        // but `sortedSubsteps` orders by a substep's own duration, so s1sub1 is picked.
-        withKnownIssue("durationWithSubsteps picks the substep with the longest own duration") {
-            #expect(schritt.durationWithSubsteps(reader: dbQueue) == 60 + 2800)
+        // even though s1sub1 has the longer own duration.
+        #expect(schritt.durationWithSubsteps(reader: dbQueue) == 60 + 2800)
+        try dbQueue.read { db throws in
+            #expect(try schritt.durationWithSubsteps(db: db) == 60 + 2800)
         }
+    }
+
+    @Test("Nested substeps are scheduled along the longest chain")
+    func nestedStepStartDates() throws {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let dbQueue = try makeDatabase()
+        let (inserted, steps) = try dbQueue.write { try insertMultilayerRecipe($0) }
+        // the schedule only reads the date from the record, not from the database
+        var recipe = inserted
+        recipe.date = date
+
+        // Schritt starts after its longest chain (s1sub2 → s1sub2sub → s1sub2subsub, 2800 s).
+        // That chain starts right away, the s1sub1 chain (2100 s) starts 700 s later,
+        // so every substep ends exactly when its super step starts.
+        let expectedOffsets: [String: TimeInterval] = [
+            "s1sub2subsub": 0,
+            "s1sub2sub": 400,
+            "s1sub2": 2200,
+            "s1sub1sub": 700,
+            "s1sub1": 1900,
+            "Schritt": 2800,
+            "s2": 2860,
+        ]
+        for (name, offset) in expectedOffsets {
+            let step = try #require(steps[name])
+            #expect(
+                recipe.formattedStartDate(for: step, reader: dbQueue) == dateFormatter.string(from: date + offset),
+                "\(name)"
+            )
+        }
+
+        // Total duration is counted in whole minutes per top level step: 2860 s → 47 min, 390 s → 6 min.
+        #expect(recipe.totalDuration(reader: dbQueue) == 53)
+        #expect(recipe.endDate(reader: dbQueue) == date + 53 * 60)
     }
 
     @Test("Start and end dates depend on whether the date is inverted", arguments: [false, true])
