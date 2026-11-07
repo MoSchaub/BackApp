@@ -77,15 +77,48 @@ struct RecipeImportTests {
     /// then returns the alert it asked the UI to show.
     private func openAndWaitForAlert(_ url: URL) async -> (title: String, message: String) {
         await withCheckedContinuation { continuation in
-            var token: NSObjectProtocol?
-            token = NotificationCenter.default.addObserver(forName: .alertShouldBePresented, object: nil, queue: nil) { notification in
+            let observation = SingleNotificationObservation()
+            observation.start(forName: .alertShouldBePresented) { notification in
                 // other suites may import concurrently, so ignore alerts for other files
-                if let openedURL = notification.object as? URL, openedURL != url { return }
-                guard let observer = token else { return }
-                NotificationCenter.default.removeObserver(observer)
+                if let openedURL = notification.object as? URL, openedURL != url { return false }
                 continuation.resume(returning: (inputAlertTitle, inputAlertMessage))
+                return true
             }
             appData.open(url)
+        }
+    }
+}
+
+/// Observes a notification until `handler` returns true for one of them, then stops observing.
+/// The handler runs on the posting thread, so the observer token is guarded by a lock,
+/// and once one call has returned true it is never called again.
+private final class SingleNotificationObservation: @unchecked Sendable {
+    private let lock = NSLock()
+    private var token: NSObjectProtocol?
+    private var isFinished = false
+
+    func start(forName name: Notification.Name, handler: @escaping @Sendable (Notification) -> Bool) {
+        let token = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { [self] notification in
+            lock.lock()
+            defer { lock.unlock() }
+            guard isFinished == false, handler(notification) else { return }
+            isFinished = true
+            stop()
+        }
+        lock.lock()
+        defer { lock.unlock() }
+        if isFinished {
+            NotificationCenter.default.removeObserver(token)
+        } else {
+            self.token = token
+        }
+    }
+
+    /// must be called with `lock` held
+    private func stop() {
+        if let token {
+            NotificationCenter.default.removeObserver(token)
+            self.token = nil
         }
     }
 }

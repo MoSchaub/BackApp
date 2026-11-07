@@ -18,6 +18,9 @@ final class ReadmeScreenshots: XCTestCase {
     private let stepName = "Main dough"
     private let ingredientName = "Wheat bread flour"
 
+    /// How long to wait for a screen. Generous because Xcode Cloud's simulators are slow.
+    private let timeout: TimeInterval = 10
+
     private var app: XCUIApplication!
 
     override func setUpWithError() throws {
@@ -31,13 +34,13 @@ final class ReadmeScreenshots: XCTestCase {
     func testTakeReadmeScreenshots() throws {
         // 1. recipe list
         let recipeCell = app.staticTexts[recipeName].firstMatch
-        XCTAssertTrue(recipeCell.waitForExistence(timeout: 10), "example recipes were not imported")
+        XCTAssertTrue(recipeCell.waitForExistence(timeout: timeout), "example recipes were not imported")
         snapshot("1_recipeList")
 
         // 2. recipe detail
         recipeCell.tap()
         let start = app.staticTexts["Start"].firstMatch
-        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        XCTAssertTrue(start.waitForExistence(timeout: timeout))
         snapshot("2_recipeDetail")
 
         // 3. schedule
@@ -46,10 +49,10 @@ final class ReadmeScreenshots: XCTestCase {
         // accessibility label is "Done", so match either label.
         let ok = app.navigationBars.buttons.matching(
             NSPredicate(format: "label == %@ OR label == %@", "OK", "Done")).firstMatch
-        XCTAssertTrue(ok.waitForExistence(timeout: 5))
+        XCTAssertTrue(ok.waitForExistence(timeout: timeout))
         ok.tap()
         ok.tap()
-        XCTAssertTrue(app.staticTexts[stepName].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts[stepName].firstMatch.waitForExistence(timeout: timeout))
         snapshot("3_schedule")
 
         // back to the recipe detail (schedule -> schedule form -> recipe detail)
@@ -60,22 +63,24 @@ final class ReadmeScreenshots: XCTestCase {
         // iOS 26 no longer nests the bottom toolbar buttons under a toolbar element,
         // so query the Edit button directly.
         let edit = app.buttons["Edit"].firstMatch
-        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        XCTAssertTrue(edit.waitForExistence(timeout: timeout))
         edit.tap()
         let step = app.staticTexts[stepName].firstMatch
-        XCTAssertTrue(step.waitForExistence(timeout: 5))
+        XCTAssertTrue(step.waitForExistence(timeout: timeout))
         scrollToTop(step)
         snapshot("4_editRecipe")
 
         // 5. step detail
         step.tap()
         let ingredient = app.staticTexts[ingredientName].firstMatch
-        XCTAssertTrue(ingredient.waitForExistence(timeout: 5))
+        XCTAssertTrue(ingredient.waitForExistence(timeout: timeout))
         snapshot("5_stepDetail")
 
         // 6. ingredient detail
+        // the tap is lost if the cell isn't hittable yet, and then the screen never opens
+        waitUntilHittable(ingredient)
         ingredient.tap()
-        XCTAssertTrue(app.navigationBars[ingredientName].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars[ingredientName].waitForExistence(timeout: timeout))
         snapshot("6_ingredientDetail")
     }
 
@@ -95,6 +100,12 @@ final class ReadmeScreenshots: XCTestCase {
             start.press(forDuration: 0.1, thenDragTo: end)
             waitForAnimations()
         }
+    }
+
+    private func waitUntilHittable(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: element)
+        XCTAssertEqual(XCTWaiter().wait(for: [hittable], timeout: timeout), .completed,
+                       "\(element) did not become hittable", file: file, line: line)
     }
 
     private func waitForAnimations() {
