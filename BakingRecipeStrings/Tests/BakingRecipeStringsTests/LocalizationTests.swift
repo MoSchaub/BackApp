@@ -20,15 +20,21 @@ private func stringsTable(for language: String) throws -> [String: String] {
     return try #require(plist as? [String: String], "Localizable.strings for \(language) is not a string table")
 }
 
+/// `Strings.swift` in the package sources, located relative to this file.
+private let stringsSourceURL = URL(fileURLWithPath: #filePath)
+    .deletingLastPathComponent() // BakingRecipeStringsTests
+    .deletingLastPathComponent() // Tests
+    .deletingLastPathComponent() // package root
+    .appendingPathComponent("Sources/BakingRecipeStrings/Strings.swift")
+
+/// Whether the package sources are on this machine. Xcode Cloud runs tests on a separate
+/// machine that only has the built test products, not the repository.
+private let sourcesAreAvailable = FileManager.default.fileExists(atPath: stringsSourceURL.path)
+
 /// Every key `Strings.swift` passes to `NSLocalizedString`, read from the source file itself
 /// so newly added strings are covered automatically.
 private func keysUsedByStrings() throws -> Set<String> {
-    let source = URL(fileURLWithPath: #filePath)
-        .deletingLastPathComponent() // BakingRecipeStringsTests
-        .deletingLastPathComponent() // Tests
-        .deletingLastPathComponent() // package root
-        .appendingPathComponent("Sources/BakingRecipeStrings/Strings.swift")
-    let text = try String(contentsOf: source, encoding: .utf8)
+    let text = try String(contentsOf: stringsSourceURL, encoding: .utf8)
     let regex = try NSRegularExpression(pattern: #"NSLocalizedString\("([^"]+)""#)
     let matches = regex.matches(in: text, range: NSRange(text.startIndex..., in: text))
     return Set(matches.compactMap { Range($0.range(at: 1), in: text).map { String(text[$0]) } })
@@ -46,7 +52,11 @@ private func formatSpecifiers(in string: String) -> [String] {
 @Suite("Localization tables")
 struct LocalizationTests {
 
-    @Test("Every key used by Strings exists in the table", arguments: shippedLanguages)
+    @Test(
+        "Every key used by Strings exists in the table",
+        .enabled(if: sourcesAreAvailable, "Needs the package sources, which Xcode Cloud test runners lack"),
+        arguments: shippedLanguages
+    )
     func everyKeyIsTranslated(language: String) throws {
         let table = try stringsTable(for: language)
         let usedKeys = try keysUsedByStrings()
