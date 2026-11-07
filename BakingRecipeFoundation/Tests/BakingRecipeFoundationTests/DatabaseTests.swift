@@ -314,13 +314,40 @@ struct ScheduleTests {
     @Test("Nested substeps follow the longest chain, not the longest direct substep")
     func durationWithNestedSubsteps() throws {
         let dbQueue = try makeDatabase()
-        let (_, steps) = try dbQueue.write { try insertMultilayerRecipe($0) }
+        let (recipe, steps) = try dbQueue.write { try insertMultilayerRecipe($0) }
         let schritt = try #require(steps["Schritt"])
 
         // The s1sub2 chain (600 + 1800 + 400 s) is longer than the s1sub1 chain (900 + 1200 s),
-        // but `sortedSubsteps` orders by a substep's own duration, so s1sub1 is picked.
-        withKnownIssue("durationWithSubsteps picks the substep with the longest own duration") {
-            #expect(schritt.durationWithSubsteps(reader: dbQueue) == 60 + 2800)
+        // even though s1sub1 itself is longer than s1sub2.
+        #expect(schritt.durationWithSubsteps(reader: dbQueue) == 60 + 2800)
+        try dbQueue.read { db throws in
+            #expect(try schritt.durationWithSubsteps(db: db) == 60 + 2800)
+        }
+        // 2860 s + 390 s, each step rounded down to whole minutes: 47 + 6
+        #expect(recipe.totalDuration(reader: dbQueue) == 53)
+    }
+
+    @Test("Nested substep chains are scheduled to finish together")
+    func nestedStepStartDates() throws {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let dbQueue = try makeDatabase()
+        let (recipe, steps) = try dbQueue.write { db in
+            try insertMultilayerRecipe(db) { $0.date = date }
+        }
+
+        // The longer s1sub2 chain starts at +0 s; the s1sub1 chain starts 700 s later,
+        // so both end at +2800 s, when Schritt starts.
+        let expectedOffsets: [String: TimeInterval] = [
+            "s1sub2subsub": 0, "s1sub2sub": 400, "s1sub2": 2200,
+            "s1sub1sub": 700, "s1sub1": 1900,
+            "Schritt": 2800, "s2": 2860,
+        ]
+        for (name, offset) in expectedOffsets {
+            let step = try #require(steps[name])
+            #expect(
+                recipe.formattedStartDate(for: step, reader: dbQueue) == dateFormatter.string(from: date + offset),
+                "\(name)"
+            )
         }
     }
 

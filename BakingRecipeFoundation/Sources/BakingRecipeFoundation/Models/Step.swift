@@ -298,13 +298,20 @@ public extension Step {
     }
 
     /// the duration of this step and its substeps
-    /// - NOTE: This only counts the time of the longest substeps if there are multiple substeps because they will run in parallel
+    /// - NOTE: Substeps run in parallel, so only the longest substep chain counts.
+    ///   That is the substep with the longest duration *including its own substeps*,
+    ///   which is not necessarily the substep with the longest own duration.
     func durationWithSubsteps(reader: DatabaseReader) -> Double {
-        return self.duration + (self.sortedSubsteps(reader: reader).first?.durationWithSubsteps(reader: reader) ?? 0.0 )
+        (try? reader.read { db in
+            try durationWithSubsteps(db: db)
+        }) ?? self.duration
     }
 
     func durationWithSubsteps(db: Database) throws -> Double {
-        return self.duration + (try self.sortedSubsteps(db: db).first?.durationWithSubsteps(db: db) ?? 0.0)
+        let longestChain = try sortedSubsteps(db: db)
+            .map { try $0.durationWithSubsteps(db: db) }
+            .max() ?? 0.0
+        return self.duration + longestChain
     }
     
     /// the mass of all Ingredients and Substeps to this step in a given database

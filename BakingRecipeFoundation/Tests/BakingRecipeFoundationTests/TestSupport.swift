@@ -105,8 +105,11 @@ func insertIngredient(
 ///         └── s1sub2sub (1800 s)
 ///             └── s1sub2subsub (400 s)
 ///     s2 (390 s)
-func insertMultilayerRecipe(_ db: Database) throws -> (recipe: Recipe, steps: [String: Step]) {
-    let recipe = try insertRecipe(db, name: "multilayer")
+func insertMultilayerRecipe(
+    _ db: Database,
+    configure: (inout Recipe) -> Void = { _ in }
+) throws -> (recipe: Recipe, steps: [String: Step]) {
+    let recipe = try insertRecipe(db, name: "multilayer", configure: configure)
     var steps = [String: Step]()
     steps["Schritt"] = try insertStep(db, in: recipe, name: "Schritt", duration: 60, number: 1)
     steps["s1sub1"] = try insertStep(db, in: recipe, name: "s1sub1", duration: 900, superStep: steps["Schritt"], number: 2)
