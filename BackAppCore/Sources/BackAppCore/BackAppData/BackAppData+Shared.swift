@@ -44,11 +44,9 @@ extension BackAppData {
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)
             
-            // adds to examples for new users when the user is new in the right language if it exists
-            if Standarts.newUser, appData.allRecipes.isEmpty, let subdir = Bundle.main.preferredLocalizations.first, let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) {
-
-                //filter the right files by the prefix which is eg. 1en
-                _ = urls.filter({ $0.description.prefix(3).contains(subdir)}).map { appData.open($0)}
+            // adds the bundled example recipes for new users in their language (falls back to english)
+            if Standarts.newUser, appData.allRecipes.isEmpty {
+                importBundledExampleRecipes(into: appData)
                 Standarts.newUser = false
             }
 
@@ -98,6 +96,26 @@ extension BackAppData {
         }
     }
     
+    /// The bundled example recipe files for a language.
+    /// The files are named like `1en.bakingAppRecipe`, so the language code follows the leading digit.
+    static func bundledExampleRecipeURLs(for language: String, in bundle: Bundle = .main) -> [URL] {
+        let urls = bundle.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) ?? []
+        return urls
+            .filter { $0.lastPathComponent.dropFirst().hasPrefix(language) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    }
+
+    /// Imports the bundled example recipes in the preferred language of the app,
+    /// or in english if there are no examples for that language.
+    static func importBundledExampleRecipes(into appData: BackAppData, bundle: Bundle = .main) {
+        let preferred = bundle.preferredLocalizations.first ?? "en"
+        var urls = bundledExampleRecipeURLs(for: preferred, in: bundle)
+        if urls.isEmpty {
+            urls = bundledExampleRecipeURLs(for: "en", in: bundle)
+        }
+        urls.forEach { appData.open($0) }
+    }
+
     /// Creates an empty database for SwiftUI previews and other testing purposes
     static func empty() -> BackAppData {
         // Connect to an in-memory database
