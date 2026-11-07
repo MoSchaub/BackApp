@@ -113,7 +113,7 @@ public extension Ingredient {
     /// the name of the ingredient
     ///- NOTE: This name should be used whenever you need to only show the name
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     /// type of the recipe
