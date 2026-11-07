@@ -17,7 +17,9 @@ public extension Database.ColumnType {
     static let real = Database.ColumnType.init(rawValue: "REAL")
 }
 
-public struct BackAppData {
+// Sendable: `DatabaseWriter` is Sendable in GRDB 7, so this struct can safely be
+// captured by the `@Sendable` closures of `ValueObservation.tracking`.
+public struct BackAppData: Sendable {
     
     
     /// Creates an `BackAppData`, and make sure the database schema is ready.

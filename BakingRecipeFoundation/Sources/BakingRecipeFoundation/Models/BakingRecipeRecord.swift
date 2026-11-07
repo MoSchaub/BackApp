@@ -11,8 +11,9 @@
 import GRDB
 
 ///combination of Record Protocols with the common features of Recipe, Step and Ingredient
+/// - Note: `Sendable` so records can safely cross concurrency domains, as recommended by GRDB 7
 @available(iOS 13, *)
-public protocol BakingRecipeRecord: Identifiable, Hashable, Codable, MutablePersistableRecord, FetchableRecord {
+public protocol BakingRecipeRecord: Identifiable, Hashable, Codable, Sendable, MutablePersistableRecord, FetchableRecord {
     var id: Int64? { get set }
     var name: String { get set }
     var number: Int {get set}

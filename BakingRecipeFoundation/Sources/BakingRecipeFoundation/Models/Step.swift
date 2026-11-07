@@ -120,18 +120,20 @@ public extension Step {
     }
     
     /// Arange the selected columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.duration,
-        Columns.temperature,
-        Columns.notes,
-        Columns.recipeId,
-        Columns.superStepId,
-        Columns.number,
-        Columns.isKneadingStep,
-        Columns.endTemp
-    ]
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.duration,
+            Columns.temperature,
+            Columns.notes,
+            Columns.recipeId,
+            Columns.superStepId,
+            Columns.number,
+            Columns.isKneadingStep,
+            Columns.endTemp
+        ]
+    }
 }
 
 //MARK: SQL Fetching

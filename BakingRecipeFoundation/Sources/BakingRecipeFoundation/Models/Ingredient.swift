@@ -11,7 +11,7 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
-    public enum Style: Double, CaseIterable, Codable {
+    public enum Style: Double, CaseIterable, Codable, Sendable {
         
         /// water or something similar
         case bulkLiquid = 4.187
@@ -179,15 +179,17 @@ public extension Ingredient {
     }
     
     /// Arange the seleted columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.temperature,
-        Columns.mass,
-        Columns.c,
-        Columns.stepId,
-        Columns.number
-    ]
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.temperature,
+            Columns.mass,
+            Columns.c,
+            Columns.stepId,
+            Columns.number
+        ]
+    }
 }
 
 // Fetching methods

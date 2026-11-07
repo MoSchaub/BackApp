@@ -22,11 +22,13 @@ public extension Notification.Name {
 
 // Feeds the list of recipes
 public extension BackAppData {
-    struct RecipeListItem: Decodable, Hashable, FetchableRecord {
+    struct RecipeListItem: Decodable, Hashable, FetchableRecord, Sendable {
         public let recipe: Recipe
         public let stepCount: Int
 
-        static var request = Recipe.annotated(with: Recipe.steps.count).orderedByNumber
+        static var request: QueryInterfaceRequest<Recipe> {
+            Recipe.annotated(with: Recipe.steps.count).orderedByNumber
+        }
     }
 
     private func recipeList(db: Database) throws -> [RecipeListItem] {

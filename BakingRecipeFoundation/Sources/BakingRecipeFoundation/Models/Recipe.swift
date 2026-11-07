@@ -207,18 +207,20 @@ public extension Recipe {
     }
     
     /// Arange the selected columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.info,
-        Columns.isFavorite,
-        Columns.difficulty,
-        Columns.inverted,
-        Columns.times,
-        Columns.date,
-        Columns.imageData,
-        Columns.number
-    ]
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.info,
+            Columns.isFavorite,
+            Columns.difficulty,
+            Columns.inverted,
+            Columns.times,
+            Columns.date,
+            Columns.imageData,
+            Columns.number
+        ]
+    }
 }
 
 //MARK: SQL Fetching
