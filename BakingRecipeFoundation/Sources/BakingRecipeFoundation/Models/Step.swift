@@ -61,7 +61,7 @@ public struct Step: BakingRecipeRecord {
         self.duration = duration
         self.temperature = temperature
         self.notes = notes
-        self.isKneadingStep = false
+        self.isKneadingStep = isKneadingStep
         self.recipeId = recipeId
         self.superStepId = nil
         self.number = number
@@ -428,7 +428,7 @@ public extension Step {
 
     private func otherMass(db: Database) throws -> Double {
         var mass = try Ingredient.Style.other.massOfSelfIngredients(in: self, db: db)
-        _ = try sortedSubsteps(db: db).map { mass += try $0.waterMass(db: db)}
+        _ = try sortedSubsteps(db: db).map { mass += try $0.otherMass(db: db)}
         return mass
     }
     

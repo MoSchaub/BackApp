@@ -27,7 +27,7 @@ public extension Int {
         }
         
         if hours > 1 {
-            return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
+            return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + (minutes > 0 ? " " + minutesFormatted() : "")
         } else if hours == 1 {
             return Strings.one + " " + formattedDurationUnit(for: hours, hours: true) + (minutes > 0 ? " " + minutesFormatted() : "")
         } else {
