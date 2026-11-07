@@ -42,8 +42,12 @@ final class ReadmeScreenshots: XCTestCase {
 
         // 3. schedule
         start.tap()
-        let ok = app.navigationBars.buttons["OK"].firstMatch
+        // The confirm button is titled "OK" but iOS 26 renders it as a checkmark whose
+        // accessibility label is "Done", so match either label.
+        let ok = app.navigationBars.buttons.matching(
+            NSPredicate(format: "label == %@ OR label == %@", "OK", "Done")).firstMatch
         XCTAssertTrue(ok.waitForExistence(timeout: 5))
+        ok.tap()
         ok.tap()
         XCTAssertTrue(app.staticTexts[stepName].firstMatch.waitForExistence(timeout: 5))
         snapshot("3_schedule")
@@ -53,7 +57,9 @@ final class ReadmeScreenshots: XCTestCase {
         goBack()
 
         // 4. edit recipe, scrolled to the steps
-        let edit = app.toolbars.buttons["Edit"].firstMatch
+        // iOS 26 no longer nests the bottom toolbar buttons under a toolbar element,
+        // so query the Edit button directly.
+        let edit = app.buttons["Edit"].firstMatch
         XCTAssertTrue(edit.waitForExistence(timeout: 5))
         edit.tap()
         let step = app.staticTexts[stepName].firstMatch

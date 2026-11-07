@@ -35,7 +35,7 @@ BackApp keeps your bread recipes in one place and turns them into a plan for bak
 
 ![Editing a recipe, a step and an ingredient](images/recipeManagement.jpeg)
 
-The app is available in English and German.
+The app is available in English and German. Translations into other languages are very welcome — see [Contributing](#contributing).
 
 ## Building the app
 
