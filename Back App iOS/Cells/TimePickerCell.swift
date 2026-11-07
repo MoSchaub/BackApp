@@ -76,6 +76,7 @@ public class TimePickerCell: CustomCell {
         super.setup()
         
         addSubview(datePicker)
+        datePicker.accessibilityIdentifier = AccessibilityID.stepDurationPicker
         self.configureDatePicker()
     }
     

@@ -7,7 +7,8 @@ import XCTest
 /// Shared setup, elements and helpers for the UI tests.
 ///
 /// Every test gets a fresh `app` that starts with an empty database (`-reset`),
-/// in English and with Celsius, since the tests match on those labels.
+/// without animations, in English and with Celsius. Controls are found by their
+/// `AccessibilityID`; only content checks (recipe names, amounts) match on text.
 /// Add launch arguments in the test before calling `app.launch()`.
 class BackAppUITestCase: XCTestCase {
 
@@ -22,6 +23,7 @@ class BackAppUITestCase: XCTestCase {
         app = XCUIApplication()
         app.launchArguments = [
             "-reset",
+            "-disableAnimations",
             "-AppleLanguages", "(en)",
             // en_GB: English labels, °C and "." as decimal separator
             "-AppleLocale", "en_GB",
@@ -34,14 +36,16 @@ class BackAppUITestCase: XCTestCase {
 
     // MARK: - Elements
 
-    var appTables: XCUIElementQuery { app.tables }
     var navigationBar: XCUIElement { app.navigationBars.firstMatch }
+    /// The system back button of the current screen
     var backButton: XCUIElement { navigationBar.buttons.firstMatch }
-    var addButton: XCUIElement { navigationBar.buttons["Add recipe"].firstMatch }
-    var settingsButton: XCUIElement { navigationBar.buttons["settings"] }
-    var nameTextField: XCUIElement { appTables.textFields["name"] }
-    var doneButton: XCUIElement { navigationBar.buttons["Done"] }
-    var toolbar: XCUIElement { app.toolbars.firstMatch }
+    var addButton: XCUIElement { app.buttons[AccessibilityID.addRecipeButton].firstMatch }
+    var settingsButton: XCUIElement { app.buttons[AccessibilityID.settingsButton].firstMatch }
+    var nameTextField: XCUIElement { app.textFields[AccessibilityID.nameField] }
+    var doneButton: XCUIElement { app.buttons[AccessibilityID.doneButton].firstMatch }
+
+    /// The table cell with accessibility identifier `id`
+    func cell(_ id: String) -> XCUIElement { app.cells[id].firstMatch }
 
     // MARK: - Helpers
 
@@ -52,6 +56,12 @@ class BackAppUITestCase: XCTestCase {
     func assertExists(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
         guard !element.exists else { return }
         XCTAssertTrue(element.waitForExistence(timeout: timeout), "\(element) did not appear", file: file, line: line)
+    }
+
+    /// Fails the test if the text field's value isn't `expected`.
+    func assertValue(of element: XCUIElement, is expected: String, file: StaticString = #filePath, line: UInt = #line) {
+        assertExists(element, file: file, line: line)
+        XCTAssertEqual(element.value as? String, expected, file: file, line: line)
     }
 
     /// Taps `element` and types `text` into it.

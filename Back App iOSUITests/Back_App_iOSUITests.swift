@@ -6,8 +6,16 @@ import XCTest
 
 final class Back_App_iOSUITests: BackAppUITestCase {
 
+    private var saveRecipeButton: XCUIElement { app.buttons[AccessibilityID.saveRecipeButton].firstMatch }
+    private var cancelRecipeButton: XCUIElement { app.buttons[AccessibilityID.cancelRecipeButton].firstMatch }
+    private var addStepCell: XCUIElement { cell(AccessibilityID.addStepCell) }
+    private var addIngredientCell: XCUIElement { cell(AccessibilityID.addIngredientCell) }
+    private var amountTextField: XCUIElement { app.textFields[AccessibilityID.ingredientAmountField] }
+
+    /// "Delete" in the alert shown when cancelling a new recipe.
+    /// Alert actions can't have an accessibility identifier, so this one is found by its title.
     private var cancelDeleteButton: XCUIElement {
-        app.alerts["Cancel"].scrollViews.otherElements.buttons["Delete"]
+        app.alerts[AccessibilityID.cancelRecipeAlert].buttons["Delete"]
     }
 
     // MARK: - Tests
@@ -19,12 +27,12 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         type("testRezept", into: nameTextField)
         doneButton.tap()
 
-        appTables.staticTexts["add Step"].tap()
+        addStepCell.tap()
         type("testSchritt", into: nameTextField)
         doneButton.tap()
 
         backButton.tap()
-        navigationBar.buttons["Cancel"].tap()
+        cancelRecipeButton.tap()
         cancelDeleteButton.tap()
     }
 
@@ -32,17 +40,17 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         app.launch()
 
         addButton.tap()
-        appTables.staticTexts["add Step"].tap()
-        appTables.staticTexts["add Ingredient"].tap()
+        addStepCell.tap()
+        addIngredientCell.tap()
 
         type("test", into: nameTextField)
 
-        appTables.staticTexts["other"].tap()
-        appTables.staticTexts["bulk liquid"].tap()
+        cell(AccessibilityID.ingredientTypeCell).tap()
+        cell(AccessibilityID.ingredientTypeOption("bulkLiquid")).tap()
 
         backButton.tap()
         backButton.tap()
-        app.navigationBars["unnamed recipe"].buttons["Cancel"].tap()
+        cancelRecipeButton.tap()
         cancelDeleteButton.tap()
     }
 
@@ -50,20 +58,20 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         app.launch()
 
         addButton.tap()
-        appTables.staticTexts["add Step"].tap()
-        appTables.staticTexts["add Ingredient"].tap()
+        addStepCell.tap()
+        addIngredientCell.tap()
 
         type("test", into: nameTextField)
         doneButton.tap()
 
-        type("10,5", into: appTables.textFields["amount in gramms"])
+        type("10,5", into: amountTextField)
         doneButton.tap()
 
-        assertExists(appTables.textFields["10.5 g"].firstMatch)
+        assertValue(of: amountTextField, is: "10.5 g")
 
         backButton.tap()
 
-        assertExists(appTables.staticTexts["10.5 g "].firstMatch)
+        assertExists(app.staticTexts["10.5 g "].firstMatch)
     }
 
     /// Enters `Recipe.example` through the UI and checks it is still there after a relaunch.
@@ -79,7 +87,7 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         doneButton.tap()
 
         // quantity
-        type(recipe.timesText, into: appTables.textFields["Number of breads, rolls, etc."])
+        type(recipe.timesText, into: app.textFields[AccessibilityID.recipeQuantityField])
         doneButton.tap()
 
         // steps
@@ -87,9 +95,9 @@ final class Back_App_iOSUITests: BackAppUITestCase {
             addStep(step)
         }
 
-        app.navigationBars[recipe.name].buttons["Save"].tap()
+        saveRecipeButton.tap()
 
-        assertExists(appTables.staticTexts[recipe.name])
+        assertExists(app.staticTexts[recipe.name])
 
         // relaunch without resetting the database to check the recipe was persisted
         app.terminate()
@@ -97,23 +105,22 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         app.launch()
         app.swipeDown()
 
-        assertExists(appTables.staticTexts[recipe.name])
+        assertExists(app.staticTexts[recipe.name])
     }
 
     func testChangingRecipeExample() throws {
-        let recipeName = Recipe.example.name
         app.launchArguments.append("-includeTestingRecipe")
         app.launch()
 
-        appTables.staticTexts[recipeName].tap()
-        toolbar.buttons["Edit"].tap()
+        app.staticTexts[Recipe.example.name].tap()
+        app.buttons[AccessibilityID.editRecipeButton].firstMatch.tap()
 
-        appTables.staticTexts["add Step"].tap()
-        app.navigationBars["unnamed Step"].buttons[recipeName].tap()
-        app.navigationBars[recipeName].buttons[recipeName].tap()
-        app.navigationBars[recipeName].buttons["Recipes"].tap()
+        addStepCell.tap()
+        backButton.tap() // step -> edit recipe
+        backButton.tap() // edit recipe -> recipe detail
+        backButton.tap() // recipe detail -> recipe list
 
-        assertExists(appTables.staticTexts["3 steps"])
+        assertExists(app.staticTexts["3 steps"])
     }
 
     func testInEditingDissmissCrash() throws {
@@ -122,7 +129,7 @@ final class Back_App_iOSUITests: BackAppUITestCase {
 
         addButton.tap()
         nameTextField.tap()
-        navigationBar.buttons["Cancel"].tap()
+        cancelRecipeButton.tap()
     }
 
     // The schedule tests (testnormalSchedule, testScheduleInverted, testScheduleDiffrentDate,
@@ -131,75 +138,65 @@ final class Back_App_iOSUITests: BackAppUITestCase {
 
     // MARK: - Flows
 
-    private func addIngredient(_ ingredient: Ingredient, stepName: String) {
-        appTables.staticTexts["add Ingredient"].tap()
+    private func addIngredient(_ ingredient: Ingredient) {
+        addIngredientCell.tap()
 
         // name
         type(ingredient.name, into: nameTextField)
         doneButton.tap()
 
         // amount
-        type("\(ingredient.amount)", into: appTables.textFields["amount in gramms"])
+        type("\(ingredient.amount)", into: amountTextField)
         doneButton.tap()
 
-        appTables.staticTexts["other"].tap()
+        assertValue(of: nameTextField, is: ingredient.name)
 
-        assertExists(appTables.textFields[ingredient.name])
+        // type
+        cell(AccessibilityID.ingredientTypeCell).tap()
+        cell(AccessibilityID.ingredientTypeOption("\(ingredient.type)")).tap()
 
-        switch ingredient.type {
-        case .bulkLiquid:
-            appTables.staticTexts["bulk liquid"].tap()
-        case .flour:
-            appTables.staticTexts["flour"].tap()
-        case .ta150:
-            appTables.staticTexts["starter 50% hydration"].tap()
-        case .ta200:
-            appTables.staticTexts["starter 100% hydration"].tap()
-        case .other:
-            appTables.staticTexts["other"].firstMatch.tap()
-        }
+        backButton.tap()
 
-        app.navigationBars[ingredient.name].buttons[stepName].tap()
-
-        assertExists(appTables.staticTexts[ingredient.name])
+        assertExists(app.staticTexts[ingredient.name])
     }
 
     private func addStep(_ step: Step) {
-        appTables.staticTexts["add Step"].tap()
+        addStepCell.tap()
 
         // name
         type(step.name, into: nameTextField)
         doneButton.tap()
 
         // notes
-        type(step.notes, into: appTables.textViews.firstMatch)
+        type(step.notes, into: app.textViews.firstMatch)
         doneButton.tap()
 
         // duration
-        appTables.staticTexts["one minute"].firstMatch.tap()
+        cell(AccessibilityID.stepDurationCell).tap()
         if step.time != 60 {
-            let picker = appTables.pickerWheels["one minute"]
-            assertExists(picker)
-            picker.adjust(toPickerWheelValue: "\(Int(step.time / 60)) minutes")
+            // the second wheel holds the minutes
+            let minutesWheel = app.pickers[AccessibilityID.stepDurationPicker].pickerWheels.element(boundBy: 1)
+            assertExists(minutesWheel)
+            minutesWheel.adjust(toPickerWheelValue: "\(Int(step.time / 60)) minutes")
         }
 
         // ingredients
         for ingredient in step.ingredients {
-            addIngredient(ingredient, stepName: step.formattedName)
+            addIngredient(ingredient)
         }
 
-        // substeps
+        // substeps (Recipe.example has none, so this isn't run at the moment)
         for substep in step.subSteps {
-            appTables.staticTexts["add Ingredient"].tap()
+            addIngredientCell.tap()
             app.scrollViews.otherElements.buttons["step"].tap()
             app.scrollViews.otherElements.buttons[substep.formattedName].tap()
-            appTables.cells.staticTexts[substep.name].firstMatch.tap()
-            navigationBar.buttons[step.name].tap()
+            app.cells.staticTexts[substep.name].firstMatch.tap()
+            backButton.tap()
             // TODO: test tapping all the substeps
         }
 
-        app.navigationBars[step.formattedName].buttons.firstMatch.tap()
+        backButton.tap()
 
-        assertExists(appTables.staticTexts[step.name])
+        assertExists(app.staticTexts[step.name])
     }
 }

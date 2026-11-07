@@ -92,6 +92,7 @@ private extension SettingsViewController {
 
             // Add Close button for modal presentation
             let closeItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(self.dismissSelf))
+            closeItem.accessibilityIdentifier = AccessibilityID.closeSettingsButton
             self.navigationItem.leftBarButtonItem = closeItem
         }
     }
@@ -178,6 +179,7 @@ extension SettingsViewController {
                         
                         //roomtempCell
                         cell.textLabel?.text = item.text
+                        cell.accessibilityIdentifier = AccessibilityID.roomTemperatureCell
                         
                         cell.detailTextLabel?.attributedText = NSAttributedString(string: item.detailLabel, attributes: [.foregroundColor: self.roomTempPickerShown ? UIColor.baTintColor! : UIColor.primaryCellTextColor!])
                         
@@ -229,6 +231,7 @@ extension SettingsViewController {
                 
                 // about back app
                 cell.textLabel?.text = item.text
+                cell.accessibilityIdentifier = AccessibilityID.aboutCell
                 return cell
             }
             return CustomCell()

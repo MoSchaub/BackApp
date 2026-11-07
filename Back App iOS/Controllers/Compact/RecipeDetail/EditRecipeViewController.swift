@@ -98,7 +98,9 @@ class EditRecipeViewController: BackAppVC {
 
     override func setRightBarButtonItems() {
         if creating {
-            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
+            let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))
+            saveItem.accessibilityIdentifier = AccessibilityID.saveRecipeButton
+            self.navigationItem.rightBarButtonItems = [saveItem]
         } else {
             if UITraitCollection.current.horizontalSizeClass == .regular { // ipad and large iphone landscape
 
@@ -114,7 +116,9 @@ class EditRecipeViewController: BackAppVC {
 
     override func setLeftBarButtonItems() {
         if creating {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+            let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+            cancelItem.accessibilityIdentifier = AccessibilityID.cancelRecipeButton
+            self.navigationItem.leftBarButtonItem = cancelItem
         }
     }
 
@@ -176,7 +180,9 @@ private extension EditRecipeViewController {
             if let textFieldItem = item as? TextFieldItem {
 
                 //name text field
-                return TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.nameCell, textChanded: { self.recipe.name = $0 })
+                let cell = TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.nameCell, textChanded: { self.recipe.name = $0 })
+                cell.textField.accessibilityIdentifier = AccessibilityID.nameField
+                return cell
             } else if let imageItem = item as? ImageItem {
 
                 //imageCell
@@ -205,6 +211,7 @@ private extension EditRecipeViewController {
 
                 // add step cell
                 cell.textLabel?.text = detailItem.text
+                cell.accessibilityIdentifier = detailItem.text == Strings.addStep ? AccessibilityID.addStepCell : nil
                 cell.accessoryType = .disclosureIndicator
 
                 // gray out the text if editMode enabled
@@ -283,6 +290,7 @@ extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
 
     private func showAlert() {
         let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+        alertVC.view.accessibilityIdentifier = AccessibilityID.cancelRecipeAlert
 
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)

@@ -17,7 +17,7 @@ public class AmountCell: TextFieldCell {
     private func setUp(with text: String, format: @escaping (String) -> String ) {
         textField.text = text
         textField.placeholder = Strings.amountCellPlaceholder2
-        textField.accessibilityIdentifier = Strings.amountCellPlaceholder2
+        textField.accessibilityIdentifier = AccessibilityID.recipeQuantityField
         textField.keyboardType = .numberPad
         setUpBoth(format: format)
         self.textChanged!(textField.text ?? "" )
@@ -32,7 +32,7 @@ public class AmountCell: TextFieldCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         textField.text = String(ingredient.formattedAmount)
         textField.placeholder = Strings.amountCellPlaceholder1
-        textField.accessibilityIdentifier = Strings.amountCellPlaceholder1
+        textField.accessibilityIdentifier = AccessibilityID.ingredientAmountField
         textField.keyboardType = .decimalPad
         setUpBoth(format: format)
         self.textChanged!(textField.text ?? "0g" )

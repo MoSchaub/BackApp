@@ -212,6 +212,7 @@ class RecipeDetailViewController: UITableViewController {
 
         /// edit item to navigate to editRecipeVC
         let edit =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editRecipe))
+        edit.accessibilityIdentifier = AccessibilityID.editRecipeButton
 
         //setup toolbar / navbar
         setUpItemToolbar(item1: share, item2: favourite, item3: edit) {
