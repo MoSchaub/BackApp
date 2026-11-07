@@ -47,6 +47,9 @@ class RecipeDetailViewController: UITableViewController {
     /// edit recipe vc provided by the init used for pushing to the detail screen
     private let editVC: EditRecipeViewController
 
+    /// scene that saves this recipe for state restoration while it is shown
+    private weak var restorationScene: UIScene?
+
     //MARK: - Init
 
     init(recipeId: Int64, editVC: EditRecipeViewController, recipeName: String) {
@@ -83,6 +86,29 @@ class RecipeDetailViewController: UITableViewController {
         super.viewWillAppear(animated)
 
         configureNavbarItems()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // remember this recipe, so iOS reopens it after terminating the app in the background
+        restorationScene = view.window?.windowScene
+        restorationScene?.userActivity = RecipeStateRestoration.activity(for: recipeId)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        // only forget the recipe when navigating back to the list, not when pushing a screen
+        // on top of it; this controller is wrapped in its own navigation controller
+        let isLeaving = isMovingFromParent || isBeingDismissed
+            || navigationController?.isMovingFromParent == true
+            || navigationController?.isBeingDismissed == true
+        guard isLeaving,
+              RecipeStateRestoration.recipeId(from: restorationScene?.userActivity) == recipeId
+        else { return }
+
+        restorationScene?.userActivity = nil
     }
 
     //MARK: - Helpers
