@@ -83,6 +83,12 @@ extension BackAppData {
                 }
             }
             
+            // Support for README screenshots: replace the database with the bundled example recipes
+            if CommandLine.arguments.contains("-screenshotMode") {
+                try? appData.deleteAll(of: Recipe.self)
+                appData.importBundledExampleRecipes(favouriteFilePrefix: "2")
+            }
+            
             return appData
         } catch {
             // Replace this implementation with code to handle the error appropriately.
@@ -106,4 +112,30 @@ extension BackAppData {
         return try! BackAppData(dbQueue)
     }
     
+}
+
+extension BackAppData {
+    /// Synchronously imports the example recipes bundled with the app (e.g. `1en.bakingAppRecipe`)
+    /// for the current language, so screenshots always show the same data.
+    /// - Parameter favouriteFilePrefix: recipes from files starting with this prefix are marked as favourites
+    fileprivate func importBundledExampleRecipes(favouriteFilePrefix: String) {
+        let language = Bundle.main.preferredLocalizations.first ?? "en"
+        guard let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) else { return }
+        
+        let exampleURLs = urls
+            .filter { $0.lastPathComponent.dropFirst().hasPrefix(language) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        
+        for url in exampleURLs {
+            guard let data = try? Data(contentsOf: url) else { continue }
+            let existingIds = Set(allRecipes.compactMap(\.id))
+            _ = importData(data)
+            
+            if url.lastPathComponent.hasPrefix(favouriteFilePrefix) {
+                for var recipe in allRecipes where !existingIds.contains(recipe.id ?? -1) {
+                    toggleFavorite(for: &recipe)
+                }
+            }
+        }
+    }
 }

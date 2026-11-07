@@ -34,6 +34,15 @@ A Great Place to getting started is writing translations with are all managed in
 But any PR is welcome. Please merge into devel and not into master. 
 At the moment there are a lot of bugs and ui issues just feel free to look around in the issues.
 
+### Updating the screenshots
+The images in this README are made from the example recipes bundled with the app. To take new ones, run this on a Mac with Xcode and [Pillow](https://pypi.org/project/pillow/) installed:
+
+```bash
+scripts/screenshots/take_screenshots.sh "iPhone 16"
+```
+
+It runs the `ReadmeScreenshots` UI test on the simulator (the app is launched with `-screenshotMode`, which loads the example recipes) and writes `images/overview.jpeg` and `images/recipeManagement.jpeg`.
+
 ## Donating
 The App is available for free in the Apple App Store, but many, many hours of programming work have gone into its development and its publication in the App Store is not for free. If you like the app, we would be very happy to receive a small donation [here](https://www.paypal.com/donate?hosted_button_id=UCSFW65PP6N3U)
  
