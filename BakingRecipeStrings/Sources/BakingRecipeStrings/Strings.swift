@@ -73,6 +73,8 @@ public struct Strings {
     public static let select_image = NSLocalizedString("select_image", bundle: .module, comment: "")
     public static let recipesImported = NSLocalizedString("recipesImported", bundle: .module, comment: "")
     public static let recipeImported = NSLocalizedString("recipeImported", bundle: .module, comment: "")
+    public static let importFileUnreadable = NSLocalizedString("importFileUnreadable", bundle: .module, comment: "")
+    public static let importFileContainsNoRecipes = NSLocalizedString("importFileContainsNoRecipes", bundle: .module, comment: "")
     public static let success = NSLocalizedString("success", bundle: .module, comment: "")
     public static let flour = NSLocalizedString("flour", bundle: .module, comment: "")
     public static let other = NSLocalizedString("other", bundle: .module, comment: "")
