@@ -64,6 +64,16 @@ precedence = "closest"
 SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
+# SwiftPM lock files of the local packages
+[[annotations]]
+path = [
+    "BackAppCore/Package.resolved",
+    "BakingRecipeFoundation/Package.resolved",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
 #Colors and AppIcon
 [[annotations]]
 path = [
