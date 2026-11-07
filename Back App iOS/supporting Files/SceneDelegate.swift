@@ -22,6 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         coordinator = BackAppCoordinator(windowScene: windowScene)
         coordinator.start()
 
+        // When iOS terminated the app in the background, reopen the recipe the user was looking at.
+        // (iOS discards this activity when the user force-quits the app from the app switcher.)
+        coordinator.restoreState(from: session.stateRestorationActivity)
+
         // When the app is launched by opening a recipe file, or iPadOS opens the file in a
         // new window (the app supports multiple scenes), the file is only delivered here
         // and `scene(_:openURLContexts:)` is never called for it.
@@ -36,6 +40,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         // open file in app
         coordinator.open(urls: URLContexts.map(\.url))
+    }
+
+    /// activity iOS stores to restore the scene after it terminated the app in the background
+    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        // set by `RecipeDetailViewController` while it shows a recipe
+        scene.userActivity
     }
 }
 

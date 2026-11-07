@@ -123,6 +123,36 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         assertExists(app.staticTexts["3 steps"])
     }
 
+    /// After iOS terminated the app in the background, it reopens the recipe that was shown (#29).
+    func testShownRecipeIsRestoredAfterTerminationInBackground() throws {
+        app.launchArguments.append("-includeTestingRecipe")
+        app.launch()
+
+        app.staticTexts[Recipe.example.name].tap()
+        assertExists(app.buttons[AccessibilityID.editRecipeButton])
+
+        relaunchAfterTerminationInBackground()
+
+        assertExists(app.buttons[AccessibilityID.editRecipeButton])
+        XCTAssertTrue(app.navigationBars[Recipe.example.name].exists)
+    }
+
+    /// After going back to the list, a relaunch starts on the list again (#29).
+    func testRecipeListIsRestoredAfterLeavingRecipe() throws {
+        app.launchArguments.append("-includeTestingRecipe")
+        app.launch()
+
+        app.staticTexts[Recipe.example.name].tap()
+        assertExists(app.buttons[AccessibilityID.editRecipeButton])
+        backButton.tap()
+        assertExists(addButton)
+
+        relaunchAfterTerminationInBackground()
+
+        assertExists(addButton)
+        XCTAssertFalse(app.buttons[AccessibilityID.editRecipeButton].exists)
+    }
+
     func testInEditingDissmissCrash() throws {
         app.launch()
         app.swipeDown()
@@ -137,6 +167,19 @@ final class Back_App_iOSUITests: BackAppUITestCase {
     // date math and amount scaling: see BackAppCoreTests/ScheduleAndFormattingTests.swift.
 
     // MARK: - Flows
+
+    /// Sends the app to the background, kills it like iOS does to free memory and launches it again
+    /// with the same database. Unlike swiping it away in the app switcher, this keeps the scene's
+    /// state restoration activity.
+    private func relaunchAfterTerminationInBackground() {
+        XCUIDevice.shared.press(.home)
+        XCTAssertTrue(app.wait(for: .runningBackgroundSuspended, timeout: timeout)
+                      || app.state == .runningBackground)
+
+        app.terminate()
+        app.launchArguments.removeAll { $0 == "-reset" || $0 == "-includeTestingRecipe" }
+        app.launch()
+    }
 
     private func addIngredient(_ ingredient: Ingredient) {
         addIngredientCell.tap()
