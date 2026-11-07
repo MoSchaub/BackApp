@@ -2,18 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import UIKit
 import XCTest
 @testable import BakingRecipeUIFoundation
 
 final class BakingRecipeUIFoundationTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(BakingRecipeUIFoundation().text, "Hello, World!")
+    func testThemeManagerRegistersThemeColors() {
+        _ = ThemeManager.default
+
+        XCTAssertNotNil(UIColor.baTintColor)
+        XCTAssertNotNil(UIColor.cellBackgroundColor)
+        XCTAssertNotNil(UIColor.primaryCellTextColor)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testThemeManagerRegistersThemeColors", testThemeManagerRegistersThemeColors),
     ]
 }

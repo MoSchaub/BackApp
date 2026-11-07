@@ -65,6 +65,7 @@
 		CDA7EE2E24A67DBD00763E21 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */; };
 		CDA7EE3024A67DBD00763E21 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE2F24A67DBD00763E21 /* RecipeListViewController.swift */; };
 		5C2EE0A12F0A000100A1B2C3 /* ReadmeScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */; };
+		5C2EE0A32F0A000100A1B2C3 /* BackAppUITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */; };
 		CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */; };
 		CDA7EE5824A67E7000763E21 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD6A9A152340252600748249 /* Images.xcassets */; };
 		CDA7EE7424A67EF200763E21 /* PrivacyPolicy.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB5EE4E246BDF6900E35376 /* PrivacyPolicy.txt */; };
@@ -199,6 +200,7 @@
 		CDA7EE3924A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA7EE3E24A67DC200763E21 /* Back App iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Back App iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeScreenshots.swift; sourceTree = "<group>"; };
+		5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackAppUITestCase.swift; sourceTree = "<group>"; };
 		CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Back_App_iOSUITests.swift; sourceTree = "<group>"; };
 		CDA7EE4424A67DC200763E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA806FB250400BE008E0EC0 /* ScheduleFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFormViewController.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */,
 				CD9B3CF3253CE6ED00132CA9 /* TestModels.swift */,
 				5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */,
+				5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */,
 				CDA7EE4424A67DC200763E21 /* Info.plist */,
 			);
 			path = "Back App iOSUITests";
@@ -800,6 +803,7 @@
 				8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */,
 				CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */,
 				5C2EE0A12F0A000100A1B2C3 /* ReadmeScreenshots.swift in Sources */,
+				5C2EE0A32F0A000100A1B2C3 /* BackAppUITestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1027,7 +1031,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 221;
+				CURRENT_PROJECT_VERSION = 224;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
@@ -1063,7 +1067,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 221;
+				CURRENT_PROJECT_VERSION = 224;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
