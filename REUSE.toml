@@ -50,6 +50,7 @@ path = [
     "BackApp.xcodeproj/project.pbxproj",
     "BackApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
     "BackApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+    "BackApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
     "BackApp.xcodeproj/project.xcworkspace/xcuserdata/moritzschaub.xcuserdatad/IDEFindNavigatorScopes.plist",
     "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/49A7FE36-D0D4-4BC8-B93D-56802C0C6FFA.plist",
     "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/Info.plist",
