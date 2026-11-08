@@ -77,10 +77,11 @@ final class ReadmeScreenshots: XCTestCase {
         snapshot("5_stepDetail")
 
         // 6. ingredient detail
-        // the ingredient can be below the screen edge, e.g. on iPhone 16 with iOS 27
-        scrollIntoView(ingredient)
-        ingredient.tap()
-        XCTAssertTrue(app.navigationBars[ingredientName].waitForExistence(timeout: timeout))
+        // the ingredient can be below the screen edge, e.g. on iPhone 16 with iOS 27.
+        // Tap the cell rather than the label, so the tap selects the row.
+        let ingredientCell = app.cells.containing(.staticText, identifier: ingredientName).firstMatch
+        scrollIntoView(ingredientCell)
+        tap(ingredientCell, until: app.navigationBars[ingredientName])
         snapshot("6_ingredientDetail")
     }
 
@@ -102,15 +103,33 @@ final class ReadmeScreenshots: XCTestCase {
         }
     }
 
-    /// Swipes the list up until `element` can be tapped.
-    /// XCUITest doesn't scroll a label in a table cell into view before tapping it,
-    /// so a tap on a row below the screen edge is lost.
+    /// Swipes the list up until `element` can be tapped and is clear of the bottom screen edge.
+    /// XCUITest doesn't reliably scroll a table cell into view before tapping it,
+    /// and a tap on a row right at the edge (behind the home indicator) is lost.
+    /// Stops early when the list can't scroll any further.
     private func scrollIntoView(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
-        for _ in 0..<5 where element.isHittable == false {
+        let bottom = app.windows.firstMatch.frame.maxY - 100
+        for _ in 0..<5 {
+            if element.isHittable && element.frame.maxY <= bottom { break }
+            let frameBefore = element.frame
             app.tables.firstMatch.swipeUp(velocity: .slow)
             waitForAnimations()
+            if element.frame == frameBefore { break }
         }
         XCTAssertTrue(element.isHittable, "\(element) is not on screen", file: file, line: line)
+    }
+
+    /// Taps `element` and waits for `screen` to appear.
+    /// On slow simulators a tap right after scrolling can be lost (it only stops the scrolling),
+    /// so tap once more if `element` is still on screen.
+    private func tap(_ element: XCUIElement, until screen: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        element.tap()
+        if !screen.waitForExistence(timeout: timeout / 2), element.isHittable {
+            waitForAnimations()
+            element.tap()
+        }
+        XCTAssertTrue(screen.waitForExistence(timeout: timeout), "\(screen) did not appear after tapping \(element)",
+                      file: file, line: line)
     }
 
     private func waitForAnimations() {
