@@ -31,30 +31,31 @@ public var inputAlertMessage = ""
 public extension BackAppData {
     
     /// opens the data at a specified url and tries to import it as a recipe, sets alertTitle and Message
+    ///
+    /// Always posts `.alertShouldBePresented` (with `url` as the object) so the user learns
+    /// whether the import worked, including when the file could not be read.
     func open(_ url: URL) {
         DispatchQueue.global(qos: .background).async {
             databaseAutoUpdatesDisabled = true
-            let loaded = url.loadData() //gets the data from the file at url
-            
-            if let loadedData = loaded.data { //make sure the data is succesfully loaded
+
+            if let loadedData = url.loadData().data { //gets the data from the file at url
                 if self.importData(loadedData) { //import the data into the internal database
-                    
-                    //set succes
                     inputAlertTitle = Strings.success
-                    inputAlertTitle = Strings.recipesImported
+                    inputAlertMessage = Strings.recipesImported
                 } else {
-                    
-                    //send error message
                     inputAlertTitle = Strings.Alert_Error
-                    inputAlertMessage = "" //TODO: add Error message like "error importing recipes"
+                    inputAlertMessage = Strings.importFileContainsNoRecipes
                 }
+            } else {
+                inputAlertTitle = Strings.Alert_Error
+                inputAlertMessage = Strings.importFileUnreadable
             }
-            
+
             // reload the navbar since the updates are disabled
             NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
-            
+
             // present the alert when it is done
-            NotificationCenter.default.post(name: .alertShouldBePresented, object: nil)
+            NotificationCenter.default.post(name: .alertShouldBePresented, object: url)
             
             // make sure the last one displays the correct time since the updates are disabled
             NotificationCenter.default.post(name: .recipesChanged, object: nil)

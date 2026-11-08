@@ -9,6 +9,7 @@
 //
 
 import BakingRecipeFoundation
+import Foundation
 import GRDB
 
 public extension BackAppData {
@@ -42,8 +43,38 @@ public extension BackAppData {
         }) ?? []
     }
     
+    /// moves a step like a row in the edit recipe table
+    /// - Parameters:
+    ///   - source: row of the moved step in `reorderedSteps(for:)`
+    ///   - destination: row the step is dropped at in `reorderedSteps(for:)`
+    /// - NOTE: The rows are the reordered steps (substeps directly before their superstep), not the steps
+    /// sorted by their stored number. Only the order of the top-level steps can be changed by the user,
+    /// substeps always stay with their superstep. Afterwards the numbers of all steps are stored in the
+    /// displayed order, so the next move uses matching rows.
     func moveStep(with recipeId: Int64, from source: Int, to destination: Int) {
-        self.moveRecord(in: steps(with: recipeId), from: source, to: destination)
+        var rows = reorderedSteps(for: recipeId)
+        guard rows.indices.contains(source), rows.indices.contains(destination),
+              let recipe = record(with: recipeId, of: Recipe.self) else { return }
+
+        rows.insert(rows.remove(at: source), at: destination)
+        let topLevelStepIds = rows.filter { $0.superStepId == nil }.compactMap(\.id)
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            do {
+                try self.dbWriter.write { db in
+                    for (number, id) in topLevelStepIds.enumerated() {
+                        try Step.filter(key: id).updateAll(db, Step.Columns.number.set(to: number))
+                    }
+
+                    // group the substeps with their superstep again and store that order
+                    for (number, step) in try recipe.reoderedSteps(db: db).enumerated() {
+                        try Step.filter(key: step.id).updateAll(db, Step.Columns.number.set(to: number))
+                    }
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
 }

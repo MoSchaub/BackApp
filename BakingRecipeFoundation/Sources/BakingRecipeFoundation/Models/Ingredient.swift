@@ -11,7 +11,7 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
-    public enum Style: Double, CaseIterable, Codable {
+    public enum Style: Double, CaseIterable, Codable, Sendable {
         
         /// water or something similar
         case bulkLiquid = 4.187
@@ -113,7 +113,7 @@ public extension Ingredient {
     /// the name of the ingredient
     ///- NOTE: This name should be used whenever you need to only show the name
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     /// type of the recipe
@@ -179,15 +179,23 @@ public extension Ingredient {
     }
     
     /// Arange the seleted columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.temperature,
-        Columns.mass,
-        Columns.c,
-        Columns.stepId,
-        Columns.number
-    ]
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.temperature,
+            Columns.mass,
+            Columns.c,
+            Columns.stepId,
+            Columns.number
+        ]
+    }
 }
 
 // Fetching methods

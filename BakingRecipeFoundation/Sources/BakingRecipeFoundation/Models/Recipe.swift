@@ -207,18 +207,26 @@ public extension Recipe {
     }
     
     /// Arange the selected columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.info,
-        Columns.isFavorite,
-        Columns.difficulty,
-        Columns.inverted,
-        Columns.times,
-        Columns.date,
-        Columns.imageData,
-        Columns.number
-    ]
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.info,
+            Columns.isFavorite,
+            Columns.difficulty,
+            Columns.inverted,
+            Columns.times,
+            Columns.date,
+            Columns.imageData,
+            Columns.number
+        ]
+    }
 }
 
 //MARK: SQL Fetching
@@ -404,28 +412,21 @@ public extension Recipe {
         return dict
     }
     
-    ///Tuple with a start date and a startDates dictionary
+    /// Start dates for `step` and all its substeps, given the date `h` at which its longest substep chain starts.
+    /// Returns the start date of `step` itself (when all its substep chains have ended) and the dictionary.
     private func startDates(for step: Step, h: Date, reader: DatabaseReader) -> (h: Date, dict: [Step : Date]) {
         var dict = [Step : Date]()
-        var h = h
-        var sortedSubs = step.sortedSubsteps(reader: reader)
-        if let first = sortedSubs.first { //get the longest sub
-            sortedSubs.removeFirst() //remove so it does not get used twice
-            let firstDates = startDates(for: first, h: h, reader: reader)
-            dict.append(contentsOf: firstDates.dict)
-            h = firstDates.h
-            
-            let subEndDate = h.addingTimeInterval(first.duration) //data when all substebs of the step should end
-            for sub in sortedSubs {
-                let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-(sub.duration)), reader: reader)
-                dict.append(contentsOf: subDates.dict)
-            }
-            
-            h = subEndDate
+        let chains = step.sortedSubsteps(reader: reader).map { ($0, $0.durationWithSubsteps(reader: reader)) }
+
+        // the substep chains run in parallel and all end when this step starts
+        let subEndDate = h.addingTimeInterval(chains.map(\.1).max() ?? 0)
+        for (sub, chainDuration) in chains {
+            let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-chainDuration), reader: reader)
+            dict.append(contentsOf: subDates.dict)
         }
-        dict[step] = h
-        
-        return (h,dict)
+        dict[step] = subEndDate
+
+        return (subEndDate, dict)
     }
     
     /// steps that are no substeps of any other step

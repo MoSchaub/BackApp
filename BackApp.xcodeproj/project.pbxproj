@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C2EE0A12F0A000100A1B2C3 /* ReadmeScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */; };
+		5C2EE0A32F0A000100A1B2C3 /* BackAppUITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */; };
+		5C2EE0A52F0A000100A1B2C3 /* AccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A72F0A000100A1B2C3 /* AccessibilityID.swift */; };
+		5C2EE0A62F0A000100A1B2C3 /* AccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2EE0A72F0A000100A1B2C3 /* AccessibilityID.swift */; };
 		8E5C074C2D207293002EED55 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5C074B2D207293002EED55 /* LicenseView.swift */; };
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
@@ -123,6 +127,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeScreenshots.swift; sourceTree = "<group>"; };
+		5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackAppUITestCase.swift; sourceTree = "<group>"; };
+		5C2EE0A72F0A000100A1B2C3 /* AccessibilityID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityID.swift; sourceTree = "<group>"; };
 		8E35DC7A2F93809900624927 /* BackAppCore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = BackAppCore.xctestplan; path = BackAppCore/Tests/BackAppCoreTests/BackAppCore.xctestplan; sourceTree = "<group>"; };
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
@@ -433,6 +440,8 @@
 				CD9B3CE7253CE6D000132CA9 /* Localizable.strings */,
 				CDA7EE4224A67DC200763E21 /* Back_App_iOSUITests.swift */,
 				CD9B3CF3253CE6ED00132CA9 /* TestModels.swift */,
+				5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */,
+				5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */,
 				CDA7EE4424A67DC200763E21 /* Info.plist */,
 			);
 			path = "Back App iOSUITests";
@@ -543,6 +552,7 @@
 			isa = PBXGroup;
 			children = (
 				CDA7EE2B24A67DBD00763E21 /* AppDelegate.swift */,
+				5C2EE0A72F0A000100A1B2C3 /* AccessibilityID.swift */,
 				CDA7EE2D24A67DBD00763E21 /* SceneDelegate.swift */,
 			);
 			path = "supporting Files";
@@ -744,6 +754,7 @@
 				CDA7EE3024A67DBD00763E21 /* RecipeListViewController.swift in Sources */,
 				CD285EA7259E1D5C00834C21 /* SettingsViewController.swift in Sources */,
 				CDA7EE2C24A67DBD00763E21 /* AppDelegate.swift in Sources */,
+				5C2EE0A52F0A000100A1B2C3 /* AccessibilityID.swift in Sources */,
 				CD232E5126740CD500E528BB /* IngredientRow.swift in Sources */,
 				CD6FD71126921D0800ACDE85 /* RecipeDetailViewController.swift in Sources */,
 				CD663F6824E2A0FE008F9A09 /* EditRecipeDataSource.swift in Sources */,
@@ -796,6 +807,9 @@
 				CDA7EE4324A67DC200763E21 /* Back_App_iOSUITests.swift in Sources */,
 				8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */,
 				CD9B3CF4253CE6ED00132CA9 /* TestModels.swift in Sources */,
+				5C2EE0A12F0A000100A1B2C3 /* ReadmeScreenshots.swift in Sources */,
+				5C2EE0A32F0A000100A1B2C3 /* BackAppUITestCase.swift in Sources */,
+				5C2EE0A62F0A000100A1B2C3 /* AccessibilityID.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -853,7 +867,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -875,7 +889,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1023,7 +1037,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 188;
+				CURRENT_PROJECT_VERSION = 228;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2WV4PNAXJT;
@@ -1035,7 +1049,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1059,7 +1073,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 188;
+				CURRENT_PROJECT_VERSION = 228;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2WV4PNAXJT;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
@@ -1071,7 +1085,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moritzschaub.Back-App-iOS";
 				PRODUCT_NAME = "Back App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1092,7 +1106,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSUITests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1113,7 +1127,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2WV4PNAXJT;
 				INFOPLIST_FILE = "Back App iOSUITests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
