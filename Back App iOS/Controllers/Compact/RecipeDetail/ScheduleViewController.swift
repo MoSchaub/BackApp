@@ -58,7 +58,7 @@ private extension ScheduleViewController {
     // - MARK: - NavigationBar
     private func setUpNavigationBar() {
         title = recipe.formattedName + " - \(Strings.schedule) "
-        navigationItem.prompt = self.times!.description + " " + Strings.pieces
+        navigationItem.prompt = Strings.piecesCount(NSDecimalNumber(decimal: self.times!).doubleValue, formatted: self.times!.description)
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .action, target: self, action: #selector(shareText))
         navigationController?.setToolbarHidden(true, animated: true)

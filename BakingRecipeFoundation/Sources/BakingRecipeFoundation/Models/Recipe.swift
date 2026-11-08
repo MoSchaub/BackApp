@@ -57,12 +57,10 @@ public struct Recipe: BakingRecipeRecord {
     /// formatted text for times
     public var timesText: String{
         get{
-            if self.times != nil {
-                if let timesString = numberFormatter.string(from: times! as NSNumber) {
-                    return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
-                }
+            if self.times != nil, let text = piecesText(for: times! as NSNumber) {
+                return text
             }
-            return "1 " + Strings.piece
+            return piecesText(for: 1)!
         }
         set{
             if let int = Int(newValue){
@@ -75,8 +73,14 @@ public struct Recipe: BakingRecipeRecord {
     
     /// timesText + indivialMass given a total Mass, e. g. 12 pieces, 11 g each
     public func timesTextWithIndivialMass(with totalMass: Double) -> String {
-        
-        return self.timesText + (Bundle.main.preferredLocalizations.first! == "de" ? " à " : ", " ) + (totalMass/Double(self.times!.description)!).formattedMass + (Bundle.main.preferredLocalizations.first! == "en" ? " each" : "")
+        Strings.piecesWithMass(self.timesText, mass: (totalMass/Double(self.times!.description)!).formattedMass)
+    }
+
+    /// the number of pieces with the plural form of the displayed (rounded) number, e. g. "12 pieces"
+    private func piecesText(for times: NSNumber) -> String? {
+        guard let timesString = numberFormatter.string(from: times) else { return nil }
+        let shownValue = numberFormatter.number(from: timesString)?.doubleValue ?? times.doubleValue
+        return Strings.piecesCount(shownValue, formatted: timesString)
     }
 
     private var numberFormatter: NumberFormatter {
@@ -88,13 +92,10 @@ public struct Recipe: BakingRecipeRecord {
     
     /// scale the times text with a factor
     private func timesTextScaled(with factor: Double) -> String {
-        if self.times != nil {
-            let times = self.times! * Decimal(factor) as NSNumber
-            if let timesString = numberFormatter.string(from: times) {
-                return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
-            }
+        if self.times != nil, let text = piecesText(for: self.times! * Decimal(factor) as NSNumber) {
+            return text
         }
-        return "1 " + Strings.piece
+        return piecesText(for: 1)!
 
     }
 }
@@ -468,7 +469,7 @@ public extension Recipe {
             text += step.text(startDate: runningDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: self, reader: reader)
             runningDate = runningDate.addingTimeInterval(step.duration)
         }
-        text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: endDate(reader: reader)))"
+        text += Strings.exportEndDate(dateFormatter.string(from: endDate(reader: reader)))
         return text
     }
 

@@ -6,10 +6,13 @@ import Foundation
 import Testing
 @testable import BakingRecipeStrings
 
-/// The languages the package ships a `Localizable.strings` table for.
+/// The languages `Localizable.xcstrings` provides translations for.
 private let shippedLanguages = ["en", "de"]
 
-/// Loads `<language>.lproj/Localizable.strings` from the package's resource bundle.
+/// Loads the `<language>.lproj/Localizable.strings` table that the build compiles from
+/// `Localizable.xcstrings` into the package's resource bundle.
+/// Strings with plural variations are compiled into `Localizable.stringsdict` instead; they are
+/// included with their format string (`NSStringLocalizedFormatKey`) as the value.
 private func stringsTable(for language: String) throws -> [String: String] {
     let path = try #require(
         Bundle.module.path(forResource: "Localizable", ofType: "strings", inDirectory: nil, forLocalization: language),
@@ -17,15 +20,62 @@ private func stringsTable(for language: String) throws -> [String: String] {
     )
     let data = try #require(FileManager.default.contents(atPath: path))
     let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
-    return try #require(plist as? [String: String], "Localizable.strings for \(language) is not a string table")
+    var table = try #require(plist as? [String: String], "Localizable.strings for \(language) is not a string table")
+
+    if let dictPath = Bundle.module.path(forResource: "Localizable", ofType: "stringsdict", inDirectory: nil, forLocalization: language) {
+        let dictData = try #require(FileManager.default.contents(atPath: dictPath))
+        let dict = try #require(
+            try PropertyListSerialization.propertyList(from: dictData, options: [], format: nil) as? [String: [String: Any]],
+            "Localizable.stringsdict for \(language) is not a dictionary"
+        )
+        for (key, entry) in dict {
+            table[key] = entry["NSStringLocalizedFormatKey"] as? String ?? ""
+        }
+    }
+    return table
 }
 
-/// `Strings.swift` in the package sources, located relative to this file.
-private let stringsSourceURL = URL(fileURLWithPath: #filePath)
+/// Formats a localized string of the package as it would read in `language`.
+private func localized(_ key: String, in language: String, _ arguments: CVarArg...) throws -> String {
+    let path = try #require(Bundle.module.path(forResource: language, ofType: "lproj"), "No \(language).lproj")
+    let bundle = try #require(Bundle(path: path))
+    let format = bundle.localizedString(forKey: key, value: nil, table: nil)
+    return String(format: format, locale: Locale(identifier: language), arguments: arguments)
+}
+
+/// `Sources/BakingRecipeStrings` in the package, located relative to this file.
+private let packageSourcesURL = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent() // BakingRecipeStringsTests
     .deletingLastPathComponent() // Tests
     .deletingLastPathComponent() // package root
-    .appendingPathComponent("Sources/BakingRecipeStrings/Strings.swift")
+    .appendingPathComponent("Sources/BakingRecipeStrings")
+
+/// `Strings.swift` in the package sources.
+private let stringsSourceURL = packageSourcesURL.appendingPathComponent("Strings.swift")
+
+/// The String Catalog source, which still carries each translation's review state.
+private let stringCatalogURL = packageSourcesURL.appendingPathComponent("Resources/Localizable.xcstrings")
+
+/// The parts of the `.xcstrings` JSON format the tests look at.
+private struct StringCatalog: Decodable {
+    struct Entry: Decodable {
+        var localizations: [String: Localization]?
+    }
+    struct Localization: Decodable {
+        var stringUnit: StringUnit?
+    }
+    struct StringUnit: Decodable {
+        var state: String
+        var value: String
+    }
+
+    var sourceLanguage: String
+    var strings: [String: Entry]
+}
+
+private func loadStringCatalog() throws -> StringCatalog {
+    try JSONDecoder().decode(StringCatalog.self, from: Data(contentsOf: stringCatalogURL))
+}
 
 /// Whether the package sources are on this machine. Xcode Cloud runs tests on a separate
 /// machine that only has the built test products, not the repository.
@@ -42,8 +92,8 @@ private func keysUsedByStrings() throws -> Set<String> {
 
 /// Format specifiers such as `%@`, `%d` or `%1$@`, in order of appearance.
 /// `%%` is a literal percent sign and is skipped.
-private func formatSpecifiers(in string: String) -> [String] {
-    let regex = try! NSRegularExpression(pattern: #"%%|%(\d+\$)?[@dDuUxXoOfeEgGcCsSpaAF]"#)
+private func formatSpecifiers(in string: String) throws -> [String] {
+    let regex = try NSRegularExpression(pattern: #"%%|%(\d+\$)?[@dDuUxXoOfeEgGcCsSpaAF]"#)
     return regex.matches(in: string, range: NSRange(string.startIndex..., in: string))
         .compactMap { Range($0.range, in: string).map { String(string[$0]) } }
         .filter { $0 != "%%" }
@@ -92,19 +142,65 @@ struct LocalizationTests {
         for (key, englishValue) in english {
             guard let germanValue = german[key] else { continue } // reported by tablesHaveTheSameKeys
             #expect(
-                formatSpecifiers(in: germanValue) == formatSpecifiers(in: englishValue),
+                try formatSpecifiers(in: germanValue) == formatSpecifiers(in: englishValue),
                 "Format specifiers differ for \(key)"
             )
         }
     }
 
+    @Test(
+        "Every catalog entry is translated and reviewed",
+        .enabled(if: sourcesAreAvailable, "Needs the package sources, which Xcode Cloud test runners lack"),
+        arguments: shippedLanguages
+    )
+    func catalogIsFullyTranslated(language: String) throws {
+        let catalog = try loadStringCatalog()
+        try #require(catalog.sourceLanguage == "en")
+        try #require(catalog.strings.isEmpty == false, "Localizable.xcstrings contains no strings")
+
+        // Xcode marks new or changed source strings as "new" / "needs_review"; only "translated" is done.
+        let unfinished = catalog.strings
+            .filter { $0.value.localizations?[language]?.stringUnit?.state != "translated" }
+            .keys.sorted()
+        #expect(unfinished.isEmpty, "Strings not translated for \(language): \(unfinished)")
+    }
+
     @Test("Localized constants resolve to a translation, not to their key")
     func constantsResolve() {
         // NSLocalizedString falls back to the key itself when it is missing from the table.
-        #expect(Strings.donate_text != "donateText")
-        #expect(Strings.donate_text != "donate_text")
+        #expect(Strings.noRecipeSelectedHint != "noRecipeSelectedHint")
+        #expect(Strings.minutesCount(2) != "minutesCount")
         #expect(Strings.unnamedRecipe != "unnamedRecipe")
         #expect(Strings.EditButton_Done != "EditButton_Done")
+    }
+}
+
+@Suite("Plural forms")
+struct PluralTests {
+
+    @Test("Counted strings pick the plural form of the language", arguments: [
+        ("minutesCount", "en", 1, "one minute"),
+        ("minutesCount", "en", 0, "0 minutes"),
+        ("hoursCount", "de", 1, "eine Stunde"),
+        ("hoursCount", "de", 2, "2 Stunden"),
+        ("hoursCount", "fr", 0, "0 heure"),
+        ("hoursCount", "fr", 2, "2 heures"),
+        ("stepsCount", "en", 1, "1 step"),
+        ("stepsCount", "fr", 12, "12 étapes"),
+    ])
+    func integerPlurals(key: String, language: String, count: Int, expected: String) throws {
+        #expect(try localized(key, in: language, count) == expected)
+    }
+
+    @Test("Decimal counts pick the plural form from the value", arguments: [
+        ("en", 1.0, "1", "1 piece"),
+        ("en", 1.5, "1.5", "1.5 pieces"),
+        ("fr", 1.5, "1,5", "1,5 pièce"),
+        ("fr", 2.0, "2", "2 pièces"),
+        ("de", 1.0, "1", "1 Stück"),
+    ])
+    func decimalPlurals(language: String, value: Double, formatted: String, expected: String) throws {
+        #expect(try localized("piecesCount", in: language, value, formatted) == expected)
     }
 }
 

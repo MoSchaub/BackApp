@@ -176,6 +176,8 @@
 		CD663F6B24E2A20B008F9A09 /* RecipeListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListDataSource.swift; sourceTree = "<group>"; };
 		CD68D46424AC5CBB000D4BD7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD68D46624AC5CBD000D4BD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C2EE0B12F0B000100A1B2C3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C2EE0B22F0B000100A1B2C3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
 		CD6A9A152340252600748249 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CD6F748A2691D1C800BCFC3E /* 2de.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2de.bakingAppRecipe; sourceTree = "<group>"; };
 		CD6F748C2691D1D800BCFC3E /* 3de.bakingAppRecipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3de.bakingAppRecipe; sourceTree = "<group>"; };
@@ -674,6 +676,7 @@
 			knownRegions = (
 				de,
 				en,
+				fr,
 				Base,
 			);
 			mainGroup = CD6A9A032340252400748249;
@@ -834,6 +837,7 @@
 			children = (
 				CD68D46424AC5CBB000D4BD7 /* de */,
 				CD68D46624AC5CBD000D4BD7 /* en */,
+				5C2EE0B12F0B000100A1B2C3 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -844,6 +848,7 @@
 				CD87B1FA26FF913D00DAC6B6 /* Base */,
 				CD87B1FD26FF914300DAC6B6 /* de */,
 				CD9129D326FF91750040061C /* en */,
+				5C2EE0B22F0B000100A1B2C3 /* fr */,
 			);
 			name = "Launch Screen.storyboard";
 			sourceTree = "<group>";

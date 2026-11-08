@@ -38,7 +38,7 @@ struct RecipeImportTests {
         #expect(appData.allRecipes.map(\.name) == ["Imported Bread"])
         #expect(appData.allIngredients.map(\.name) == ["Flour"])
         #expect(alert.title == Strings.success)
-        #expect(alert.message == Strings.recipesImported)
+        #expect(alert.message == Strings.recipesImported(1))
     }
 
     @Test("Opening a file that cannot be read reports an error")

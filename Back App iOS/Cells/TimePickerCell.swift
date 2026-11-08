@@ -153,11 +153,11 @@ extension TimePickerCell: UIPickerViewDelegate, UIPickerViewDataSource {
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         var returnValue: NSAttributedString?
         doSomething(component: component) {
-            let hourString = row == 1 ? Strings.one + " " + Strings.hour : "\(row) " + Strings.hours
+            let hourString = Strings.hoursCount(row)
             
             returnValue =  NSAttributedString(string: hourString, attributes: [NSAttributedString.Key.foregroundColor:UIColor.primaryCellTextColor!])
         } and: {
-            let minuteString = row == 1 ? Strings.one + " " + Strings.minute : "\(row) " + Strings.minutes
+            let minuteString = Strings.minutesCount(row)
             
             returnValue = NSAttributedString(string: minuteString, attributes: [NSAttributedString.Key.foregroundColor:UIColor.primaryCellTextColor!])
         }
