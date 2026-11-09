@@ -285,6 +285,51 @@ struct BulkLiquidTemperatureTests {
         let mixture = (100 * waterC * waterTemp + 50 * otherC * 30) / (100 * waterC + 50 * otherC)
         #expect(abs(mixture - 26) < 1e-9)
     }
+
+    @Test("A starter in a substep has the same heat capacity as a starter used directly", arguments: [
+        Ingredient.Style.ta150,
+        Ingredient.Style.ta200,
+    ])
+    func starterInSubstep(starter: Ingredient.Style) throws {
+        let dbQueue = try makeDatabase()
+        let (direct, nested) = try dbQueue.write { db -> (Step, Step) in
+            let recipe = try insertRecipe(db)
+
+            let direct = try insertStep(db, in: recipe, name: "direkt", temperature: 26)
+            try insertIngredient(db, in: direct, name: "Wasser", mass: 100, type: .bulkLiquid, number: 0)
+            try insertIngredient(db, in: direct, name: "Anstellgut", mass: 200, type: starter, number: 1)
+
+            let nested = try insertStep(db, in: recipe, name: "mit Vorteig", temperature: 26, number: 1)
+            try insertIngredient(db, in: nested, name: "Wasser", mass: 100, type: .bulkLiquid)
+            // a substep at room temperature that only holds the starter
+            let sub = try insertStep(db, in: recipe, name: "Sauerteig", temperature: 20, superStep: nested, number: 2)
+            try insertIngredient(db, in: sub, name: "Anstellgut", mass: 200, type: starter)
+            return (direct, nested)
+        }
+
+        let directTemp = try direct.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let nestedTemp = try nested.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let mixture = (100 * waterC * nestedTemp + 200 * starter.rawValue * 20) / (100 * waterC + 200 * starter.rawValue)
+        #expect(abs(mixture - 26) < 1e-9)
+        #expect(abs(directTemp - nestedTemp) < 1e-9)
+    }
+
+    @Test("An empty substep does not affect the bulk liquid temperature")
+    func emptySubstep() throws {
+        let dbQueue = try makeDatabase()
+        let step = try dbQueue.write { db -> Step in
+            let recipe = try insertRecipe(db)
+            let step = try insertStep(db, in: recipe, name: "Hauptteig", temperature: 26)
+            try insertIngredient(db, in: step, name: "Mehl", mass: 500, type: .flour, number: 0)
+            try insertIngredient(db, in: step, name: "Wasser", mass: 350, type: .bulkLiquid, number: 1)
+            try insertStep(db, in: recipe, name: "leer", superStep: step, number: 1)
+            return step
+        }
+
+        let waterTemp = try step.bulkLiquidTemperature(roomTemp: 20, kneadingHeating: 0, databaseReader: dbQueue)
+        let mixture = (500 * flourC * 20 + 350 * waterC * waterTemp) / (500 * flourC + 350 * waterC)
+        #expect(abs(mixture - 26) < 1e-9)
+    }
 }
 
 @Suite("Durations and schedule")
