@@ -24,6 +24,11 @@ enum AccessibilityID {
 
     static let editRecipeButton = "editRecipeButton"
 
+    // MARK: Schedule form
+
+    /// The OK button that creates the schedule (iOS 26 shows it as a checkmark labelled "Done")
+    static let confirmScheduleButton = "confirmScheduleButton"
+
     // MARK: Edit recipe
 
     static let saveRecipeButton = "saveRecipeButton"
