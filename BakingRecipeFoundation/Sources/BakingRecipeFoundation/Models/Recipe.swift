@@ -293,6 +293,18 @@ public extension Recipe {
     static let ingredients = hasMany(Ingredient.self, through: steps, using: Step.ingredients)
 }
 
+//MARK: - Schedule formatting
+public extension Schedule {
+
+    /// the start date of `step` formatted for display, or "error" if the step isn't part of this schedule
+    func formattedStartDate(of step: Step) -> String {
+        guard let stepId = step.id, let start = startDate(ofStepWithId: stepId) else {
+            return "error"
+        }
+        return dateFormatter.string(from: start)
+    }
+}
+
 //MARK: - Association methods
 public extension Recipe {
 
@@ -371,62 +383,51 @@ public extension Recipe {
         String(format: "%.2f", try totalDoughYield(db: db))
     }
     
+    /// the steps of this recipe as a tree for `ScheduleCalculator`, loaded with a single query
+    /// - NOTE: The top-level steps are ordered by number, the substeps of each step by number too.
+    ///   The order of substeps doesn't change the schedule because they run in parallel.
+    func scheduleNodes(db: Database) throws -> [ScheduleNode] {
+        guard let id = self.id else { return [] }
+        let steps = try Step.all().orderedByNumber(with: id).fetchAll(db)
+        let substepsBySuperStepId = Dictionary(grouping: steps.filter { $0.superStepId != nil }, by: { $0.superStepId! })
+
+        // guards against substep cycles in broken data, which would otherwise recurse forever
+        var visitedStepIds = Set<Int64>()
+        func node(for step: Step) -> ScheduleNode? {
+            guard let stepId = step.id, visitedStepIds.insert(stepId).inserted else { return nil }
+            let substeps = (substepsBySuperStepId[stepId] ?? []).compactMap { node(for: $0) }
+            return ScheduleNode(stepId: stepId, duration: step.duration, substeps: substeps)
+        }
+
+        return steps.filter { $0.superStepId == nil }.compactMap { node(for: $0) }
+    }
+
+    /// when each step of this recipe starts, based on `date` and `inverted`
+    func schedule(db: Database) throws -> Schedule {
+        ScheduleCalculator.schedule(for: try scheduleNodes(db: db), date: date, inverted: inverted)
+    }
+
+    /// when each step of this recipe starts, based on `date` and `inverted`
+    /// - NOTE: If the steps can't be read, this is an empty schedule that starts and ends at `date`.
+    func schedule(reader: DatabaseReader) -> Schedule {
+        (try? reader.read { db in
+            try schedule(db: db)
+        }) ?? ScheduleCalculator.schedule(for: [], date: date, inverted: inverted)
+    }
+
     ///starting date
     func startDate(reader: DatabaseReader) -> Date {
-        if !inverted {
-            return self.date
-        } else {
-            return self.date.addingTimeInterval(TimeInterval(-(totalDuration(reader: reader) * 60)))
-        }
+        schedule(reader: reader).startDate
     }
     
     ///end date
     func endDate(reader: DatabaseReader) -> Date {
-        if inverted {
-            return self.date
-        } else {
-            return self.date.addingTimeInterval(TimeInterval(totalDuration(reader: reader) * 60))
-        }
+        schedule(reader: reader).endDate
     }
     
     /// the startDateText for a given Step in this recipe
     func formattedStartDate(for item: Step, reader: DatabaseReader) -> String {
-        let datesDict = startDatesDictionary(reader: reader)
-        if let date = datesDict[item] {
-            return dateFormatter.string(from: date)
-        }
-        return "error"
-    }
-    
-    ///dictonary with the step and the corresponding startdate
-    private func startDatesDictionary(reader: DatabaseReader) -> [Step : Date]{
-        var dict = [Step : Date]()
-        var h = startDate(reader: reader)
-        for step in self.notSubsteps(reader: reader) {
-            let stepDates = startDates(for: step, h: h, reader: reader)
-            dict.append(contentsOf: stepDates.dict)
-            h = stepDates.h
-            
-            h.addTimeInterval(step.duration)
-        }
-        return dict
-    }
-    
-    /// Start dates for `step` and all its substeps, given the date `h` at which its longest substep chain starts.
-    /// Returns the start date of `step` itself (when all its substep chains have ended) and the dictionary.
-    private func startDates(for step: Step, h: Date, reader: DatabaseReader) -> (h: Date, dict: [Step : Date]) {
-        var dict = [Step : Date]()
-        let chains = step.sortedSubsteps(reader: reader).map { ($0, $0.durationWithSubsteps(reader: reader)) }
-
-        // the substep chains run in parallel and all end when this step starts
-        let subEndDate = h.addingTimeInterval(chains.map(\.1).max() ?? 0)
-        for (sub, chainDuration) in chains {
-            let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-chainDuration), reader: reader)
-            dict.append(contentsOf: subDates.dict)
-        }
-        dict[step] = subEndDate
-
-        return (subEndDate, dict)
+        schedule(reader: reader).formattedStartDate(of: item)
     }
     
     /// steps that are no substeps of any other step
@@ -456,7 +457,7 @@ public extension Recipe {
     
     ///text for exporting
     func text(roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String {
-        var runningDate = startDate(reader: reader)
+        let schedule = self.schedule(reader: reader)
         var text = self.formattedName
         text += " "
         
@@ -465,10 +466,9 @@ public extension Recipe {
         text += "\n"
         
         for step in notSubsteps(reader: reader) {
-            text += step.text(startDate: runningDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: self, reader: reader)
-            runningDate = runningDate.addingTimeInterval(step.duration)
+            text += step.text(schedule: schedule, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
         }
-        text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: endDate(reader: reader)))"
+        text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: schedule.endDate))"
         return text
     }
 

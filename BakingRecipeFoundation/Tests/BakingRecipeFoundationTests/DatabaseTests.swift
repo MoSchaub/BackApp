@@ -394,6 +394,51 @@ struct ScheduleTests {
         }
     }
 
+    @Test("The schedule tree is loaded with the substeps under their step")
+    func scheduleNodes() throws {
+        let dbQueue = try makeDatabase()
+        let (recipe, steps) = try dbQueue.write { try insertMultilayerRecipe($0) }
+        let nodes = try dbQueue.read { try recipe.scheduleNodes(db: $0) }
+
+        func id(_ name: String) throws -> Int64 { try #require(steps[name]?.id) }
+        #expect(try nodes.map(\.stepId) == [id("Schritt"), id("s2")])
+        #expect(try Set(nodes[0].substeps.map(\.stepId)) == [id("s1sub1"), id("s1sub2")])
+        #expect(nodes[0].durationWithSubsteps == 60 + 2800)
+        #expect(nodes[1].substeps.isEmpty)
+    }
+
+    @Test("An inverted schedule ends exactly at the date, even for durations that aren't whole minutes")
+    func invertedScheduleWithSeconds() throws {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let dbQueue = try makeDatabase()
+        let (recipe, steps) = try dbQueue.write { db in
+            try insertMultilayerRecipe(db) {
+                $0.date = date
+                $0.inverted = true
+            }
+        }
+
+        // 3250 s in total. The displayed total duration is still rounded down per step (47 + 6 min),
+        // but the dates use the exact durations, so the last step ends at the date.
+        #expect(recipe.totalDuration(reader: dbQueue) == 53)
+        #expect(recipe.startDate(reader: dbQueue) == date - 3250)
+        #expect(recipe.endDate(reader: dbQueue) == date)
+        let s2 = try #require(steps["s2"])
+        #expect(recipe.formattedStartDate(for: s2, reader: dbQueue) == dateFormatter.string(from: date - 390))
+    }
+
+    @Test("A step is found by its id, even if the passed copy is outdated")
+    func startDateOfOutdatedStep() throws {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let dbQueue = try makeDatabase()
+        let (recipe, steps) = try dbQueue.write { db in
+            try insertMultilayerRecipe(db) { $0.date = date }
+        }
+        var s2 = try #require(steps["s2"])
+        s2.name = "renamed, not saved"
+        #expect(recipe.formattedStartDate(for: s2, reader: dbQueue) == dateFormatter.string(from: date + 2860))
+    }
+
     @Test("An unknown step has no start date")
     func unknownStepStartDate() throws {
         let dbQueue = try makeDatabase()
@@ -471,5 +516,29 @@ struct DuplicationTests {
         #expect(lines.contains("gut mischen"))
         #expect(lines.contains { $0.hasPrefix("Backen ") })
         #expect(lines.last == "\(Strings.EditButton_Done): \(dateFormatter.string(from: recipe.endDate(reader: dbQueue)))")
+    }
+
+    @Test("The export text lists substeps before their step, with their own start dates")
+    func exportTextWithSubsteps() throws {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let dbQueue = try makeDatabase()
+        let (recipe, _) = try dbQueue.write { db in
+            try insertMultilayerRecipe(db) { $0.date = date }
+        }
+
+        let lines = recipe.text(roomTemp: 20, scaleFactor: 1, kneadingHeating: 0, reader: dbQueue)
+            .components(separatedBy: "\n")
+        func line(_ name: String, _ offset: TimeInterval) -> String {
+            "\(name) \(dateFormatter.string(from: date + offset))"
+        }
+
+        #expect(lines.contains(line("s1sub2subsub", 0)))
+        #expect(lines.contains(line("s1sub1sub", 700)))
+        #expect(lines.contains(line("Schritt", 2800)))
+        #expect(lines.contains(line("s2", 2860)))
+        let substepLine = try #require(lines.firstIndex(of: line("s1sub2subsub", 0)))
+        let stepLine = try #require(lines.firstIndex(of: line("Schritt", 2800)))
+        #expect(substepLine < stepLine)
+        #expect(lines.last == "\(Strings.EditButton_Done): \(dateFormatter.string(from: date + 3250))")
     }
 }

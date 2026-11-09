@@ -479,14 +479,15 @@ public extension Step {
     }
     
     ///text for exporting for one step
-    func text(startDate: Date, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, recipe: Recipe, reader: DatabaseReader) -> String{
+    /// - Parameter schedule: the schedule of the recipe, which gives the start date of this step and its substeps
+    func text(schedule: Schedule, roomTemp: Double, scaleFactor: Double, kneadingHeating: Double, reader: DatabaseReader) -> String{
         var text = ""
         
         for step in sortedSubsteps(reader: reader) {
-            text += step.text(startDate: startDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: recipe, reader: reader)
+            text += step.text(schedule: schedule, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, reader: reader)
         }
         
-        let nameString = "\(self.formattedName) \(recipe.formattedStartDate(for: self, reader: reader))\n"
+        let nameString = "\(self.formattedName) \(schedule.formattedStartDate(of: self))\n"
         text.append(nameString)
         
         for ingredient in ingredients(reader: reader){

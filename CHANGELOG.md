@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- **A schedule with an end date finishes exactly at that time.** For steps whose duration isn't a whole number of minutes, for example from an imported recipe, the start was rounded and the last step could end up to a minute per step after the chosen end date. (#24)
+
+### Under the hood
+
+- Moved schedule calculation into a separate `ScheduleCalculator` that works without the database, as groundwork for flexible step durations. A recipe's schedule is now loaded in a single database read, instead of several reads for every step whose start time is shown. (#24)
+
 ## 1.4
 
 ### New
