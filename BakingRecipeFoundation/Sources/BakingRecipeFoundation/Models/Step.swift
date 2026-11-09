@@ -370,28 +370,6 @@ public extension Step {
         }
     }
 
-    /// specific temperature capacity of all the ingredients and all ingredients of all substeps combined
-    private func c(reader: DatabaseReader) -> Double {
-        let percentageFlour = flourMass(reader: reader)/totalMass(reader: reader)
-        let percentageWater = waterMass(reader: reader)/totalMass(reader: reader)
-        let percentageOther = otherMass(reader: reader)/totalMass(reader: reader)
-        let percentageTa150 = ta150Mass(reader: reader)/totalMass(reader: reader)
-        let percentageTa200 = ta200Mass(reader: reader)/totalMass(reader: reader)
-        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue + percentageOther * Ingredient.Style.other.rawValue + percentageTa150 * Ingredient.Style.ta150.rawValue + percentageTa200 * Ingredient.Style.ta200.rawValue
-        //Anteil Mehl*Cmehl+Anteil Wasser*CWasser
-    }
-
-    private func c(db: Database) throws -> Double {
-        let totalMass = try self.totalMass(db: db)
-        let percentageFlour = try flourMass(db: db)/totalMass
-        let percentageWater = try waterMass(db: db)/totalMass
-        let percentageOther = try otherMass(db: db)/totalMass
-        let percentageTa150 = try ta150Mass(db: db)/totalMass
-        let percentageTa200 = try ta200Mass(db: db)/totalMass
-        return percentageFlour * Ingredient.Style.flour.rawValue + percentageWater * Ingredient.Style.bulkLiquid.rawValue + percentageOther * Ingredient.Style.other.rawValue + percentageTa150 * Ingredient.Style.ta150.rawValue + percentageTa200 * Ingredient.Style.ta200.rawValue
-        //Anteil Mehl*cMehl+Anteil Wasser*cWasser ...
-    }
-    
     /// total mass of flour in the step
     func flourMass(reader: DatabaseReader) -> Double {
         var mass = Ingredient.Style.flour.massOfSelfIngredients(in: self, reader: reader)
@@ -426,52 +404,20 @@ public extension Step {
         return mass
     }
     
-    /// total mass of ingredient with type other
-    private func otherMass(reader: DatabaseReader) -> Double {
-        var mass = Ingredient.Style.other.massOfSelfIngredients(in: self, reader: reader)
-        _ = sortedSubsteps(reader: reader).map { mass += $0.otherMass(reader: reader) }
-        return mass
-    }
-
-    private func otherMass(db: Database) throws -> Double {
-        var mass = try Ingredient.Style.other.massOfSelfIngredients(in: self, db: db)
-        _ = try sortedSubsteps(db: db).map { mass += try $0.otherMass(db: db)}
-        return mass
-    }
-    
-    private func ta150Mass(reader: DatabaseReader) -> Double {
-        var mass = Ingredient.Style.ta150.massOfSelfIngredients(in: self, reader: reader)
-        _ = sortedSubsteps(reader: reader).map { mass += $0.ta150Mass(reader: reader)}
-        return mass
-    }
-
-    private func ta150Mass(db: Database) throws -> Double {
-        var mass = try Ingredient.Style.ta150.massOfSelfIngredients(in: self, db: db)
-        _ = try sortedSubsteps(db: db).map { mass += try $0.ta150Mass(db: db)}
-        return mass
-    }
-    
-    private func ta200Mass(reader: DatabaseReader) -> Double {
-        var mass = Ingredient.Style.ta200.massOfSelfIngredients(in: self, reader: reader)
-        _ = sortedSubsteps(reader: reader).map { mass += $0.ta200Mass(reader: reader)}
-        return mass
-    }
-
-    private func ta200Mass(db: Database) throws -> Double {
-        var mass = try Ingredient.Style.ta200.massOfSelfIngredients(in: self, db: db)
-        _ = try sortedSubsteps(db: db).map { mass += try $0.ta200Mass(db: db)}
-        return mass
-    }
-    
-    
-    private func massCProduct(reader: DatabaseReader) -> Double {
-        self.totalMass(reader: reader) * self.c(reader: reader)
-    }
-
+    /// sum of mass * specific heat capacity of all ingredients of this step and all its substeps
+    /// - NOTE: Every ingredient contributes exactly what it contributes when used directly in a step
+    /// (`Ingredient.massCProduct`), so a starter in a substep is not counted twice
+    /// (once via the flour/water split and once with its own heat capacity).
     private func massCProduct(db: Database) throws -> Double {
-        try self.totalMass(db: db) * self.c(db: db)
+        var product = 0.0
+        for ingredient in try ingredients(db: db) {
+            product += ingredient.massCProduct
+        }
+        for substep in sortedSubsteps(db: db) {
+            product += try substep.massCProduct(db: db)
+        }
+        return product
     }
-
 
     private func massCTempProduct(db: Database, superTemp: Double) throws -> Double {
         let temp: Double = self.endTempEnabled ? self.endTemp! : self.temperature ?? superTemp
