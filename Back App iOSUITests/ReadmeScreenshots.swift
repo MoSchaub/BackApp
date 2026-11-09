@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import XCTest
+import BakingRecipeStrings
 
 /// Takes the screenshots used in the README and in the App Store.
 ///

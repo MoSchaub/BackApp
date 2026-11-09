@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import XCTest
+import BakingRecipeStrings
 
 /// Shared setup, elements and helpers for the UI tests.
 ///
