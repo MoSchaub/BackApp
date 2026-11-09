@@ -21,9 +21,7 @@ extension RecipeListCoordinator {
     }
 
     func navigateToRecipeDetail(from recipeListViewController: RecipeListViewController, with item: BackAppData.RecipeListItem) {
-        DispatchQueue.main.async { //needs to be on main thread
-            self.showRecipeDetail(for: item.recipe, sender: recipeListViewController)
-        }
+        showRecipeDetail(for: item.recipe, sender: recipeListViewController)
     }
 
     /// shows the detail screen of `recipe` in the split view's secondary column

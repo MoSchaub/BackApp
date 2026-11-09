@@ -99,20 +99,15 @@ private extension TextFieldCell {
 
 extension TextFieldCell: UITextFieldDelegate {
     
-    /// Serial, so text changes are saved in the order they were typed.
-    /// A concurrent queue let an older value (e.g. "Mis") overwrite a newer one ("Mischen").
-    private static let updateQueue = DispatchQueue(label: "TextFieldCell.updateText", qos: .userInitiated)
-
+    /// Passes the text to `textChanged` on the main actor, where UIKit sends the text field events.
+    ///
+    /// The callbacks change view controller state and save it, so they must not run on a background queue.
+    /// Calling them synchronously also keeps the saves in the order the text was typed
+    /// (an older value like "Mis" must never overwrite a newer one like "Mischen").
     @objc internal func updateText(completion: (() -> ())? = nil ) {
-        let textFieldText = textField.text
-        Self.updateQueue.async {
-            if let textChanged = self.textChanged, let text = textFieldText {//force away from main thread to not interrupt the ux
-                textChanged(text)
-                if let completion = completion {
-                    completion()
-                }
-            }
-        }
+        guard let textChanged, let text = textField.text else { return }
+        textChanged(text)
+        completion?()
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {

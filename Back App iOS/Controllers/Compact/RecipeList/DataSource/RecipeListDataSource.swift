@@ -46,8 +46,8 @@ class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppDa
 
     private func attachRecipeListPublisher() {
         self.recipesListPublisher = BackAppData.shared.recipeListPublisher
-            .sink(receiveCompletion: { _ in }) { recipeListItems in
-                self.update(recipeListItems: recipeListItems)
+            .sink(receiveCompletion: { _ in }) { [weak self] recipeListItems in
+                self?.update(recipeListItems: recipeListItems)
             }
     }
     
@@ -75,10 +75,9 @@ class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppDa
         snapshot.appendSections([.recipes])
         snapshot.appendItems(recipeListItems, toSection: .recipes)
 
-        //update
-        DispatchQueue.main.async { //force the main thread since UITableView should be updated from the main thread
-            self.apply(snapshot, animatingDifferences: false)
-        }
+        //update; already on the main queue, where GRDB's `.immediate` scheduling delivers the values,
+        //so the first snapshot is shown right away instead of on the next run loop pass
+        apply(snapshot, animatingDifferences: false)
     }
 
     /// enable deleting recipes
@@ -105,7 +104,14 @@ class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppDa
         guard destinationIndexPath.row < snapshot.numberOfItems(inSection: .recipes) else { reset(); return }
         guard destinationIndexPath.section == 0 && snapshot.numberOfSections == 1 || destinationIndexPath.section == 1 && snapshot.numberOfSections == 2 else { reset(); return}
         guard snapshot.numberOfItems(inSection: .recipes) > sourceIndexPath.row else { reset(); return }
-        BackAppData.shared.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        Task { @MainActor in
+            do {
+                try await BackAppData.shared.moveRecipe(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            } catch {
+                print(error.localizedDescription)
+                reset()
+            }
+        }
     }
 
     //wether a row can be moved or not

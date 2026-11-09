@@ -27,7 +27,7 @@ class MockDelegate: RecipeListViewDelegate {
         
     }
     
-    func presentImportAlert(from recipeListViewController: Back_App.RecipeListViewController) {
+    func presentImportAlert(for result: ImportResult, from recipeListViewController: Back_App.RecipeListViewController) {
         
     }
     

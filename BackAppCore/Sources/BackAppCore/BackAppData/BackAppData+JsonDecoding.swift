@@ -13,54 +13,53 @@ import Foundation
 import BakingRecipeFoundation
 import BakingRecipeStrings
 
-public var databaseAutoUpdatesDisabled = false
-
 ///Notifications for triggering events in the ui
 public extension Notification.Name {
-    static var homeNavBarShouldReload = Self.init(rawValue: "homeNavBarShouldReload")
-    static var alertShouldBePresented = Self.init(rawValue: "alertShouldBePresented")
-    static var homeShouldPopSplitVC = Self.init("homeShouldPopSplitVC")
+    static let homeShouldPopSplitVC = Self.init("homeShouldPopSplitVC")
 }
 
-///the title of an alert displayed in the ui
-public var inputAlertTitle = ""
+/// The outcome of importing a recipe file, so the ui can tell the user whether it worked.
+public enum ImportResult: Sendable, Equatable {
+    /// the file contained recipes and they were imported
+    case imported
+    /// the file could be read, but it contains no recipes
+    case noRecipes
+    /// the file could not be read
+    case unreadable
 
-///the alert message for the same alert
-public var inputAlertMessage = ""
+    /// title of the alert telling the user about the import
+    public var alertTitle: String {
+        self == .imported ? Strings.success : Strings.Alert_Error
+    }
+
+    /// message of the alert telling the user about the import
+    public var alertMessage: String {
+        switch self {
+        case .imported: return Strings.recipesImported
+        case .noRecipes: return Strings.importFileContainsNoRecipes
+        case .unreadable: return Strings.importFileUnreadable
+        }
+    }
+}
 
 public extension BackAppData {
     
-    /// opens the data at a specified url and tries to import it as a recipe, sets alertTitle and Message
+    /// Reads the file at `url` and imports the recipes it contains.
     ///
-    /// Always posts `.alertShouldBePresented` (with `url` as the object) so the user learns
-    /// whether the import worked, including when the file could not be read.
-    func open(_ url: URL) {
-        DispatchQueue.global(qos: .background).async {
-            databaseAutoUpdatesDisabled = true
+    /// `BackAppData` is not actor-isolated, so this `async` method runs on the global
+    /// concurrent executor and reading and importing the file stays off the main actor.
+    /// - Note: When the package adopts Swift 6.2's `NonisolatedNonsendingByDefault`,
+    ///   mark this method `@concurrent` to keep it off the caller's actor.
+    /// - Returns: whether the import worked, including when the file could not be read
+    func open(_ url: URL) async -> ImportResult {
+        importFile(at: url)
+    }
 
-            if let loadedData = url.loadData().data { //gets the data from the file at url
-                if self.importData(loadedData) { //import the data into the internal database
-                    inputAlertTitle = Strings.success
-                    inputAlertMessage = Strings.recipesImported
-                } else {
-                    inputAlertTitle = Strings.Alert_Error
-                    inputAlertMessage = Strings.importFileContainsNoRecipes
-                }
-            } else {
-                inputAlertTitle = Strings.Alert_Error
-                inputAlertMessage = Strings.importFileUnreadable
-            }
-
-            // reload the navbar since the updates are disabled
-            NotificationCenter.default.post(name: .homeNavBarShouldReload, object: nil)
-
-            // present the alert when it is done
-            NotificationCenter.default.post(name: .alertShouldBePresented, object: url)
-            
-            // make sure the last one displays the correct time since the updates are disabled
-            NotificationCenter.default.post(name: .recipesChanged, object: nil)
-            databaseAutoUpdatesDisabled = false
-        }
+    /// Synchronously reads the file at `url` and imports the recipes it contains.
+    /// - Returns: whether the import worked, including when the file could not be read
+    func importFile(at url: URL) -> ImportResult {
+        guard let loadedData = url.loadData().data else { return .unreadable }
+        return importData(loadedData) ? .imported : .noRecipes
     }
     
     /// imports data containing recipes into the database

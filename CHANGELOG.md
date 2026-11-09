@@ -14,6 +14,9 @@
 - **Fast typing is saved correctly.** Typing quickly in a text field could leave an older value saved, for example "Mis" instead of "Mischen". (#48)
 - **New users get the example recipes.** The bundled example recipes were never imported on first launch. They now load in your language, or in English if there are none in your language. (#41)
 - Removed trailing periods from the import error messages.
+- **Quick reordering keeps the right order.** Dragging steps, ingredients or recipes again before the previous move was saved could reorder from the old positions. Each move now reads and saves the order in one step.
+- **Importing several files shows the right message for each.** Concurrent imports could show each other's success or error message.
+- **Typing in a step or ingredient name no longer loses other edits.** Names were saved from a background thread, which could overwrite a change made at the same moment, such as the notes.
 
 ### Under the hood
 
@@ -21,6 +24,7 @@
 - Moved the Swift package tests to Swift Testing and added more tests. They now cover formatting, the models, database logic, scheduling, export, and string tables that have the same keys in English and German. (#46)
 - The UI tests are faster and more reliable. They find controls by accessibility identifier, launch with animations off and a fixed locale, and wait for elements instead of sleeping. A full run now takes about 100 s instead of 160 s. (#46, #48)
 - Added `Package.resolved` for the local packages, with REUSE licensing information.
+- Reviewed the app for concurrency problems. UI code no longer runs on background queues. Moves and imports are `async` and return their result, which replaces global alert state and notifications. The tests await them instead of polling for up to two minutes. Complete strict concurrency checking is on for the app and all packages (as warnings in Swift 5 mode), to prepare for Swift 6.
 
 ### Project
 

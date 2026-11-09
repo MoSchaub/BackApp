@@ -687,7 +687,15 @@ fileprivate class StepDetailDataSource: UITableViewDiffableDataSource<StepDetail
         guard destination < ingredients.count else { updateList(); return }
         guard ingredients.count > source else { updateList(); return }
 
-        appData.moveIngredient(with: step.id!, from: source, to: destination)
+        let stepId = step.id!
+        Task { @MainActor in
+            do {
+                try await appData.moveIngredient(with: stepId, from: source, to: destination)
+            } catch {
+                print(error.localizedDescription)
+                updateList()
+            }
+        }
     }
     
     private func updateList() {

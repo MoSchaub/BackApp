@@ -8,15 +8,6 @@ import Testing
 @testable import BakingRecipeFoundation
 @testable import GRDB
 
-/// Polls `condition` every 50 ms until it is true or `timeout` seconds have passed.
-/// Used instead of fixed sleeps so tests continue as soon as background database work lands.
-func poll(timeout: TimeInterval = 30, until condition: () -> Bool) async {
-    let deadline = Date().addingTimeInterval(timeout)
-    while condition() == false, Date() < deadline {
-        try? await Task.sleep(nanoseconds: 50_000_000)
-    }
-}
-
 // serialized because every test opens its own DatabasePool on the same db.sqlite file;
 // parallel opens race on `PRAGMA journal_mode = WAL` and crash with SQLite error 5
 @Suite(.serialized)
@@ -287,14 +278,8 @@ struct BackAppCoreTests {
 
         try appData.deleteAll(of: Recipe.self)
 
-        appData.open(url)
-
-        // open() imports on a background queue; poll until it finishes instead of
-        // sleeping a fixed time. A fixed sleep is flaky and lets the import keep
-        // writing while later tests reset the database, crashing on FK violations.
-        // The import runs at .background QoS and can be starved during a full
-        // suite run (8s in isolation), hence the generous timeout.
-        await poll(timeout: 120) { appData.allIngredients.count >= ingredients.count }
+        let result = await appData.open(url)
+        #expect(result == .imported)
 
         for recipe in recipes {
             #expect(appData.allRecipes.contains(where: { $0.name == recipe.name }))
@@ -413,18 +398,15 @@ struct BackAppCoreTests {
         try insert(recipeTransfer: Recipe.complexExample(number: 0))
         let appData = BackAppData.shared
 
-        appData.moveStep(with: recipeId, from: 1, to: 0)
-        await poll { appData.reorderedSteps(for: recipeId).first?.formattedName == "Backen" }
+        try await appData.moveStep(with: recipeId, from: 1, to: 0)
         #expect(appData.reorderedSteps(for: recipeId).first?.formattedName == "Backen")
 
         let step = try #require(appData.reorderedSteps(for: recipeId).first(where: { $0.formattedName == "Mischen" }))
         let stepId = try #require(step.id)
-        appData.moveIngredient(with: stepId, from: 1, to: 2)
-        await poll { appData.ingredients(with: stepId)[safe: 1]?.formattedName == "Olivenöl" }
+        try await appData.moveIngredient(with: stepId, from: 1, to: 2)
         #expect(appData.ingredients(with: stepId)[safe: 1]?.formattedName == "Olivenöl")
 
-        appData.moveRecipe(from: 1, to: 0)
-        await poll { appData.allRecipes.first?.formattedName == "Komplexes Rezept" }
+        try await appData.moveRecipe(from: 1, to: 0)
         #expect(appData.allRecipes.first?.formattedName == "Komplexes Rezept")
     }
 

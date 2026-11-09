@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // SPDX-FileCopyrightText: 2024 Moritz Schaub <moritz@pfaender.net>
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -26,9 +26,15 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "BakingRecipeUIFoundation",
-            dependencies: ["BakingRecipeFoundation", "BakingRecipeStrings", "BackAppCore"]),
+            dependencies: [
+                .product(name: "BakingRecipeFoundation", package: "BakingRecipeFoundation"),
+                .product(name: "BakingRecipeStrings", package: "BakingRecipeStrings"),
+                .product(name: "BackAppCore", package: "BackAppCore"),
+            ],
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]),
         .testTarget(
             name: "BakingRecipeUIFoundationTests",
-            dependencies: ["BakingRecipeUIFoundation"]),
+            dependencies: ["BakingRecipeUIFoundation"],
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]),
     ]
 )

@@ -68,11 +68,9 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
         recipeListCoordinator.showRecipeDetail(for: recipe, animated: false)
     }
 
-    /// imports the recipe files at the given urls
+    /// imports the recipe files at the given urls and tells the user about each import
     public func open(urls: [URL]) {
-        for url in urls {
-            appData.open(url)
-        }
+        childCoordinators.lazy.compactMap { $0 as? RecipeListCoordinator }.first?.importFiles(at: urls)
     }
 
     public func getWindow() -> UIWindow {

@@ -15,7 +15,7 @@ protocol RecipeListViewDelegate {
 
     func presentRoomTempSheet(from recipeListViewController: RecipeListViewController)
 
-    func presentImportAlert(from recipeListViewController: RecipeListViewController)
+    func presentImportAlert(for result: ImportResult, from recipeListViewController: RecipeListViewController)
 
     func editRecipeViewController(for recipeId: Int64) -> EditRecipeViewController
 

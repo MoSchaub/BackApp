@@ -11,47 +11,61 @@
 import Combine
 #endif
 
+/// The settings are computed properties without stored state: their values live in `UserDefaults`,
+/// which is thread-safe, so they can be read and written from any isolation domain.
 public struct Standarts {
     
-    @UserDefaultsWrapper(key: .roomTemp, defaultValue: 20)
     public static var roomTemp: Double {
-        didSet{
+        get { UserDefaultsWrapper(key: .roomTemp, defaultValue: 20).wrappedValue }
+        set {
+            var setting = UserDefaultsWrapper(key: .roomTemp, defaultValue: 20.0)
+            setting.wrappedValue = newValue
             #if canImport(Combine)
             if #available(iOS 13.0, *) {
-                standartsChangedPublisher.send(.roomTemp(self.roomTemp))
+                standartsChangedPublisher.send(.roomTemp(newValue))
             }
             #endif
         }
     }
     
-    @UserDefaultsWrapper(key: .kneadingHeatingEnabled, defaultValue: false)
     public static var kneadingHeatingEnabled: Bool {
-        didSet{
+        get { UserDefaultsWrapper(key: .kneadingHeatingEnabled, defaultValue: false).wrappedValue }
+        set {
+            var setting = UserDefaultsWrapper(key: .kneadingHeatingEnabled, defaultValue: false)
+            setting.wrappedValue = newValue
             #if canImport(Combine)
             if #available(iOS 13.0, *) {
-                standartsChangedPublisher.send(.kneadingHeatingEnabled(self.kneadingHeatingEnabled))
+                standartsChangedPublisher.send(.kneadingHeatingEnabled(newValue))
             }
             #endif
         }
     }
     
-    @UserDefaultsWrapper(key: .kneadingHeating, defaultValue: 0)
     public static var kneadingHeating: Double {
-        didSet{
+        get { UserDefaultsWrapper(key: .kneadingHeating, defaultValue: 0).wrappedValue }
+        set {
+            var setting = UserDefaultsWrapper(key: .kneadingHeating, defaultValue: 0.0)
+            setting.wrappedValue = newValue
             #if canImport(Combine)
             if #available(iOS 13.0, *) {
-                standartsChangedPublisher.send(.kneadingHeating(self.kneadingHeating))
+                standartsChangedPublisher.send(.kneadingHeating(newValue))
             }
             #endif
         }
     }
     
-    @UserDefaultsWrapper(key: .newUser, defaultValue: true)
-    static var newUser: Bool
+    static var newUser: Bool {
+        get { UserDefaultsWrapper(key: .newUser, defaultValue: true).wrappedValue }
+        set {
+            var setting = UserDefaultsWrapper(key: .newUser, defaultValue: true)
+            setting.wrappedValue = newValue
+        }
+    }
     
     #if canImport(Combine)
+    /// `nonisolated(unsafe)` because Combine subjects synchronize `send` internally.
     @available(iOS 13.0, *)
-    public static var standartsChangedPublisher = PassthroughSubject<standartsChangedKey, Never>()
+    nonisolated(unsafe) public static let standartsChangedPublisher = PassthroughSubject<standartsChangedKey, Never>()
     #endif
     
     public enum standartsChangedKey: Equatable {

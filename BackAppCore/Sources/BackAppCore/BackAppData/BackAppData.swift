@@ -122,7 +122,7 @@ public extension BackAppData {
             }
         }
         
-        if record is Recipe, !databaseAutoUpdatesDisabled {
+        if record is Recipe {
             NotificationCenter.default.post(name: .recipesChanged, object: nil)
         }
     }
@@ -183,23 +183,24 @@ public extension BackAppData {
     }
     
     /// move Records (change their number) so their sorted order changes
-    internal func moveRecord<T: BakingRecipeRecord>(in array: [T] ,from source: Int, to destination: Int) {
-        DispatchQueue.global(qos: .userInteractive).async {
-            databaseAutoUpdatesDisabled = true
-            var recordIds = array.map { $0.id }
-            
-            let removedRecord = recordIds.remove(at: source)
-            recordIds.insert(removedRecord, at: destination)
-            
-            var number = 0
-            for id in recordIds {
-                var record: T = self.record(with: id!)!
-                self.updateChanges(for: &record) { record in
-                    record.number = number
-                }
-                number += 1
+    ///
+    /// The records are fetched and renumbered in one transaction, so a move always starts from the
+    /// order the previous move left behind, database observers never see a half-moved list,
+    /// and callers can await the move instead of polling for it.
+    /// - Parameter fetchRecords: fetches the records in their displayed order
+    internal func moveRecord<T: BakingRecipeRecord>(
+        from source: Int, to destination: Int,
+        fetchRecords: @escaping @Sendable (Database) throws -> [T]
+    ) async throws {
+        try await dbWriter.write { db in
+            var recordIds = try fetchRecords(db).compactMap(\.id)
+            guard recordIds.indices.contains(source), recordIds.indices.contains(destination) else { return }
+
+            recordIds.insert(recordIds.remove(at: source), at: destination)
+
+            for (number, id) in recordIds.enumerated() {
+                try T.filter(key: id).updateAll(db, Column("number").set(to: number))
             }
-            databaseAutoUpdatesDisabled = false
         }
     }
 

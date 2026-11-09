@@ -43,19 +43,30 @@ extension RecipeListCoordinator {
         recipeListViewController.present(hostingController, animated: true)
     }
 
-    func presentImportAlert(from recipeListViewController: RecipeListViewController) {
-        DispatchQueue.main.async { //force to main thread since this is ui code
-
-            //create the alert
-            let alert = UIAlertController(title: inputAlertTitle, message: inputAlertMessage, preferredStyle: .alert)
-
-            //add the "ok" action/option/button
-            alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
-                alert.dismiss(animated: true)
-            }))
-
-            //finally present it
-            recipeListViewController.present(alert, animated: true)
+    /// imports the recipe files at `urls` one after another and tells the user about each import
+    func importFiles(at urls: [URL]) {
+        guard !urls.isEmpty else { return }
+        // UI work stays on the main actor; each import itself runs off it
+        Task { @MainActor in
+            for url in urls {
+                let result = await delegate.appData.open(url)
+                guard let recipeListViewController = navigationController.viewControllers.first as? RecipeListViewController
+                else { continue }
+                presentImportAlert(for: result, from: recipeListViewController)
+            }
         }
+    }
+
+    func presentImportAlert(for result: ImportResult, from recipeListViewController: RecipeListViewController) {
+        //create the alert
+        let alert = UIAlertController(title: result.alertTitle, message: result.alertMessage, preferredStyle: .alert)
+
+        //add the "ok" action/option/button
+        alert.addAction(UIAlertAction(title: Strings.Alert_ActionOk, style: .default, handler: { _ in
+            alert.dismiss(animated: true)
+        }))
+
+        //finally present it
+        recipeListViewController.present(alert, animated: true)
     }
 }

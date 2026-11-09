@@ -8,15 +8,9 @@ import BackAppCore
 extension RecipeListViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DispatchQueue.global(qos: .utility).async {
-            guard !self.pressed else { return }
-            self.pressed = true
-            guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return}
-
-            self.delegate.navigateToRecipeDetail(from: self, with: item)
-
-            self.pressed = false
-        }
+        // UIKit calls this on the main actor; the data source must only be read there
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        delegate.navigateToRecipeDetail(from: self, with: item)
     }
 
     private func navigateToRecipe(_ item: BackAppData.RecipeListItem) {

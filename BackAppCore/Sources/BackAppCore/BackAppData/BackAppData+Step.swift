@@ -51,28 +51,25 @@ public extension BackAppData {
     /// sorted by their stored number. Only the order of the top-level steps can be changed by the user,
     /// substeps always stay with their superstep. Afterwards the numbers of all steps are stored in the
     /// displayed order, so the next move uses matching rows.
-    func moveStep(with recipeId: Int64, from source: Int, to destination: Int) {
-        var rows = reorderedSteps(for: recipeId)
-        guard rows.indices.contains(source), rows.indices.contains(destination),
-              let recipe = record(with: recipeId, of: Recipe.self) else { return }
+    /// The rows are read and the steps renumbered in one transaction, so a quick second move
+    /// starts from the order the first one stored.
+    func moveStep(with recipeId: Int64, from source: Int, to destination: Int) async throws {
+        try await dbWriter.write { db in
+            guard let recipe = try Recipe.fetchOne(db, id: recipeId) else { return }
 
-        rows.insert(rows.remove(at: source), at: destination)
-        let topLevelStepIds = rows.filter { $0.superStepId == nil }.compactMap(\.id)
+            var rows = try recipe.reoderedSteps(db: db)
+            guard rows.indices.contains(source), rows.indices.contains(destination) else { return }
 
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                try self.dbWriter.write { db in
-                    for (number, id) in topLevelStepIds.enumerated() {
-                        try Step.filter(key: id).updateAll(db, Step.Columns.number.set(to: number))
-                    }
+            rows.insert(rows.remove(at: source), at: destination)
+            let topLevelStepIds = rows.filter { $0.superStepId == nil }.compactMap(\.id)
 
-                    // group the substeps with their superstep again and store that order
-                    for (number, step) in try recipe.reoderedSteps(db: db).enumerated() {
-                        try Step.filter(key: step.id).updateAll(db, Step.Columns.number.set(to: number))
-                    }
-                }
-            } catch {
-                print(error.localizedDescription)
+            for (number, id) in topLevelStepIds.enumerated() {
+                try Step.filter(key: id).updateAll(db, Step.Columns.number.set(to: number))
+            }
+
+            // group the substeps with their superstep again and store that order
+            for (number, step) in try recipe.reoderedSteps(db: db).enumerated() {
+                try Step.filter(key: step.id).updateAll(db, Step.Columns.number.set(to: number))
             }
         }
     }

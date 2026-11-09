@@ -87,8 +87,10 @@ public extension BackAppData {
         }) ?? []
     }
     
-    func moveRecipe(from source: Int, to destination: Int) {
-        self.moveRecord(in: allRecipes.filter{ !$0.isFavorite }, from: source, to: destination)
+    func moveRecipe(from source: Int, to destination: Int) async throws {
+        try await moveRecord(from: source, to: destination) { db in
+            try Recipe.all().orderedByNumber.fetchAll(db).filter { !$0.isFavorite }
+        }
     }
 
     /// creates new blank recipe generates a new number inserts it and returns the inserted recipe

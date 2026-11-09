@@ -62,7 +62,15 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
         guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
         guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
 
-        appData.moveStep(with: recipeId, from: sourceIndexPath.row, to: destinationIndexPath.row)
+        // UI work stays on the main actor; the database write itself runs off it
+        Task { @MainActor in
+            do {
+                try await appData.moveStep(with: recipeId, from: sourceIndexPath.row, to: destinationIndexPath.row)
+            } catch {
+                print(error.localizedDescription)
+                reset(tableView: tableView, indexPath: sourceIndexPath)
+            }
+        }
     }
     
 }

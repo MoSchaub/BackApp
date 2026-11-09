@@ -24,9 +24,6 @@ class RecipeListViewController: UITableViewController {
     /// appData storage interface
     private(set) var appData: BackAppData
     
-    /// wether a cell has been pressed
-    internal lazy var pressed = false
-    
     /// for managing the theme
     private var themeManager: ThemeManager
     
@@ -66,28 +63,21 @@ class RecipeListViewController: UITableViewController {
         super.viewDidLoad()
         registerCells()
 
-        //attach publisher for navbar reload
-        NotificationCenter.default.publisher(for: .homeNavBarShouldReload).sink { _ in
-            self.configureNavigationBar()
-        }.store(in: &tokens)
-
-        //attach publisher for alert
-        NotificationCenter.default.publisher(for: .alertShouldBePresented).sink { _ in
-            self.delegate.presentImportAlert(from: self)
-        }.store(in: &tokens)
-
-        NotificationCenter.default.publisher(for: .homeShouldPopSplitVC).sink { _ in
-            DispatchQueue.main.async {
-                if self.splitViewController?.viewControllers.count ?? 2 > 1 {
-                    _ = self.splitViewController?.viewControllers.popLast()
-                }
+        // posted from the thread that deleted the recipe, so deliver it on the main queue
+        NotificationCenter.default.publisher(for: .homeShouldPopSplitVC)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let splitViewController = self?.splitViewController,
+                      splitViewController.viewControllers.count > 1 else { return }
+                _ = splitViewController.viewControllers.popLast()
             }
-        }.store(in: &tokens)
+            .store(in: &tokens)
 
+        // GRDB's `.immediate` scheduling delivers on the main queue
         BackAppData.shared.recipeListPublisher
-            .sink(receiveCompletion: { _ in}) { recipeListItems in
-                self.editButtonItem.isEnabled = !recipeListItems.isEmpty
-                self.configureNavigationBar()
+            .sink(receiveCompletion: { _ in}) { [weak self] recipeListItems in
+                self?.editButtonItem.isEnabled = !recipeListItems.isEmpty
+                self?.configureNavigationBar()
             }
             .store(in: &tokens)
         
@@ -107,36 +97,31 @@ class RecipeListViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        DispatchQueue.global(qos: .background).async {
 #if DEBUG
-            self.postRecipeListVCAvailable()
+        postRecipeListVCAvailable()
 #endif
-        }
     }
 
 #if DEBUG
     private var triggerCounter = 0
 
     func postRecipeListVCAvailable() {
-        DispatchQueue.main.async {
-            if !triggering {
-                self.triggerCounter += 1
-                if self.triggerCounter == 1 {
-                    NotificationCenter.default.post(name: .recipeListVCAvailable, object: nil)
-                    triggering = true
-                }
-            }
+        guard !triggering else { return }
+        triggerCounter += 1
+        if triggerCounter == 1 {
+            NotificationCenter.default.post(name: .recipeListVCAvailable, object: nil)
+            triggering = true
         }
     }
 #endif
 }
 
 #if DEBUG
-var triggering = false
+@MainActor var triggering = false
 
 public extension NSNotification.Name {
-    static var recipeListVCAvailable = NSNotification.Name.init(rawValue: "recipeListVCAvailable")
-    static var recipeListNavbarDidLoad = NSNotification.Name.init(rawValue: "recipeListNavbarDidLoad")
+    static let recipeListVCAvailable = NSNotification.Name.init(rawValue: "recipeListVCAvailable")
+    static let recipeListNavbarDidLoad = NSNotification.Name.init(rawValue: "recipeListNavbarDidLoad")
 }
 #endif
 
@@ -191,7 +176,11 @@ extension RecipeListViewController {
 extension RecipeListViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard urls.count == 1, let url = urls.first else { return }
-        appData.open(url)
+        // UI work stays on the main actor; the import itself runs off it
+        Task { @MainActor in
+            let result = await appData.open(url)
+            delegate.presentImportAlert(for: result, from: self)
+        }
     }
 
 }

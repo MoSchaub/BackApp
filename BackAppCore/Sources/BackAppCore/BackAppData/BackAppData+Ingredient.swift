@@ -22,8 +22,10 @@ public extension BackAppData {
         }) ?? []
     }
     
-    func moveIngredient(with stepId: Int64, from source: Int, to destination: Int) {
-        self.moveRecord(in: ingredients(with: stepId), from: source, to: destination)
+    func moveIngredient(with stepId: Int64, from source: Int, to destination: Int) async throws {
+        try await moveRecord(from: source, to: destination) { db in
+            try Ingredient.all().orderedByNumber(with: stepId).fetchAll(db)
+        }
     }
     
 }

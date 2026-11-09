@@ -11,7 +11,26 @@
 import Foundation
 
 public enum MeasurementFormatting {
-    public static var localeOverride: Locale?
+    /// Guards `storedLocaleOverride`, because formatting runs on whatever thread reads the database.
+    /// (`Mutex` would be preferable but needs iOS 18.)
+    private static let lock = NSLock()
+
+    /// Only accessed while `lock` is held.
+    nonisolated(unsafe) private static var storedLocaleOverride: Locale?
+
+    /// Locale used instead of the current one, so tests can format deterministically.
+    public static var localeOverride: Locale? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return storedLocaleOverride
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            storedLocaleOverride = newValue
+        }
+    }
 }
 
 fileprivate var measurementFormatter: MeasurementFormatter {

@@ -113,13 +113,16 @@ extension BackAppData {
 
     /// Imports the bundled example recipes in the preferred language of the app,
     /// or in english if there are no examples for that language.
+    ///
+    /// Synchronous, so the examples are in the database before setup continues
+    /// (e.g. before `-reset` deletes all recipes for UI tests).
     static func importBundledExampleRecipes(into appData: BackAppData, bundle: Bundle = .main) {
         let preferred = bundle.preferredLocalizations.first ?? "en"
         var urls = bundledExampleRecipeURLs(for: preferred, in: bundle)
         if urls.isEmpty {
             urls = bundledExampleRecipeURLs(for: "en", in: bundle)
         }
-        urls.forEach { appData.open($0) }
+        urls.forEach { _ = appData.importFile(at: $0) }
     }
 
     /// Creates an empty database for SwiftUI previews and other testing purposes
