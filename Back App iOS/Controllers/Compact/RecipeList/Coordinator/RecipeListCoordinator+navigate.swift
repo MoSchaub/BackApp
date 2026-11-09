@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import BackAppCore
+import BakingRecipeFoundation
 
 extension RecipeListCoordinator {
     func navigateToSettings(from recipeListViewController: RecipeListViewController) {
@@ -21,14 +22,25 @@ extension RecipeListCoordinator {
 
     func navigateToRecipeDetail(from recipeListViewController: RecipeListViewController, with item: BackAppData.RecipeListItem) {
         DispatchQueue.main.async { //needs to be on main thread
-            let recipeId = item.recipe.id!
-            let recipeViewController = RecipeDetailViewController(
-                recipeId: recipeId, editVC: self.editRecipeViewController(for: recipeId),
-                recipeName: item.recipe.formattedName)
+            self.showRecipeDetail(for: item.recipe, sender: recipeListViewController)
+        }
+    }
 
-            //show the viewController wrapped in a navigationController
-            let navigationController = UINavigationController(rootViewController: recipeViewController)
-            self.splitViewController.showDetailViewController(navigationController, sender: recipeListViewController)
+    /// shows the detail screen of `recipe` in the split view's secondary column
+    func showRecipeDetail(for recipe: Recipe, sender: Any? = nil, animated: Bool = true) {
+        let recipeId = recipe.id!
+        let recipeViewController = RecipeDetailViewController(
+            recipeId: recipeId, editVC: editRecipeViewController(for: recipeId),
+            recipeName: recipe.formattedName)
+
+        //show the viewController wrapped in a navigationController
+        let navigationController = UINavigationController(rootViewController: recipeViewController)
+        if animated {
+            splitViewController.showDetailViewController(navigationController, sender: sender)
+        } else {
+            UIView.performWithoutAnimation {
+                splitViewController.showDetailViewController(navigationController, sender: sender)
+            }
         }
     }
 }

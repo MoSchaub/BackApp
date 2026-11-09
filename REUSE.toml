@@ -50,6 +50,7 @@ path = [
     "BackApp.xcodeproj/project.pbxproj",
     "BackApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
     "BackApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+    "BackApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
     "BackApp.xcodeproj/project.xcworkspace/xcuserdata/moritzschaub.xcuserdatad/IDEFindNavigatorScopes.plist",
     "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/49A7FE36-D0D4-4BC8-B93D-56802C0C6FFA.plist",
     "BackApp.xcodeproj/xcshareddata/xcbaselines/CD2BCE5224AE72CB00B868D7.xcbaseline/Info.plist",
@@ -61,6 +62,23 @@ path = [
 ]
 precedence = "closest"
 SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# changelog
+[[annotations]]
+path = "CHANGELOG.md"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# SwiftPM lock files of the local packages
+[[annotations]]
+path = [
+    "BackAppCore/Package.resolved",
+    "BakingRecipeFoundation/Package.resolved",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Moritz Schaub <moritz@pfaender.net>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 #Colors and AppIcon

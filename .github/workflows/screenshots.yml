@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Moritz Schaub <moritz@pfaender.net>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: App Store Screenshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      devices:
+        description: "Device keys from scripts/screenshots/config.json (empty = all)"
+        required: false
+        default: ""
+
+jobs:
+  screenshots:
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Select newest xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install duoctl (iPhone Duo fold control)
+        run: brew install skarol/tap/duoctl
+
+      - name: List available simulators
+        run: xcrun simctl list devices available
+
+      - name: Capture and compose screenshots
+        run: scripts/screenshots/make_screenshots.sh ${{ github.event.inputs.devices }}
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-screenshots
+          path: build/appstore-screenshots/final

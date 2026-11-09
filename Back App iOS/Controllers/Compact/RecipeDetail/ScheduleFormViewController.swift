@@ -39,6 +39,7 @@ class ScheduleFormViewController: BackAppVC {
 
     override func setRightBarButtonItems() {
         self.navigationItem.rightBarButtonItem = .init(title: Strings.Alert_ActionOk, style: .plain, target: self, action: #selector(proceedToScheduleView))
+        self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = AccessibilityID.confirmScheduleButton
     }
 
     override func updateNavBarTitle() {

@@ -35,16 +35,18 @@ extension BackAppData {
             // Connect to a database on disk
             // See https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections
             let dbURL = folderURL.appendingPathComponent("db.sqlite")
-            let dbPool = try DatabasePool(path: dbURL.path)
+            // Wait instead of failing with SQLITE_BUSY when several connections
+            // (app + tests, or multiple shared() calls) access the same file.
+            var configuration = Configuration()
+            configuration.busyMode = .timeout(5)
+            let dbPool = try DatabasePool(path: dbURL.path, configuration: configuration)
             
             // Create the AppDatabase
             let appData = try BackAppData(dbPool)
             
-            // adds to examples for new users when the user is new in the right language if it exists
-            if Standarts.newUser, appData.allRecipes.isEmpty, let subdir = Bundle.main.preferredLocalizations.first, let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) {
-
-                //filter the right files by the prefix which is eg. 1en
-                _ = urls.filter({ $0.description.prefix(3).contains(subdir)}).map { appData.open($0)}
+            // adds the bundled example recipes for new users in their language (falls back to english)
+            if Standarts.newUser, appData.allRecipes.isEmpty {
+                importBundledExampleRecipes(into: appData)
                 Standarts.newUser = false
             }
 
@@ -79,6 +81,12 @@ extension BackAppData {
                 }
             }
             
+            // Support for README screenshots: replace the database with the bundled example recipes
+            if CommandLine.arguments.contains("-screenshotMode") {
+                try? appData.deleteAll(of: Recipe.self)
+                appData.importBundledExampleRecipes(favouriteFilePrefix: "2")
+            }
+            
             return appData
         } catch {
             // Replace this implementation with code to handle the error appropriately.
@@ -94,6 +102,26 @@ extension BackAppData {
         }
     }
     
+    /// The bundled example recipe files for a language.
+    /// The files are named like `1en.bakingAppRecipe`, so the language code follows the leading digit.
+    static func bundledExampleRecipeURLs(for language: String, in bundle: Bundle = .main) -> [URL] {
+        let urls = bundle.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) ?? []
+        return urls
+            .filter { $0.lastPathComponent.dropFirst().hasPrefix(language) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    }
+
+    /// Imports the bundled example recipes in the preferred language of the app,
+    /// or in english if there are no examples for that language.
+    static func importBundledExampleRecipes(into appData: BackAppData, bundle: Bundle = .main) {
+        let preferred = bundle.preferredLocalizations.first ?? "en"
+        var urls = bundledExampleRecipeURLs(for: preferred, in: bundle)
+        if urls.isEmpty {
+            urls = bundledExampleRecipeURLs(for: "en", in: bundle)
+        }
+        urls.forEach { appData.open($0) }
+    }
+
     /// Creates an empty database for SwiftUI previews and other testing purposes
     static func empty() -> BackAppData {
         // Connect to an in-memory database
@@ -102,4 +130,30 @@ extension BackAppData {
         return try! BackAppData(dbQueue)
     }
     
+}
+
+extension BackAppData {
+    /// Synchronously imports the example recipes bundled with the app (e.g. `1en.bakingAppRecipe`)
+    /// for the current language, so screenshots always show the same data.
+    /// - Parameter favouriteFilePrefix: recipes from files starting with this prefix are marked as favourites
+    fileprivate func importBundledExampleRecipes(favouriteFilePrefix: String) {
+        let language = Bundle.main.preferredLocalizations.first ?? "en"
+        guard let urls = Bundle.main.urls(forResourcesWithExtension: "bakingAppRecipe", subdirectory: nil) else { return }
+        
+        let exampleURLs = urls
+            .filter { $0.lastPathComponent.dropFirst().hasPrefix(language) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        
+        for url in exampleURLs {
+            guard let data = try? Data(contentsOf: url) else { continue }
+            let existingIds = Set(allRecipes.compactMap(\.id))
+            _ = importData(data)
+            
+            if url.lastPathComponent.hasPrefix(favouriteFilePrefix) {
+                for var recipe in allRecipes where !existingIds.contains(recipe.id ?? -1) {
+                    toggleFavorite(for: &recipe)
+                }
+            }
+        }
+    }
 }

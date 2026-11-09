@@ -52,6 +52,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Dies erlaubt dir direkt in der App Fotos mit deiner Kamera für deine Rezepte zu machen</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.moritzschaub.Back-App-iOS.viewRecipe</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
