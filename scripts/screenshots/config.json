@@ -1,0 +1,92 @@
+{
+  "languages": ["en", "de"],
+
+  "pose_command": "duoctl -d {udid} {pose}",
+  "screenshot_command": "duoctl -d {udid} screenshot {path}",
+
+  "devices": {
+    "iphone_6_3": {
+      "description": "iPhone 6.3\" display with Dynamic Island (iPhone 17 / 16 Pro class)",
+      "size": [1206, 2622],
+      "simulators": ["iPhone 17 Pro", "iPhone 17", "iPhone 16 Pro"],
+      "screen_corner_radius": 0.135,
+      "bezel": 0.035
+    },
+    "iphone_duo_outer": {
+      "description": "iPhone Duo, outer display",
+      "size": [1398, 2034],
+      "simulators": ["iPhone Duo"],
+      "pose": "close",
+      "fallback": "iphone_6_3",
+      "screen_corner_radius": 0.11,
+      "bezel": 0.035
+    },
+    "iphone_duo_inner": {
+      "description": "iPhone Duo, inner (unfolded) display",
+      "size": [2007, 2853],
+      "simulators": ["iPhone Duo"],
+      "pose": "open",
+      "fallback": "ipad_13",
+      "orientation": "landscape",
+      "screen_corner_radius": 0.05,
+      "bezel": 0.025
+    },
+    "ipad_13": {
+      "description": "iPad 13\" display",
+      "size": [2064, 2752],
+      "orientation": "landscape",
+      "simulators": ["iPad Pro 13-inch (M5)", "iPad Pro 13-inch (M4)", "iPad Air 13-inch (M3)"],
+      "screen_corner_radius": 0.035,
+      "bezel": 0.025
+    }
+  },
+
+  "style": {
+    "mode": "plain",
+    "background_top": "#1C1C2E",
+    "background_bottom": "#000000",
+    "caption_color": "#FFFFFF",
+    "subtitle_color": "#C9C9E8",
+    "bezel_color": "#2B2B2E",
+    "bezel_highlight": "#4A4A50",
+    "fonts": [
+      "/System/Library/Fonts/SFNS.ttf",
+      "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+      "/Library/Fonts/Arial Bold.ttf",
+      "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    ]
+  },
+
+  "screens": [
+    {
+      "id": "1_recipeList",
+      "caption": { "en": "All your bread recipes", "de": "Alle deine Brotrezepte" },
+      "subtitle": { "en": "Saved locally, favourites on top", "de": "Lokal gespeichert, Favoriten oben" }
+    },
+    {
+      "id": "2_recipeDetail",
+      "caption": { "en": "Everything at a glance", "de": "Alles auf einen Blick" },
+      "subtitle": { "en": "Duration, dough weight and hydration", "de": "Dauer, Teiggewicht und Hydration" }
+    },
+    {
+      "id": "3_schedule",
+      "caption": { "en": "Plan your baking day", "de": "Plane deinen Backtag" },
+      "subtitle": { "en": "Times and scaled quantities for every step", "de": "Zeiten und Mengen für jeden Schritt" }
+    },
+    {
+      "id": "4_editRecipe",
+      "caption": { "en": "Steps and substeps", "de": "Schritte und Unterschritte" },
+      "subtitle": { "en": "Perfect for starters and pre-ferments", "de": "Ideal für Sauerteig und Vorteige" }
+    },
+    {
+      "id": "5_stepDetail",
+      "caption": { "en": "Water temperature calculated", "de": "Wassertemperatur berechnet" },
+      "subtitle": { "en": "Based on your room temperature", "de": "Passend zur Raumtemperatur" }
+    },
+    {
+      "id": "6_ingredientDetail",
+      "caption": { "en": "Smart ingredient types", "de": "Zutaten automatisch erkannt" },
+      "subtitle": { "en": "Flour, water and starter recognised", "de": "Mehl, Wasser und Anstellgut" }
+    }
+  ]
+}

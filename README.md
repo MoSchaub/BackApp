@@ -77,6 +77,8 @@ scripts/screenshots/take_screenshots.sh "iPhone 16"
 
 It runs the `ReadmeScreenshots` UI test on the simulator (the app is launched with `-screenshotMode`, which loads the example recipes) and writes `images/overview.jpeg` and `images/recipeManagement.jpeg`.
 
+The App Store screenshots (every language and required device size) are made by the same test; see [scripts/screenshots/README.md](scripts/screenshots/README.md).
+
 ## Supporting the project
 
 BackApp is free in the App Store, but many hours of work have gone into it, and publishing it in the App Store costs money. If you like the app, we would be very happy about a small [donation via PayPal](https://www.paypal.com/donate?hosted_button_id=UCSFW65PP6N3U).
