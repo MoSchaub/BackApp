@@ -136,43 +136,30 @@ class RecipeListVCTests: XCTestCase {
             //settings button
             let settingsButton = leadingButtons.first!
             XCTAssertEqual(settingsButton.image, UIImage(systemName: "gear"))
+            XCTAssertEqual(settingsButton.title, Strings.settings)
 
             self.sut.perform(settingsButton.action)
 
             let trailingButtons = navigationItem.rightBarButtonItems ?? []
             XCTAssertGreaterThanOrEqual(trailingButtons.count, 2)
 
-            let editButton: UIBarButtonItem = {
-                if let found = trailingButtons.first(where: { $0.title == Strings.EditButton_Edit || $0.title == Strings.EditButton_Done }) {
-                    return found
-                }
-                return trailingButtons.last!
-            }()
+            // a pencil symbol with a title instead of the text-only system Edit item
+            guard let editButton = trailingButtons.first(where: { $0.accessibilityIdentifier == AccessibilityID.editRecipeListAction }) else {
+                XCTFail("missing edit button")
+                expectation.fulfill()
+                return
+            }
+            XCTAssertEqual(editButton.image, UIImage(systemName: "pencil"))
+            XCTAssertEqual(editButton.title, Strings.EditButton_Edit)
 
             XCTAssertEqual(self.sut.isEditing, false)
-            if let title = editButton.title {
-                XCTAssertEqual(title, Strings.EditButton_Edit)
-            }
-
             if let action = editButton.action, let target = editButton.target as AnyObject? {
                 _ = target.perform(action, with: editButton)
-            } else {
-                self.sut.setEditing(true, animated: false)
             }
             XCTAssertEqual(self.sut.isEditing, true)
-            if let title = editButton.title {
-                XCTAssertEqual(title, Strings.EditButton_Done)
-            }
 
-            if let action = editButton.action, let target = editButton.target as AnyObject? {
-                _ = target.perform(action, with: editButton)
-            } else {
-                self.sut.setEditing(false, animated: false)
-            }
+            self.sut.setEditing(false, animated: false)
             XCTAssertEqual(self.sut.isEditing, false)
-            if let title = editButton.title {
-                XCTAssertEqual(title, Strings.EditButton_Edit)
-            }
 
             //trailing
             let plusButton = trailingButtons.first!

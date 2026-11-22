@@ -40,7 +40,9 @@ extension RecipeListViewController {
                 self.navigationItem.leftBarButtonItems = [self.makeSettingsButtonItem()]
 
                 //trailing
-                self.navigationItem.rightBarButtonItems = [addButtonItem, .flexible, self.editButtonItem]
+                // while editing, the system Done item ends editing
+                let editItem = self.isEditing ? self.editButtonItem : self.makeEditButtonItem()
+                self.navigationItem.rightBarButtonItems = [addButtonItem, .flexible, editItem]
             }
 
             // search
@@ -60,8 +62,25 @@ extension RecipeListViewController {
 
     private func makeSettingsButtonItem() -> UIBarButtonItem {
         let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
+        settingsButtonItem.title = Strings.settings
         settingsButtonItem.accessibilityIdentifier = AccessibilityID.settingsButton
         return settingsButtonItem
+    }
+
+    /// The pencil that starts editing the list.
+    ///
+    /// A symbol instead of the text-only system Edit item, which stays in a horizontal bar
+    /// instead of moving into the vertical bar on iPhone Duo.
+    private func makeEditButtonItem() -> UIBarButtonItem {
+        let editButtonItem = UIBarButtonItem(image: UIImage(systemName: "pencil"), style: .plain, target: self, action: #selector(self.startEditing))
+        editButtonItem.title = Strings.EditButton_Edit
+        editButtonItem.isEnabled = self.editButtonItem.isEnabled
+        editButtonItem.accessibilityIdentifier = AccessibilityID.editRecipeListAction
+        return editButtonItem
+    }
+
+    @objc private func startEditing() {
+        setEditing(true, animated: true)
     }
 
     /// The + button, which adds a recipe and offers importing one from a file in its menu

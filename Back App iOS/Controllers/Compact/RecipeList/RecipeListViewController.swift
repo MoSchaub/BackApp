@@ -106,10 +106,8 @@ class RecipeListViewController: UITableViewController {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        // in the sidebar, Edit lives in the overflow menu and the bar shows Done while editing
-        if usesSidebarNavigationBar {
-            configureNavigationBar()
-        }
+        // the bar shows Done while editing instead of the pencil (or, in the sidebar, instead of +)
+        configureNavigationBar()
     }
 
     override func loadView() {

@@ -88,7 +88,9 @@ class EditRecipeViewController: BackAppVC {
 
     /// favourite item to add  the recipe to the favorites
     private func favouriteItem() -> UIBarButtonItem {
-        UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+        let item = UIBarButtonItem(image: UIImage(systemName: recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+        item.title = recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite
+        return item
     }
 
     /// delete item; deletes the recipe and dissmisses

@@ -9,6 +9,7 @@
 //
 
 import UIKit
+import BakingRecipeStrings
 
 private var openSettingsKey: UInt8 = 0
 
@@ -47,12 +48,14 @@ public extension UITableViewController {
             if #available(iOS 14.0, *) {
                 // create a settings item that triggers the provided closure
                 self._openSettingsHandler = openSettings
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                let settingsItem = UIBarButtonItem(
                     image: UIImage(systemName: "gear"),
                     style: .plain,
                     target: self,
                     action: #selector(_ba_openSettingsTapped)
                 )
+                settingsItem.title = Strings.settings
+                self.navigationItem.rightBarButtonItem = settingsItem
             }
             
             // enable the toolbar

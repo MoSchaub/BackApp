@@ -22,7 +22,7 @@ enum AccessibilityID {
     static let addRecipeButton = "addRecipeButton"
     /// The settings button, or in the sidebar its action in the overflow menu
     static let settingsButton = "settingsButton"
-    /// The Edit action in the sidebar's overflow menu
+    /// The pencil that starts editing the list, or in the sidebar its action in the overflow menu
     static let editRecipeListAction = "editRecipeListAction"
 
     // MARK: Recipe detail
