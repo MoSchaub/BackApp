@@ -19,6 +19,7 @@ class BackAppUITestCase: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        applyRequestedOrientation()
 
         app = XCUIApplication()
         app.launchArguments = [
@@ -37,8 +38,14 @@ class BackAppUITestCase: XCTestCase {
     // MARK: - Elements
 
     var navigationBar: XCUIElement { app.navigationBars.firstMatch }
-    /// The system back button of the current screen
-    var backButton: XCUIElement { navigationBar.buttons.firstMatch }
+    /// The system back button of the current screen.
+    ///
+    /// In the split view the back button of the detail column isn't the first button of the first
+    /// navigation bar (that's the sidebar's), and on the iPhone Duo it isn't inside a navigation bar at all,
+    /// so look it up by the system identifier there.
+    var backButton: XCUIElement {
+        isSplitView ? app.buttons[AccessibilityID.systemBackButton].firstMatch : navigationBar.buttons.firstMatch
+    }
     var addButton: XCUIElement { app.buttons[AccessibilityID.addRecipeButton].firstMatch }
     var settingsButton: XCUIElement { app.buttons[AccessibilityID.settingsButton].firstMatch }
     var nameTextField: XCUIElement { app.textFields[AccessibilityID.nameField] }
@@ -47,7 +54,40 @@ class BackAppUITestCase: XCTestCase {
     /// The table cell with accessibility identifier `id`
     func cell(_ id: String) -> XCUIElement { app.cells[id].firstMatch }
 
+    /// Whether the app shows the recipe list as a sidebar next to the detail (iPad, unfolded iPhone Duo)
+    /// instead of a single navigation stack (iPhone).
+    var isSplitView: Bool { app.windows.firstMatch.horizontalSizeClass == .regular }
+
     // MARK: - Helpers
+
+    /// Opens the settings from the recipe list.
+    /// In the sidebar the settings are an action in the navigation bar's overflow menu (⋯), on the iPhone a button.
+    func openSettings(file: StaticString = #filePath, line: UInt = #line) {
+        guard isSplitView else {
+            settingsButton.tap()
+            return
+        }
+        // the system overflow button has no identifier, only its label
+        let overflowButton = app.navigationBars.buttons["More"].firstMatch
+        guard overflowButton.waitForExistence(timeout: timeout) else {
+            XCTFail("overflow menu button not found in\n\(app.debugDescription)", file: file, line: line)
+            return
+        }
+        overflowButton.tap()
+
+        let settingsAction = app.buttons.matching(
+            NSPredicate(format: "identifier == %@ OR label == %@", AccessibilityID.settingsButton, "Settings")).firstMatch
+        assertExists(settingsAction, file: file, line: line)
+        settingsAction.tap()
+    }
+
+    /// Goes back from the recipe detail to the recipe list.
+    /// In the split view the list is always visible next to the detail, so there's nothing to do.
+    func backToRecipeList(file: StaticString = #filePath, line: UInt = #line) {
+        guard !isSplitView else { return }
+        backButton.tap()
+        assertExists(addButton, file: file, line: line)
+    }
 
     /// Fails the test if `element` doesn't appear within `timeout`.
     ///
@@ -70,5 +110,15 @@ class BackAppUITestCase: XCTestCase {
         assertExists(element, file: file, line: line)
         element.tap()
         element.typeText(text)
+    }
+}
+
+/// Rotates the device if the test run asks for it with `UI_TEST_ORIENTATION=portrait` or `landscape`,
+/// e.g. `TEST_RUNNER_UI_TEST_ORIENTATION=portrait xcodebuild test …` to run the UI tests on an iPad in portrait.
+func applyRequestedOrientation() {
+    switch ProcessInfo.processInfo.environment["UI_TEST_ORIENTATION"] {
+    case "portrait": XCUIDevice.shared.orientation = .portrait
+    case "landscape": XCUIDevice.shared.orientation = .landscapeLeft
+    default: break
     }
 }

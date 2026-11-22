@@ -118,7 +118,7 @@ final class Back_App_iOSUITests: BackAppUITestCase {
         addStepCell.tap()
         backButton.tap() // step -> edit recipe
         backButton.tap() // edit recipe -> recipe detail
-        backButton.tap() // recipe detail -> recipe list
+        backToRecipeList()
 
         assertExists(app.staticTexts["3 steps"])
     }
@@ -141,11 +141,11 @@ final class Back_App_iOSUITests: BackAppUITestCase {
     func testRecipeListIsRestoredAfterLeavingRecipe() throws {
         app.launchArguments.append("-includeTestingRecipe")
         app.launch()
+        try XCTSkipIf(isSplitView, "In the split view the recipe stays open next to the list, so it can't be left.")
 
         app.staticTexts[Recipe.example.name].tap()
         assertExists(app.buttons[AccessibilityID.editRecipeButton])
-        backButton.tap()
-        assertExists(addButton)
+        backToRecipeList()
 
         relaunchAfterTerminationInBackground()
 
@@ -173,8 +173,14 @@ final class Back_App_iOSUITests: BackAppUITestCase {
     /// state restoration activity.
     private func relaunchAfterTerminationInBackground() {
         XCUIDevice.shared.press(.home)
+        // On the iPhone Duo simulator the Home press goes to the other display and the app stays
+        // in the foreground, so bring another app to the front instead.
+        if !app.wait(for: .runningBackgroundSuspended, timeout: 2) && app.state == .runningForeground {
+            XCUIApplication(bundleIdentifier: "com.apple.Preferences").activate()
+        }
         XCTAssertTrue(app.wait(for: .runningBackgroundSuspended, timeout: timeout)
-                      || app.state == .runningBackground)
+                      || app.state == .runningBackground,
+                      "app did not go to the background, state: \(app.state.rawValue)")
 
         app.terminate()
         app.launchArguments.removeAll { $0 == "-reset" || $0 == "-includeTestingRecipe" }

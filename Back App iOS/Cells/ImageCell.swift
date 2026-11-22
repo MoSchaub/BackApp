@@ -17,7 +17,8 @@ public class ImageCell: CustomCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         guard let imageView = self.imageView else { return }
         if let data = data {
-            let image = UIImage(data: data, scale: 0.01) ?? Images.largePhoto
+            // big enough for the full width of an iPad, without decoding a full camera resolution photo
+            let image = UIImage.downsampled(from: data, maxPixelSize: 2048) ?? Images.largePhoto
             imageView.image = image
             imageView.contentMode = .scaleAspectFill
         } else {

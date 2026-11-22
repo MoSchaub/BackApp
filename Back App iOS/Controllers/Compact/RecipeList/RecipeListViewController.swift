@@ -76,11 +76,16 @@ class RecipeListViewController: UITableViewController {
             self.delegate.presentImportAlert(from: self)
         }.store(in: &tokens)
 
+        //the sidebar uses a different navigation bar layout, so rebuild it when the width changes
+        NotificationCenter.default.publisher(for: .horizontalSizeClassDidChange).sink { _ in
+            self.configureNavigationBar()
+        }.store(in: &tokens)
+
         NotificationCenter.default.publisher(for: .homeShouldPopSplitVC).sink { _ in
             DispatchQueue.main.async {
-                if self.splitViewController?.viewControllers.count ?? 2 > 1 {
-                    _ = self.splitViewController?.viewControllers.popLast()
-                }
+                // the recipe is gone, so show the placeholder in the detail column again
+                guard let splitViewController = self.splitViewController, !splitViewController.isCollapsed else { return }
+                splitViewController.showDetailViewController(BackAppCoordinator.makePlaceholder(), sender: self)
             }
         }.store(in: &tokens)
 
@@ -97,6 +102,14 @@ class RecipeListViewController: UITableViewController {
         //ask for room temp
         delegate.presentRoomTempSheet(from: self)
 #endif
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        // in the sidebar, Edit lives in the overflow menu and the bar shows Done while editing
+        if usesSidebarNavigationBar {
+            configureNavigationBar()
+        }
     }
 
     override func loadView() {

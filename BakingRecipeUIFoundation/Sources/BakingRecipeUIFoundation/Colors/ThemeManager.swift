@@ -33,6 +33,7 @@ public final class ThemeManager {
 
         UITableViewCell.appearance().backgroundColor = currentTheme.backgroundColor
         
+        UIColor.screenBackgroundColor = currentTheme.backgroundColor
         UIColor.cellBackgroundColor = currentTheme.cellBackgroundColor
         UIColor.selectedCellBackgroundColor = currentTheme.selectedCellBackground
         UIColor.baTintColor = currentTheme.baTintColor

@@ -12,7 +12,7 @@ final class CompactHomeTests: BackAppUITestCase {
         app.swipeDown()
 
         setRoomTemperature("30")
-        settingsButton.tap()
+        openSettings()
         assertExists(app.staticTexts["30°C"])
 
         // relaunch to check the setting was persisted, then restore the default
@@ -21,7 +21,7 @@ final class CompactHomeTests: BackAppUITestCase {
         app.swipeDown()
 
         setRoomTemperature("20")
-        settingsButton.tap()
+        openSettings()
         assertExists(app.staticTexts["20°C"])
     }
 
@@ -29,7 +29,7 @@ final class CompactHomeTests: BackAppUITestCase {
         app.launch()
         app.swipeDown()
 
-        settingsButton.tap()
+        openSettings()
         cell(AccessibilityID.aboutCell).tap()
 
         assertExists(app.navigationBars["about Baking App"])
@@ -53,7 +53,7 @@ final class CompactHomeTests: BackAppUITestCase {
 
     /// Opens the settings, picks `temperature` as room temperature and goes back to the recipe list.
     private func setRoomTemperature(_ temperature: String) {
-        settingsButton.tap()
+        openSettings()
         cell(AccessibilityID.roomTemperatureCell).tap()
 
         let picker = app.pickerWheels.firstMatch

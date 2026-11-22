@@ -14,11 +14,16 @@ enum AccessibilityID {
     static let nameField = "nameField"
     /// The navigation bar Done button shown while editing a text field
     static let doneButton = "doneButton"
+    /// The identifier UIKit gives the system back button of a navigation bar
+    static let systemBackButton = "BackButton"
 
     // MARK: Recipe list
 
     static let addRecipeButton = "addRecipeButton"
+    /// The settings button, or in the sidebar its action in the overflow menu
     static let settingsButton = "settingsButton"
+    /// The Edit action in the sidebar's overflow menu
+    static let editRecipeListAction = "editRecipeListAction"
 
     // MARK: Recipe detail
 
