@@ -19,26 +19,26 @@ struct DurationFormattingTests {
     }
 
     @Test("formattedDuration", arguments: [
-        (0, "0 \(Strings.minutes)"),
-        (1, "\(Strings.one) \(Strings.minute)"),
-        (2, "2 \(Strings.minutes)"),
-        (59, "59 \(Strings.minutes)"),
-        (60, "\(Strings.one) \(Strings.hour)"),
-        (61, "\(Strings.one) \(Strings.hour) \(Strings.one) \(Strings.minute)"),
-        (66, "\(Strings.one) \(Strings.hour) 6 \(Strings.minutes)"),
-        (120, "2 \(Strings.hours)"),
-        (121, "2 \(Strings.hours) \(Strings.one) \(Strings.minute)"),
-        (126, "2 \(Strings.hours) 6 \(Strings.minutes)"),
+        (0, Strings.minutesCount(0)),
+        (1, Strings.minutesCount(1)),
+        (2, Strings.minutesCount(2)),
+        (59, Strings.minutesCount(59)),
+        (60, Strings.hoursCount(1)),
+        (61, "\(Strings.hoursCount(1)) \(Strings.minutesCount(1))"),
+        (66, "\(Strings.hoursCount(1)) \(Strings.minutesCount(6))"),
+        (120, Strings.hoursCount(2)),
+        (121, "\(Strings.hoursCount(2)) \(Strings.minutesCount(1))"),
+        (126, "\(Strings.hoursCount(2)) \(Strings.minutesCount(6))"),
     ])
     func formattedDuration(minutes: Int, expected: String) {
         #expect(minutes.formattedDuration == expected)
     }
 
     @Test("formattedDurationHours drops the minutes", arguments: [
-        (30, "0 \(Strings.hours)"),
-        (60, "\(Strings.one) \(Strings.hour)"),
-        (119, "\(Strings.one) \(Strings.hour)"),
-        (150, "2 \(Strings.hours)"),
+        (30, Strings.hoursCount(0)),
+        (60, Strings.hoursCount(1)),
+        (119, Strings.hoursCount(1)),
+        (150, Strings.hoursCount(2)),
     ])
     func formattedDurationHours(minutes: Int, expected: String) {
         #expect(minutes.formattedDurationHours == expected)
@@ -55,12 +55,12 @@ struct DurationFormattingTests {
     func compactDurationAboveAnHour(minutes: Int, whole: String, fraction: String) {
         // NumberFormatter uses the current locale, so build the expectation with its separator.
         let separator = Locale.current.decimalSeparator ?? "."
-        #expect(minutes.compactForamttedDuration == "\(whole)\(separator)\(fraction) \(Strings.hours)")
+        #expect(minutes.compactForamttedDuration == Strings.hoursDecimalCount(Double(minutes) / 60, formatted: "\(whole)\(separator)\(fraction)"))
     }
 
     @Test("Whole hours above an hour have no fraction")
     func compactDurationWholeHours() {
-        #expect(180.compactForamttedDuration == "3 \(Strings.hours)")
+        #expect(180.compactForamttedDuration == Strings.hoursDecimalCount(3, formatted: "3"))
     }
 
     @Test("Step.formattedDuration converts seconds and truncates to whole minutes", arguments: [

@@ -64,10 +64,13 @@ private extension RecipeCell {
         guard let imageData = imageData else {
             return nil
         }
-        guard let image = UIImage(data: imageData, scale: 0.01) else {
+        let height = self.bounds.height
+        // The accessory shows the photo aspect filled, so decode it a few times
+        // larger than the accessory instead of at full camera resolution.
+        let maxPixelSize = height * 3 * UITraitCollection.current.displayScale
+        guard let image = UIImage.downsampled(from: imageData, maxPixelSize: maxPixelSize) else {
             return nil
         }
-        let height = self.bounds.height
         let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: height * 1.5, height: height)))
         
         

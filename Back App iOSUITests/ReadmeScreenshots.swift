@@ -25,6 +25,7 @@ final class ReadmeScreenshots: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        applyRequestedOrientation()
 
         app = XCUIApplication()
         app.launchArguments += ["-screenshotMode", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
@@ -46,8 +47,9 @@ final class ReadmeScreenshots: XCTestCase {
         // 3. schedule
         start.tap()
         // The confirm button is titled "OK" but iOS 26 renders it as a checkmark whose
-        // accessibility label is "Done", so match either label.
-        let ok = app.navigationBars.buttons.matching(
+        // accessibility label is "Done", so match either label. Search all buttons: on the
+        // iPhone Duo the bar buttons aren't inside the navigation bar.
+        let ok = app.buttons.matching(
             NSPredicate(format: "label == %@ OR label == %@", "OK", "Done")).firstMatch
         XCTAssertTrue(ok.waitForExistence(timeout: timeout))
         ok.tap()
@@ -62,7 +64,7 @@ final class ReadmeScreenshots: XCTestCase {
         // 4. edit recipe, scrolled to the steps
         // iOS 26 no longer nests the bottom toolbar buttons under a toolbar element,
         // so query the Edit button directly.
-        let edit = app.buttons["Edit"].firstMatch
+        let edit = app.buttons[AccessibilityID.editRecipeButton].firstMatch
         XCTAssertTrue(edit.waitForExistence(timeout: timeout))
         edit.tap()
         let step = app.staticTexts[stepName].firstMatch
@@ -71,9 +73,12 @@ final class ReadmeScreenshots: XCTestCase {
         snapshot("4_editRecipe")
 
         // 5. step detail
-        step.tap()
-        let ingredient = app.staticTexts[ingredientName].firstMatch
-        XCTAssertTrue(ingredient.waitForExistence(timeout: timeout))
+        // Tap the cell rather than the label, so the tap selects the row. The ingredient names
+        // are already shown in the edit screen, so wait for the step's navigation bar instead.
+        // The cell lists the step's ingredients below its title, so tap the title line at the top:
+        // the middle of the cell can be an ingredient row, e.g. on iPad.
+        let stepCell = app.cells.containing(.staticText, identifier: stepName).firstMatch
+        tap(stepCell, at: CGVector(dx: 0.5, dy: 0.05), until: app.navigationBars[stepName])
         snapshot("5_stepDetail")
 
         // 6. ingredient detail
@@ -87,8 +92,15 @@ final class ReadmeScreenshots: XCTestCase {
 
     // MARK: - Helpers
 
+    /// Taps the back button of the current screen.
+    /// In the split view the first navigation bar is the sidebar's, and on the iPhone Duo the bar buttons
+    /// aren't inside the navigation bar, so use the system back button's identifier there.
     private func goBack() {
-        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        if app.windows.firstMatch.horizontalSizeClass == .regular {
+            app.buttons[AccessibilityID.systemBackButton].firstMatch.tap()
+        } else {
+            app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        }
         waitForAnimations()
     }
 
@@ -122,11 +134,13 @@ final class ReadmeScreenshots: XCTestCase {
     /// Taps `element` and waits for `screen` to appear.
     /// On slow simulators a tap right after scrolling can be lost (it only stops the scrolling),
     /// so tap once more if `element` is still on screen.
-    private func tap(_ element: XCUIElement, until screen: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
-        element.tap()
+    /// `offset` is the normalized position in `element` to tap, the center by default.
+    private func tap(_ element: XCUIElement, at offset: CGVector = CGVector(dx: 0.5, dy: 0.5), until screen: XCUIElement,
+                     file: StaticString = #filePath, line: UInt = #line) {
+        element.coordinate(withNormalizedOffset: offset).tap()
         if !screen.waitForExistence(timeout: timeout / 2), element.isHittable {
             waitForAnimations()
-            element.tap()
+            element.coordinate(withNormalizedOffset: offset).tap()
         }
         XCTAssertTrue(screen.waitForExistence(timeout: timeout), "\(screen) did not appear after tapping \(element)",
                       file: file, line: line)

@@ -235,9 +235,12 @@ class RecipeDetailViewController: UITableViewController {
 
         /// favourite item to add  the recipe to the favorites
         let favourite = UIBarButtonItem(image: UIImage(systemName: recipeDetailItem.recipe.isFavorite ? "star.fill" : "star"), style: .plain, target: self, action: #selector(favouriteRecipe))
+        favourite.title = recipeDetailItem.recipe.isFavorite ? Strings.removeFavorite : Strings.addFavorite
 
         /// edit item to navigate to editRecipeVC
-        let edit =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editRecipe))
+        /// a symbol instead of a text-only Edit button, so it can move into the vertical bar on iPhone Duo
+        let edit = UIBarButtonItem(image: UIImage(systemName: "pencil"), style: .plain, target: self, action: #selector(editRecipe))
+        edit.title = Strings.EditButton_Edit
         edit.accessibilityIdentifier = AccessibilityID.editRecipeButton
 
         //setup toolbar / navbar

@@ -20,6 +20,8 @@ private struct ColorUtilsKey {
     static var secondaryTextColor: UIColor?
     
     static var secondaryCellBackgroundColor: UIColor?
+
+    static var screenBackgroundColor: UIColor?
 }
 
 public extension UIColor {
@@ -38,6 +40,12 @@ public extension UIColor {
     
     
     
+    /// The background of screens and table views
+    static var screenBackgroundColor: UIColor? {
+        get { getAssociatedObject(key: &ColorUtilsKey.screenBackgroundColor) }
+        set { setAssociatedObject(key: &ColorUtilsKey.screenBackgroundColor, value: newValue) }
+    }
+
     static var primaryCellTextColor: UIColor? {
         get { getAssociatedObject(key: &ColorUtilsKey.primaryCellTextColor)}
         set { setAssociatedObject(key: &ColorUtilsKey.primaryCellTextColor, value: newValue) }

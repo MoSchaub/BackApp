@@ -9,7 +9,7 @@ protocol BackAppCoordinatorDelegate {
     func cordinatorDidCompleteStart()
 }
 
-final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
+final class BackAppCoordinator: NSObject, Coordinator, RecipeListCoordinatorDelegate {
 
     var childCoordinators: [Coordinator] = []
 
@@ -29,20 +29,32 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
         
         if #available(iOS 26.0, *) {
             self.splitViewController = BASplitViewController(style: UISplitViewController.Style.doubleColumn)
-            splitViewController.preferredDisplayMode = .oneBesideSecondary
-            splitViewController.displayModeButtonVisibility = .never
         } else {
             self.splitViewController = BASplitViewController()
-            if #available(iOS 14.0, *) {
-                splitViewController.preferredDisplayMode = .oneBesideSecondary
-            } else {
-                splitViewController.preferredDisplayMode = .allVisible
-            }
         }
-        
-        splitViewController.viewControllers = [navigationController]
 
         self.appData = BackAppData.shared
+        super.init()
+
+        splitViewController.preferredDisplayMode = .oneBesideSecondary
+        if #available(iOS 26.0, *) {
+            splitViewController.displayModeButtonVisibility = .never
+        }
+
+        // show a placeholder in the detail column until a recipe is selected
+        let placeholder = Self.makePlaceholder()
+        if splitViewController.style == .unspecified {
+            splitViewController.viewControllers = [navigationController, placeholder]
+        } else {
+            splitViewController.setViewController(navigationController, for: .primary)
+            splitViewController.setViewController(placeholder, for: .secondary)
+        }
+        splitViewController.delegate = self
+    }
+
+    /// The placeholder for the split view's detail column, wrapped in a navigation controller like the recipe detail
+    static func makePlaceholder() -> UINavigationController {
+        UINavigationController(rootViewController: RecipePlaceholderViewController())
     }
 
     func start() {
@@ -83,3 +95,35 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
     
 }
 
+// MARK: - Split view
+
+extension BackAppCoordinator: UISplitViewControllerDelegate {
+
+    private func isPlaceholder(_ viewController: UIViewController?) -> Bool {
+        (viewController as? UINavigationController)?.viewControllers.first is RecipePlaceholderViewController
+            || viewController is RecipePlaceholderViewController
+    }
+
+    // Column style (iOS 26+): when the split view collapses (iPhone, folding the Duo, narrow iPad window),
+    // show the recipe list instead of the placeholder.
+    func splitViewController(_ svc: UISplitViewController,
+                             topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+        isPlaceholder(svc.viewController(for: .secondary)) ? .primary : proposedTopColumn
+    }
+
+    // Classic style: drop the placeholder when collapsing instead of pushing it onto the list
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        isPlaceholder(secondaryViewController)
+    }
+
+    // Classic style: when expanding with only the list on screen, show the placeholder next to it
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        guard let primary = primaryViewController as? UINavigationController, primary.viewControllers.count <= 1 else {
+            return nil
+        }
+        return Self.makePlaceholder()
+    }
+}

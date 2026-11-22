@@ -37,9 +37,9 @@ struct RecipeModelTests {
     }
 
     @Test("timesText uses the singular only for exactly one piece", arguments: [
-        (Decimal(1), "1 \(Strings.piece)"),
-        (Decimal(2), "2 \(Strings.pieces)"),
-        (Decimal(12), "12 \(Strings.pieces)"),
+        (Decimal(1), Strings.piecesCount(1, formatted: "1")),
+        (Decimal(2), Strings.piecesCount(2, formatted: "2")),
+        (Decimal(12), Strings.piecesCount(12, formatted: "12")),
     ])
     func timesText(times: Decimal, expected: String) {
         var recipe = Recipe(number: 0)
@@ -51,7 +51,7 @@ struct RecipeModelTests {
     func timesTextWithoutValue() {
         var recipe = Recipe(number: 0)
         recipe.times = nil
-        #expect(recipe.timesText == "1 \(Strings.piece)")
+        #expect(recipe.timesText == Strings.piecesCount(1, formatted: "1"))
     }
 
     @Test("Setting timesText parses whole numbers and clears anything else", arguments: [
@@ -74,7 +74,7 @@ struct RecipeModelTests {
     func timesTextWithIndividualMass() {
         var recipe = Recipe(number: 0)
         recipe.times = 4
-        #expect(recipe.timesTextWithIndivialMass(with: 1000) == "4 \(Strings.pieces), 250.0 g each")
+        #expect(recipe.timesTextWithIndivialMass(with: 1000) == "4 pieces, 250.0 g each")
     }
 
     @Test("neutralizedForExport clears personal state and keeps the content")
