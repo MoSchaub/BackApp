@@ -465,11 +465,11 @@ struct DuplicationTests {
         let text = recipe.text(roomTemp: 20, scaleFactor: 2, kneadingHeating: 0, reader: dbQueue)
         let lines = text.components(separatedBy: "\n")
 
-        #expect(lines.first == "Cracker 4 \(Strings.pieces)")
+        #expect(lines.first == "Cracker \(Strings.piecesCount(4, formatted: "4"))")
         #expect(lines.contains { $0.hasPrefix("Mischen ") })
         #expect(lines.contains("\tMehl: 100.0 g "))
         #expect(lines.contains("gut mischen"))
         #expect(lines.contains { $0.hasPrefix("Backen ") })
-        #expect(lines.last == "\(Strings.EditButton_Done): \(dateFormatter.string(from: recipe.endDate(reader: dbQueue)))")
+        #expect(lines.last == Strings.exportEndDate(dateFormatter.string(from: recipe.endDate(reader: dbQueue))))
     }
 }

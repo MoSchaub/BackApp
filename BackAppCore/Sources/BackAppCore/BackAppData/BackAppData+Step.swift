@@ -51,10 +51,15 @@ public extension BackAppData {
     /// sorted by their stored number. Only the order of the top-level steps can be changed by the user,
     /// substeps always stay with their superstep. Afterwards the numbers of all steps are stored in the
     /// displayed order, so the next move uses matching rows.
-    func moveStep(with recipeId: Int64, from source: Int, to destination: Int) {
+    /// - Parameter completion: called on the main queue once the new order is stored (or the move was rejected),
+    /// so the table can be rebuilt from the database
+    func moveStep(with recipeId: Int64, from source: Int, to destination: Int, completion: (() -> Void)? = nil) {
         var rows = reorderedSteps(for: recipeId)
         guard rows.indices.contains(source), rows.indices.contains(destination),
-              let recipe = record(with: recipeId, of: Recipe.self) else { return }
+              let recipe = record(with: recipeId, of: Recipe.self) else {
+            DispatchQueue.main.async { completion?() }
+            return
+        }
 
         rows.insert(rows.remove(at: source), at: destination)
         let topLevelStepIds = rows.filter { $0.superStepId == nil }.compactMap(\.id)
@@ -74,6 +79,7 @@ public extension BackAppData {
             } catch {
                 print(error.localizedDescription)
             }
+            DispatchQueue.main.async { completion?() }
         }
     }
     

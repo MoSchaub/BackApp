@@ -15,6 +15,7 @@
 		8E5F3F132CB42C5A00C74344 /* CompactHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB20D5D2544E6FD00311A06 /* CompactHomeTests.swift */; };
 		8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */; };
 		8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */; };
+		8E755EEB30B9DA45008B7340 /* EditRecipeDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E755EEA30B9DA45008B7340 /* EditRecipeDataSourceTests.swift */; };
 		8E8B41F72F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
 		8E8B41F82F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
 		8E8B41F92F97760C00A10B5E /* Back App Debug.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */; };
@@ -130,6 +131,8 @@
 		5C2EE0A22F0A000100A1B2C3 /* ReadmeScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeScreenshots.swift; sourceTree = "<group>"; };
 		5C2EE0A42F0A000100A1B2C3 /* BackAppUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackAppUITestCase.swift; sourceTree = "<group>"; };
 		5C2EE0A72F0A000100A1B2C3 /* AccessibilityID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityID.swift; sourceTree = "<group>"; };
+		5C2EE0B12F0B000100A1B2C3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C2EE0B22F0B000100A1B2C3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
 		8E35DC7A2F93809900624927 /* BackAppCore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = BackAppCore.xctestplan; path = BackAppCore/Tests/BackAppCoreTests/BackAppCore.xctestplan; sourceTree = "<group>"; };
 		8E5A9A072DE3ACEB00A9B87B /* deploy-ios.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "deploy-ios.yml"; sourceTree = "<group>"; };
 		8E5A9A0B2DE3CDDD00A9B87B /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 		8E5C074E2D20A63F002EED55 /* download_on_the_app_store.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = download_on_the_app_store.svg; sourceTree = "<group>"; };
 		8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeViewTest.swift; sourceTree = "<group>"; };
 		8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewTest.swift; sourceTree = "<group>"; };
+		8E755EEA30B9DA45008B7340 /* EditRecipeDataSourceTests.swift */ = {isa = PBXFileReference; path = EditRecipeDataSourceTests.swift; sourceTree = "<group>"; };
 		8E8B41F62F97759A00A10B5E /* Back App Debug.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Back App Debug.xctestplan"; sourceTree = "<group>"; };
 		8EDCC5692E2314A800478852 /* LICENSES */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSES; sourceTree = SOURCE_ROOT; };
 		CD1B6A182483F7FF00597931 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -276,6 +280,7 @@
 			children = (
 				8E5F3F182CB4334A00C74344 /* EditRecipeViewTest.swift */,
 				8E5F3F1B2CB54A8200C74344 /* RecipeDetailViewTest.swift */,
+				8E755EEA30B9DA45008B7340 /* EditRecipeDataSourceTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -674,6 +679,7 @@
 			knownRegions = (
 				de,
 				en,
+				fr,
 				Base,
 			);
 			mainGroup = CD6A9A032340252400748249;
@@ -739,6 +745,7 @@
 			files = (
 				8E5F3F1C2CB54A8200C74344 /* RecipeDetailViewTest.swift in Sources */,
 				8E5F3F1A2CB4334A00C74344 /* EditRecipeViewTest.swift in Sources */,
+				8E755EEB30B9DA45008B7340 /* EditRecipeDataSourceTests.swift in Sources */,
 				CD2BCE5624AE72CB00B868D7 /* Back_App_iOSTests.swift in Sources */,
 				CDE7BF7D27065BD1006A9970 /* RecipeListVCTests.swift in Sources */,
 				CDD4F15D271B1E9E004E6840 /* CellTests.swift in Sources */,
@@ -834,6 +841,7 @@
 			children = (
 				CD68D46424AC5CBB000D4BD7 /* de */,
 				CD68D46624AC5CBD000D4BD7 /* en */,
+				5C2EE0B12F0B000100A1B2C3 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -844,6 +852,7 @@
 				CD87B1FA26FF913D00DAC6B6 /* Base */,
 				CD87B1FD26FF914300DAC6B6 /* de */,
 				CD9129D326FF91750040061C /* en */,
+				5C2EE0B22F0B000100A1B2C3 /* fr */,
 			);
 			name = "Launch Screen.storyboard";
 			sourceTree = "<group>";

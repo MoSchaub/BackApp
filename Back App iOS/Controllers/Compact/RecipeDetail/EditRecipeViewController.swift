@@ -74,7 +74,7 @@ class EditRecipeViewController: BackAppVC {
         snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
         snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
-        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([RoleDetailItem(role: EditRecipeRow.addStep, name: Strings.addStep)],toSection: .steps)
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
@@ -152,7 +152,8 @@ class EditRecipeViewController: BackAppVC {
 
     override func attachPublishers() {
         super.attachPublishers()
-        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate)
+        // only react to this table's data source, other edit screens may show different recipes
+        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate, object: dataSource)
             .sink { _ in
                 self.updateDataSource(animated: false)
             }
@@ -211,7 +212,7 @@ private extension EditRecipeViewController {
 
                 // add step cell
                 cell.textLabel?.text = detailItem.text
-                cell.accessibilityIdentifier = detailItem.text == Strings.addStep ? AccessibilityID.addStepCell : nil
+                cell.accessibilityIdentifier = (detailItem as? RoleDetailItem<EditRecipeRow>)?.role == .addStep ? AccessibilityID.addStepCell : nil
                 cell.accessoryType = .disclosureIndicator
 
                 // gray out the text if editMode enabled
@@ -226,6 +227,7 @@ private extension EditRecipeViewController {
         }
         dataSource.defaultRowAnimation = .none
         dataSource.recipeId = self.recipe.id
+        dataSource.appData = self.appData
 
         return dataSource
     }
@@ -364,6 +366,11 @@ extension EditRecipeViewController {
 
 }
 
+/// fixed rows of the edit recipe screen that are not backed by recipe data
+enum EditRecipeRow {
+    case addStep
+}
+
 // MARK: - Cell Selection
 
 extension EditRecipeViewController {
@@ -373,10 +380,8 @@ extension EditRecipeViewController {
                 imageTapped(sender: indexPath)
             } else if let stepItem = item as? StepItem {
                 showStepDetail(id: Int64(stepItem.id))
-            } else if let detailItem = item as? DetailItem {
-                if detailItem.text == Strings.addStep {
-                    showStepDetail(id: nil)
-                }
+            } else if let rowItem = item as? RoleDetailItem<EditRecipeRow>, rowItem.role == .addStep {
+                showStepDetail(id: nil)
             }
         }
     }

@@ -44,6 +44,17 @@ precedence = "closest"
 SPDX-FileCopyrightText = "2024 Moritz Schaub <moritz@pfaender.net>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
+# localizations added in 2026
+[[annotations]]
+path = [
+    "Back App iOS/fr.lproj/InfoPlist.strings",
+    "Back App iOS/fr.lproj/Launch Screen.strings",
+    "BakingRecipeStrings/Sources/BakingRecipeStrings/Resources/Localizable.xcstrings",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Moritz Schaub <moritz@pfaender.net>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
 #xcodeproj files
 [[annotations]]
 path = [
@@ -124,8 +135,6 @@ SPDX-License-Identifier = "CC-BY-SA-4.0"
 # txt files PrivacyPolicy
 [[annotations]]
 path = [
-  "Shared/Models/Data/BackAppImpressum.txt",
-  "Shared/Models/Data/PrivacyPolicy.txt",
   "Shared/Data/BackAppImpressum.txt",
   "Shared/Data/PrivacyPolicy.txt"
 ]

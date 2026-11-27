@@ -65,4 +65,35 @@ extension BackAppCoreTests {
         await moveRow(in: recipeId, from: 0, to: 2, expecting: ["Sauerteig", "Hauptteig", "Backen"])
         #expect(appData.reorderedSteps(for: recipeId).map(\.formattedName) == ["Sauerteig", "Hauptteig", "Backen"])
     }
+
+    /// The edit table rebuilds itself in the completion, so the new order must already be stored
+    /// when it is called and it has to run on the main queue.
+    @Test
+    func completionRunsAfterMoveIsStored() async throws {
+        let recipeId = try insertComplexRecipeWithTrailingStep()
+
+        let (isMainThread, displayed) = await withCheckedContinuation { continuation in
+            appData.moveStep(with: recipeId, from: 2, to: 0) {
+                continuation.resume(returning: (Thread.isMainThread, appData.reorderedSteps(for: recipeId).map(\.formattedName)))
+            }
+        }
+
+        #expect(isMainThread)
+        #expect(displayed == ["Backen", "Sauerteig", "Hauptteig"])
+    }
+
+    /// A rejected move still calls the completion, so the table resyncs with the unchanged order.
+    @Test
+    func completionRunsForInvalidRows() async throws {
+        let recipeId = try insertComplexRecipeWithTrailingStep()
+
+        let (isMainThread, displayed) = await withCheckedContinuation { continuation in
+            appData.moveStep(with: recipeId, from: 0, to: 10) {
+                continuation.resume(returning: (Thread.isMainThread, appData.reorderedSteps(for: recipeId).map(\.formattedName)))
+            }
+        }
+
+        #expect(isMainThread)
+        #expect(displayed == ["Sauerteig", "Hauptteig", "Backen"])
+    }
 }

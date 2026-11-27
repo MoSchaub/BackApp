@@ -27,7 +27,7 @@ class RecipeListDataSource: UITableViewDiffableDataSource<HomeSection, BackAppDa
     init(tableView: UITableView) {
 
         super.init(tableView: tableView) { (_, _, recipeListItem) -> UITableViewCell? in
-            RecipeCell(name: recipeListItem.recipe.formattedName, minuteLabel: "\(recipeListItem.stepCount) \(Strings.steps)", imageData: recipeListItem.recipe.imageData, reuseIdentifier: Strings.recipeCell)
+            RecipeCell(name: recipeListItem.recipe.formattedName, minuteLabel: Strings.stepsCount(recipeListItem.stepCount), imageData: recipeListItem.recipe.imageData, reuseIdentifier: Strings.recipeCell)
         }
         self.setup()
     }

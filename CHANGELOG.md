@@ -10,6 +10,7 @@
 
 - **Importing recipes on iPad works again.** Opening a recipe file from the Files app could open the app in a new window without importing anything. The same happened when a file launched the app. If a file can't be read, you now get an error message instead of nothing. (#35, #44)
 - **Reordering steps next to substeps works.** Dragging a step next to a substep could move the wrong step, or nothing at all. (#37, #43)
+- **The step list updates after reordering.** After dragging a step, its substeps stayed behind, and the list could jump back to the old order when you left edit mode. (#55)
 - **Durations and start times account for nested substeps.** A step's total duration followed the substep with the longest duration of its own, not the longest chain of substeps. So a short substep with long substeps of its own was left out, and some substeps were scheduled after their parent step. (#48)
 - **Fast typing is saved correctly.** Typing quickly in a text field could leave an older value saved, for example "Mis" instead of "Mischen". (#48)
 - **New users get the example recipes.** The bundled example recipes were never imported on first launch. They now load in your language, or in English if there are none in your language. (#41)

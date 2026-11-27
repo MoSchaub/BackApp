@@ -39,9 +39,9 @@ public extension BackAppData {
             databaseAutoUpdatesDisabled = true
 
             if let loadedData = url.loadData().data { //gets the data from the file at url
-                if self.importData(loadedData) { //import the data into the internal database
+                if let importedCount = self.importData(loadedData) { //import the data into the internal database
                     inputAlertTitle = Strings.success
-                    inputAlertMessage = Strings.recipesImported
+                    inputAlertMessage = Strings.recipesImported(importedCount)
                 } else {
                     inputAlertTitle = Strings.Alert_Error
                     inputAlertMessage = Strings.importFileContainsNoRecipes
@@ -64,14 +64,15 @@ public extension BackAppData {
     }
     
     /// imports data containing recipes into the database
-    /// - Returns: wether the import succeeded
-    func importData(_ data: Data) -> Bool {
+    /// - Returns: the number of imported recipes, or nil if the data is not a recipe file
+    @discardableResult
+    func importData(_ data: Data) -> Int? {
         //make json from data and ensure it contains the coding keys
         if let json = try? JSON(data: data), let recipesJson = json[CodingKeys.recipes.rawValue].array {
             _ = recipesJson.map { decodeAndImportRecipe(from: $0)} //decode and import
-            return true
+            return recipesJson.count
         } else {
-            return false
+            return nil
         }
     }
     
