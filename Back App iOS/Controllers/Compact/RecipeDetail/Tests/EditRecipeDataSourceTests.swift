@@ -6,7 +6,7 @@ import Foundation
 import Testing
 import GRDB
 @testable import Back_App
-@testable import BackAppCore
+@preconcurrency @testable import BackAppCore
 import BakingRecipeFoundation
 
 /// Moving a step row must rebuild the edit recipe table from the database,
@@ -35,7 +35,7 @@ struct EditRecipeDataSourceTests {
         var hauptteig = Step(name: "Hauptteig", recipeId: recipeId, number: 1)
         appData.insert(&hauptteig)
         var sauerteig = Step(name: "Sauerteig", recipeId: recipeId, number: 2)
-        sauerteig.superStepId = try #require(hauptteig.id)
+        sauerteig.superStepId = hauptteig.id
         appData.insert(&sauerteig)
 
         sut = EditRecipeViewController(recipeId: recipeId, creating: false, appData: appData)
