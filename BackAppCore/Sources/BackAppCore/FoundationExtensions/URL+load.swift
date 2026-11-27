@@ -43,12 +43,14 @@ extension URL {
     /// - returns: the loaded data and the potential error 
     func loadData() -> (data: Data?, error: Error?) {
         let data: Data
-        
+
         // read data from url
         do {
-            let _ = self.startAccessingSecurityScopedResource() // start the security-scoped resource before reading the file
+            // files opened in place (Files app, document picker) are security scoped;
+            // only balance the access if it was actually granted
+            let didStartAccessing = self.startAccessingSecurityScopedResource()
+            defer { if didStartAccessing { self.stopAccessingSecurityScopedResource() } }
             data = try Data(contentsOf: self)
-            self.stopAccessingSecurityScopedResource() // release the security-scoped resource after the data is read from the file
         } catch {
             print("Couldn't load \(self) from main bundle:\n\(error)")
             return (nil, error)

@@ -131,7 +131,9 @@ private extension BackAppVC {
     func doneButtonItem() -> UIBarButtonItem? {
         guard self.editingTextField != nil || self.editingTextView != nil else { return nil }
 
-        return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonItemPressed))
+        let item = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonItemPressed))
+        item.accessibilityIdentifier = AccessibilityID.doneButton
+        return item
     }
 
     private func items() -> [UIBarButtonItem] {

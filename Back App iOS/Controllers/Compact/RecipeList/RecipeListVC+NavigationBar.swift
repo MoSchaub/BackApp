@@ -14,6 +14,7 @@ extension RecipeListViewController {
 
             //left / leading
             let settingsButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.navigateToSettings))
+            settingsButtonItem.accessibilityIdentifier = AccessibilityID.settingsButton
             let editButtonItem = self.editButtonItem
             self.navigationItem.leftBarButtonItems = [settingsButtonItem]
 
@@ -26,9 +27,12 @@ extension RecipeListViewController {
                     self.presentAddRecipePopover(self.navigationItem.rightBarButtonItem!)
                 }
                 
-                self.navigationItem.rightBarButtonItems = [UIBarButtonItem(title: Strings.addRecipe, image: UIImage(systemName: "plus"), primaryAction: addAction, menu: UIMenu(children: [addAction, importAction])), .flexible, editButtonItem]
+                let addButtonItem = UIBarButtonItem(title: Strings.addRecipe, image: UIImage(systemName: "plus"), primaryAction: addAction, menu: UIMenu(children: [addAction, importAction]))
+                addButtonItem.accessibilityIdentifier = AccessibilityID.addRecipeButton
+                self.navigationItem.rightBarButtonItems = [addButtonItem, .flexible, editButtonItem]
             } else {
                 let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.presentAddRecipePopover))
+                addButtonItem.accessibilityIdentifier = AccessibilityID.addRecipeButton
                 let importButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.down.doc"), style: .plain, target: self, action: #selector(self.openImportFilePopover))
                 self.navigationItem.rightBarButtonItems = [addButtonItem, importButtonItem, editButtonItem]
             }
@@ -66,3 +70,11 @@ extension RecipeListViewController {
     }
 }
 
+#if DEBUG
+extension RecipeListViewController {
+    @objc func _test_openImportFilePopover() {
+        // Forward to the real implementation so tests can invoke via selector
+        self.openImportFilePopover()
+    }
+}
+#endif

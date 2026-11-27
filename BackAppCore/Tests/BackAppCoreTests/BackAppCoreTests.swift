@@ -8,34 +8,36 @@ import Testing
 @testable import BakingRecipeFoundation
 @testable import GRDB
 
-/// Availability-safe async wait helper for unit tests
-@inline(__always)
-func waitSeconds(_ seconds: UInt64) async {
-    if #available(iOS 16.0, *) {
-        // Prefer Duration-based API when available
-        try? await Task.sleep(for: .seconds(seconds))
-    } else {
-        // Fallback for older OS versions
-        try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
+/// Polls `condition` every 50 ms until it is true or `timeout` seconds have passed.
+/// Used instead of fixed sleeps so tests continue as soon as background database work lands.
+func poll(timeout: TimeInterval = 30, until condition: () -> Bool) async {
+    let deadline = Date().addingTimeInterval(timeout)
+    while condition() == false, Date() < deadline {
+        try? await Task.sleep(nanoseconds: 50_000_000)
     }
 }
 
-@Suite
+// serialized because every test opens its own DatabasePool on the same db.sqlite file;
+// parallel opens race on `PRAGMA journal_mode = WAL` and crash with SQLite error 5
+@Suite(.serialized)
 struct BackAppCoreTests {
-    
+
     var appData: BackAppData
 
     // Per-test setup: Swift Testing creates a new instance for each test.
     init() {
+        // Strings.* resolve lazily via NSLocalizedString, so setting AppleLanguages here
+        // is picked up on first access and forces English output.
         UserDefaults.standard.set(["en"], forKey: "AppleLanguages")
-        UserDefaults.standard.set("en_US", forKey: "AppleLocale")
-        UserDefaults.standard.synchronize()
+        // Locale.current cannot be changed at runtime, so use the production override hook
+        // to make temperature formatting deterministic (en_US -> °F).
+        MeasurementFormatting.localeOverride = Locale(identifier: "en_US")
         // Nuke the database before each test instance
         self.appData = BackAppData.shared(resetDatabase: true)
     }
 
     // Helper to reduce duplication in schema tests
-    func assertTableSchema(existsName: String, columnsName: String? = nil, expectedColumns: Set<String>) throws {
+    func assertTableSchema(existsName: String, columnsName: String? = nil, expectedColumns: Set<String>, sourceLocation: SourceLocation = #_sourceLocation) throws {
         // Given an empty database
         let dbQueue = try DatabaseQueue()
 
@@ -44,15 +46,15 @@ struct BackAppCoreTests {
 
         // Then the table exists with its columns
         try dbQueue.read { db in
-            #expect(try db.tableExists(existsName))
+            #expect(try db.tableExists(existsName), sourceLocation: sourceLocation)
             let columns = try db.columns(in: columnsName ?? existsName)
             let columnNames = Set(columns.map { $0.name })
-            #expect(columnNames == expectedColumns)
+            #expect(columnNames == expectedColumns, sourceLocation: sourceLocation)
         }
     }
 
     @Test
-    func testRecipeDatabaseSchema() throws {
+    func recipeDatabaseSchema() throws {
         try assertTableSchema(
             existsName: "Recipe",
             expectedColumns: ["id", "name", "info", "isFavorite", "difficulty", "inverted", "times", "date", "imageData", "number"]
@@ -60,7 +62,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testStepDatabaseSchema() throws {
+    func stepDatabaseSchema() throws {
         try assertTableSchema(
             existsName: "Step",
             expectedColumns: ["id", "name", "duration", "isKneadingStep", "temperature", "notes", "recipeId", "superStepId", "number", "endTemp"]
@@ -68,7 +70,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testIngredientDatabaseSchema() throws {
+    func ingredientDatabaseSchema() throws {
         try assertTableSchema(
             existsName: "ingredient",
             columnsName: "Ingredient",
@@ -77,41 +79,44 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testInsertingExample() throws {
+    func insertingExample() throws {
         try insert(recipeTransfer: Recipe.example)
     }
 
     @Test
-    func testInsertingComplexRecipe() throws {
+    func insertingComplexRecipe() throws {
         try insert(recipeTransfer: Recipe.complexExample(number: 0))
     }
 
     @Test
-    func testInsertingMultilayerRecipe() throws {
+    func insertingMultilayerRecipe() throws {
         try insert(recipeTransfer: Recipe.multilayerSubstepExample(number: 0), complex: true)
 
-        let recipeId: Int64 = try appData.databaseReader.read { db in
-            let recipe = try Recipe.filter(Recipe.Columns.name == "multilayer").fetchOne(db)
-            return recipe!.id!
+        let fetchedRecipe = try appData.databaseReader.read { db in
+            try Recipe.filter(Recipe.Columns.name == "multilayer").fetchOne(db)
         }
+        let recipe = try #require(fetchedRecipe)
+        let recipeId = try #require(recipe.id)
 
         //verify that the substeps are correct
-        let step = appData.steps(with: recipeId).first
-        #expect(appData.sortedSubsteps(for: step!.id!).count == 2)
+        let step = try #require(appData.steps(with: recipeId).first)
+        let stepId = try #require(step.id)
+        #expect(appData.sortedSubsteps(for: stepId).count == 2)
     }
 
-    func insert(recipeTransfer: RecipeTransferType, complex: Bool = false) throws {
+    func insert(recipeTransfer: RecipeTransferType, complex: Bool = false, sourceLocation: SourceLocation = #_sourceLocation) throws {
         var recipe = recipeTransfer.recipe
         let appData = BackAppData.shared
 
         appData.insert(&recipe)
-        #expect(try appData.databaseReader.read(recipe.exists))
+        #expect(try appData.databaseReader.read(recipe.exists), sourceLocation: sourceLocation)
+        let recipeId = try #require(recipe.id, sourceLocation: sourceLocation)
 
         var previousStepId: Int64?
 
-        _ = try recipeTransfer.stepIngredients.map {
-            var step = $0.step
-            step.recipeId = recipe.id!
+        for stepIngredients in recipeTransfer.stepIngredients {
+            var step = stepIngredients.step
+            step.recipeId = recipeId
 
             //check if there is any superstep id that is not nil. any superstep id is used as a notation to say that the step is suposed to be substep of the previously inserted step. This means the superstepid is not set if it was nil before.
             if !complex, step.superStepId != nil, let previousStepId = previousStepId {
@@ -121,20 +126,19 @@ struct BackAppCoreTests {
             }
             appData.insert(&step)
 
-            #expect(try appData.databaseReader.read(step.exists))
+            #expect(try appData.databaseReader.read(step.exists), sourceLocation: sourceLocation)
 
-            let stepId = step.id!
+            let stepId = try #require(step.id, sourceLocation: sourceLocation)
             previousStepId = stepId
 
-            for ingredient in $0.ingredients {
-                var ingredient = ingredient
+            for var ingredient in stepIngredients.ingredients {
                 ingredient.stepId = stepId
                 appData.insert(&ingredient)
-                #expect(try appData.databaseReader.read(ingredient.exists))
+                #expect(try appData.databaseReader.read(ingredient.exists), sourceLocation: sourceLocation)
             }
         }
 
-        #expect(appData.steps(with: recipe.id!).count == recipeTransfer.stepIngredients.count)
+        #expect(appData.steps(with: recipeId).count == recipeTransfer.stepIngredients.count, sourceLocation: sourceLocation)
     }
 
     func fetchRecipe(named name: String) throws -> Recipe? {
@@ -144,123 +148,128 @@ struct BackAppCoreTests {
         }
     }
 
-    func insertExampleRecipeAndGetId() throws -> Int64 {
-        try insert(recipeTransfer: Recipe.example)
+    func insertExampleRecipe(sourceLocation: SourceLocation = #_sourceLocation) throws -> Recipe {
+        try insert(recipeTransfer: Recipe.example, sourceLocation: sourceLocation)
         let recipe = try fetchRecipe(named: Recipe.example.recipe.name)
-        #expect(recipe != nil)
-        return recipe!.id!
+        return try #require(recipe, sourceLocation: sourceLocation)
     }
 
-    func insertExampleRecipe() throws -> Recipe {
-        try insert(recipeTransfer: Recipe.example)
-        let recipe = try fetchRecipe(named: Recipe.example.recipe.name)
-        #expect(recipe != nil)
-        return recipe!
+    func insertExampleRecipeAndGetId(sourceLocation: SourceLocation = #_sourceLocation) throws -> Int64 {
+        let recipe = try insertExampleRecipe(sourceLocation: sourceLocation)
+        return try #require(recipe.id, sourceLocation: sourceLocation)
     }
 
-    func insertComplexRecipeAndGetId() throws -> Int64 {
+    func insertComplexRecipe(sourceLocation: SourceLocation = #_sourceLocation) throws -> Recipe {
         let transfer = Recipe.complexExample(number: 0)
-        try insert(recipeTransfer: transfer)
+        try insert(recipeTransfer: transfer, sourceLocation: sourceLocation)
         let recipe = try fetchRecipe(named: transfer.recipe.name)
-        #expect(recipe != nil)
-        return recipe!.id!
+        return try #require(recipe, sourceLocation: sourceLocation)
     }
 
-    func insertComplexRecipe() throws -> Recipe {
-        let transfer = Recipe.complexExample(number: 0)
-        try insert(recipeTransfer: transfer)
-        let recipe = try fetchRecipe(named: transfer.recipe.name)
-        #expect(recipe != nil)
-        return recipe!
+    func insertComplexRecipeAndGetId(sourceLocation: SourceLocation = #_sourceLocation) throws -> Int64 {
+        let recipe = try insertComplexRecipe(sourceLocation: sourceLocation)
+        return try #require(recipe.id, sourceLocation: sourceLocation)
     }
 
-    func insertMultilayerRecipeAndGetId() throws -> Int64 {
+    func insertMultilayerRecipeAndGetId(sourceLocation: SourceLocation = #_sourceLocation) throws -> Int64 {
         let transfer = Recipe.multilayerSubstepExample(number: 0)
-        try insert(recipeTransfer: transfer, complex: true)
-        let recipe  = try fetchRecipe(named: transfer.recipe.name)
-        #expect(recipe != nil)
-        return recipe!.id!
+        try insert(recipeTransfer: transfer, complex: true, sourceLocation: sourceLocation)
+        let recipe = try #require(try fetchRecipe(named: transfer.recipe.name), sourceLocation: sourceLocation)
+        return try #require(recipe.id, sourceLocation: sourceLocation)
     }
 
     @Test
-    func testUpdatingExample() throws {
+    func updatingExample() throws {
         try insert(recipeTransfer: Recipe.example)
 
         let appData = BackAppData.shared
 
         let recipeExample = Recipe.example
 
-        var recipe = appData.allRecords(of: Recipe.self).first(where: { $0.name == recipeExample.recipe.name })!
+        var recipe = try #require(appData.allRecords(of: Recipe.self).first(where: { $0.name == recipeExample.recipe.name }))
 
         recipe.difficulty = .medium
 
         appData.update(recipe)
 
-        #expect(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
+        let recipeId = try #require(recipe.id)
+        let updatedRecipe = try #require(appData.record(with: recipeId, of: Recipe.self))
+        #expect(updatedRecipe.difficulty == .medium)
 
-        _ = try recipeExample.stepIngredients.map { try update(stepIngredients: $0, recipeId: recipe.id!)}
+        for stepIngredients in recipeExample.stepIngredients {
+            try update(stepIngredients: stepIngredients, recipeId: recipeId)
+        }
     }
 
     @Test
-    func testUpdatingComplexRecipe() throws {
+    func updatingComplexRecipe() throws {
         try insert(recipeTransfer: Recipe.complexExample(number: 0))
 
         let appData = BackAppData.shared
 
         let complexRecipeExample = Recipe.complexExample(number: 0)
 
-        var recipe = appData.allRecords(of: Recipe.self).first(where: { $0.name == complexRecipeExample.recipe.name })!
+        var recipe = try #require(appData.allRecords(of: Recipe.self).first(where: { $0.name == complexRecipeExample.recipe.name }))
 
         recipe.difficulty = .medium
 
         appData.update(recipe)
 
-        #expect(appData.record(with: recipe.id!, of: Recipe.self)!.difficulty == .medium)
+        let recipeId = try #require(recipe.id)
+        let updatedRecipe = try #require(appData.record(with: recipeId, of: Recipe.self))
+        #expect(updatedRecipe.difficulty == .medium)
 
-        _ = try complexRecipeExample.stepIngredients.map { try update(stepIngredients: $0, recipeId: recipe.id!)}
+        for stepIngredients in complexRecipeExample.stepIngredients {
+            try update(stepIngredients: stepIngredients, recipeId: recipeId)
+        }
     }
 
 
-    func update(stepIngredients: (step: Step, ingredients: [Ingredient]), recipeId: Int64) throws {
+    func update(stepIngredients: (step: Step, ingredients: [Ingredient]), recipeId: Int64, sourceLocation: SourceLocation = #_sourceLocation) throws {
 
         let appData = BackAppData.shared
 
-        var step = try appData.databaseReader.read { db in
+        let fetchedStep = try appData.databaseReader.read { db in
             try Step.all().orderedByNumber(with: recipeId).filter( Step.Columns.name == stepIngredients.step.name ).fetchOne(db)
         }
 
-        #expect(step != nil)
+        var step = try #require(fetchedStep, sourceLocation: sourceLocation)
 
-        step!.duration = 10000
+        step.duration = 10000
 
-        appData.update(step!)
+        appData.update(step)
 
-        #expect(appData.record(with: step!.id!, of: Step.self)!.duration == 10000)
+        let stepId = try #require(step.id, sourceLocation: sourceLocation)
+        let updatedStep = try #require(appData.record(with: stepId, of: Step.self), sourceLocation: sourceLocation)
+        #expect(updatedStep.duration == 10000, sourceLocation: sourceLocation)
 
-        _ = try stepIngredients.ingredients.map { try update(ingredient: $0, with: step!.id!)}
+        for ingredient in stepIngredients.ingredients {
+            try update(ingredient: ingredient, with: stepId, sourceLocation: sourceLocation)
+        }
     }
 
-    func update(ingredient: Ingredient, with stepId: Int64) throws {
+    func update(ingredient: Ingredient, with stepId: Int64, sourceLocation: SourceLocation = #_sourceLocation) throws {
 
         let appData = BackAppData.shared
 
-        var ingredient = try appData.databaseReader.read { db in
+        let fetchedIngredient = try appData.databaseReader.read { db in
             try Ingredient.all().orderedByNumber(with: stepId).fetchOne(db)
         }
 
-        #expect(ingredient != nil)
+        var ingredient = try #require(fetchedIngredient, sourceLocation: sourceLocation)
 
-        ingredient!.mass += 1
+        ingredient.mass += 1
 
-        appData.update(ingredient!)
-        //XCTAssert(appData.update(ingredient!))
+        appData.update(ingredient)
 
-        #expect(appData.record(with: ingredient!.id!, of: Ingredient.self)!.mass == ingredient!.mass)
+        let ingredientId = try #require(ingredient.id, sourceLocation: sourceLocation)
+        let updatedIngredient = try #require(appData.record(with: ingredientId, of: Ingredient.self), sourceLocation: sourceLocation)
+        #expect(updatedIngredient.mass == ingredient.mass, sourceLocation: sourceLocation)
     }
 
 
     @Test
-    func testExportingAndImporting() async throws {
+    func exportingAndImporting() async throws {
         try insert(recipeTransfer: Recipe.example)
         try insert(recipeTransfer: Recipe.complexExample(number: 0))
 
@@ -270,54 +279,63 @@ struct BackAppCoreTests {
         let steps = appData.allSteps
         let ingredients = appData.allIngredients
 
+        // the bare test runner has no app sandbox, so the Documents directory may not
+        // exist yet; exportRecipesToFile force-tries writing into it and would crash
+        try FileManager.default.createDirectory(at: FileManager.default.documentsDirectory, withIntermediateDirectories: true)
+
         let url = appData.exportAllRecipesToFile()
 
         try appData.deleteAll(of: Recipe.self)
 
         appData.open(url)
 
-        await waitSeconds(2)
+        // open() imports on a background queue; poll until it finishes instead of
+        // sleeping a fixed time. A fixed sleep is flaky and lets the import keep
+        // writing while later tests reset the database, crashing on FK violations.
+        // The import runs at .background QoS and can be starved during a full
+        // suite run (8s in isolation), hence the generous timeout.
+        await poll(timeout: 120) { appData.allIngredients.count >= ingredients.count }
 
         for recipe in recipes {
-            #expect(appData.allRecipes.first(where: { $0.name == recipe.name }) != nil)
+            #expect(appData.allRecipes.contains(where: { $0.name == recipe.name }))
         }
 
         for step in steps {
-            #expect(appData.allSteps.first(where: { $0.name == step.name}) != nil)
+            #expect(appData.allSteps.contains(where: { $0.name == step.name }))
         }
 
         for ingredient in ingredients {
-            #expect(appData.allIngredients.first(where: { $0.name == ingredient.name }) != nil)
+            #expect(appData.allIngredients.contains(where: { $0.name == ingredient.name }))
         }
     }
 
 
     @Test
-    func testDeletingExample() throws {
+    func deletingExample() throws {
         try insert(recipeTransfer: Recipe.example)
 
         let appData = BackAppData.shared
 
         let recipeExample = Recipe.example
 
-        let recipe = try appData.databaseReader.read { db in
+        let fetchedRecipe = try appData.databaseReader.read { db in
             try Recipe.filter(Recipe.Columns.name == recipeExample.recipe.name).fetchOne(db)
         }
-        #expect(recipe != nil)
-        let recipeId = recipe!.id!
+        let recipe = try #require(fetchedRecipe)
+        let recipeId = try #require(recipe.id)
 
         let stepIds = try appData.databaseReader.read { db in
-            try Step.all().orderedByNumber(with: recipeId).fetchAll(db).map { $0.id! }
+            try Step.all().orderedByNumber(with: recipeId).fetchAll(db).compactMap { $0.id }
         }
 
-        appData.delete(recipe!)
+        appData.delete(recipe)
 
         #expect(appData.record(with: recipeId, of: Recipe.self) == nil)
         let steps = try appData.databaseReader.read { db in
             try Step.all().orderedByNumber(with: recipeId).fetchAll(db)
         }
         #expect(steps.isEmpty)
-        _ = try stepIds.map { stepId in
+        for stepId in stepIds {
             let ingredients = try appData.databaseReader.read { db in
                 try Ingredient.all().orderedByNumber(with: stepId).fetchAll(db)
             }
@@ -327,7 +345,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testNumberOfAllIngredients() throws {
+    func numberOfAllIngredients() throws {
         let recipeId = try insertExampleRecipeAndGetId()
         #expect(BackAppData.shared.numberOfAllIngredients(for: recipeId) == 5)
 
@@ -336,7 +354,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testTotalDurationOfRecipe() throws {
+    func totalDurationOfRecipe() throws {
         let appData = BackAppData.shared
         let reader = appData.databaseReader
 
@@ -348,7 +366,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testFormattedTotalDurationOfRecipe() throws {
+    func formattedTotalDurationOfRecipe() throws {
         let appData = BackAppData.shared
         let reader = appData.databaseReader
 
@@ -360,7 +378,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testTotalFormattedAmountOfRecipe() throws {
+    func totalFormattedAmountOfRecipe() throws {
         let recipeId = try insertExampleRecipeAndGetId()
         #expect(BackAppData.shared.totalFormattedAmount(for: recipeId) == "245.0 g")
 
@@ -369,7 +387,7 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testFormattedTotalDoughYield() throws {
+    func formattedTotalDoughYield() throws {
         let recipeId = try insertExampleRecipeAndGetId()
         #expect(BackAppData.shared.formattedTotalDoughYield(for: recipeId) == "0.91")
 
@@ -378,115 +396,124 @@ struct BackAppCoreTests {
     }
 
     @Test
-    func testText() throws {
+    func recipeText() throws {
         let appData = BackAppData.shared
         let reader = appData.databaseReader
 
         let recipeExample = try insertExampleRecipe()
-        // With en_US locale set in init, temperatures are formatted in °F (20°C -> 68°F).
-        #expect(appData.text(for: recipeExample.id!, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 68°F\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(recipeExample.totalDuration(reader: reader) * 60))))")
+        let recipeId = try #require(recipeExample.id)
+        // MeasurementFormatting.localeOverride is set to en_US in init,
+        // so temperatures are formatted in °F (20°C -> 68°F).
+        #expect(appData.text(for: recipeId, roomTemp: 20, scaleFactor: 1, kneadingHeating: 0) == "Sauerteigcracker 1 piece\nMischen \(dateFormatter.string(from: Date()))\n\tVollkornmehl: 50.0 g \n\tAnstellgut TA 200: 120.0 g \n\tOlivenöl: 40.0 g 68°F\n\tSaaten: 30.0 g \n\tSalz: 5.0 g \nBacken \(dateFormatter.string(from: Date().addingTimeInterval(Recipe.example.stepIngredients[0].step.duration)))\n170˚ C\nDone: \(dateFormatter.string(from: Date().addingTimeInterval(TimeInterval(recipeExample.totalDuration(reader: reader) * 60))))")
     }
 
     @Test
-    func testMovingRecords() async throws {
+    func movingRecords() async throws {
         let recipeId = try insertExampleRecipeAndGetId()
         try insert(recipeTransfer: Recipe.complexExample(number: 0))
         let appData = BackAppData.shared
 
         appData.moveStep(with: recipeId, from: 1, to: 0)
-        await waitSeconds(1)
-        #expect(appData.reorderedSteps(for: recipeId).first!.formattedName == "Backen")
+        await poll { appData.reorderedSteps(for: recipeId).first?.formattedName == "Backen" }
+        #expect(appData.reorderedSteps(for: recipeId).first?.formattedName == "Backen")
 
-        let stepId = appData.reorderedSteps(for: recipeId).first(where: { $0.formattedName == "Mischen"})!.id!
+        let step = try #require(appData.reorderedSteps(for: recipeId).first(where: { $0.formattedName == "Mischen" }))
+        let stepId = try #require(step.id)
         appData.moveIngredient(with: stepId, from: 1, to: 2)
-        await waitSeconds(1)
-        #expect(appData.ingredients(with: stepId)[1].formattedName == "Olivenöl")
+        await poll { appData.ingredients(with: stepId)[safe: 1]?.formattedName == "Olivenöl" }
+        #expect(appData.ingredients(with: stepId)[safe: 1]?.formattedName == "Olivenöl")
 
         appData.moveRecipe(from: 1, to: 0)
-        await waitSeconds(1)
-        #expect(appData.allRecipes.first!.formattedName == "Komplexes Rezept")
+        await poll { appData.allRecipes.first?.formattedName == "Komplexes Rezept" }
+        #expect(appData.allRecipes.first?.formattedName == "Komplexes Rezept")
     }
 
     @Test
-    func testDuplicatingExampleRecipe() throws {
+    func duplicatingExampleRecipe() throws {
         let appData = BackAppData.shared
         let writer = appData.dbWriter
 
         let recipeExample = try insertExampleRecipe()
+        let recipeId = try #require(recipeExample.id)
 
         #expect(appData.allRecipes.count == 1)
         #expect(appData.allSteps.count == 2)
-        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeExample.id!))
+        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeId))
         recipeExample.duplicate(writer: writer)
         #expect(appData.allRecipes.count == 2)
-        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeExample.id!) * 2)
+        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeId) * 2)
         #expect(appData.allSteps.count == 4)
     }
 
     @Test
-    func testDuplicationgComplexRecipe() throws {
+    func duplicatingComplexRecipe() throws {
         let appData = BackAppData.shared
         let writer = appData.dbWriter
 
         let recipeExample = try insertComplexRecipe()
+        let recipeId = try #require(recipeExample.id)
+
         #expect(appData.allRecipes.count == 1)
         #expect(appData.allSteps.count == 2)
-        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeExample.id!))
+        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeId))
         recipeExample.duplicate(writer: writer)
         #expect(appData.allRecipes.count == 2)
-        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeExample.id!) * 2)
+        #expect(appData.allIngredients.count == appData.numberOfAllIngredients(for: recipeId) * 2)
         #expect(appData.allSteps.count == 4)
     }
 
     /// tests the new query for finding the correct order of steps
     @Test
-    func testReorderedSteps() throws {
+    func reorderedSteps() throws {
         let appData = BackAppData.shared
         let recipeId = try insertExampleRecipeAndGetId()
         let steps = appData.reorderedSteps(for: recipeId)
 
-        #expect("\(steps.map { $0.formattedName })" == "[\"Mischen\", \"Backen\"]")
+        #expect(steps.map(\.formattedName) == ["Mischen", "Backen"])
 
         let complexId = try insertComplexRecipeAndGetId()
         let complexSteps = appData.reorderedSteps(for: complexId)
-        #expect("\(complexSteps.map { $0.formattedName})" == "[\"Sauerteig\", \"Hauptteig\"]")
+        #expect(complexSteps.map(\.formattedName) == ["Sauerteig", "Hauptteig"])
 
         let multilayerId = try insertMultilayerRecipeAndGetId()
         let multilayerSteps = appData.reorderedSteps(for: multilayerId)
-        #expect("\(multilayerSteps.map {$0.formattedName})" == "[\"s1sub2subsub\", \"s1sub2sub\", \"s1sub1sub\", \"s1sub1\", \"s1sub2\", \"Schritt\", \"s2\"]")
+        #expect(multilayerSteps.map(\.formattedName) == ["s1sub2subsub", "s1sub2sub", "s1sub1sub", "s1sub1", "s1sub2", "Schritt", "s2"])
     }
 
     @Test
-    func testStepIngredientNumber() throws {
+    func stepIngredientNumber() throws {
         let appData = BackAppData.shared
         let recipeId = try insertComplexRecipeAndGetId()
-        let step = appData.steps(with: recipeId).first
         let reader = appData.databaseReader
-        #expect(step?.ingredientCount(reader: reader) == 2)
-        #expect(step?.ingredients(reader: reader).count == 2)
-        #expect(step?.ingredients(reader: reader).count == step?.ingredientCount(reader: reader))
+
+        let step = try #require(appData.steps(with: recipeId).first)
+        #expect(step.ingredientCount(reader: reader) == 2)
+        #expect(step.ingredients(reader: reader).count == 2)
 
         // test if ingredientCount works for the secondStep
-        let secondStep = appData.steps(with: recipeId)[safe: 1]
-        #expect(secondStep?.ingredientCount(reader: reader) == 2)
-        #expect(secondStep?.ingredients(reader: reader).count == 2)
-        #expect(secondStep?.ingredients(reader: reader).count == secondStep?.ingredientCount(reader: reader))
+        let secondStep = try #require(appData.steps(with: recipeId)[safe: 1])
+        #expect(secondStep.ingredientCount(reader: reader) == 2)
+        #expect(secondStep.ingredients(reader: reader).count == 2)
     }
 
     @Test
-    func testStepsWithIngredientsOrSupersteps() throws {
+    func stepsWithIngredientsOrSupersteps() async throws {
         let appData = BackAppData.shared
         let recipeId = try insertMultilayerRecipeAndGetId()
-        let step = appData.steps(with: recipeId).first
-        #expect(step?.id != nil)
-        let possibleSubsteps = appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: step!.id!)
+        let step = try #require(appData.steps(with: recipeId).first)
+        let stepId = try #require(step.id)
+        let possibleSubsteps = appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: stepId)
         #expect(possibleSubsteps.count == 1)
 
-        var substep = possibleSubsteps.first!
-        substep.superStepId = step!.id
-        appData.update(substep) { _ in
-            #expect(appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: step!.id!).count == 0)
+        var substep = try #require(possibleSubsteps.first)
+        substep.superStepId = stepId
+        // wait for the completion handler so the expectation is guaranteed to run
+        // before the test ends
+        await withCheckedContinuation { continuation in
+            appData.update(substep) { _ in
+                #expect(appData.stepsWithIngredientsOrSupersteps(in: recipeId, without: stepId).isEmpty)
+                continuation.resume()
+            }
         }
     }
 }
-

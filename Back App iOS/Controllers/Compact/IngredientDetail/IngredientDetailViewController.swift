@@ -99,6 +99,7 @@ private extension IngredientDetailViewController {
             if textItem is TextFieldItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.nameCell, for: indexPath) as? TextFieldCell {
                 cell.textField.text = self.ingredient.name
                 cell.textField.placeholder = Strings.name
+                cell.textField.accessibilityIdentifier = AccessibilityID.nameField
                 cell.textChanged = { text in
                     self.ingredient.name = text
                 }
@@ -113,6 +114,7 @@ private extension IngredientDetailViewController {
             } else if let detailItem = textItem as? DetailItem, let cell = tableView.dequeueReusableCell(withIdentifier: Strings.IngredientTypeCell, for: indexPath) as? DetailCell {
                 cell.textLabel?.text = detailItem.text
                 cell.detailTextLabel?.text = detailItem.detailLabel
+                cell.accessibilityIdentifier = AccessibilityID.ingredientTypeCell
                 if self.typeSectionExpanded {
                     cell.detailTextLabel?.textColor = .baTintBackgroundColor
                 } else {
@@ -121,6 +123,10 @@ private extension IngredientDetailViewController {
                 return cell
             } else if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.plainCell, for: indexPath) as? CustomCell {
                 cell.textLabel?.text = textItem.text
+                // type option
+                cell.accessibilityIdentifier = Ingredient.Style.allCases
+                    .first { $0.name == textItem.text }
+                    .map { AccessibilityID.ingredientTypeOption("\($0)") }
                 return cell
             } else {
                 return CustomCell()

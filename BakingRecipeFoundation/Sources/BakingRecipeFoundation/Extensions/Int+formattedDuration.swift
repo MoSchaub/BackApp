@@ -15,23 +15,13 @@ public extension Int {
     var formattedDuration: String {
         let hours = self.hours
         let minutes = self.minutes
-        
-        func minutesFormatted() -> String {
-            if minutes == 0 && hours != 0 {
-                return ""
-            } else if minutes == 1 {
-                return Strings.one + " " + formattedDurationUnit(for: minutes)
-            } else {
-                return "\(minutes) " + formattedDurationUnit(for: minutes)
-            }
-        }
-        
-        if hours > 1 {
-            return "\(hours) " + formattedDurationUnit(for: hours, hours: true) + " " + minutesFormatted()
-        } else if hours == 1 {
-            return Strings.one + " " + formattedDurationUnit(for: hours, hours: true) + (minutes > 0 ? " " + minutesFormatted() : "")
+
+        if hours == 0 {
+            return Strings.minutesCount(minutes)
+        } else if minutes == 0 {
+            return Strings.hoursCount(hours)
         } else {
-            return minutesFormatted()
+            return Strings.hoursCount(hours) + " " + Strings.minutesCount(minutes)
         }
     }
     
@@ -44,8 +34,7 @@ public extension Int {
     }
 
     var formattedDurationHours: String {
-        let hours = self.hours
-        return (hours == 1 ? Strings.one : "\(hours)") + " " + formattedDurationUnit(for: hours, hours: true)
+        Strings.hoursCount(hours)
     }
     
     var compactForamttedDuration: String {
@@ -67,23 +56,7 @@ public extension Int {
             return self.formattedDuration
         } else {
             let hours = Double(self) / 60.0
-            return formatNumber(hours) + " " + Strings.hours
-        }
-    }
-}
-
-fileprivate func formattedDurationUnit(for time: Int, hours: Bool = false) -> String{
-    if hours {
-        if time == 1 {
-            return Strings.hour
-        } else {
-            return Strings.hours
-        }
-    } else {
-        if time == 1 {
-            return Strings.minute
-        } else {
-            return Strings.minutes
+            return Strings.hoursDecimalCount(hours, formatted: formatNumber(hours))
         }
     }
 }

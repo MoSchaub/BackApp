@@ -21,7 +21,6 @@ public struct Strings {
     public static let Alert_ActionRemove = NSLocalizedString("Alert_ActionRemove", bundle: .module, comment: "")
     public static let Alert_ActionDelete = NSLocalizedString("Alert_ActionDelete", bundle: .module, comment: "")
     public static let Alert_ActionSave = NSLocalizedString("Alert_ActionSave", bundle: .module, comment: "")
-    public static let Alert_ActionRetry = NSLocalizedString("Alert_ActionRetry", bundle: .module, comment: "")
     public static let Alert_Error = NSLocalizedString("Alert_Error", bundle: .module, comment: "")
     public static let EditButton_Done = NSLocalizedString("EditButton_Done", bundle: .module, comment: "")
     public static let EditButton_Edit = NSLocalizedString("EditButton_Edit", bundle: .module, comment: "")
@@ -43,17 +42,14 @@ public struct Strings {
     public static let importFile = NSLocalizedString("importFile", bundle: .module, comment: "")
     public static let ingredientOrStep = NSLocalizedString("ingredientOrStep", bundle: .module, comment: "")
     public static let ingredients = NSLocalizedString("ingredients", bundle: .module, comment: "")
-    public static let minute = NSLocalizedString("minute", bundle: .module, comment: "")
-    public static let minutes = NSLocalizedString("minutes", bundle: .module, comment: "")
     public static let name = NSLocalizedString("name", bundle: .module, comment: "")
     public static let newIngredient = NSLocalizedString("newIngredient", bundle: .module, comment: "")
     public static let notes = NSLocalizedString("notes", bundle: .module, comment: "")
-    public static let piece = NSLocalizedString("piece", bundle: .module, comment: "")
-    public static let pieces = NSLocalizedString("pieces", bundle: .module, comment: "")
     public static let quantity = NSLocalizedString("quantity", bundle: .module, comment: "")
     public static let recipes = NSLocalizedString("recipes", bundle: .module, comment: "")
+    public static let noRecipeSelected = NSLocalizedString("noRecipeSelected", bundle: .module, comment: "Title of the empty detail pane next to the recipe list")
+    public static let noRecipeSelectedHint = NSLocalizedString("noRecipeSelectedHint", bundle: .module, comment: "Hint below the title of the empty detail pane")
     public static let roomTemperature = NSLocalizedString("roomTemperature", bundle: .module, comment: "")
-    public static let scheduleFormErrorMessage = NSLocalizedString("scheduleFormErrorMessage", bundle: .module, comment: "")
     public static let selectStep = NSLocalizedString("selectStep", bundle: .module, comment: "")
     public static let start = NSLocalizedString("start", bundle: .module, comment: "")
     public static let startRecipe = NSLocalizedString("startRecipe", bundle: .module, comment: "")
@@ -65,14 +61,11 @@ public struct Strings {
     public static let unnamedStep = NSLocalizedString("unnamedStep", bundle: .module, comment: "")
     public static let image_alert_title = NSLocalizedString("image_alert_title", bundle: .module, comment: "")
     public static let take_picture = NSLocalizedString("take_picture", bundle: .module, comment: "")
-    public static let version = NSLocalizedString("version", bundle: .module, comment: "") + " \(Bundle.main.releaseVersionNumber!) (\(Bundle.main.buildVersionNumber!))"
-    public static let donate_text = NSLocalizedString("donateText", bundle: .module, comment: "")
     public static let website = NSLocalizedString("website", bundle: .module, comment: "")
-    public static let support = NSLocalizedString("support", bundle: .module, comment: "")
     public static let privacy_policy = NSLocalizedString("privacy_policy", bundle: .module, comment: "")
     public static let select_image = NSLocalizedString("select_image", bundle: .module, comment: "")
-    public static let recipesImported = NSLocalizedString("recipesImported", bundle: .module, comment: "")
-    public static let recipeImported = NSLocalizedString("recipeImported", bundle: .module, comment: "")
+    public static let importFileUnreadable = NSLocalizedString("importFileUnreadable", bundle: .module, comment: "")
+    public static let importFileContainsNoRecipes = NSLocalizedString("importFileContainsNoRecipes", bundle: .module, comment: "")
     public static let success = NSLocalizedString("success", bundle: .module, comment: "")
     public static let flour = NSLocalizedString("flour", bundle: .module, comment: "")
     public static let other = NSLocalizedString("other", bundle: .module, comment: "")
@@ -80,20 +73,11 @@ public struct Strings {
     public static let ta200 = NSLocalizedString("ta200", bundle: .module, comment: "")
     public static let startDate = NSLocalizedString("startDate", bundle: .module, comment: "")
     public static let endDate = NSLocalizedString("endDate", bundle: .module, comment: "")
-    public static let one = NSLocalizedString("one", bundle: .module, comment: "")
-    public static let hour = NSLocalizedString("hour", bundle: .module, comment: "")
-    public static let hours = NSLocalizedString("hours", bundle: .module, comment: "")
     public static let settings = NSLocalizedString("settings", bundle: .module, comment: "")
     public static let kneadingHeating = NSLocalizedString("kneadingHeating", bundle: .module, comment: "")
     public static let kneadingHeatCellPlaceholder = NSLocalizedString("kneadingHeatCellPlaceholder", bundle: .module, comment: "")
-    public static let appearance = NSLocalizedString("appearance", bundle: .module, comment: "")
-    public static let auto = NSLocalizedString("auto", bundle: .module, comment: "")
-    public static let dark = NSLocalizedString("dark", bundle: .module, comment: "")
-    public static let light = NSLocalizedString("light", bundle: .module, comment: "")
     public static let language = NSLocalizedString("language", bundle: .module, comment: "")
     public static var favorites = NSLocalizedString("favorites", bundle: .module, comment: "")
-    public static var allRecipes = NSLocalizedString("allRecipes", bundle: .module, comment: "")
-    public static var next = NSLocalizedString("next", bundle: .module, comment: "")
     public static var weighIn = NSLocalizedString("weighIn", bundle: .module, comment: "")
     public static var doughYield = NSLocalizedString("doughYield", bundle: .module, comment: "")
     public static var roomTempQuestionLabel = NSLocalizedString("roomTempQuestionLabel", bundle: .module, comment: "")
@@ -107,9 +91,61 @@ public struct Strings {
     public static var duplicate = NSLocalizedString("duplicate", bundle: .module, comment: "")
     public static var addRecipe = NSLocalizedString("addRecipe", bundle: .module, comment: "")
     public static var license = NSLocalizedString("License", bundle: .module, comment: "")
-    
+    public static let version = String.localizedStringWithFormat(
+        NSLocalizedString("versionFormat", bundle: .module, comment: "App version on the about screen; first the release, then the build number"),
+        Bundle.main.releaseVersionNumber!, Bundle.main.buildVersionNumber!
+    )
+
+    // MARK: - Counted and formatted strings
+    // Built from format strings so each language picks its own plural form and word order.
+
+    /// e.g. "5 minutes"
+    public static func minutesCount(_ count: Int) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("minutesCount", bundle: .module, comment: "A duration in whole minutes"), count)
+    }
+
+    /// e.g. "2 hours"
+    public static func hoursCount(_ count: Int) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("hoursCount", bundle: .module, comment: "A duration in whole hours"), count)
+    }
+
+    /// e.g. "1.5 hours"
+    /// - Parameters:
+    ///   - hours: the value the plural form is chosen for
+    ///   - formatted: `hours` as it should be displayed
+    public static func hoursDecimalCount(_ hours: Double, formatted: String) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("hoursDecimalCount", bundle: .module, comment: "A duration in hours that can have a fraction; the second argument is the displayed number"), hours, formatted)
+    }
+
+    /// e.g. "12 pieces"
+    /// - Parameters:
+    ///   - count: the value the plural form is chosen for
+    ///   - formatted: `count` as it should be displayed
+    public static func piecesCount(_ count: Double, formatted: String) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("piecesCount", bundle: .module, comment: "Number of breads or rolls a recipe makes; the second argument is the displayed number"), count, formatted)
+    }
+
+    /// e.g. "12 pieces, 80.0 g each"
+    public static func piecesWithMass(_ pieces: String, mass: String) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("piecesWithMass", bundle: .module, comment: "Number of pieces (piecesCount) followed by the mass of one piece"), pieces, mass)
+    }
+
+    /// e.g. "4 steps"
+    public static func stepsCount(_ count: Int) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("stepsCount", bundle: .module, comment: "Number of steps of a recipe in the recipe list"), count)
+    }
+
+    /// Message after importing recipes from a file
+    public static func recipesImported(_ count: Int) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("recipesImportedCount", bundle: .module, comment: "Alert message after importing recipes from a file"), count)
+    }
+
+    /// Last line of an exported recipe, e.g. "Done: 08.11.26, 14:00"
+    public static func exportEndDate(_ date: String) -> String {
+        String.localizedStringWithFormat(NSLocalizedString("exportEndDate", bundle: .module, comment: "Last line of an exported recipe: when the recipe is finished"), date)
+    }
+
     public static let info = "info"
-    public static let recipe_already_exist_error = NSLocalizedString("recipe_already_exist_error", bundle: .module, comment: "")
     public static let websiteURL = URL(string: "https://heimbaecker.de/backapp")!
     public static let privacyPolicyURL = URL(string: "https://heimbaecker.de/backapp-datenschutzerklaerung")!
     public static let donateURL = URL(string: "https://heimbaecker.de/backapp-donate")!

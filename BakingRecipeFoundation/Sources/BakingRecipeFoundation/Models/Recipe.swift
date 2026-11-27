@@ -57,12 +57,10 @@ public struct Recipe: BakingRecipeRecord {
     /// formatted text for times
     public var timesText: String{
         get{
-            if self.times != nil {
-                if let timesString = numberFormatter.string(from: times! as NSNumber) {
-                    return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
-                }
+            if self.times != nil, let text = piecesText(for: times! as NSNumber) {
+                return text
             }
-            return "1 " + Strings.piece
+            return piecesText(for: 1)!
         }
         set{
             if let int = Int(newValue){
@@ -75,8 +73,14 @@ public struct Recipe: BakingRecipeRecord {
     
     /// timesText + indivialMass given a total Mass, e. g. 12 pieces, 11 g each
     public func timesTextWithIndivialMass(with totalMass: Double) -> String {
-        
-        return self.timesText + (Bundle.main.preferredLocalizations.first! == "de" ? " à " : ", " ) + (totalMass/Double(self.times!.description)!).formattedMass + (Bundle.main.preferredLocalizations.first! == "en" ? " each" : "")
+        Strings.piecesWithMass(self.timesText, mass: (totalMass/Double(self.times!.description)!).formattedMass)
+    }
+
+    /// the number of pieces with the plural form of the displayed (rounded) number, e. g. "12 pieces"
+    private func piecesText(for times: NSNumber) -> String? {
+        guard let timesString = numberFormatter.string(from: times) else { return nil }
+        let shownValue = numberFormatter.number(from: timesString)?.doubleValue ?? times.doubleValue
+        return Strings.piecesCount(shownValue, formatted: timesString)
     }
 
     private var numberFormatter: NumberFormatter {
@@ -88,13 +92,10 @@ public struct Recipe: BakingRecipeRecord {
     
     /// scale the times text with a factor
     private func timesTextScaled(with factor: Double) -> String {
-        if self.times != nil {
-            let times = self.times! * Decimal(factor) as NSNumber
-            if let timesString = numberFormatter.string(from: times) {
-                return timesString + " " + (timesString == "1" ? Strings.piece : Strings.pieces)
-            }
+        if self.times != nil, let text = piecesText(for: self.times! * Decimal(factor) as NSNumber) {
+            return text
         }
-        return "1 " + Strings.piece
+        return piecesText(for: 1)!
 
     }
 }
@@ -207,18 +208,26 @@ public extension Recipe {
     }
     
     /// Arange the selected columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.info,
-        Columns.isFavorite,
-        Columns.difficulty,
-        Columns.inverted,
-        Columns.times,
-        Columns.date,
-        Columns.imageData,
-        Columns.number
-    ]
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.info,
+            Columns.isFavorite,
+            Columns.difficulty,
+            Columns.inverted,
+            Columns.times,
+            Columns.date,
+            Columns.imageData,
+            Columns.number
+        ]
+    }
 }
 
 //MARK: SQL Fetching
@@ -404,28 +413,21 @@ public extension Recipe {
         return dict
     }
     
-    ///Tuple with a start date and a startDates dictionary
+    /// Start dates for `step` and all its substeps, given the date `h` at which its longest substep chain starts.
+    /// Returns the start date of `step` itself (when all its substep chains have ended) and the dictionary.
     private func startDates(for step: Step, h: Date, reader: DatabaseReader) -> (h: Date, dict: [Step : Date]) {
         var dict = [Step : Date]()
-        var h = h
-        var sortedSubs = step.sortedSubsteps(reader: reader)
-        if let first = sortedSubs.first { //get the longest sub
-            sortedSubs.removeFirst() //remove so it does not get used twice
-            let firstDates = startDates(for: first, h: h, reader: reader)
-            dict.append(contentsOf: firstDates.dict)
-            h = firstDates.h
-            
-            let subEndDate = h.addingTimeInterval(first.duration) //data when all substebs of the step should end
-            for sub in sortedSubs {
-                let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-(sub.duration)), reader: reader)
-                dict.append(contentsOf: subDates.dict)
-            }
-            
-            h = subEndDate
+        let chains = step.sortedSubsteps(reader: reader).map { ($0, $0.durationWithSubsteps(reader: reader)) }
+
+        // the substep chains run in parallel and all end when this step starts
+        let subEndDate = h.addingTimeInterval(chains.map(\.1).max() ?? 0)
+        for (sub, chainDuration) in chains {
+            let subDates = startDates(for: sub, h: subEndDate.addingTimeInterval(-chainDuration), reader: reader)
+            dict.append(contentsOf: subDates.dict)
         }
-        dict[step] = h
-        
-        return (h,dict)
+        dict[step] = subEndDate
+
+        return (subEndDate, dict)
     }
     
     /// steps that are no substeps of any other step
@@ -467,7 +469,7 @@ public extension Recipe {
             text += step.text(startDate: runningDate, roomTemp: roomTemp, scaleFactor: scaleFactor, kneadingHeating: kneadingHeating, recipe: self, reader: reader)
             runningDate = runningDate.addingTimeInterval(step.duration)
         }
-        text += "\(Strings.EditButton_Done): \(dateFormatter.string(from: endDate(reader: reader)))"
+        text += Strings.exportEndDate(dateFormatter.string(from: endDate(reader: reader)))
         return text
     }
 

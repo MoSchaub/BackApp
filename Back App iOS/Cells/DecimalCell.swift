@@ -109,9 +109,10 @@ private extension DecimalCell {
         // This is the only place we update `value`.
         if let newValue = formatter.number(from: self.textField.text ?? "")?.doubleValue {
             self.value = Decimal(newValue)
-            self.textField.text = formatter.string(from: NSNumber(value: newValue))! + " " + Strings.pieces
+            self.textField.text = Strings.piecesCount(newValue, formatted: formatter.string(from: NSNumber(value: newValue))!)
         } else {
-            self.textField.text = formatter.string(for: delegate?.standardValue(in: self))! + " " + Strings.pieces
+            let standardValue = delegate?.standardValue(in: self)
+            self.textField.text = Strings.piecesCount(NSDecimalNumber(decimal: standardValue ?? 1).doubleValue, formatted: formatter.string(for: standardValue)!)
         }
     }
     

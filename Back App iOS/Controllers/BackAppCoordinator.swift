@@ -59,8 +59,17 @@ final class BackAppCoordinator: Coordinator, RecipeListCoordinatorDelegate {
     }
 
 
-    public func open(URLContexts: Set<UIOpenURLContext>) {
-        let urls = URLContexts.map { $0.url}
+    /// shows the recipe described by a state restoration activity, if it still exists
+    func restoreState(from activity: NSUserActivity?) {
+        guard let recipe = appData.recipeToRestore(from: activity),
+              let recipeListCoordinator = childCoordinators.lazy.compactMap({ $0 as? RecipeListCoordinator }).first
+        else { return }
+
+        recipeListCoordinator.showRecipeDetail(for: recipe, animated: false)
+    }
+
+    /// imports the recipe files at the given urls
+    public func open(urls: [URL]) {
         for url in urls {
             appData.open(url)
         }

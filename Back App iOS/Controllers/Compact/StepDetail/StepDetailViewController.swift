@@ -181,17 +181,17 @@ extension StepDetailViewController {
                 navigateToIngredientDetail(id: nil)
             }
 
-        } else if StepDetailSection.allCases[indexPath.section] == .durationTemp {
+        } else if StepDetailSection.allCases[indexPath.section] == .durationTemp, let rowItem = item as? RoleDetailItem<StepDetailRow> {
 
-            if item.text == Strings.duration {
+            if rowItem.role == .duration {
 
                 //duration cell tapped now expand the datePickerCell
                 self.datePickerShown ? collapseDatePicker() : expandDatePicker()
-            } else if item.text == Strings.temperature {
+            } else if rowItem.role == .temperature {
 
                 // temp cell tapped expand tempPicker Cell
                 self.tempPickerShown ? collapseTempPicker() : expandTempPicker()
-            } else if item.text == Strings.endTemp, self.step.endTempEnabled {
+            } else if rowItem.role == .endTemp, self.step.endTempEnabled {
 
                 // end temp cell tapped expand or collapse the endTempPicker
                 // nothing happens if endTemp is not enabled
@@ -391,6 +391,7 @@ private extension StepDetailViewController {
                                                 //name
                                                 cell.textField.text = textFieldItem.text
                                                 cell.textField.placeholder = Strings.name
+                                                cell.textField.accessibilityIdentifier = AccessibilityID.nameField
                                                 cell.textChanged = { text in
                                                     self.step.name = text
                                                 }
@@ -406,12 +407,14 @@ private extension StepDetailViewController {
                                         } else if let detailItem = item as? DetailItem {
                                             if indexPath.section == StepDetailSection.durationTemp.rawValue {
                                                 //duration or temp
-                                                if detailItem.text == Strings.duration {
+                                                let row = (detailItem as? RoleDetailItem<StepDetailRow>)?.role
+                                                if row == .duration {
                                                     //duration
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.durationCell, with: detailItem)
+                                                    cell.accessibilityIdentifier = AccessibilityID.stepDurationCell
                                                     cell.detailTextLabel?.textColor = self.datePickerShown ? .baTintBackgroundColor : .secondaryCellTextColor
                                                     return cell
-                                                } else if detailItem.text == Strings.temperature {
+                                                } else if row == .temperature {
                                                     //temp
                                                     let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.tempCell, with: detailItem)
                                                     cell.detailTextLabel?.textColor = self.tempPickerShown ? .baTintBackgroundColor : .secondaryCellTextColor
@@ -421,9 +424,11 @@ private extension StepDetailViewController {
                                                     if let cell = tableView.dequeueReusableCell(withIdentifier: Strings.kneadingStepCell, for: indexPath) as? SwitchCell {
                                                         cell.textLabel?.text = detailItem.text
                                                         cell.detailTextLabel?.text = detailItem.detailLabel
-                                                        if detailItem.text == Strings.endTemp {
+                                                        if row == .endTemp {
                                                             cell.detailTextLabel?.textColor = self.endTempPickerShown ? .baTintBackgroundColor : .secondaryCellTextColor
                                                         }
+                                                        // the delegate reads the row from the tag, so set it first
+                                                        cell.tag = row?.rawValue ?? 0
                                                         cell.delegate = self
                                                         return cell
                                                     }
@@ -437,7 +442,9 @@ private extension StepDetailViewController {
                                                     return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.substepCell, with: detailItem)
                                                 } else  {
                                                     // add ingredient
-                                                    return dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
+                                                    let cell = dequeueAndSetupDetailCell(at: indexPath, withIdentifier: Strings.addIngredientCell, with: detailItem)
+                                                    cell.accessibilityIdentifier = AccessibilityID.addIngredientCell
+                                                    return cell
                                                 }
                                             }
                                         } else if self.datePickerShown, indexPath.row == 1{
@@ -456,9 +463,14 @@ private extension StepDetailViewController {
     }
 }
 
+/// rows of the duration and temperature section; raw values are stored in the cell's tag (0 means none)
+enum StepDetailRow: Int {
+    case duration = 1, temperature, kneadingStep, endTemp
+}
+
 extension StepDetailViewController: SwitchCellDelegate {
     func switchCell(_ cell: SwitchCell, didToggleSwitch isOn: Bool) {
-        if cell.textLabel!.text == Strings.endTemp {
+        if StepDetailRow(rawValue: cell.tag) == .endTemp {
             self.step.endTempEnabled = isOn
             if isOn {
                 expandEndTempPicker()
@@ -470,7 +482,7 @@ extension StepDetailViewController: SwitchCellDelegate {
     }
 
     func switchValue(in cell: SwitchCell) -> Bool {
-        if cell.textLabel!.text == Strings.endTemp {
+        if StepDetailRow(rawValue: cell.tag) == .endTemp {
             return self.step.endTempEnabled
         } else {
             return self.step.isKneadingStep
@@ -575,20 +587,20 @@ private extension StepDetailViewController {
 
     /// detailItem for duration
     private var durationItem: DetailItem {
-        DetailItem(name: Strings.duration, detailLabel: step.formattedDuration )
+        RoleDetailItem(role: StepDetailRow.duration, name: Strings.duration, detailLabel: step.formattedDuration)
     }
     
     /// detailItem for temp
     private var tempItem: DetailItem {
-        DetailItem(name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.roomTemp))
+        RoleDetailItem(role: StepDetailRow.temperature, name: Strings.temperature, detailLabel: step.formattedTemp(roomTemp: Standarts.roomTemp))
     }
 
     private var kneadingStepSwitchItem: DetailItem {
-        DetailItem(name: Strings.isKneadingStep)
+        RoleDetailItem(role: StepDetailRow.kneadingStep, name: Strings.isKneadingStep)
     }
 
     private var endTempSwitchItem: DetailItem {
-        DetailItem(name: Strings.endTemp, detailLabel: step.formattedEndTemp)
+        RoleDetailItem(role: StepDetailRow.endTemp, name: Strings.endTemp, detailLabel: step.formattedEndTemp)
     }
     
     private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<StepDetailSection, Item> {

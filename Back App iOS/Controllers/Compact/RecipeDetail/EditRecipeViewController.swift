@@ -74,7 +74,7 @@ class EditRecipeViewController: BackAppVC {
         snapshot.appendItems([recipe.imageItem, recipe.infoStripItem(appData: appData)], toSection: .imageControlStrip)
         snapshot.appendItems([recipe.amountItem()], toSection: .times)
         snapshot.appendItems(recipe.stepItems(appData: appData), toSection: .steps)
-        snapshot.appendItems([DetailItem(name: Strings.addStep, detailLabel: "")],toSection: .steps)
+        snapshot.appendItems([RoleDetailItem(role: EditRecipeRow.addStep, name: Strings.addStep)],toSection: .steps)
         snapshot.appendItems([recipe.infoItem], toSection: .info)
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
@@ -98,7 +98,9 @@ class EditRecipeViewController: BackAppVC {
 
     override func setRightBarButtonItems() {
         if creating {
-            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))]
+            let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.dissmiss))
+            saveItem.accessibilityIdentifier = AccessibilityID.saveRecipeButton
+            self.navigationItem.rightBarButtonItems = [saveItem]
         } else {
             if UITraitCollection.current.horizontalSizeClass == .regular { // ipad and large iphone landscape
 
@@ -114,7 +116,9 @@ class EditRecipeViewController: BackAppVC {
 
     override func setLeftBarButtonItems() {
         if creating {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+            let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancel))
+            cancelItem.accessibilityIdentifier = AccessibilityID.cancelRecipeButton
+            self.navigationItem.leftBarButtonItem = cancelItem
         }
     }
 
@@ -148,7 +152,8 @@ class EditRecipeViewController: BackAppVC {
 
     override func attachPublishers() {
         super.attachPublishers()
-        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate)
+        // only react to this table's data source, other edit screens may show different recipes
+        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate, object: dataSource)
             .sink { _ in
                 self.updateDataSource(animated: false)
             }
@@ -176,7 +181,9 @@ private extension EditRecipeViewController {
             if let textFieldItem = item as? TextFieldItem {
 
                 //name text field
-                return TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.nameCell, textChanded: { self.recipe.name = $0 })
+                let cell = TextFieldCell(text: textFieldItem.text, placeholder: Strings.name, reuseIdentifier: Strings.nameCell, textChanded: { self.recipe.name = $0 })
+                cell.textField.accessibilityIdentifier = AccessibilityID.nameField
+                return cell
             } else if let imageItem = item as? ImageItem {
 
                 //imageCell
@@ -205,6 +212,7 @@ private extension EditRecipeViewController {
 
                 // add step cell
                 cell.textLabel?.text = detailItem.text
+                cell.accessibilityIdentifier = (detailItem as? RoleDetailItem<EditRecipeRow>)?.role == .addStep ? AccessibilityID.addStepCell : nil
                 cell.accessoryType = .disclosureIndicator
 
                 // gray out the text if editMode enabled
@@ -219,6 +227,7 @@ private extension EditRecipeViewController {
         }
         dataSource.defaultRowAnimation = .none
         dataSource.recipeId = self.recipe.id
+        dataSource.appData = self.appData
 
         return dataSource
     }
@@ -283,6 +292,7 @@ extension EditRecipeViewController: UIAdaptivePresentationControllerDelegate {
 
     private func showAlert() {
         let alertVC = UIAlertController(title: Strings.Alert_ActionCancel, message: Strings.CancelRecipeMessage, preferredStyle: .alert)
+        alertVC.view.accessibilityIdentifier = AccessibilityID.cancelRecipeAlert
 
         alertVC.addAction(UIAlertAction(title: Strings.Alert_ActionDelete, style: .destructive) {_ in
             alertVC.dismiss(animated: false)
@@ -356,6 +366,11 @@ extension EditRecipeViewController {
 
 }
 
+/// fixed rows of the edit recipe screen that are not backed by recipe data
+enum EditRecipeRow {
+    case addStep
+}
+
 // MARK: - Cell Selection
 
 extension EditRecipeViewController {
@@ -365,10 +380,8 @@ extension EditRecipeViewController {
                 imageTapped(sender: indexPath)
             } else if let stepItem = item as? StepItem {
                 showStepDetail(id: Int64(stepItem.id))
-            } else if let detailItem = item as? DetailItem {
-                if detailItem.text == Strings.addStep {
-                    showStepDetail(id: nil)
-                }
+            } else if let rowItem = item as? RoleDetailItem<EditRecipeRow>, rowItem.role == .addStep {
+                showStepDetail(id: nil)
             }
         }
     }

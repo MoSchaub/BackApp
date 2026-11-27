@@ -20,6 +20,9 @@ extension NSNotification.Name {
 class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, Item> {
 
     public var recipeId: Int64!
+
+    /// database the steps are read from and written to
+    public var appData: BackAppData = .shared
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
@@ -35,7 +38,7 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if let item = itemIdentifier(for: indexPath) as? StepItem, let step = BackAppData.shared.record(with: Int64(item.id), of: Step.self), step.superStepId == nil {
+        if let item = itemIdentifier(for: indexPath) as? StepItem, let step = appData.record(with: Int64(item.id), of: Step.self), step.superStepId == nil {
             return true
         } else {
             return false
@@ -47,7 +50,7 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
             var snapshot = self.snapshot()
             snapshot.deleteItems([item])
             apply(snapshot, animatingDifferences: true) {
-                try? BackAppData.shared.dbWriter.write { db in
+                try? self.appData.dbWriter.write { db in
                     _ = try Step.deleteOne(db, id: Int64(item.id))
                 }
             }
@@ -56,13 +59,15 @@ class EditRecipeDataSource: UITableViewDiffableDataSource<RecipeDetailSection, I
     
     /// move steps
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let appData = BackAppData.shared
         let steps = appData.steps(with: recipeId)
         guard destinationIndexPath.row < steps.count else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
         guard RecipeDetailSection.allCases[destinationIndexPath.section] == .steps  else { reset(tableView: tableView, indexPath: sourceIndexPath); return}
         guard steps.count > sourceIndexPath.row else { reset(tableView: tableView, indexPath: sourceIndexPath); return }
 
-        appData.moveStep(with: recipeId, from: sourceIndexPath.row, to: destinationIndexPath.row)
+        // rebuild the table from the database once the new order is stored, so substeps follow their superstep
+        appData.moveStep(with: recipeId, from: sourceIndexPath.row, to: destinationIndexPath.row) { [weak self] in
+            NotificationCenter.default.post(name: .editRecipeShouldUpdate, object: self)
+        }
     }
     
 }
@@ -72,7 +77,7 @@ extension EditRecipeDataSource {
         var snapshot = self.snapshot()
         snapshot.deleteAllItems()
         self.apply(snapshot, animatingDifferences: false)
-        NotificationCenter.default.post(name: .editRecipeShouldUpdate, object: nil)
+        NotificationCenter.default.post(name: .editRecipeShouldUpdate, object: self)
         tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
     }
 }

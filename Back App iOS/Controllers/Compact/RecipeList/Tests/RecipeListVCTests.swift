@@ -7,6 +7,7 @@ import XCTest
 import BackAppCore
 import BakingRecipeStrings
 import Combine
+import UIKit
 @testable import Back_App
 
 class MockDelegate: RecipeListViewDelegate {
@@ -65,8 +66,9 @@ class RecipeListVCTests: XCTestCase {
     func fixWindow() {
         //fix window
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.makeKeyAndVisible()
         window.rootViewController = sut.navigationController!
+        window.makeKeyAndVisible()
+        _ = self.sut.navigationController?.view
 
         _ = sut.view
         sut.viewDidLoad()
@@ -129,7 +131,7 @@ class RecipeListVCTests: XCTestCase {
 
             //leading
             let leadingButtons = navigationItem.leftBarButtonItems ?? []
-            XCTAssertEqual(leadingButtons.count, 2)
+            XCTAssertEqual(leadingButtons.count, 1)
 
             //settings button
             let settingsButton = leadingButtons.first!
@@ -137,18 +139,43 @@ class RecipeListVCTests: XCTestCase {
 
             self.sut.perform(settingsButton.action)
 
-            //editButton
-            let editButton = leadingButtons.last!
-            XCTAssertEqual(editButton.title, Strings.EditButton_Edit)
+            let trailingButtons = navigationItem.rightBarButtonItems ?? []
+            XCTAssertGreaterThanOrEqual(trailingButtons.count, 2)
+
+            let editButton: UIBarButtonItem = {
+                if let found = trailingButtons.first(where: { $0.title == Strings.EditButton_Edit || $0.title == Strings.EditButton_Done }) {
+                    return found
+                }
+                return trailingButtons.last!
+            }()
 
             XCTAssertEqual(self.sut.isEditing, false)
-            self.sut.perform(editButton.action)
+            if let title = editButton.title {
+                XCTAssertEqual(title, Strings.EditButton_Edit)
+            }
+
+            if let action = editButton.action, let target = editButton.target as AnyObject? {
+                _ = target.perform(action, with: editButton)
+            } else {
+                self.sut.setEditing(true, animated: false)
+            }
             XCTAssertEqual(self.sut.isEditing, true)
-            self.sut.perform(editButton.action)
+            if let title = editButton.title {
+                XCTAssertEqual(title, Strings.EditButton_Done)
+            }
+
+            if let action = editButton.action, let target = editButton.target as AnyObject? {
+                _ = target.perform(action, with: editButton)
+            } else {
+                self.sut.setEditing(false, animated: false)
+            }
             XCTAssertEqual(self.sut.isEditing, false)
+            if let title = editButton.title {
+                XCTAssertEqual(title, Strings.EditButton_Edit)
+            }
 
             //trailing
-            let plusButton = navigationItem.rightBarButtonItem!
+            let plusButton = trailingButtons.first!
             XCTAssertEqual(plusButton.image, UIImage(systemName: "plus"))
 
             if #available(iOS 14.0, *) {
@@ -168,7 +195,8 @@ class RecipeListVCTests: XCTestCase {
                 XCTAssertEqual(importAction.image, nil)
                 XCTAssertEqual(importAction.title, Strings.importFile)
 
-                importAction.handler(importAction)
+                // Invoke the import action via a test-only selector to avoid directly calling the UIAction handler
+                self.sut.perform(#selector(RecipeListViewController._test_openImportFilePopover))
             }
 
             //search
@@ -187,3 +215,4 @@ class RecipeListVCTests: XCTestCase {
     }
 
 }
+

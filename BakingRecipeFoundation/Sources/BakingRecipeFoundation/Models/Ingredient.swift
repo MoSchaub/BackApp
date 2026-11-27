@@ -11,7 +11,7 @@ public struct Ingredient: BakingRecipeRecord {
     
     /// diffrent styles of ingredients
     /// - NOTE: raw value is their c
-    public enum Style: Double, CaseIterable, Codable {
+    public enum Style: Double, CaseIterable, Codable, Sendable {
         
         /// water or something similar
         case bulkLiquid = 4.187
@@ -84,12 +84,21 @@ public struct Ingredient: BakingRecipeRecord {
 // MARK: - Auto ingredient type detection
 private extension Ingredient {
     
+    /// words in an ingredient name that mark it as flour or as a bulk liquid, per app language
+    static let typeKeywords: [String: (flour: [String], bulkLiquid: [String])] = [
+        "de": (["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM", "Typo", "typo"],
+               ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft", " ei", "Ei "]),
+        "en": (["flour", "Flour", "grist", "Grist"],
+               ["water", "Water", "milk", "Milk", "beer", "Beer", "oil", "Oil", "juice", "Juice", "egg", "Egg "]),
+        "fr": (["farine", "Farine", "semoule", "Semoule"],
+               ["eau", "Eau", "lait", "Lait", "bière", "Bière", "huile", "Huile", "jus", "Jus", "œuf", "Œuf", "oeuf", "Oeuf"]),
+    ]
+
     mutating func autoDetectIngredientType() {
-        if Bundle.main.preferredLocalizations.first! == "de" || Bundle.main.preferredLocalizations.first! == "en" { //only german locale at first
-            
-            let flourStrings = Bundle.main.preferredLocalizations.first! == "de" ? ["Mehl", "mehl", "Schrot", "schrot", "WM", "RM", "DM", "RVKM", "WVKM", "Typo", "typo"] : ["flour", "Flour", "grist", "Grist"]
-            let bulkLiquidStrings = Bundle.main.preferredLocalizations.first! == "de" ? ["Wasser", "wasser", "Milch", "milch", "Bier", "bier", "Öl", "öl", "saft", "Saft", " ei", "Ei "] : ["water", "Water", "milk", "Milk", "beer", "Beer", "oil", "Oil", "juice", "Juice", "egg", "Egg "]
-            
+        if let language = Bundle.main.preferredLocalizations.first, let keywords = Self.typeKeywords[language] {
+            let flourStrings = keywords.flour
+            let bulkLiquidStrings = keywords.bulkLiquid
+
             for flourString in flourStrings {
                 if self.name.contains(flourString) {
                     self.type = .flour
@@ -113,7 +122,7 @@ public extension Ingredient {
     /// the name of the ingredient
     ///- NOTE: This name should be used whenever you need to only show the name
     var formattedName: String {
-        name.trimmingCharacters(in: .whitespaces).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Strings.unnamedIngredient : name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     /// type of the recipe
@@ -179,15 +188,23 @@ public extension Ingredient {
     }
     
     /// Arange the seleted columns and lock their order
-    static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.temperature,
-        Columns.mass,
-        Columns.c,
-        Columns.stepId,
-        Columns.number
-    ]
+    ///
+    /// Computed rather than stored since GRDB 7: a stored `static let` of
+    /// non-Sendable `SQLSelectable` existentials is shared mutable state and
+    /// not concurrency-safe.
+    /// - Warning: `init(row:)` decodes by numeric index, so the order here
+    ///   must stay in sync with the indices used there.
+    static var databaseSelection: [any SQLSelectable] {
+        [
+            Columns.id,
+            Columns.name,
+            Columns.temperature,
+            Columns.mass,
+            Columns.c,
+            Columns.stepId,
+            Columns.number
+        ]
+    }
 }
 
 // Fetching methods

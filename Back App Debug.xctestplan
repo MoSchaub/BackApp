@@ -9,7 +9,6 @@
     }
   ],
   "defaultOptions" : {
-    "areLocalizationScreenshotsEnabled" : true,
     "language" : "en",
     "performanceAntipatternCheckerEnabled" : true,
     "region" : "US",
@@ -32,6 +31,34 @@
         "containerPath" : "container:BackApp.xcodeproj",
         "identifier" : "CD2BCE5224AE72CB00B868D7",
         "name" : "Back App iOSTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:BackAppCore",
+        "identifier" : "BackAppCoreTests",
+        "name" : "BackAppCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:BakingRecipeFoundation",
+        "identifier" : "BakingRecipeFoundationTests",
+        "name" : "BakingRecipeFoundationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:BakingRecipeStrings",
+        "identifier" : "BakingRecipeStringsTests",
+        "name" : "BakingRecipeStringsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:BakingRecipeUIFoundation",
+        "identifier" : "BakingRecipeUIFoundationTests",
+        "name" : "BakingRecipeUIFoundationTests"
       }
     }
   ],
