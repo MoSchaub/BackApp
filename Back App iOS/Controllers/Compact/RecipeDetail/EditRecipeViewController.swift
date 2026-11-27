@@ -152,7 +152,8 @@ class EditRecipeViewController: BackAppVC {
 
     override func attachPublishers() {
         super.attachPublishers()
-        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate)
+        // only react to this table's data source, other edit screens may show different recipes
+        NotificationCenter.default.publisher(for: .editRecipeShouldUpdate, object: dataSource)
             .sink { _ in
                 self.updateDataSource(animated: false)
             }
@@ -226,6 +227,7 @@ private extension EditRecipeViewController {
         }
         dataSource.defaultRowAnimation = .none
         dataSource.recipeId = self.recipe.id
+        dataSource.appData = self.appData
 
         return dataSource
     }
